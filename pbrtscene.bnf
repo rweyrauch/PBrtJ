@@ -1,0 +1,161 @@
+/*
+ * PBrtJ -- Port of pbrt v3 to Java.
+ * Copyright (c) 2017 Rick Weyrauch.
+ *
+ * pbrt source code is Copyright(c) 1998-2016
+ * Matt Pharr, Greg Humphreys, and Wenzel Jakob.
+ *
+ */
+
+{
+    classHeader = "license.txt"
+    generate=[names="long" visitor-value="R"]
+
+    parserClass="org.pbrt.lang.core.parser.PbrtParser"
+    parserUtilClass="org.pbrt.lang.core.parser.PbrtParserUtil"
+
+    implements="org.pbrt.lang.core.psi.PbrtCompositeElement"
+    extends="org.pbrt.lang.core.psi.impl.PbrtCompositeElementImpl"
+
+    elementTypeHolderClass="org.pbrt.lang.core.psi.PbrtElementTypes"
+    elementTypeClass="org.pbrt.lang.core.psi.PbrtCompositeElementType"
+    tokenTypeClass="org.pbrt.lang.core.psi.PbrtTokenType"
+
+    psiClassPrefix="Pbrt"
+    psiImplClassSuffix="Impl"
+    psiPackage="org.pbrt.lang.core.psi"
+    psiImplPackage="org.pbrt.lang.core.psi.impl"
+
+    tokens = [
+        space='regexp:\s+'
+        COMMENT="regexp:#[^\n]*"
+
+        NUMBER="regexp:[-+]*[0-9]*\.[0-9]*|[-+]*[0-9]*"
+        STRING="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\\'|\\)*\")"
+
+        LBRACK      =  '['
+        RBRACK      =  ']'
+        SHA         =  '#'
+        ACCELERATOR =        "Accelerator"
+        ACTIVETRANSFORM =    "ActiveTransform"
+        ALL =                "All"
+        AREALIGHTSOURCE =    "AreaLightSource"
+        ATTRIBUTEBEGIN =     "AttributeBegin"
+        ATTRIBUTEEND =       "AttributeEnd"
+        CAMERA =             "Camera"
+        CONCATTRANSFORM =    "ConcatTransform"
+        COORDINATESYSTEM =   "CoordinateSystem"
+        COORDSYSTRANSFORM =  "CoordSysTransform"
+        ENDTIME =            "EndTime"
+        FILM =               "Film"
+        IDENTITY =           "Identity"
+        INCLUDE =            "Include"
+        LIGHTSOURCE =        "LightSource"
+        LOOKAT =             "LookAt"
+        MAKENAMEDMATERIAL =  "MakeNamedMaterial"
+        MATERIAL =           "Material"
+        NAMEDMATERIAL =      "NamedMaterial"
+        OBJECTBEGIN =        "ObjectBegin"
+        OBJECTEND =          "ObjectEnd"
+        OBJECTINSTANCE =     "ObjectInstance"
+        PIXELFILTER =        "PixelFilter"
+        RENDERER =           "Renderer"
+        REVERSEORIENTATION = "ReverseOrientation"
+        ROTATE	=            "Rotate"
+        SAMPLER =            "Sampler"
+        SCALE =              "Scale"
+        SHAPE =              "Shape"
+        STARTTIME =          "StartTime"
+        SURFACEINTEGRATOR =  "SurfaceIntegrator"
+        TEXTURE =            "Texture"
+        TRANSFORMBEGIN	=    "TransformBegin"
+        TRANSFORMEND =       "TransformEnd"
+        TRANSFORMTIMES =     "TransformTimes"
+        TRANSFORM =          "Transform"
+        TRANSLATE =          "Translate"
+        VOLUME =             "Volume"
+        VOLUMEINTEGRATOR =   "VolumeIntegrator"
+        WORLDBEGIN =         "WorldBegin"
+        WORLDEND =           "WorldEnd"
+    ]
+
+    generateTokenAccessors=true
+}
+
+start ::= pbrt_stmt_list {}
+
+array ::= string_array {}
+	| number_array {}
+
+string_array
+	::= LBRACK string_list RBRACK {}
+	| single_element_string_array {}
+
+single_element_string_array
+	::= STRING {}
+
+string_list
+	::= STRING* {}
+
+number_array
+	::= LBRACK number_list RBRACK {}
+	| single_element_number_array {}
+
+single_element_number_array
+	::= number {}
+
+number_list
+	::= number* {}
+
+param_list
+	::= param_list_entry* {}
+
+param_list_entry
+	::= STRING array {}
+
+pbrt_stmt_list
+	::= pbrt_stmt* {}
+
+pbrt_stmt
+	::= ACCELERATOR STRING param_list {}
+	| ACTIVETRANSFORM ALL {}
+	| ACTIVETRANSFORM ENDTIME {}
+	| ACTIVETRANSFORM STARTTIME {}
+	| AREALIGHTSOURCE STRING param_list {}
+	| ATTRIBUTEBEGIN {}
+	| ATTRIBUTEEND {}
+	| CAMERA STRING param_list {}
+	| CONCATTRANSFORM number_array {}
+	| COORDINATESYSTEM STRING {}
+	| COORDSYSTRANSFORM STRING {}
+	| FILM STRING param_list {}
+	| IDENTITY {}
+	| INCLUDE STRING {}
+	| LIGHTSOURCE STRING param_list {}
+	| LOOKAT number number number number number number number number number {}
+	| MAKENAMEDMATERIAL STRING param_list {}
+	| MATERIAL STRING param_list {}
+	| NAMEDMATERIAL STRING {}
+	| OBJECTBEGIN STRING {}
+	| OBJECTEND {}
+	| OBJECTINSTANCE STRING {}
+	| PIXELFILTER STRING param_list {}
+	| RENDERER STRING param_list {}
+	| REVERSEORIENTATION {}
+	| ROTATE number number number number {}
+	| SAMPLER STRING param_list {}
+	| SCALE number number number {}
+	| SHAPE STRING param_list {}
+	| SURFACEINTEGRATOR STRING param_list {}
+	| TEXTURE STRING STRING STRING param_list {}
+	| TRANSFORMBEGIN {}
+	| TRANSFORMEND {}
+	| TRANSFORMTIMES number number {}
+	| TRANSFORM number_array {}
+	| TRANSLATE number number number {}
+	| VOLUME STRING param_list {}
+	| VOLUMEINTEGRATOR STRING param_list {}
+	| WORLDBEGIN {}
+	| WORLDEND {}
+
+number ::= NUMBER {}
