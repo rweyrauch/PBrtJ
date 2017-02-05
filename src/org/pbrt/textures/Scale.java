@@ -1,3 +1,4 @@
+
 /*
  * PBrtJ -- Port of pbrt v3 to Java.
  * Copyright (c) 2017 Rick Weyrauch.
@@ -7,8 +8,10 @@
  *
  */
 
-package org.pbrt.core;
+package org.pbrt.textures;
 
-public class Bounds2 {
+import org.pbrt.core.Texture;
+
+public class Scale extends Texture {
 
 }

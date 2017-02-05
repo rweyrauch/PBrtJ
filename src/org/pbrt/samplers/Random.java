@@ -1,3 +1,4 @@
+
 /*
  * PBrtJ -- Port of pbrt v3 to Java.
  * Copyright (c) 2017 Rick Weyrauch.
@@ -7,8 +8,10 @@
  *
  */
 
-package org.pbrt.core;
+package org.pbrt.samplers;
 
-public class Bounds3 {
+import org.pbrt.core.Sampler;
+
+public class Random extends Sampler {
 
 }

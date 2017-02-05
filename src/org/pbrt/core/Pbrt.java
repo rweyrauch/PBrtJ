@@ -15,6 +15,24 @@ public class Pbrt
 {
     public static Options options;
 
+    static float MachineEpsilon() {
+        return Math.ulp(1.0f) * 0.5f;
+    }
+
+    public static float gamma(int n) {
+        return (n * MachineEpsilon()) / (1 - n * MachineEpsilon());
+    }
+
+    public static float GammaCorrect(float value) {
+        if (value <= 0.0031308f) return 12.92f * value;
+        return 1.055f * (float)Math.pow(value, (1.0 / 2.4)) - 0.055f;
+    }
+
+    public static float InverseGammaCorrect(float value) {
+        if (value <= 0.04045f) return value * 1.f / 12.92f;
+        return (float)Math.pow((value + 0.055) * 1.0 / 1.055, 2.4);
+    }
+
     public static float Clamp(float v, float low, float high) {
         if (v < low) return low;
         else if (v > high) return high;

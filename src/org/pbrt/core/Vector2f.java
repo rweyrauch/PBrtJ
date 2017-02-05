@@ -15,6 +15,8 @@ public class Vector2f {
     public float x, y;
 
     public Vector2f() {
+        x = 0.0f;
+        y = 0.0f;
     }
 
     public Vector2f(float xx, float yy) {
@@ -28,9 +30,13 @@ public class Vector2f {
     }
 
     public Vector2f(Point2f p) {
+        x = p.x;
+        y = p.y;
     }
 
     public Vector2f(Point3f p) {
+        x = p.x;
+        y = p.y;
     }
 
     // default versions of these are fine for release builds; for debug

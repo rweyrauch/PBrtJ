@@ -35,6 +35,10 @@ public class Point2f {
         assert (!p.HasNaNs());
         return new Vector2f(x - p.x, y - p.y);
     }
+    public Point2f subtract(Vector2f v) {
+        assert (!v.HasNaNs());
+        return new Point2f(x - v.x, y - v.y);
+    }
     public Point2f negate() { return new Point2f(-x, -y); }
 
     public Point2f add(Point2f p) {
