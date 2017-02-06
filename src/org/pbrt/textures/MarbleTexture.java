@@ -12,18 +12,18 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class ImageMap extends Texture {
+public class MarbleTexture<T> extends Texture {
 
     @Override
     public Object Evaluate(SurfaceInteraction si) {
         return null;
     }
 
-    public static Texture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
+    public static Texture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
         return null;
     }
 
-    public static Texture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
+    public static Texture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
         return null;
     }
 }

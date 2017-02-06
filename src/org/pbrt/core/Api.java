@@ -17,6 +17,8 @@ import org.pbrt.shapes.*;
 import org.pbrt.textures.*;
 import org.pbrt.materials.*;
 import org.pbrt.lights.*;
+import org.pbrt.cameras.*;
+import org.pbrt.filters.*;
 
 public class Api {
 
@@ -261,17 +263,17 @@ public class Api {
         if (name == "" || name == "none")
             return null;
         else if (name == "matte")
-            material = Matte.Create(mp);
+            material = MatteMaterial.Create(mp);
         else if (name == "plastic")
-            material = Plastic.Create(mp);
+            material = PlasticMaterial.Create(mp);
         else if (name == "translucent")
-            material = Translucent.Create(mp);
+            material = TranslucentMaterial.Create(mp);
         else if (name == "glass")
-            material = Glass.Create(mp);
+            material = GlassMaterial.Create(mp);
         else if (name == "mirror")
-            material = Mirror.Create(mp);
+            material = MirrorMaterial.Create(mp);
         else if (name == "hair")
-            material = Hair.Create(mp);
+            material = HairMaterial.Create(mp);
         else if (name == "mix") {
             String m1 = mp.FindString("namedmaterial1", "");
             String m2 = mp.FindString("namedmaterial2", "");
@@ -288,22 +290,22 @@ public class Api {
                 mat2 = MakeMaterial("matte", mp);
             }
 
-            material = MixMat.Create(mp, mat1, mat2);
+            material = MixMaterial.Create(mp, mat1, mat2);
         } else if (name == "metal")
-            material = Metal.Create(mp);
+            material = MetalMaterial.Create(mp);
         else if (name == "substrate")
-            material = Substrate.Create(mp);
+            material = SubstrateMaterial.Create(mp);
         else if (name == "uber")
-            material = Uber.Create(mp);
+            material = UberMaterial.Create(mp);
         else if (name == "subsurface")
-            material = Subsurface.Create(mp);
+            material = SubsurfaceMaterial.Create(mp);
         else if (name == "kdsubsurface")
-            material = KdSubsurface.Create(mp);
+            material = KdSubsurfaceMaterial.Create(mp);
         else if (name == "fourier")
-            material = Fourier.Create(mp);
+            material = FourierMaterial.Create(mp);
         else {
             Error.Warning("Material \"%s\" unknown. Using \"matte\".", name);
-            material = Matte.Create(mp);
+            material = MatteMaterial.Create(mp);
         }
 
         if ((name == "subsurface" || name == "kdsubsurface") && (renderOptions.IntegratorName != "path" && (renderOptions.IntegratorName != "volpath"))) {
@@ -320,29 +322,29 @@ public class Api {
     Texture<Float> MakeFloatTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Float> tex = null;
         if (name == "constant")
-            tex = CreateConstantFloatTexture(tex2world, tp);
+            tex = ConstantTexture.CreateFloat(tex2world, tp);
         else if (name == "scale")
-            tex = CreateScaleFloatTexture(tex2world, tp);
+            tex = ScaleTexture.CreateFloat(tex2world, tp);
         else if (name == "mix")
-            tex = CreateMixFloatTexture(tex2world, tp);
+            tex = MixTexture.CreateFloat(tex2world, tp);
         else if (name == "bilerp")
-            tex = CreateBilerpFloatTexture(tex2world, tp);
+            tex = BilerpTexture.CreateFloat(tex2world, tp);
         else if (name == "imagemap")
-            tex = CreateImageFloatTexture(tex2world, tp);
+            tex = ImageMap.CreateFloat(tex2world, tp);
         else if (name == "uv")
-            tex = CreateUVFloatTexture(tex2world, tp);
+            tex = UVTexture.CreateFloat(tex2world, tp);
         else if (name == "checkerboard")
-            tex = CreateCheckerboardFloatTexture(tex2world, tp);
+            tex = CheckerBoardTexture.CreateFloat(tex2world, tp);
         else if (name == "dots")
-            tex = CreateDotsFloatTexture(tex2world, tp);
+            tex = DotsTexture.CreateFloat(tex2world, tp);
         else if (name == "fbm")
-            tex = CreateFBmFloatTexture(tex2world, tp);
+            tex = FBMTexture.CreateFloat(tex2world, tp);
         else if (name == "wrinkled")
-            tex = CreateWrinkledFloatTexture(tex2world, tp);
+            tex = WrinkledTexture.CreateFloat(tex2world, tp);
         else if (name == "marble")
-            tex = CreateMarbleFloatTexture(tex2world, tp);
+            tex = MarbleTexture.CreateFloat(tex2world, tp);
         else if (name == "windy")
-            tex = CreateWindyFloatTexture(tex2world, tp);
+            tex = WindyTexture.CreateFloat(tex2world, tp);
         else
             Error.Warning("Float texture \"%s\" unknown.", name);
         tp.ReportUnused();
@@ -352,29 +354,29 @@ public class Api {
     Texture<Spectrum> MakeSpectrumTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Spectrum> tex = null;
         if (name == "constant")
-            tex = CreateConstantSpectrumTexture(tex2world, tp);
+            tex = ConstantTexture.CreateSpectrum(tex2world, tp);
         else if (name == "scale")
-            tex = CreateScaleSpectrumTexture(tex2world, tp);
+            tex = ScaleTexture.CreateSpectrum(tex2world, tp);
         else if (name == "mix")
-            tex = CreateMixSpectrumTexture(tex2world, tp);
+            tex = MixTexture.CreateSpectrum(tex2world, tp);
         else if (name == "bilerp")
-            tex = CreateBilerpSpectrumTexture(tex2world, tp);
+            tex = BilerpTexture.CreateSpectrum(tex2world, tp);
         else if (name == "imagemap")
-            tex = CreateImageSpectrumTexture(tex2world, tp);
+            tex = ImageMap.CreateSpectrum(tex2world, tp);
         else if (name == "uv")
-            tex = CreateUVSpectrumTexture(tex2world, tp);
+            tex = UVTexture.CreateSpectrum(tex2world, tp);
         else if (name == "checkerboard")
-            tex = CreateCheckerboardSpectrumTexture(tex2world, tp);
+            tex = CheckerBoardTexture.CreateSpectrum(tex2world, tp);
         else if (name == "dots")
-            tex = CreateDotsSpectrumTexture(tex2world, tp);
+            tex = DotsTexture.CreateSpectrum(tex2world, tp);
         else if (name == "fbm")
-            tex = CreateFBmSpectrumTexture(tex2world, tp);
+            tex = FBMTexture.CreateSpectrum(tex2world, tp);
         else if (name == "wrinkled")
-            tex = CreateWrinkledSpectrumTexture(tex2world, tp);
+            tex = WrinkledTexture.CreateSpectrum(tex2world, tp);
         else if (name == "marble")
-            tex = CreateMarbleSpectrumTexture(tex2world, tp);
+            tex = MarbleTexture.CreateSpectrum(tex2world, tp);
         else if (name == "windy")
-            tex = CreateWindySpectrumTexture(tex2world, tp);
+            tex = WindyTexture.CreateSpectrum(tex2world, tp);
         else
             Error.Warning("Spectrum texture \"%s\" unknown.", name);
         tp.ReportUnused();
@@ -468,13 +470,13 @@ public class Api {
         TransformCache.TransformPair c2w1 = transformCache.Lookup(cam2worldSet.at(1));
         AnimatedTransform animatedCam2World = new AnimatedTransform(c2w0.t, transformStart, c2w1.t, transformEnd);
         if (name == "perspective")
-            camera = CreatePerspectiveCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
+            camera = PerspectiveCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
         else if (name == "orthographic")
-            camera = CreateOrthographicCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
+            camera = OrthographicCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
         else if (name == "realistic")
-            camera = CreateRealisticCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
+            camera = RealisticCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
         else if (name == "environment")
-            camera = CreateEnvironmentCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
+            camera = EnvironmentCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
         else
             Error.Warning("Camera \"%s\" unknown.", name);
         paramSet.ReportUnused();
@@ -504,15 +506,15 @@ public class Api {
     Filter MakeFilter(String name, ParamSet paramSet) {
         Filter filter = null;
         if (name == "box")
-            filter = CreateBoxFilter(paramSet);
+            filter = BoxFilter.Create(paramSet);
         else if (name == "gaussian")
-            filter = CreateGaussianFilter(paramSet);
+            filter = GaussianFilter.Create(paramSet);
         else if (name == "mitchell")
-            filter = CreateMitchellFilter(paramSet);
+            filter = MitchellFilter.Create(paramSet);
         else if (name == "sinc")
-            filter = CreateSincFilter(paramSet);
+            filter = SincFilter.Create(paramSet);
         else if (name == "triangle")
-            filter = CreateTriangleFilter(paramSet);
+            filter = TriangleFilter.Create(paramSet);
         else {
             Error.Error("Filter \"%s\" unknown.", name);
         }
@@ -523,7 +525,7 @@ public class Api {
     Film MakeFilm(String name, ParamSet paramSet, Filter filter) {
         Film film = null;
         if (name == "image")
-            film = CreateFilm(paramSet, filter);
+            film = Film.Create(paramSet, filter);
         else
             Error.Warning("Film \"%s\" unknown.", name);
         

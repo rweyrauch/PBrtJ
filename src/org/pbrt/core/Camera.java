@@ -10,6 +10,41 @@
 
 package org.pbrt.core;
 
-public class Camera {
+public abstract class Camera {
+    // Camera Public Data
+    public AnimatedTransform CameraToWorld;
+    public float shutterOpen, shutterClose;
+    public Film film;
+    public Medium medium;
+
+    public class CameraSample {
+        Point2f pFilm;
+        Point2f pLens;
+        Float time;
+    }
+
+    // Camera Interface
+    public Camera(AnimatedTransform CameraToWorld, float shutterOpen, float shutterClose, Film film, Medium medium) {
+        this.CameraToWorld = CameraToWorld;
+        this.shutterOpen = shutterOpen;
+        this.shutterClose = shutterClose;
+        this.film = film;
+        this.medium = medium;
+    }
+
+    public abstract float GenerateRay(CameraSample sample, Ray ray);
+
+    public float GenerateRayDifferential(CameraSample sample, RayDifferential rd) {
+        return 0;
+    }
+    public Spectrum We(Ray ray, Point2f pRaster2) {
+        return null;
+    }
+    public void Pdf_We(Ray ray, float pdfPos, float pdfDir) {
+
+    }
+    public Spectrum Sample_Wi(Interaction ref, Point2f u, Vector3f wi, float pdf, Point2f pRaster, VisibilityTester vis) {
+        return null;
+    }
 
 }

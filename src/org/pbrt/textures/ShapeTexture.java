@@ -8,11 +8,15 @@
  *
  */
 
-package org.pbrt.core;
+package org.pbrt.textures;
 
-public class Film {
+import org.pbrt.core.SurfaceInteraction;
+import org.pbrt.core.Texture;
 
-    public static Film Create(ParamSet paramSet, Filter filter) {
+public class ShapeTexture<T> extends Texture {
+
+    @Override
+    public Object Evaluate(SurfaceInteraction si) {
         return null;
     }
 }

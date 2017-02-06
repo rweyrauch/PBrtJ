@@ -10,6 +10,17 @@
 
 package org.pbrt.core;
 
-public class Filter {
+public abstract class Filter {
+    // Filter Public Data
+    public Vector2f radius, invRadius;
 
+    public Filter() {
+        this.radius = new Vector2f(0,0);
+        this.invRadius = new Vector2f(0,0);
+    }
+    public Filter(Vector2f radius) {
+        this.radius = radius;
+        this.invRadius = new Vector2f(1 / radius.x, 1 / radius.y); }
+
+    public abstract float Evaluate(Point2f p);
 }

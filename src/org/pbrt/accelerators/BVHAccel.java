@@ -8,11 +8,8 @@
  *
  */
 
-package org.pbrt.core;
+package org.pbrt.accelerators;
 
-public class Film {
+public class BVHAccel {
 
-    public static Film Create(ParamSet paramSet, Filter filter) {
-        return null;
-    }
 }

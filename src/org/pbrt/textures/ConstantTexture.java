@@ -20,10 +20,10 @@ public class ConstantTexture<T> extends Texture {
     }
     public T Evaluate(SurfaceInteraction si) { return value; }
 
-    public static ConstantTexture<Float> CreateConstantFloatTexture(Transform tex2world, TextureParams tp) {
+    public static ConstantTexture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
         return new ConstantTexture<>(tp.FindFloat("value", 1.0f));
     }
-    public static ConstantTexture<Spectrum> CreateConstantSpectrumTexture(Transform tex2world, TextureParams tp) {
+    public static ConstantTexture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
         return new ConstantTexture<>(tp.FindSpectrum("value", new Spectrum(1.f)));
     }
 }

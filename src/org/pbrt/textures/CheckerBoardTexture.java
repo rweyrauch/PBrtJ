@@ -12,7 +12,7 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class ImageMap extends Texture {
+public class CheckerBoardTexture<T> extends Texture {
 
     @Override
     public Object Evaluate(SurfaceInteraction si) {

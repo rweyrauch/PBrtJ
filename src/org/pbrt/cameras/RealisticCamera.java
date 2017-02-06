@@ -8,11 +8,13 @@
  *
  */
 
-package org.pbrt.core;
+package org.pbrt.cameras;
 
-public class Film {
+import org.pbrt.core.*;
 
-    public static Film Create(ParamSet paramSet, Filter filter) {
+public class RealisticCamera extends Camera {
+
+    public static Camera Create(ParamSet paramSet, AnimatedTransform animatedCam2World, Film film, Medium outside) {
         return null;
     }
 }
