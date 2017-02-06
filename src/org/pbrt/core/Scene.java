@@ -10,6 +10,59 @@
 
 package org.pbrt.core;
 
+import java.util.ArrayList;
+
 public class Scene {
+    // Scene Private Data
+    private Primitive aggregate;
+    private Bounds3f worldBound;
+
+    // Scene Public Data
+    ArrayList<Light> lights;
+    // Store infinite light sources separately for cases where we only want
+    // to loop over them.
+    ArrayList<Light> infiniteLights;
+
+    // Scene Public Methods
+    public Scene(Primitive aggregate,
+          ArrayList<Light> lights) {
+        this.aggregate = aggregate;
+        this.lights = lights;
+
+        // Scene Constructor Implementation
+        worldBound = aggregate.WorldBound();
+        for (Light light : this.lights) {
+            light.Preprocess(this);
+            if ((light.flags & Light.FlagInfinite) != 0)
+                infiniteLights.add(light);
+        }
+    }
+    public Bounds3f WorldBound() { return worldBound; }
+    public SurfaceInteraction Intersect(Ray ray) {
+        return aggregate.Intersect(ray);
+    }
+    public boolean IntersectP(Ray ray) {
+        return aggregate.IntersectP(ray);
+    }
+
+    public class TrIntersection {
+        SurfaceInteraction isect;
+        Spectrum Tr;
+    }
+    public TrIntersection IntersectTr(Ray ray, Sampler sampler) {
+        TrIntersection tsect = new TrIntersection();
+        tsect.Tr = new Spectrum(1.f);
+        while (true) {
+            tsect.isect = Intersect(ray);
+
+            // Accumulate beam transmittance for ray segment
+            if (ray.medium != null) tsect.Tr.multiply(ray.medium.Tr(ray, sampler));
+
+            // Initialize next ray segment or terminate transmittance computation
+            if (tsect.isect == null) return null;
+            if (tsect.isect.primitive.GetMaterial() != null) return tsect;
+            ray = tsect.isect.SpawnRay(ray.d);
+        }
+    }
 
 }

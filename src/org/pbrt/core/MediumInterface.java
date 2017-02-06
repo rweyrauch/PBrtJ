@@ -12,4 +12,17 @@ package org.pbrt.core;
 
 public class MediumInterface {
 
+    public Medium inside = null, outside = null;
+
+    // MediumInterface Public Methods
+    public MediumInterface() {}
+    public MediumInterface(Medium medium) {
+        inside = medium;
+        outside = medium;
+    }
+    public MediumInterface(Medium inside, Medium outside) {
+        this.inside = inside;
+        this.outside = outside;
+    }
+    public boolean IsMediumTransition() { return inside != outside; }
 }

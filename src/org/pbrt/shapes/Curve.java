@@ -10,8 +10,37 @@
 
 package org.pbrt.shapes;
 
-import org.pbrt.core.Shape;
+import org.pbrt.core.*;
+
+import java.util.ArrayList;
 
 public class Curve extends Shape {
 
+    public Curve(Transform ObjectToWorld, Transform WorldToObject, boolean reverseOrientation) {
+        super(ObjectToWorld, WorldToObject, reverseOrientation);
+    }
+
+    public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
+        return null;
+    }
+
+    @Override
+    public Bounds3f ObjectBound() {
+        return null;
+    }
+
+    @Override
+    public HitResult Intersect(Ray ray, boolean testAlphaTexture) {
+        return null;
+    }
+
+    @Override
+    public float Area() {
+        return 0;
+    }
+
+    @Override
+    public SampleResult Sample(Point2f u) {
+        return null;
+    }
 }

@@ -45,6 +45,17 @@ public class Vector3f {
         assert !v.HasNaNs();
         return new Vector3f(x + v.x, y + v.y, z + v.z);
     }
+    public Vector3f add(Normal3f n) {
+        assert !n.HasNaNs();
+        return new Vector3f(x + n.x, y + n.y, z + n.z);
+    }
+
+    public void increment(Vector3f v) {
+        assert !v.HasNaNs();
+        x += v.x;
+        y += v.y;
+        z += v.z;
+    }
 
     public Vector3f subtract(Vector3f v) {
         assert !v.HasNaNs();

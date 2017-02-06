@@ -11,7 +11,17 @@
 package org.pbrt.materials;
 
 import org.pbrt.core.Material;
+import org.pbrt.core.SurfaceInteraction;
+import org.pbrt.core.TextureParams;
 
 public class Plastic extends Material {
 
+    public static Material Create(TextureParams mp) {
+        return null;
+    }
+
+    @Override
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+
+    }
 }

@@ -1,3 +1,4 @@
+
 /*
  * PBrtJ -- Port of pbrt v3 to Java.
  * Copyright (c) 2017 Rick Weyrauch.
@@ -9,9 +10,6 @@
 
 package org.pbrt.core;
 
-public class MediumInteraction extends Interaction {
-
-    // MediumInteraction Public Data
-    public PhaseFunction phase;
+public class BSSRDF {
 
 }

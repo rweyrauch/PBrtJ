@@ -10,6 +10,12 @@
 
 package org.pbrt.core;
 
-public class Medium {
+public abstract class Medium {
+    public class MediumSample {
+        Spectrum spectrum;
+        MediumInteraction mi;
+    }
+    public abstract Spectrum Tr(Ray ray, Sampler sampler);
+    public abstract MediumSample Sample(Ray ray, Sampler sampler);
 
 }

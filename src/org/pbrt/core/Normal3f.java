@@ -31,15 +31,24 @@ public class Normal3f {
         z = v.z;
     }
 
+    public void flip() {
+        x = -x;
+        y = -y;
+        z = -z;
+    }
     public Normal3f negate() {
         return new Normal3f(-x, -y, -z);
     }
+
 
     public Normal3f add(Normal3f n) {
         assert (!n.HasNaNs());
         return new Normal3f(x + n.x, y + n.y, z + n.z);
     }
-
+    public Normal3f add(Vector3f v) {
+        assert (!v.HasNaNs());
+        return new Normal3f(x + v.x, y + v.y, z + v.z);
+    }
     public boolean HasNaNs() {
         return Float.isNaN(x) || Float.isNaN(y) || Float.isNaN(z);
     }

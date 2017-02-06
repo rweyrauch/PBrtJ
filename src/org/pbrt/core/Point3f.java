@@ -41,6 +41,18 @@ public class Point3f {
         assert (!p.HasNaNs());
         return new Point3f(x + p.x, y + p.y, z + p.z);
     }
+    public void increment(Vector3f v) {
+        assert !v.HasNaNs();
+        x += v.x;
+        y += v.y;
+        z += v.z;
+    }
+    public void increment(Point3f p) {
+        assert !p.HasNaNs();
+        x += p.x;
+        y += p.y;
+        z += p.z;
+    }
 
     public Vector3f subtract(Point3f p) {
         assert (!p.HasNaNs());
@@ -67,7 +79,12 @@ public class Point3f {
         if (i == 1) return y;
         return z;
     }
-
+    public void set(int i, float v) {
+        assert (i >= 0 && i <= 2);
+        if (i == 0) x = v;
+        if (i == 1) y = v;
+        else z = v;
+    }
     public boolean equal(Point3f p) {
         return x == p.x && y == p.y && z == p.z;
     }
@@ -119,4 +136,21 @@ public class Point3f {
     public static Point3f Permute(Point3f p, int x, int y, int z) {
         return new Point3f(p.at(x), p.at(y), p.at(z));
     }
+
+    public static Point3f OffsetRayOrigin(Point3f p,  Vector3f pError,
+                                Normal3f n,  Vector3f w) {
+        float d = Normal3f.Dot(Normal3f.Abs(n), pError);
+        Vector3f offset = new Vector3f(n.scale(d));
+        if (Normal3f.Dot(w, n) < 0) offset = offset.negate();
+        Point3f po = p.add(offset);
+        // Round offset point _po_ away from _p_
+        for (int i = 0; i < 3; ++i) {
+            if (offset.at(i) > 0)
+                po.set(i, Math.nextUp(po.at(i)));
+            else if (offset.at(i) < 0)
+                po.set(i, Math.nextDown(po.at(i)));
+        }
+        return po;
+    }
+
 }

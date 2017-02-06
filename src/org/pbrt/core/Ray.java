@@ -14,7 +14,7 @@ public class Ray {
     // Ray Public Data
     Point3f o;
     Vector3f d;
-    float tMax = Float.MAX_VALUE;
+    float tMax = Pbrt.Infinity;
     float time = 0.0f;
     Medium medium = null;
 
@@ -27,13 +27,21 @@ public class Ray {
         this.d = d;
     }
 
-    public Ray(Point3f o, Vector3f d, Float tMax,
+    public Ray(Point3f o, Vector3f d, float tMax,
                float time, Medium medium) {
         this.o = o;
         this.d = d;
         this.tMax = tMax;
         this.time = time;
         this.medium = medium;
+    }
+
+    public Ray(Ray r) {
+        this.o = r.o;
+        this.d = r.d;
+        this.tMax = r.tMax;
+        this.time = r.time;
+        this.medium = r.medium;
     }
 
     public Point3f at(float t) {

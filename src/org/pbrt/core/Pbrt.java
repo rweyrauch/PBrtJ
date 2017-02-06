@@ -15,10 +15,12 @@ public class Pbrt
 {
     public static Options options;
 
-    static float MachineEpsilon() {
+    public static float MachineEpsilon() {
         return Math.ulp(1.0f) * 0.5f;
     }
-
+    public static final float Infinity = Float.MAX_VALUE;
+    public static final float ShadowEpsilon = 0.0001f;
+    public static final float OneMinusEpsilon = 0x1.fffffep-1f;
     public static float gamma(int n) {
         return (n * MachineEpsilon()) / (1 - n * MachineEpsilon());
     }

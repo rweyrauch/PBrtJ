@@ -8,10 +8,8 @@
  *
  */
 
-package org.pbrt.textures;
+package org.pbrt.core;
 
-import org.pbrt.core.Texture;
-
-public class Constant extends Texture {
+public class BSDF {
 
 }

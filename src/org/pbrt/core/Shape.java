@@ -35,32 +35,32 @@ public abstract class Shape {
         this.transformSwapsHandedness = ObjectToWorld.SwapsHandedness();
     }
 
-    abstract Bounds3<Float> ObjectBound();
-    public Bounds3<Float> WorldBound() { return ObjectToWorld.Transform(ObjectBound()); }
-    abstract HitResult Intersect(Ray ray, boolean testAlphaTexture);
-    public HitResult IntersectP(Ray ray, boolean testAlphaTexture) {
-        return Intersect(ray, testAlphaTexture);
+    public abstract Bounds3f ObjectBound();
+    public Bounds3f WorldBound() { return ObjectToWorld.xform(ObjectBound()); }
+    public abstract HitResult Intersect(Ray ray, boolean testAlphaTexture);
+    public boolean IntersectP(Ray ray, boolean testAlphaTexture) {
+        return (Intersect(ray, testAlphaTexture) != null);
     }
 
-    abstract float Area();
+    public abstract float Area();
     // Sample a point on the surface of the shape and return the PDF with
     // respect to area on the surface.
-    abstract SampleResult Sample(Point2f u);
+    public abstract SampleResult Sample(Point2f u);
     public float Pdf(Interaction ref) { return 1.0f / Area(); }
 
     // Sample a point on the shape given a reference point |ref| and
     // return the PDF with respect to solid angle from |ref|.
     public SampleResult Sample(Interaction ref, Point2f u) {
         SampleResult result = Sample(u);
-        Vector3f wi = result.interaction.p - ref.p;
+        Vector3f wi = result.interaction.p.subtract(ref.p);
         if (wi.LengthSquared() == 0) {
             result.pdf = 0;
         }
         else {
-            wi = Normalize(wi);
+            wi = Vector3f.Normalize(wi);
             // Convert from area measure, as returned by the Sample() call
             // above, to solid angle measure.
-            result.pdf *= DistanceSquared(ref.p, result.interaction.p) / AbsDot(result.interaction.n, -wi);
+            result.pdf *= Point3f.DistanceSquared(ref.p, result.interaction.p) / Normal3f.AbsDot(result.interaction.n, wi.negate());
             if (Float.isInfinite(result.pdf)) result.pdf = 0.0f;
         }
         return result;
@@ -76,7 +76,7 @@ public abstract class Shape {
             return 0.0f;
 
         // Convert light sample weight to solid angle measure
-        float pdf = DistanceSquared(ref.p, hit.interaction.p) / (AbsDot(hit.interaction.n, -wi) * Area());
+        float pdf = Point3f.DistanceSquared(ref.p, hit.interaction.p) / (Normal3f.AbsDot(hit.interaction.n, wi.negate()) * Area());
         if (Float.isInfinite(pdf)) pdf = 0.0f;
         return pdf;
     }
@@ -87,12 +87,12 @@ public abstract class Shape {
     // integration; the nSamples parameter determines how many samples are
     // used in this case.
     public float SolidAngle(Point3f p, int nSamples) {
-        Interaction ref(p, Normal3f(), Vector3f(), Vector3f(0, 0, 1), 0, MediumInterface{});
+        Interaction ref = new Interaction(p, new Normal3f(), new Vector3f(), new Vector3f(0, 0, 1), 0, new MediumInterface());
         double solidAngle = 0;
         for (int i = 0; i < nSamples; ++i) {
-            Point2f u{RadicalInverse(0, i), RadicalInverse(1, i)};
+            Point2f u = new Point2f(LowDiscrepancy.RadicalInverse(0, i), LowDiscrepancy.RadicalInverse(1, i));
             SampleResult res = Sample(ref, u);
-            if (res.pdf > 0 && !IntersectP(Ray(p, res.interaction.p - p, .999f))) {
+            if (res.pdf > 0 && !IntersectP(new Ray(p, res.interaction.p.subtract(p), 0.999f, 0.0f, null), true)) {
                 solidAngle += 1 / res.pdf;
             }
         }

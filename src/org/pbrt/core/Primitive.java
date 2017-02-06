@@ -10,6 +10,12 @@
 
 package org.pbrt.core;
 
-public class Primitive {
+public abstract class Primitive {
 
+    public abstract Bounds3f WorldBound();
+    public abstract SurfaceInteraction Intersect(Ray r);
+    public abstract boolean IntersectP(Ray r);
+    public abstract AreaLight GetAreaLight();
+    public abstract Material GetMaterial();
+    public abstract void ComputeScatteringFunctions(SurfaceInteraction isect, Material.TransportMode mode, boolean allowMultipleLobes);
 }

@@ -10,8 +10,37 @@
 
 package org.pbrt.lights;
 
-import org.pbrt.core.Light;
+import org.pbrt.core.*;
 
 public class Projection extends Light {
+
+    public static Light Create(Transform light2world, Medium outside, ParamSet paramSet) {
+        return null;
+    }
+
+    @Override
+    public LiResult Sample_Li(Interaction ref, Point2f u) {
+        return null;
+    }
+
+    @Override
+    public Spectrum Power() {
+        return null;
+    }
+
+    @Override
+    public float Pdf_Li(Interaction ref, Vector3f wi) {
+        return 0;
+    }
+
+    @Override
+    public LeResult Sample_Le(Point2f u1, Point2f u2, float time) {
+        return null;
+    }
+
+    @Override
+    public PdfResult Pdf_Le(Ray ray, Normal3f nLight) {
+        return null;
+    }
 
 }

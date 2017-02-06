@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
 import org.pbrt.shapes.*;
+import org.pbrt.textures.*;
+import org.pbrt.materials.*;
+import org.pbrt.lights.*;
 
 public class Api {
 
@@ -21,33 +24,28 @@ public class Api {
     private static final int StartTransformBits = 1 << 0;
     private static final int EndTransformBits = 1 << 1;
     private static final int AllTransformsBits = (1 << MaxTransforms) - 1;
-    private class TransformSet {
+    private static class TransformSet {
         // TransformSet Public Methods
-        Transform &operator[](int i) {
-            CHECK_GE(i, 0);
-            CHECK_LT(i, MaxTransforms);
+        public Transform at(int i) {
+            assert (i >= 0);
+            assert (i < MaxTransforms);
             return t[i];
         }
-     Transform &operator[](int i) const {
-            CHECK_GE(i, 0);
-            CHECK_LT(i, MaxTransforms);
-            return t[i];
-        }
-        friend TransformSet Inverse(const TransformSet &ts) {
-            TransformSet tInv;
-            for (int i = 0; i < MaxTransforms; ++i) tInv.t[i] = Inverse(ts.t[i]);
+        public static TransformSet Inverse(TransformSet ts) {
+            TransformSet tInv = new TransformSet();
+            for (int i = 0; i < MaxTransforms; ++i) tInv.t[i] = Transform.Inverse(ts.t[i]);
             return tInv;
         }
-        bool IsAnimated() const {
+        public boolean IsAnimated() {
             for (int i = 0; i < MaxTransforms - 1; ++i)
                 if (t[i] != t[i + 1]) return true;
             return false;
         }
 
-        private Transform t[MaxTransforms];
+        private Transform t[] = new Transform[MaxTransforms];
     }
 
-    private class RenderOptions {
+    private static class RenderOptions {
         // RenderOptions Public Methods
         public Integrator MakeIntegrator() {
             return null;
@@ -82,13 +80,37 @@ public class Api {
         boolean haveScatteringMedia = false;
     }
 
-    private class GraphicsState {
+    private static class GraphicsState {
         // Graphics State Methods
         public Material CreateMaterial(ParamSet params) {
-
+            TextureParams mp = new TextureParams(params, materialParams, floatTextures, spectrumTextures);
+            Material mtl;
+            if (currentNamedMaterial != "") {
+                mtl = namedMaterials.get(currentNamedMaterial);
+                if (mtl == null) {
+                    Error.Error("Named material \"%s\" not defined. Using \"matte\".", currentNamedMaterial);
+                    mtl = MakeMaterial("matte", mp);
+                }
+            } else {
+                mtl = MakeMaterial(material, mp);
+                if (mtl == null && material != "" && material != "none")
+                    mtl = MakeMaterial("matte", mp);
+            }
+            return mtl;
         }
         public MediumInterface CreateMediumInterface() {
-
+            MediumInterface m = new MediumInterface();
+            if (currentInsideMedium != "") {
+                m.inside = renderOptions.namedMedia.get(currentInsideMedium);
+                if (m.inside == null)
+                    Error.Error("Named medium \"%s\" undefined.", currentInsideMedium);
+            }
+            if (currentOutsideMedium != "") {
+                m.outside = renderOptions.namedMedia.get(currentOutsideMedium);
+                if (m.outside == null)
+                    Error.Error("Named medium \"%s\" undefined.", currentOutsideMedium);
+            }
+            return m;
         }
 
         // Graphics State
@@ -104,30 +126,29 @@ public class Api {
         public boolean reverseOrientation = false;
     }
 
-    private class TransformCache {
+    private static class TransformCache {
+
+        private class TransformPair {
+            Transform t;
+            Transform tInv;
+        }
         // TransformCache Public Methods
-        public void Lookup(Transform t, Transform **tCached,
-                    Transform **tCachedInverse) {
-            auto iter = cache.find(t);
-            if (iter == cache.end()) {
-                Transform *tr = arena.Alloc<Transform>();
-            *tr = t;
-                Transform *tinv = arena.Alloc<Transform>();
-            *tinv = Transform(Inverse(t));
-                cache[t] = std::make_pair(tr, tinv);
-                iter = cache.find(t);
+        public TransformPair Lookup(Transform t) {
+            TransformPair entry = cache.get(t);
+            if (entry == null) {
+                entry = new TransformPair();
+                entry.t = t;
+                entry.tInv = Transform.Inverse(t);
+                cache.put(t, entry);
             }
-            if (tCached) *tCached = iter->second.first;
-            if (tCachedInverse) *tCachedInverse = iter->second.second;
+            return entry;
         }
         public void Clear() {
-            arena.Reset();
-            cache.erase(cache.begin(), cache.end());
+            cache.clear();
         }
 
         // TransformCache Private Data
-        private Map<Transform, Pair<Transform, Transform>> cache;
-        private MemoryArena arena;
+        private Map<Transform, TransformPair> cache;
     }
 
     private enum APIState { Uninitialized, OptionsBlock, WorldBlock };
@@ -143,64 +164,50 @@ public class Api {
     private static TransformCache transformCache;
     private static int catIndentCount = 0;
 
-    private static Shape[] MakeShapes(String name,
-                                                Transform object2world,
-                                                Transform world2object,
-                                                   boolean reverseOrientation,
-                                                ParamSet paramSet) {
-        Shape[] shapes = null;
-        Shape s;
+    private static ArrayList<Shape> MakeShapes(String name, Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
+        ArrayList<Shape> shapes = new ArrayList<>();
+        Shape s = null;
         if (name == "sphere")
-            s = CreateSphereShape(object2world, world2object, reverseOrientation,
-                    paramSet);
+            s = Sphere.Create(object2world, world2object, reverseOrientation, paramSet);
             // Create remaining single _Shape_ types
         else if (name == "cylinder")
-            s = CreateCylinderShape(object2world, world2object, reverseOrientation,
-                    paramSet);
+            s = Cylinder.Create(object2world, world2object, reverseOrientation, paramSet);
         else if (name == "disk")
-            s = CreateDiskShape(object2world, world2object, reverseOrientation,
-                    paramSet);
+            s = Disk.Create(object2world, world2object, reverseOrientation, paramSet);
         else if (name == "cone")
-            s = CreateConeShape(object2world, world2object, reverseOrientation,
-                    paramSet);
+            s = Cone.Create(object2world, world2object, reverseOrientation, paramSet);
         else if (name == "paraboloid")
-            s = CreateParaboloidShape(object2world, world2object,
-                    reverseOrientation, paramSet);
+            s = Paraboloid.Create(object2world, world2object, reverseOrientation, paramSet);
         else if (name == "hyperboloid")
-            s = CreateHyperboloidShape(object2world, world2object,
-                    reverseOrientation, paramSet);
-        if (s != null) shapes.push_back(s);
+            s = Hyperboloid.Create(object2world, world2object, reverseOrientation, paramSet);
 
+        if (s != null) shapes.add(s);
             // Create multiple-_Shape_ types
         else if (name == "curve")
-            shapes = CreateCurveShape(object2world, world2object,
-                    reverseOrientation, paramSet);
+            shapes.addAll(Curve.Create(object2world, world2object, reverseOrientation, paramSet));
         else if (name == "trianglemesh") {
-            if (Pbrt.options.toPly) {
-                static int count = 1;
-            const char *plyPrefix =
-                        getenv("PLY_PREFIX") ? getenv("PLY_PREFIX") : "mesh";
-                String fn = StringPrintf("%s_%05d.ply", plyPrefix, count++);
+            if (Pbrt.options.ToPly) {
+                /*
+                 int count = 1;
+                 String plyPrefix = new String(); // getenv("PLY_PREFIX") ? getenv("PLY_PREFIX") : "mesh";
+                 String fn = StringPrintf("%s_%05d.ply", plyPrefix, count++);
 
-                int nvi, npi, nuvi, nsi, nni;
-            const int *vi = paramSet.FindInt("indices", &nvi);
-            const Point3f *P = paramSet.FindPoint3f("P", &npi);
-            const Point2f *uvs = paramSet.FindPoint2f("uv", &nuvi);
-                if (!uvs) uvs = paramSet.FindPoint2f("st", &nuvi);
-                std::vector<Point2f> tempUVs;
-                if (!uvs) {
-                const Float *fuv = paramSet.FindFloat("uv", &nuvi);
-                    if (!fuv) fuv = paramSet.FindFloat("st", &nuvi);
-                    if (fuv) {
-                        nuvi /= 2;
-                        tempUVs.reserve(nuvi);
-                        for (int i = 0; i < nuvi; ++i)
-                            tempUVs.push_back(Point2f(fuv[2 * i], fuv[2 * i + 1]));
-                        uvs = &tempUVs[0];
+                Integer[] vi = paramSet.FindInt("indices");
+                Point3f[] P = paramSet.FindPoint3f("P");
+                Point2f[] uvs = paramSet.FindPoint2f("uv");
+                if (uvs == null) uvs = paramSet.FindPoint2f("st");
+                if (uvs == null) {
+                    Float[] fuv = paramSet.FindFloat("uv");
+                    if (fuv == null) fuv = paramSet.FindFloat("st");
+                    if (fuv != null) {
+                        Point2f[] tempUVs = new Point2f[uvs.length/2];
+                        for (int i = 0; i < tempUVs.length; ++i)
+                            tempUVs[i] = new Point2f(fuv[2 * i], fuv[2 * i + 1]);
+                        uvs = tempUVs;
                     }
                 }
-             Normal3f[] N = paramSet.FindNormal3f("N", &nni);
-             Vector3f[] S = paramSet.FindVector3f("S", &nsi);
+                Normal3f[] N = paramSet.FindNormal3f("N");
+                Vector3f[] S = paramSet.FindVector3f("S");
 
                 if (!WritePlyFile(fn, nvi / 3, vi, npi, P, S, N, uvs))
                     Error.Error("Unable to write PLY file \"%s\"", fn);
@@ -210,14 +217,12 @@ public class Api {
 
                 String alphaTex = paramSet.FindTexture("alpha");
                 if (alphaTex != "")
-                    printf("\n%*s\"texture alpha\" \"%s\" ", catIndentCount + 8, "",
-                            alphaTex);
+                    printf("\n%*s\"texture alpha\" \"%s\" ", catIndentCount + 8, "", alphaTex);
                 else {
                     int count;
-                 float[] alpha = paramSet.FindFloat("alpha", &count);
-                    if (alpha)
-                        printf("\n%*s\"float alpha\" %f ", catIndentCount + 8, "",
-                                *alpha);
+                    float[] alpha = paramSet.FindFloat("alpha");
+                    if (alpha != null)
+                        printf("\n%*s\"float alpha\" %f ", catIndentCount + 8, "", alpha[0]);
                 }
 
                 String shadowAlphaTex = paramSet.FindTexture("shadowalpha");
@@ -226,56 +231,52 @@ public class Api {
                             catIndentCount + 8, "", shadowAlphaTex);
                 else {
                     int count;
-                    float[] alpha = paramSet.FindFloat("shadowalpha", &count);
-                    if (alpha)
-                        printf("\n%*s\"float shadowalpha\" %f ", catIndentCount + 8,
-                                "", *alpha);
+                    float[] alpha = paramSet.FindFloat("shadowalpha");
+                    if (alpha != null)
+                        printf("\n%*s\"float shadowalpha\" %f ", catIndentCount + 8, "", alpha[0]);
                 }
                 printf("\n");
-            } else
-                shapes = CreateTriangleMeshShape(object2world, world2object,
-                        reverseOrientation, paramSet,
-                        &graphicsState.floatTextures);
-        } else if (name == "plymesh")
-            shapes = CreatePLYMesh(object2world, world2object, reverseOrientation,
-                    paramSet, &graphicsState.floatTextures);
-    else if (name == "heightfield")
-            shapes = CreateHeightfield(object2world, world2object,
-                    reverseOrientation, paramSet);
+                */
+            }
+            else {
+                shapes.addAll(Triangle.Create(object2world, world2object, reverseOrientation, paramSet, graphicsState.floatTextures));
+            }
+        }
+        else if (name == "plymesh")
+            shapes.addAll(PlyMesh.Create(object2world, world2object, reverseOrientation, paramSet, graphicsState.floatTextures));
+        else if (name == "heightfield")
+            shapes.addAll(HeightField.Create(object2world, world2object, reverseOrientation, paramSet));
         else if (name == "loopsubdiv")
-            shapes = CreateLoopSubdiv(object2world, world2object,
-                    reverseOrientation, paramSet);
+            shapes.addAll(LoopSubdiv.Create(object2world, world2object, reverseOrientation, paramSet));
         else if (name == "nurbs")
-            shapes = CreateNURBS(object2world, world2object, reverseOrientation,
-                    paramSet);
+            shapes.addAll(NURBS.Create(object2world, world2object, reverseOrientation, paramSet));
         else
             Error.Warning("Shape \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return shapes;
     }
 
-    Material MakeMaterial(String name,
-                                        TextureParams mp) {
+    Material MakeMaterial(String name, TextureParams mp) {
         Material material = null;
         if (name == "" || name == "none")
             return null;
         else if (name == "matte")
-            material = CreateMatteMaterial(mp);
+            material = Matte.Create(mp);
         else if (name == "plastic")
-            material = CreatePlasticMaterial(mp);
+            material = Plastic.Create(mp);
         else if (name == "translucent")
-            material = CreateTranslucentMaterial(mp);
+            material = Translucent.Create(mp);
         else if (name == "glass")
-            material = CreateGlassMaterial(mp);
+            material = Glass.Create(mp);
         else if (name == "mirror")
-            material = CreateMirrorMaterial(mp);
+            material = Mirror.Create(mp);
         else if (name == "hair")
-            material = CreateHairMaterial(mp);
+            material = Hair.Create(mp);
         else if (name == "mix") {
             String m1 = mp.FindString("namedmaterial1", "");
             String m2 = mp.FindString("namedmaterial2", "");
-            Material mat1 = graphicsState.namedMaterials[m1];
-            Material mat2 = graphicsState.namedMaterials[m2];
+            Material mat1 = graphicsState.namedMaterials.get(m1);
+            Material mat2 = graphicsState.namedMaterials.get(m2);
             if (mat1 == null) {
                 Error.Error("Named material \"%s\" undefined.  Using \"matte\"",
                         m1);
@@ -287,42 +288,36 @@ public class Api {
                 mat2 = MakeMaterial("matte", mp);
             }
 
-            material = CreateMixMaterial(mp, mat1, mat2);
+            material = MixMat.Create(mp, mat1, mat2);
         } else if (name == "metal")
-            material = CreateMetalMaterial(mp);
+            material = Metal.Create(mp);
         else if (name == "substrate")
-            material = CreateSubstrateMaterial(mp);
+            material = Substrate.Create(mp);
         else if (name == "uber")
-            material = CreateUberMaterial(mp);
+            material = Uber.Create(mp);
         else if (name == "subsurface")
-            material = CreateSubsurfaceMaterial(mp);
+            material = Subsurface.Create(mp);
         else if (name == "kdsubsurface")
-            material = CreateKdSubsurfaceMaterial(mp);
+            material = KdSubsurface.Create(mp);
         else if (name == "fourier")
-            material = CreateFourierMaterial(mp);
+            material = Fourier.Create(mp);
         else {
             Error.Warning("Material \"%s\" unknown. Using \"matte\".", name);
-            material = CreateMatteMaterial(mp);
+            material = Matte.Create(mp);
         }
 
-        if ((name == "subsurface" || name == "kdsubsurface") &&
-                (renderOptions->IntegratorName != "path" &&
-                        (renderOptions->IntegratorName != "volpath")))
-            Error.Warning(
-                    "Subsurface scattering material \"%s\" used, but \"%s\" "
-                    "integrator doesn't support subsurface scattering. "
-                    "Use \"path\" or \"volpath\".",
-                    name, renderOptions->IntegratorName);
-
+        if ((name == "subsurface" || name == "kdsubsurface") && (renderOptions.IntegratorName != "path" && (renderOptions.IntegratorName != "volpath"))) {
+            Error.Warning("Subsurface scattering material \"%s\" used, but \"%s\" integrator doesn't support subsurface scattering. Use \"path\" or \"volpath\".",
+                    name, renderOptions.IntegratorName);
+        }
         mp.ReportUnused();
-        if (!material) Error("Unable to create material \"%s\"", name);
-        else ++nMaterialsCreated;
+        if (material == null) Error.Error("Unable to create material \"%s\"", name);
+        else
+            ++nMaterialsCreated;
         return material;
     }
 
-    Texture<Float> MakeFloatTexture(String name,
-                                                  Transform tex2world,
-                                                  TextureParams tp) {
+    Texture<Float> MakeFloatTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Float> tex = null;
         if (name == "constant")
             tex = CreateConstantFloatTexture(tex2world, tp);
@@ -354,9 +349,7 @@ public class Api {
         return tex;
     }
 
-    Texture<Spectrum> MakeSpectrumTexture(
-     String name,  Transform tex2world,
-     TextureParams tp) {
+    Texture<Spectrum> MakeSpectrumTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Spectrum> tex = null;
         if (name == "constant")
             tex = CreateConstantSpectrumTexture(tex2world, tp);
@@ -388,99 +381,75 @@ public class Api {
         return tex;
     }
 
-    Medium MakeMedium( String name,
-                                    ParamSet paramSet,
-                                    Transform medium2world) {
-        Float sig_a_rgb[3] = {.0011f, .0024f, .014f},
-        sig_s_rgb[3] = {2.55f, 3.21f, 3.77f};
+    Medium MakeMedium(String name, ParamSet paramSet, Transform medium2world) {
+        float sig_a_rgb[] = {.0011f, .0024f, .014f}, sig_s_rgb[] = {2.55f, 3.21f, 3.77f};
         Spectrum sig_a = Spectrum.FromRGB(sig_a_rgb),
-                sig_s = Spectrum.FromRGB(sig_s_rgb);
+                 sig_s = Spectrum.FromRGB(sig_s_rgb);
         String preset = paramSet.FindOneString("preset", "");
         boolean found = GetMediumScatteringProperties(preset, &sig_a, &sig_s);
         if (preset != "" && !found)
-            Error.Warning("Material preset \"%s\" not found.  Using defaults.",
-                    preset);
-        Float scale = paramSet.FindOneFloat("scale", 1.f);
-        Float g = paramSet.FindOneFloat("g", 0.0f);
-        sig_a = paramSet.FindOneSpectrum("sigma_a", sig_a) * scale;
-        sig_s = paramSet.FindOneSpectrum("sigma_s", sig_s) * scale;
+            Error.Warning("Material preset \"%s\" not found.  Using defaults.", preset);
+        float scale = paramSet.FindOneFloat("scale", 1.f);
+        float g = paramSet.FindOneFloat("g", 0.0f);
+        sig_a = paramSet.FindOneSpectrum("sigma_a", sig_a).scale(scale);
+        sig_s = paramSet.FindOneSpectrum("sigma_s", sig_s).scale(scale);
         Medium m = null;
         if (name == "homogeneous") {
             m = new HomogeneousMedium(sig_a, sig_s, g);
         } else if (name == "heterogeneous") {
-            int nitems;
-         Float *data = paramSet.FindFloat("density", &nitems);
-            if (!data) {
+            Float[] data = paramSet.FindFloat("density");
+            if (data == null) {
                 Error.Error("No \"density\" values provided for heterogeneous medium?");
                 return null;
             }
             int nx = paramSet.FindOneInt("nx", 1);
             int ny = paramSet.FindOneInt("ny", 1);
             int nz = paramSet.FindOneInt("nz", 1);
-            Point3f p0 = paramSet.FindOnePoint3f("p0", Point3f(0.f, 0.f, 0.f));
-            Point3f p1 = paramSet.FindOnePoint3f("p1", Point3f(1.f, 1.f, 1.f));
-            if (nitems != nx * ny * nz) {
-                Error.Error(
-                        "GridDensityMedium has %d density values; expected nx*ny*nz = "
-                        "%d",
-                        nitems, nx * ny * nz);
+            Point3f p0 = paramSet.FindOnePoint3f("p0", new Point3f(0.f, 0.f, 0.f));
+            Point3f p1 = paramSet.FindOnePoint3f("p1", new Point3f(1.f, 1.f, 1.f));
+            if (data.length != nx * ny * nz) {
+                Error.Error("GridDensityMedium has %d density values; expected nx*ny*nz = %d", data.length, nx * ny * nz);
                 return null;
             }
-            Transform data2Medium = Translate(Vector3f(p0)) *
-                    Scale(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z);
-            m = new GridDensityMedium(sig_a, sig_s, g, nx, ny, nz,
-                    medium2world * data2Medium, data);
+            Transform data2Medium = Transform.Translate(new Vector3f(p0)).concatenate(Transform.Scale(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z));
+            m = new GridDensityMedium(sig_a, sig_s, g, nx, ny, nz, medium2world.concatenate(data2Medium), data);
         } else
             Error.Warning("Medium \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return m;
     }
 
-    Light MakeLight( String name,
-                                  ParamSet paramSet,
-                                  Transform light2world,
-                                  MediumInterface mediumInterface) {
+    Light MakeLight(String name,ParamSet paramSet, Transform light2world, MediumInterface mediumInterface) {
         Light light = null;
         if (name == "point")
-            light =
-                    CreatePointLight(light2world, mediumInterface.outside, paramSet);
+            light = Point.Create(light2world, mediumInterface.outside, paramSet);
         else if (name == "spot")
-            light = CreateSpotLight(light2world, mediumInterface.outside, paramSet);
+            light = Spot.Create(light2world, mediumInterface.outside, paramSet);
         else if (name == "goniometric")
-            light = CreateGoniometricLight(light2world, mediumInterface.outside,
-                    paramSet);
+            light = Goniometric.Create(light2world, mediumInterface.outside, paramSet);
         else if (name == "projection")
-            light = CreateProjectionLight(light2world, mediumInterface.outside,
-                    paramSet);
+            light = Projection.Create(light2world, mediumInterface.outside, paramSet);
         else if (name == "distant")
-            light = CreateDistantLight(light2world, paramSet);
+            light = Distant.Create(light2world, paramSet);
         else if (name == "infinite" || name == "exinfinite")
-            light = CreateInfiniteLight(light2world, paramSet);
+            light = Infinite.Create(light2world, paramSet);
         else
             Error.Warning("Light \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return light;
     }
 
-    AreaLight MakeAreaLight(String name,
-                                          Transform light2world,
-                                          MediumInterface mediumInterface,
-                                          ParamSet paramSet,
-                                         Shape shape) {
+    AreaLight MakeAreaLight(String name, Transform light2world, MediumInterface mediumInterface, ParamSet paramSet, Shape shape) {
         AreaLight area = null;
         if (name == "area" || name == "diffuse")
-            area = CreateDiffuseAreaLight(light2world, mediumInterface.outside,
-                    paramSet, shape);
+            area = Diffuse.Create(light2world, mediumInterface.outside, paramSet, shape);
         else
             Error.Warning("Area light \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return area;
     }
 
-    Primitive MakeAccelerator(
-     String name,
-    const std::vector<std::shared_ptr<Primitive>> &prims,
-     ParamSet paramSet) {
+    Primitive MakeAccelerator(String name, Primitive[] prims, ParamSet paramSet) {
         Primitive accel = null;
         if (name == "bvh")
             accel = CreateBVHAccelerator(prims, paramSet);
@@ -492,39 +461,27 @@ public class Api {
         return accel;
     }
 
-    Camera MakeCamera( String name,  ParamSet paramSet,
-                    TransformSet cam2worldSet, float transformStart,
-                       float transformEnd, Film film) {
+    Camera MakeCamera(String name, ParamSet paramSet, TransformSet cam2worldSet, float transformStart, float transformEnd, Film film) {
         Camera camera = null;
         MediumInterface mediumInterface = graphicsState.CreateMediumInterface();
-        static_assert(MaxTransforms == 2,
-                "TransformCache assumes only two transforms");
-        Transform cam2world[2];
-        transformCache.Lookup(cam2worldSet[0], &cam2world[0], null);
-        transformCache.Lookup(cam2worldSet[1], &cam2world[1], null);
-        AnimatedTransform animatedCam2World(cam2world[0], transformStart,
-                cam2world[1], transformEnd);
+        TransformCache.TransformPair c2w0 = transformCache.Lookup(cam2worldSet.at(0));
+        TransformCache.TransformPair c2w1 = transformCache.Lookup(cam2worldSet.at(1));
+        AnimatedTransform animatedCam2World = new AnimatedTransform(c2w0.t, transformStart, c2w1.t, transformEnd);
         if (name == "perspective")
-            camera = CreatePerspectiveCamera(paramSet, animatedCam2World, film,
-                    mediumInterface.outside);
+            camera = CreatePerspectiveCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
         else if (name == "orthographic")
-            camera = CreateOrthographicCamera(paramSet, animatedCam2World, film,
-                    mediumInterface.outside);
+            camera = CreateOrthographicCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
         else if (name == "realistic")
-            camera = CreateRealisticCamera(paramSet, animatedCam2World, film,
-                    mediumInterface.outside);
+            camera = CreateRealisticCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
         else if (name == "environment")
-            camera = CreateEnvironmentCamera(paramSet, animatedCam2World, film,
-                    mediumInterface.outside);
+            camera = CreateEnvironmentCamera(paramSet, animatedCam2World, film, mediumInterface.outside);
         else
             Error.Warning("Camera \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return camera;
     }
 
-    Sampler MakeSampler( String name,
-                                      ParamSet paramSet,
-                                      Film film) {
+    Sampler MakeSampler(String name, ParamSet paramSet, Film film) {
         Sampler sampler = null;
         if (name == "lowdiscrepancy" || name == "02sequence")
             sampler = CreateZeroTwoSequenceSampler(paramSet);
@@ -544,8 +501,7 @@ public class Api {
         return sampler;
     }
 
-    Filter MakeFilter( String name,
-                                    ParamSet paramSet) {
+    Filter MakeFilter(String name, ParamSet paramSet) {
         Filter filter = null;
         if (name == "box")
             filter = CreateBoxFilter(paramSet);
@@ -559,14 +515,12 @@ public class Api {
             filter = CreateTriangleFilter(paramSet);
         else {
             Error.Error("Filter \"%s\" unknown.", name);
-            exit(1);
         }
         paramSet.ReportUnused();
         return filter;
     }
 
-    Film MakeFilm(String name,  ParamSet paramSet,
-                   Filter filter) {
+    Film MakeFilm(String name, ParamSet paramSet, Filter filter) {
         Film film = null;
         if (name == "image")
             film = CreateFilm(paramSet, filter);
@@ -582,15 +536,15 @@ public class Api {
         Pbrt.options = opt;
 
         // API Initialization
-        if (currentApiState != APIState::Uninitialized)
-            Error("pbrtInit() has already been called.");
-        currentApiState = APIState::OptionsBlock;
-        renderOptions.reset(new RenderOptions);
-        graphicsState = GraphicsState();
+        if (currentApiState != APIState.Uninitialized)
+            Error.Error("pbrtInit() has already been called.");
+        currentApiState = APIState.OptionsBlock;
+        renderOptions = new RenderOptions();
+        graphicsState = new GraphicsState();
         catIndentCount = 0;
 
         // General \pbrt Initialization
-        SampledSpectrum::Init();
+        SampledSpectrum.Init();
         ParallelInit();  // Threads must be launched before the profiler is
         // initialized.
         InitProfiler();
