@@ -13,12 +13,11 @@ package org.pbrt.core;
 public abstract class Shape {
 
     public class HitResult {
-        public boolean hit;
-        public float tDist;
-        public Interaction interaction;
+        public float tHit;
+        public SurfaceInteraction isect;
     }
     public class SampleResult {
-        public Interaction interaction;
+        public SurfaceInteraction isect;
         public float pdf;
     }
 
@@ -46,13 +45,13 @@ public abstract class Shape {
     // Sample a point on the surface of the shape and return the PDF with
     // respect to area on the surface.
     public abstract SampleResult Sample(Point2f u);
-    public float Pdf(Interaction ref) { return 1.0f / Area(); }
+    public float Pdf(Interaction ref) { return 1 / Area(); }
 
     // Sample a point on the shape given a reference point |ref| and
     // return the PDF with respect to solid angle from |ref|.
     public SampleResult Sample(Interaction ref, Point2f u) {
         SampleResult result = Sample(u);
-        Vector3f wi = result.interaction.p.subtract(ref.p);
+        Vector3f wi = result.isect.p.subtract(ref.p);
         if (wi.LengthSquared() == 0) {
             result.pdf = 0;
         }
@@ -60,8 +59,8 @@ public abstract class Shape {
             wi = Vector3f.Normalize(wi);
             // Convert from area measure, as returned by the Sample() call
             // above, to solid angle measure.
-            result.pdf *= Point3f.DistanceSquared(ref.p, result.interaction.p) / Normal3f.AbsDot(result.interaction.n, wi.negate());
-            if (Float.isInfinite(result.pdf)) result.pdf = 0.0f;
+            result.pdf *= Point3f.DistanceSquared(ref.p, result.isect.p) / Normal3f.AbsDot(result.isect.n, wi.negate());
+            if (Float.isInfinite(result.pdf)) result.pdf = 0;
         }
         return result;
     }
@@ -72,12 +71,12 @@ public abstract class Shape {
         // this intersection. Hack for the "San Miguel" scene, where this is used
         // to make an invisible area light.
         HitResult hit = Intersect(ray, false);
-        if (!hit.hit)
-            return 0.0f;
+        if (hit == null)
+            return 0;
 
         // Convert light sample weight to solid angle measure
-        float pdf = Point3f.DistanceSquared(ref.p, hit.interaction.p) / (Normal3f.AbsDot(hit.interaction.n, wi.negate()) * Area());
-        if (Float.isInfinite(pdf)) pdf = 0.0f;
+        float pdf = Point3f.DistanceSquared(ref.p, hit.isect.p) / (Normal3f.AbsDot(hit.isect.n, wi.negate()) * Area());
+        if (Float.isInfinite(pdf)) pdf = 0;
         return pdf;
     }
 
@@ -92,7 +91,7 @@ public abstract class Shape {
         for (int i = 0; i < nSamples; ++i) {
             Point2f u = new Point2f(LowDiscrepancy.RadicalInverse(0, i), LowDiscrepancy.RadicalInverse(1, i));
             SampleResult res = Sample(ref, u);
-            if (res.pdf > 0 && !IntersectP(new Ray(p, res.interaction.p.subtract(p), 0.999f, 0.0f, null), true)) {
+            if (res.pdf > 0 && !IntersectP(new Ray(p, res.isect.p.subtract(p), 0.999f, 0.0f, null), true)) {
                 solidAngle += 1 / res.pdf;
             }
         }

@@ -36,6 +36,11 @@ public class Api {
             assert (i < MaxTransforms);
             return t[i];
         }
+        public void set(int i, Transform t) {
+            assert (i >= 0);
+            assert (i < MaxTransforms);
+            this.t[i] = t;
+        }
         public static TransformSet Inverse(TransformSet ts) {
             TransformSet tInv = new TransformSet();
             for (int i = 0; i < MaxTransforms; ++i) tInv.t[i] = Transform.Inverse(ts.t[i]);
@@ -217,30 +222,30 @@ public class Api {
                 if (!WritePlyFile(fn, nvi / 3, vi, npi, P, S, N, uvs))
                     Error.Error("Unable to write PLY file \"%s\"", fn);
 
-                printf("%*sShape \"plymesh\" \"string filename\" \"%s\" ",
+                System.out.format("%*sShape \"plymesh\" \"string filename\" \"%s\" ",
                         catIndentCount, "", fn);
 
                 String alphaTex = paramSet.FindTexture("alpha");
                 if (alphaTex != "")
-                    printf("\n%*s\"texture alpha\" \"%s\" ", catIndentCount + 8, "", alphaTex);
+                    System.out.format("\n%*s\"texture alpha\" \"%s\" ", catIndentCount + 8, "", alphaTex);
                 else {
                     int count;
                     float[] alpha = paramSet.FindFloat("alpha");
                     if (alpha != null)
-                        printf("\n%*s\"float alpha\" %f ", catIndentCount + 8, "", alpha[0]);
+                        System.out.format("\n%*s\"float alpha\" %f ", catIndentCount + 8, "", alpha[0]);
                 }
 
                 String shadowAlphaTex = paramSet.FindTexture("shadowalpha");
                 if (shadowAlphaTex != "")
-                    printf("\n%*s\"texture shadowalpha\" \"%s\" ",
+                    System.out.format("\n%*s\"texture shadowalpha\" \"%s\" ",
                             catIndentCount + 8, "", shadowAlphaTex);
                 else {
                     int count;
                     float[] alpha = paramSet.FindFloat("shadowalpha");
                     if (alpha != null)
-                        printf("\n%*s\"float shadowalpha\" %f ", catIndentCount + 8, "", alpha[0]);
+                        System.out.format("\n%*s\"float shadowalpha\" %f ", catIndentCount + 8, "", alpha[0]);
                 }
-                printf("\n");
+                System.out.format("\n");
                 */
             }
             else {
@@ -263,7 +268,7 @@ public class Api {
 
     private static int nMaterialsCreated = 0;
 
-    static Material MakeMaterial(String name, TextureParams mp) {
+    private static Material MakeMaterial(String name, TextureParams mp) {
         Material material = null;
         if (name == "" || name == "none")
             return null;
@@ -285,13 +290,11 @@ public class Api {
             Material mat1 = graphicsState.namedMaterials.get(m1);
             Material mat2 = graphicsState.namedMaterials.get(m2);
             if (mat1 == null) {
-                Error.Error("Named material \"%s\" undefined.  Using \"matte\"",
-                        m1);
+                Error.Error("Named material \"%s\" undefined.  Using \"matte\"", m1);
                 mat1 = MakeMaterial("matte", mp);
             }
             if (mat2 == null) {
-                Error.Error("Named material \"%s\" undefined.  Using \"matte\"",
-                        m2);
+                Error.Error("Named material \"%s\" undefined.  Using \"matte\"", m2);
                 mat2 = MakeMaterial("matte", mp);
             }
 
@@ -324,7 +327,7 @@ public class Api {
         return material;
     }
 
-    Texture<Float> MakeFloatTexture(String name, Transform tex2world, TextureParams tp) {
+    private static Texture<Float> MakeFloatTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Float> tex = null;
         if (name == "constant")
             tex = ConstantTexture.CreateFloat(tex2world, tp);
@@ -356,7 +359,7 @@ public class Api {
         return tex;
     }
 
-    Texture<Spectrum> MakeSpectrumTexture(String name, Transform tex2world, TextureParams tp) {
+    private static Texture<Spectrum> MakeSpectrumTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Spectrum> tex = null;
         if (name == "constant")
             tex = ConstantTexture.CreateSpectrum(tex2world, tp);
@@ -388,7 +391,7 @@ public class Api {
         return tex;
     }
 
-    Medium MakeMedium(String name, ParamSet paramSet, Transform medium2world) {
+    private static Medium MakeMedium(String name, ParamSet paramSet, Transform medium2world) {
         float sig_a_rgb[] = {.0011f, .0024f, .014f}, sig_s_rgb[] = {2.55f, 3.21f, 3.77f};
         Spectrum sig_a = Spectrum.FromRGB(sig_a_rgb),
                  sig_s = Spectrum.FromRGB(sig_s_rgb);
@@ -432,7 +435,7 @@ public class Api {
         return m;
     }
 
-    Light MakeLight(String name,ParamSet paramSet, Transform light2world, MediumInterface mediumInterface) {
+    private static Light MakeLight(String name,ParamSet paramSet, Transform light2world, MediumInterface mediumInterface) {
         Light light = null;
         if (name == "point")
             light = Point.Create(light2world, mediumInterface.outside, paramSet);
@@ -452,7 +455,7 @@ public class Api {
         return light;
     }
 
-    AreaLight MakeAreaLight(String name, Transform light2world, MediumInterface mediumInterface, ParamSet paramSet, Shape shape) {
+    private static AreaLight MakeAreaLight(String name, Transform light2world, MediumInterface mediumInterface, ParamSet paramSet, Shape shape) {
         AreaLight area = null;
         if (name == "area" || name == "diffuse")
             area = Diffuse.Create(light2world, mediumInterface.outside, paramSet, shape);
@@ -462,7 +465,7 @@ public class Api {
         return area;
     }
 
-    Primitive MakeAccelerator(String name, Primitive[] prims, ParamSet paramSet) {
+    private static Primitive MakeAccelerator(String name, Primitive[] prims, ParamSet paramSet) {
         Primitive accel = null;
         if (name == "bvh")
             accel = BVHAccel.Create(prims, paramSet);
@@ -474,7 +477,7 @@ public class Api {
         return accel;
     }
 
-    Camera MakeCamera(String name, ParamSet paramSet, TransformSet cam2worldSet, float transformStart, float transformEnd, Film film) {
+    private static Camera MakeCamera(String name, ParamSet paramSet, TransformSet cam2worldSet, float transformStart, float transformEnd, Film film) {
         Camera camera = null;
         MediumInterface mediumInterface = graphicsState.CreateMediumInterface();
         TransformCache.TransformPair c2w0 = transformCache.Lookup(cam2worldSet.at(0));
@@ -494,7 +497,7 @@ public class Api {
         return camera;
     }
 
-    Sampler MakeSampler(String name, ParamSet paramSet, Film film) {
+    private static Sampler MakeSampler(String name, ParamSet paramSet, Film film) {
         Sampler sampler = null;
         if (name == "lowdiscrepancy" || name == "02sequence")
             sampler = ZeroTwoSequence.Create(paramSet);
@@ -514,7 +517,7 @@ public class Api {
         return sampler;
     }
 
-    Filter MakeFilter(String name, ParamSet paramSet) {
+    private static Filter MakeFilter(String name, ParamSet paramSet) {
         Filter filter = null;
         if (name == "box")
             filter = BoxFilter.Create(paramSet);
@@ -533,7 +536,7 @@ public class Api {
         return filter;
     }
 
-    Film MakeFilm(String name, ParamSet paramSet, Filter filter) {
+    private static Film MakeFilm(String name, ParamSet paramSet, Filter filter) {
         Film film = null;
         if (name == "image")
             film = Film.Create(paramSet, filter);
@@ -564,15 +567,39 @@ public class Api {
     }
 
     public static void pbrtCleanup() {
-
+        // API Cleanup
+        if (currentApiState == APIState.Uninitialized)
+            Error.Error("pbrtCleanup() called without pbrtInit().");
+        else if (currentApiState == APIState.WorldBlock)
+            Error.Error("pbrtCleanup() called while inside world block.");
+        currentApiState = APIState.Uninitialized;
+        //ParallelCleanup();
+        renderOptions = null;
+        //CleanupProfiler();
     }
 
-    public static void pbrtIdentity() {
+    private static char[] spaces = new char[]{ ' ' };
 
+    public static void pbrtIdentity() {
+        VERIFY_INITIALIZED("Identity");
+        for (int i = 0; i < MaxTransforms; ++i) {
+            if ((activeTransformBits & (1 << i)) != 0) {
+                curTransform.set(i, new Transform());
+            }
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%sIdentity\n", new String(spaces, 0, catIndentCount));
     }
 
     public static void pbrtTranslate(float dx, float dy, float dz) {
-
+        VERIFY_INITIALIZED("Translate");
+        for (int i = 0; i < MaxTransforms; ++i) {
+            if ((activeTransformBits & (1 << i)) != 0) {
+                curTransform.set(i, curTransform.at(i).concatenate(Transform.Translate(new Vector3f(dx, dy, dz)));
+            }
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%sTranslate %.9g %.9g %.9g\n", new String(spaces, 0, catIndentCount), dx, dy, dz);
     }
 
     public static void pbrtRotate(float angle, float ax, float ay, float az) {
@@ -697,4 +724,9 @@ public class Api {
     public static void pbrtWorldEnd() {
     }
 
-}
+    private static void VERIFY_INITIALIZED(String func) {
+        if (!(Pbrt.options.Cat || Pbrt.options.ToPly) && currentApiState == APIState.Uninitialized) {
+            Error.Error("pbrtInit() must be before calling \"%s()\". Ignoring.", func);
+        }
+    }
+ }
