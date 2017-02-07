@@ -17,10 +17,10 @@ public abstract class Camera {
     public Film film;
     public Medium medium;
 
-    public class CameraSample {
-        Point2f pFilm;
-        Point2f pLens;
-        Float time;
+    public static class CameraSample {
+        public Point2f pFilm;
+        public Point2f pLens;
+        public float time;
     }
 
     // Camera Interface
@@ -43,7 +43,7 @@ public abstract class Camera {
     public void Pdf_We(Ray ray, float pdfPos, float pdfDir) {
 
     }
-    public Spectrum Sample_Wi(Interaction ref, Point2f u, Vector3f wi, float pdf, Point2f pRaster, VisibilityTester vis) {
+    public Spectrum Sample_Wi(Interaction ref, Point2f u, Vector3f wi, float pdf, Point2f pRaster, Light.VisibilityTester vis) {
         return null;
     }
 

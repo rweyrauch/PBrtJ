@@ -19,6 +19,9 @@ import org.pbrt.materials.*;
 import org.pbrt.lights.*;
 import org.pbrt.cameras.*;
 import org.pbrt.filters.*;
+import org.pbrt.samplers.*;
+import org.pbrt.accelerators.*;
+import org.pbrt.media.*;
 
 public class Api {
 
@@ -258,7 +261,9 @@ public class Api {
         return shapes;
     }
 
-    Material MakeMaterial(String name, TextureParams mp) {
+    private static int nMaterialsCreated = 0;
+
+    static Material MakeMaterial(String name, TextureParams mp) {
         Material material = null;
         if (name == "" || name == "none")
             return null;
@@ -388,13 +393,19 @@ public class Api {
         Spectrum sig_a = Spectrum.FromRGB(sig_a_rgb),
                  sig_s = Spectrum.FromRGB(sig_s_rgb);
         String preset = paramSet.FindOneString("preset", "");
-        boolean found = GetMediumScatteringProperties(preset, &sig_a, &sig_s);
-        if (preset != "" && !found)
+        Medium.ScatteringProps props = Medium.GetMediumScatteringProperties(preset);
+        if (preset != "" && props == null) {
             Error.Warning("Material preset \"%s\" not found.  Using defaults.", preset);
+        } else {
+            sig_a = props.sigma_a;
+            sig_s = props.sigma_s;
+        }
         float scale = paramSet.FindOneFloat("scale", 1.f);
         float g = paramSet.FindOneFloat("g", 0.0f);
-        sig_a = paramSet.FindOneSpectrum("sigma_a", sig_a).scale(scale);
-        sig_s = paramSet.FindOneSpectrum("sigma_s", sig_s).scale(scale);
+        sig_a = paramSet.FindOneSpectrum("sigma_a", sig_a);
+        sig_a.scale(scale);
+        sig_s = paramSet.FindOneSpectrum("sigma_s", sig_s);
+        sig_s.scale(scale);
         Medium m = null;
         if (name == "homogeneous") {
             m = new HomogeneousMedium(sig_a, sig_s, g);
@@ -454,9 +465,9 @@ public class Api {
     Primitive MakeAccelerator(String name, Primitive[] prims, ParamSet paramSet) {
         Primitive accel = null;
         if (name == "bvh")
-            accel = CreateBVHAccelerator(prims, paramSet);
+            accel = BVHAccel.Create(prims, paramSet);
         else if (name == "kdtree")
-            accel = CreateKdTreeAccelerator(prims, paramSet);
+            accel = KdTreeAccel.Create(prims, paramSet);
         else
             Error.Warning("Accelerator \"%s\" unknown.", name);
         paramSet.ReportUnused();
@@ -486,17 +497,17 @@ public class Api {
     Sampler MakeSampler(String name, ParamSet paramSet, Film film) {
         Sampler sampler = null;
         if (name == "lowdiscrepancy" || name == "02sequence")
-            sampler = CreateZeroTwoSequenceSampler(paramSet);
+            sampler = ZeroTwoSequence.Create(paramSet);
         else if (name == "maxmindist")
-            sampler = CreateMaxMinDistSampler(paramSet);
+            sampler = MaxMinSampler.Create(paramSet);
         else if (name == "halton")
-            sampler = CreateHaltonSampler(paramSet, film->GetSampleBounds());
+            sampler = HaltonSampler.Create(paramSet, film.GetSampleBounds());
         else if (name == "sobol")
-            sampler = CreateSobolSampler(paramSet, film->GetSampleBounds());
+            sampler = SobolSampler.Create(paramSet, film.GetSampleBounds());
         else if (name == "random")
-            sampler = CreateRandomSampler(paramSet);
+            sampler = RandomSampler.Create(paramSet);
         else if (name == "stratified")
-            sampler = CreateStratifiedSampler(paramSet);
+            sampler = StratifiedSampler.Create(paramSet);
         else
             Error.Warning("Sampler \"%s\" unknown.", name);
         paramSet.ReportUnused();
@@ -546,10 +557,10 @@ public class Api {
         catIndentCount = 0;
 
         // General \pbrt Initialization
-        SampledSpectrum.Init();
-        ParallelInit();  // Threads must be launched before the profiler is
+        //SampledSpectrum.Init();
+        //ParallelInit();  // Threads must be launched before the profiler is
         // initialized.
-        InitProfiler();
+        //InitProfiler();
     }
 
     public static void pbrtCleanup() {

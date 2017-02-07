@@ -28,6 +28,11 @@ public class Bounds2f {
         pMax = new Point2f(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
     }
 
+    public Bounds2f(Bounds2i b) {
+        pMin = new Point2f(b.pMin.x, b.pMin.y);
+        pMax = new Point2f(b.pMax.x, b.pMax.y);
+    }
+
     public Point2f at(int i) {
         assert (i == 0 || i == 1);
         return (i == 0) ? pMin : pMax;

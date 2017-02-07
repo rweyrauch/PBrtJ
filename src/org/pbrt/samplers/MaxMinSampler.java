@@ -14,9 +14,9 @@ import org.pbrt.core.ParamSet;
 import org.pbrt.core.Point2f;
 import org.pbrt.core.Sampler;
 
-public class ZeroTwoSequence extends Sampler {
+public class MaxMinSampler extends Sampler {
 
-    public ZeroTwoSequence(int samplesPerPixel) {
+    public MaxMinSampler(int samplesPerPixel) {
         super(samplesPerPixel);
     }
 
@@ -38,4 +38,5 @@ public class ZeroTwoSequence extends Sampler {
     public static Sampler Create(ParamSet paramSet) {
         return null;
     }
+
 }

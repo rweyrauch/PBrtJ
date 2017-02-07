@@ -15,15 +15,19 @@ public class Point2f {
     public float x, y;
 
     public Point2f(Point3f p) {
-        x = p.x;
-        y = p.y;
+        this.x = p.x;
+        this.y = p.y;
         assert (!HasNaNs());
     }
     public Point2f() { x = y = 0; }
-    public Point2f(float xx, float yy) {
-        x = xx;
-        y = yy;
+    public Point2f(float x, float y) {
+        this.x = x;
+        this.y = y;
         assert (!HasNaNs());
+    }
+    public Point2f(Point2i p) {
+        this.x = p.x;
+        this.y = p.y;
     }
 
     public Point2f add(Vector2f v) {
@@ -61,5 +65,13 @@ public class Point2f {
     public boolean equal(Point2f p) { return x == p.x && y == p.y; }
     public boolean notEqual(Point2f p) { return x != p.x || y != p.y; }
     public boolean HasNaNs() { return Float.isNaN(x) || Float.isNaN(y); }
+
+    public static Point2f Floor(Point2f p) {
+        return new Point2f((float) Math.floor(p.x), (float) Math.floor(p.y));
+    }
+
+    public static Point2f Ceil(Point2f p) {
+        return new Point2f((float) Math.ceil(p.x), (float) Math.ceil(p.y));
+    }
 
 }

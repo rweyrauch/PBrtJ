@@ -12,10 +12,10 @@ package org.pbrt.core;
 public class Ray {
 
     // Ray Public Data
-    Point3f o;
-    Vector3f d;
-    float tMax = Pbrt.Infinity;
-    float time = 0.0f;
+    public Point3f o;
+    public Vector3f d;
+    public float tMax = Pbrt.Infinity;
+    public float time = 0.0f;
     Medium medium = null;
 
     // Ray Public Methods

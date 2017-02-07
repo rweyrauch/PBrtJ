@@ -14,9 +14,9 @@ import org.pbrt.core.ParamSet;
 import org.pbrt.core.Point2f;
 import org.pbrt.core.Sampler;
 
-public class ZeroTwoSequence extends Sampler {
+public class RandomSampler extends Sampler {
 
-    public ZeroTwoSequence(int samplesPerPixel) {
+    public RandomSampler(int samplesPerPixel) {
         super(samplesPerPixel);
     }
 

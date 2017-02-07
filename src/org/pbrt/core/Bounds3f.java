@@ -86,7 +86,8 @@ public class Bounds3f {
     }
 
     public class BoundIntersect {
-        float hit0, hit1;
+        public float hit0;
+        public float hit1;
     }
     public BoundIntersect IntersectP(Ray ray) {
         float t0 = 0, t1 = ray.tMax;

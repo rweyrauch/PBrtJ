@@ -171,4 +171,9 @@ public class Vector3f {
         return (Dot(v, v2) < 0.f) ? v.negate() : v;
     }
 
+    public static Vector3f SphericalDirection(float sinTheta, float cosTheta, float phi, Vector3f x,  Vector3f y, Vector3f z) {
+        return x.scale(sinTheta * (float)Math.cos(phi)).add(y.scale(sinTheta * (float)Math.sin(phi))).add(z.scale(cosTheta));
+    }
+
+
 }

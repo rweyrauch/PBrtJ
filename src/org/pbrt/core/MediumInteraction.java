@@ -14,4 +14,14 @@ public class MediumInteraction extends Interaction {
     // MediumInteraction Public Data
     public PhaseFunction phase;
 
+    // MediumInteraction Public Methods
+    public MediumInteraction() { this.phase = null; }
+
+    public MediumInteraction(Point3f p, Vector3f wo, float time,
+                      Medium medium, PhaseFunction phase) {
+        super(p, wo, time, new MediumInterface(medium));
+        this.phase = phase;
+    }
+    boolean IsValid() { return phase != null; }
+
 }

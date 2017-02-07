@@ -10,6 +10,12 @@
 
 package org.pbrt.accelerators;
 
+import org.pbrt.core.ParamSet;
+import org.pbrt.core.Primitive;
+
 public class BVHAccel {
 
+    public static Primitive Create(Primitive[] prims, ParamSet paramSet) {
+        return null;
+    }
 }

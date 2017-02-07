@@ -29,6 +29,9 @@ public class CoefficientSpectrum {
             c[i] = v;
         }
     }
+    protected CoefficientSpectrum(CoefficientSpectrum cs) {
+        this.c = cs.c.clone();
+    }
 
     public void Print(PrintStream ps) {
         ps.print("[ ");
@@ -45,6 +48,16 @@ public class CoefficientSpectrum {
             this.c[i] += s2.c[i];
         }
     }
+    public static CoefficientSpectrum add(CoefficientSpectrum s1, CoefficientSpectrum s2) {
+        assert !s1.HasNaNs();
+        assert !s2.HasNaNs();
+        CoefficientSpectrum cs = new CoefficientSpectrum(0,s1.c.length);
+        for (int i = 0; i < s1.c.length; ++i) {
+            cs.c[i] = s1.c[i] + s2.c[i];
+        }
+        return cs;
+    }
+
     public void subtract(CoefficientSpectrum s2) {
         assert (!s2.HasNaNs());
         for (int i = 0; i < c.length; ++i) {
@@ -76,7 +89,11 @@ public class CoefficientSpectrum {
             this.c[i] /= a;
         }
     }
-
+    public static CoefficientSpectrum scale(CoefficientSpectrum cs, float scale) {
+        CoefficientSpectrum scs = new CoefficientSpectrum(cs);
+        scs.scale(scale);
+        return scs;
+    }
     public boolean equal(CoefficientSpectrum s2) {
         for (int i = 0; i < c.length; ++i) {
             if (c[i] != s2.c[i]) return false;

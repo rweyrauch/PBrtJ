@@ -10,13 +10,14 @@
 
 package org.pbrt.samplers;
 
+import org.pbrt.core.Bounds2i;
 import org.pbrt.core.ParamSet;
 import org.pbrt.core.Point2f;
 import org.pbrt.core.Sampler;
 
-public class ZeroTwoSequence extends Sampler {
+public class SobolSampler extends Sampler {
 
-    public ZeroTwoSequence(int samplesPerPixel) {
+    public SobolSampler(int samplesPerPixel) {
         super(samplesPerPixel);
     }
 
@@ -35,7 +36,7 @@ public class ZeroTwoSequence extends Sampler {
         return null;
     }
 
-    public static Sampler Create(ParamSet paramSet) {
+    public static Sampler Create(ParamSet paramSet, Bounds2i bounds2i) {
         return null;
     }
 }

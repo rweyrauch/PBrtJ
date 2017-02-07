@@ -13,7 +13,16 @@ import org.pbrt.core.*;
 
 public class EnvironmentCamera extends Camera {
 
+    public EnvironmentCamera(AnimatedTransform CameraToWorld, float shutterOpen, float shutterClose, Film film, Medium medium) {
+        super(CameraToWorld, shutterOpen, shutterClose, film, medium);
+    }
+
     public static Camera Create(ParamSet paramSet, AnimatedTransform animatedCam2World, Film film, Medium outside) {
         return null;
+    }
+
+    @Override
+    public float GenerateRay(CameraSample sample, Ray ray) {
+        return 0;
     }
 }

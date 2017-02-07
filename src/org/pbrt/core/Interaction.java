@@ -32,6 +32,17 @@ public class Interaction {
         this.n = n;
         this.mediumInterface = mediumInterface;
     }
+    public Interaction(Point3f p, Vector3f wo, float time, MediumInterface mediumInterface) {
+        this.p = p;
+        this.time = time;
+        this.wo = wo;
+        this.mediumInterface = mediumInterface;
+    }
+    public Interaction(Point3f p, float time, MediumInterface mediumInterface) {
+        this.p = p;
+        this.time = time;
+        this.mediumInterface = mediumInterface;
+    }
 
     public boolean IsSurfaceInteraction() { return n.x != 0.0f || n.y != 0.0f || n.z != 0.0f; }
     public Ray SpawnRay(Vector3f d) {
@@ -48,17 +59,6 @@ public class Interaction {
         Point3f target = Point3f.OffsetRayOrigin(it.p, it.pError, it.n, origin.subtract(it.p));
         Vector3f d = target.subtract(origin);
         return new Ray(origin, d, 1 - Pbrt.ShadowEpsilon, time, GetMedium(d));
-    }
-    public Interaction(Point3f p, Vector3f wo, float time, MediumInterface mediumInterface) {
-        this.p = p;
-        this.time = time;
-        this.wo = wo;
-        this.mediumInterface = mediumInterface;
-    }
-    public Interaction(Point3f p, float time, MediumInterface mediumInterface) {
-        this.p = p;
-        this.time = time;
-        this.mediumInterface = mediumInterface;
     }
     public boolean IsMediumInteraction() {
         return !IsSurfaceInteraction();

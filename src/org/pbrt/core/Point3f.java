@@ -32,6 +32,12 @@ public class Point3f {
         assert (!HasNaNs());
     }
 
+    public Point3f(Point3i pi) {
+        x = pi.x;
+        y = pi.y;
+        z = pi.z;
+    }
+
     public Point3f add(Vector3f v) {
         assert (!v.HasNaNs());
         return new Point3f(x + v.x, y + v.y, z + v.z);
