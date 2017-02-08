@@ -46,12 +46,12 @@ public abstract class Sampler {
         cs.pFilm = pRasterf.add(Get2D());
         cs.time = Get1D();
         cs.pLens = Get2D();
+        return cs;
     }
     public void Request1DArray(int n) {
         assert (RoundCount(n) == n);
         samples1DArraySizes.add(n);
         sampleArray1D.add(new Float[n * samplesPerPixel]);
-
     }
     public void Request2DArray(int n) {
         assert (RoundCount(n) == n);
@@ -64,13 +64,13 @@ public abstract class Sampler {
         if (array1DOffset == sampleArray1D.size()) return null;
         assert (samples1DArraySizes.get(array1DOffset) == n);
         assert (currentPixelSampleIndex < samplesPerPixel);
-        return sampleArray1D.get(array1DOffset++)[currentPixelSampleIndex * n];
+        return null; //sampleArray1D.get(array1DOffset++)[currentPixelSampleIndex * n];
     }
     public Point2f[] Get2DArray(int n) {
         if (array2DOffset == sampleArray2D.size()) return null;
         assert (samples2DArraySizes.get(array2DOffset) == n);
         assert (currentPixelSampleIndex < samplesPerPixel);
-        return sampleArray2D.get(array2DOffset++)[currentPixelSampleIndex * n];
+        return null; //sampleArray2D.get(array2DOffset++)[currentPixelSampleIndex * n];
     }
     public boolean StartNextSample() {
         // Reset array offsets for next pixel sample

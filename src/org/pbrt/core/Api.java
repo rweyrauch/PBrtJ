@@ -595,7 +595,7 @@ public class Api {
         VERIFY_INITIALIZED("Translate");
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform.set(i, curTransform.at(i).concatenate(Transform.Translate(new Vector3f(dx, dy, dz)));
+                curTransform.set(i, curTransform.at(i).concatenate(Transform.Translate(new Vector3f(dx, dy, dz))));
             }
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly)

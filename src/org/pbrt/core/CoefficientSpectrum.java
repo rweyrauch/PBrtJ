@@ -170,6 +170,9 @@ public class CoefficientSpectrum {
         throw new NotImplementedException("TODO");
     }
 
+    public int numSamples() {
+        return c.length;
+    }
     public void set(int i, float v) {
         assert (i >= 0 && i < c.length);
         c[i] = v;

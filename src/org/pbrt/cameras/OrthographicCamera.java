@@ -18,12 +18,12 @@ public class OrthographicCamera extends Camera {
         super(CameraToWorld, shutterOpen, shutterClose, film, medium);
     }
 
-    public static Camera Create(ParamSet paramSet, AnimatedTransform animatedCam2World, Film film, Medium outside) {
+    @Override
+    public CameraRay GenerateRay(CameraSample sample) {
         return null;
     }
 
-    @Override
-    public float GenerateRay(CameraSample sample, Ray ray) {
-        return 0;
+    public static Camera Create(ParamSet paramSet, AnimatedTransform animatedCam2World, Film film, Medium outside) {
+        return null;
     }
 }

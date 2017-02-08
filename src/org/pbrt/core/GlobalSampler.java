@@ -41,7 +41,7 @@ public abstract class GlobalSampler extends Sampler {
             int nSamples = samples1DArraySizes.get(i) * samplesPerPixel;
             for (int j = 0; j < nSamples; ++j) {
                 long index = GetIndexForSample(j);
-                sampleArray1D[i][j] = SampleDimension(index, arrayStartDim + i);
+                //sampleArray1D[i][j] = SampleDimension(index, arrayStartDim + i);
             }
         }
 
@@ -51,8 +51,8 @@ public abstract class GlobalSampler extends Sampler {
             int nSamples = samples2DArraySizes.get(i) * samplesPerPixel;
             for (int j = 0; j < nSamples; ++j) {
                 int idx = GetIndexForSample(j);
-                sampleArray2D[i][j].x = SampleDimension(idx, dim);
-                sampleArray2D[i][j].y = SampleDimension(idx, dim + 1);
+                //sampleArray2D[i][j].x = SampleDimension(idx, dim);
+                //sampleArray2D[i][j].y = SampleDimension(idx, dim + 1);
             }
             dim += 2;
         }

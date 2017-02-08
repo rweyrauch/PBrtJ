@@ -18,9 +18,9 @@ public class SurfaceInteraction extends Interaction {
     public Shape shape = null;
 
     public class Shading {
-        Normal3f n;
-        Vector3f dpdu, dpdv;
-        Normal3f dndu, dndv;
+        public Normal3f n;
+        public Vector3f dpdu, dpdv;
+        public Normal3f dndu, dndv;
     }
     public Shading shading = new Shading();
     public Primitive primitive = null;

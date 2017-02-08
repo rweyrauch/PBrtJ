@@ -13,6 +13,8 @@ import org.apache.commons.lang.NotImplementedException;
 
 public class Spectrum extends CoefficientSpectrum {
 
+    public static final int nSamples = 3;
+
     public static final int sampledLambdaStart = 400;
     public static final int sampledLambdaEnd = 700;
     public static final int nSpectralSamples = 60;
@@ -871,7 +873,7 @@ public class Spectrum extends CoefficientSpectrum {
             825, 826, 827, 828, 829, 830};
 
     public Spectrum(float v) {
-        super(v, 3);
+        super(v, nSamples);
     }
 
     public static Spectrum FromRGB(float[] rgb) {
@@ -884,7 +886,7 @@ public class Spectrum extends CoefficientSpectrum {
     }
 
     public float[] ToRGB() {
-        float[] rgb = new float[3];
+        float[] rgb = new float[nSamples];
         rgb[0] = c[0];
         rgb[1] = c[1];
         rgb[2] = c[2];

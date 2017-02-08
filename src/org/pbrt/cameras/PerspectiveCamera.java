@@ -18,12 +18,13 @@ public class PerspectiveCamera extends Camera {
         super(CameraToWorld, shutterOpen, shutterClose, film, medium);
     }
 
+    @Override
+    public CameraRay GenerateRay(CameraSample sample) {
+        return null;
+    }
+
     public static Camera Create(ParamSet paramSet, AnimatedTransform animatedCam2World, Film film, Medium outside) {
         return null;
     }
 
-    @Override
-    public float GenerateRay(CameraSample sample, Ray ray) {
-        return 0;
-    }
 }
