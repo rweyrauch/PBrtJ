@@ -14,4 +14,8 @@ public class Parser {
     public static boolean ParseFile(String filename) {
         return false;
     }
+
+    public static void PushInclude(String filename) {
+        Error.Warning("Parser does not support include statement yet.");
+    }
 }

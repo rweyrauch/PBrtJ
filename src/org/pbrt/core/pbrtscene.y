@@ -154,7 +154,7 @@ pbrt_stmt_list
 pbrt_stmt
 	: ACCELERATOR STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtAccelerator($2, params);
@@ -174,7 +174,7 @@ pbrt_stmt
 	}
 	| AREALIGHTSOURCE STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_ILLUMINANT)
 			Api.pbrtAreaLightSource($2, params);
@@ -190,7 +190,7 @@ pbrt_stmt
 	}
 	| CAMERA STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtCamera($2, params);
@@ -199,7 +199,7 @@ pbrt_stmt
 	| CONCATTRANSFORM number_array
 	{
 		ArrayList<Float> values = $2;
-		if (values.length == 16) {
+		if (values.size() == 16) {
 			float[] matrix = new float[16];
 			for (int i = 0; i < 16; i++) {
 				matrix[i] = values.get(i);
@@ -221,7 +221,7 @@ pbrt_stmt
 	}
 	| FILM STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtFilm($2, params);
@@ -233,11 +233,12 @@ pbrt_stmt
 	}
 	| INCLUDE STRING
 	{
-		include_push($2, yylex)
+		//include_push($2, yylex)
+		Parser.PushInclude($2);
 	}
 	| LIGHTSOURCE STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_ILLUMINANT)
 			Api.pbrtLightSource($2, params);
@@ -252,7 +253,7 @@ pbrt_stmt
 	}
 	| MAKENAMEDMATERIAL STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtMakeNamedMaterial($2, params);
@@ -260,7 +261,7 @@ pbrt_stmt
 	}
 	| MATERIAL STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 	    	Api.pbrtMaterial($2, params);
@@ -292,7 +293,7 @@ pbrt_stmt
 	}
 	| PIXELFILTER STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
     		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtPixelFilter($2, params);
@@ -308,7 +309,7 @@ pbrt_stmt
 	}	
 	| SAMPLER STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
     		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtSampler($2, params);
@@ -320,7 +321,7 @@ pbrt_stmt
 	}	
 	| SHAPE STRING param_list
 	{
-		ParamSet params = splitParamList($3);
+		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
     		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtShape($2, params);
@@ -328,7 +329,7 @@ pbrt_stmt
 	}
 	| INTEGRATOR STRING param_list
 	{
- 		ParamSet params = splitParamList($3);
+ 		ParamSet params = PbrtParameter.CreateParamSet($3);
 		if (params != null) {
   	  		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtIntegrator($2, params);
@@ -336,7 +337,7 @@ pbrt_stmt
 	}
 	| TEXTURE STRING STRING STRING param_list
 	{
-		ParamSet params = splitParamList($5);
+		ParamSet params = PbrtParameter.CreateParamSet($5);
 		if (params != null) {
 	   	 	//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtTexture($2, $3, $4, params);
@@ -386,45 +387,110 @@ pbrt_stmt
 
 class PbrtParameter {
 
+    public String type;
     public String name;
     public Object value;
 
-    public PbrtParameter(String name, Object value) {
-        this.name = name;
+    public PbrtParameter(String typename, Object value) {
+        String[] tokens = typename.split(" ");
+        assert tokens.length == 2;
+        this.type = tokens[0];
+        this.name = tokens[1];
         this.value = value;
     }
 
-    public static ParamSet splitParamList(ArrayList<PbrtParameter> paramlist) {
+    public static ParamSet CreateParamSet(ArrayList<PbrtParameter> paramlist) {
         if (paramlist == null) return null;
 
         ParamSet pset = new ParamSet();
         for (PbrtParameter param : paramlist) {
-            if (param.value instanceof Integer[]) {
-                pset.AddInt(param.name, (Integer[])param.value);
+            if (param.type == "int") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
             }
-            else if (param.value instanceof Float[]) {
-                pset.AddFloat(param.name, (Float[])param.value);
+            else if (param.type == "bool") {
+
             }
-            else if (param.value instanceof Boolean[]) {
-                pset.AddBoolean(param.name, (Boolean[])param.value);
+            else if (param.type == "float") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
             }
-            else if (param.value instanceof Point2f[]) {
-                pset.AddPoint2f(param.name, (Point2f[])param.value);
+            else if (param.type == "point2") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
             }
-            else if (param.value instanceof Vector2f[]) {
-                pset.AddVector2f(param.name, (Vector2f[])param.value);
+            else if (param.type == "vector2") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
             }
-            else if (param.value instanceof Point3f[]) {
-                pset.AddPoint3f(param.name, (Point3f[])param.value);
+            else if (param.type == "point3") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
             }
-            else if (param.value instanceof Vector3f[]) {
-                pset.AddVector3f(param.name, (Vector3f[])param.value);
+            else if (param.type == "vector3") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
             }
-            else if (param.value instanceof Normal3f[]) {
-                pset.AddNormal3f(param.name, (Normal3f[])param.value);
+            else if (param.type == "normal") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
             }
-            else if (param.value instanceof String[]) {
-                pset.AddString(param.name, (String[])param.value);
+            else if (param.type == "color") {
+                if (param.value instanceof Float[]) {
+                }
+                else {
+                    Error.Error("Unexpected value array type.\n");
+                }
+            }
+            else if (param.type == "rgb") {
+              if (param.value instanceof Float[]) {
+              }
+              else {
+                  Error.Error("Unexpected value array type.\n");
+                }
+            }
+            else if (param.type == "xyz") {
+               if (param.value instanceof Float[]) {
+               }
+               else {
+                   Error.Error("Unexpected value array type.\n");
+                }
+            }
+            else if (param.type == "blackbody") {
+
+            }
+            else if (param.type == "spectrum") {
+
+            }
+            else if (param.type == "string") {
+
+            }
+            else if (param.type == "texture") {
+
+            }
+            else {
+                Error.Error("Unknown parameter type: %s\n", param.type);
             }
         }
         return pset;
