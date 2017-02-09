@@ -64,6 +64,15 @@ public class CoefficientSpectrum {
             this.c[i] -= s2.c[i];
         }
     }
+    public static CoefficientSpectrum subtract(CoefficientSpectrum s1, CoefficientSpectrum s2) {
+        assert !s1.HasNaNs();
+        assert !s2.HasNaNs();
+        CoefficientSpectrum cs = new CoefficientSpectrum(0,s1.c.length);
+        for (int i = 0; i < s1.c.length; ++i) {
+            cs.c[i] = s1.c[i] - s2.c[i];
+        }
+        return cs;
+    }
     public void divide(CoefficientSpectrum s2) {
         assert (!s2.HasNaNs());
         for (int i = 0; i < c.length; ++i) {
@@ -71,11 +80,30 @@ public class CoefficientSpectrum {
             this.c[i] /= s2.c[i];
         }
     }
+    public static CoefficientSpectrum divide(CoefficientSpectrum s1, CoefficientSpectrum s2) {
+        assert (!s1.HasNaNs());
+        assert (!s2.HasNaNs());
+        CoefficientSpectrum cs = new CoefficientSpectrum(0, s1.numSamples());
+        for (int i = 0; i < s1.c.length; i++) {
+            assert s2.c[i] != 0.0f;
+            cs.c[i] = s1.c[i] / s2.c[i];
+        }
+        return cs;
+    }
     public void multiply(CoefficientSpectrum s2) {
         assert (!s2.HasNaNs());
         for (int i = 0; i < c.length; ++i) {
             this.c[i] *= s2.c[i];
         }
+    }
+    public static CoefficientSpectrum multiply(CoefficientSpectrum s1, CoefficientSpectrum s2) {
+        assert (!s1.HasNaNs());
+        assert (!s2.HasNaNs());
+        CoefficientSpectrum cs = new CoefficientSpectrum(0, s1.numSamples());
+        for (int i = 0; i < s1.c.length; i++) {
+            cs.c[i] = s1.c[i] * s2.c[i];
+        }
+        return cs;
     }
     public void scale(float a) {
         for (int i = 0; i < c.length; ++i) {
