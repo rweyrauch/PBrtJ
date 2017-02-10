@@ -884,6 +884,14 @@ public class Spectrum extends CoefficientSpectrum {
         assert (!s.HasNaNs());
         return s;
     }
+    public static Spectrum FromRGB(float r, float g, float b) {
+        Spectrum s = new Spectrum(0.0f);
+        s.c[0] = r;
+        s.c[1] = g;
+        s.c[2] = b;
+        assert (!s.HasNaNs());
+        return s;
+    }
 
     public float[] ToRGB() {
         float[] rgb = new float[nSamples];
