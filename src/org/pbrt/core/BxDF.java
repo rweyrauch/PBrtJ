@@ -21,7 +21,7 @@ public abstract class BxDF {
         BSDF_SPECULAR(1 << 4),
         BSDF_ALL(0x1f);
 
-        private int value;
+        public int value;
         BxDFType(int value) {
             this.value = value;
         }
@@ -34,10 +34,10 @@ public abstract class BxDF {
     public BxDF(BxDFType type) {
         this.type = type;
     }
-    public boolean MatchesFlags(BxDFType t) { return (type & t) == type; }
+    public boolean MatchesFlags(BxDFType t) { return (type.value & t.value) == type.value; }
     public abstract Spectrum f(Vector3f wo, Vector3f wi);
 
-    public class BxDFSample {
+    public static class BxDFSample {
         public Spectrum f;
         public Vector3f wiWorld;
         public float pdf;
@@ -47,7 +47,7 @@ public abstract class BxDF {
     public BxDFSample Sample_f(Vector3f wo, Point2f u) {
         // Cosine-sample the hemisphere, flipping the direction if necessary
         BxDFSample sample = new BxDFSample();
-        sample.wiWorld = CosineSampleHemisphere(u);
+        sample.wiWorld = Sampling.CosineSampleHemisphere(u);
         if (wo.z < 0) sample.wiWorld.z *= -1;
         sample.pdf = Pdf(wo, sample.wiWorld);
         sample.f = f(wo, sample.wiWorld);
@@ -58,24 +58,31 @@ public abstract class BxDF {
         for (int i = 0; i < nSamples; ++i) {
             // Estimate one term of $\rho_\roman{hd}$
             BxDFSample sample = Sample_f(w, u[i]);
-            if (sample.pdf > 0) r += sample.f * Reflection.AbsCosTheta(sample.wiWorld) / sample.pdf;
+            if (sample.pdf > 0) {
+                r = (Spectrum)CoefficientSpectrum.add(r, CoefficientSpectrum.scale(sample.f, Reflection.AbsCosTheta(sample.wiWorld) / sample.pdf));
+            }
         }
-        return r / nSamples;
+        r.invScale(nSamples);
+        return r;
     }
+
     public Spectrum rho(int nSamples, Point2f[] u1, Point2f[] u2) {
-        Spectrum r(0.f);
+        Spectrum r = new Spectrum(0);
         for (int i = 0; i < nSamples; ++i) {
             // Estimate one term of $\rho_\roman{hh}$
-            Vector3f wo = UniformSampleHemisphere(u1[i]);
-            float pdfo = UniformHemispherePdf();
+            Vector3f wo = Sampling.UniformSampleHemisphere(u1[i]);
+            float pdfo = Sampling.UniformHemispherePdf();
             BxDFSample sample = Sample_f(wo, u2[i]);
-            if (sample.pdf > 0)
-                r += sample.f * Reflection.AbsCosTheta(sample.wiWorld) * Reflection.AbsCosTheta(wo) / (pdfo * sample.pdf);
+            if (sample.pdf > 0) {
+                r = (Spectrum)CoefficientSpectrum.add(r, CoefficientSpectrum.scale(sample.f, Reflection.AbsCosTheta(sample.wiWorld) * Reflection.AbsCosTheta(wo) / (pdfo * sample.pdf)));
+            }
         }
-        return r / ((float)Math.PI * nSamples);
+        r.invScale((float)Math.PI * nSamples);
+        return r;
     }
+
     public float Pdf(Vector3f wo, Vector3f wi) {
-        return SameHemisphere(wo, wi) ? Reflection.AbsCosTheta(wi) / (float)Math.PI : 0;
+        return Reflection.SameHemisphere(wo, wi) ? Reflection.AbsCosTheta(wi) / (float)Math.PI : 0;
     }
     public abstract String ToString();
 

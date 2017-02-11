@@ -57,20 +57,19 @@ public class BSDF {
         boolean reflect = Normal3f.Dot(wiW, ng) * Normal3f.Dot(woW, ng) > 0;
         Spectrum f = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
-            if (bxdfs[i].MatchesFlags(flags) &&
-                ((reflect && (bxdfs[i].type & BxDF.BxDFType.BSDF_REFLECTION)) ||
-        (!reflect && (bxdfs[i].type & BxDF.BxDFType.BSDF_TRANSMISSION))))
-        f += bxdfs[i].f(wo, wi);
+            if (bxdfs[i].MatchesFlags(flags) && ((reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_REFLECTION.value) != 0)) ||
+                (!reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_TRANSMISSION.value) != 0))))
+                f = (Spectrum)CoefficientSpectrum.add(f, bxdfs[i].f(wo, wi));
         return f;
     }
     public Spectrum f(Vector3f woW, Vector3f wiW) {
         return f(woW, wiW, BxDF.BxDFType.BSDF_ALL);
     }
     public Spectrum rho(int nSamples, Point2f[] samples1, Point2f[] samples2, BxDF.BxDFType flags) {
-        Spectrum ret = Spectrum(0);
+        Spectrum ret = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags))
-                ret += bxdfs[i].rho(nSamples, samples1, samples2);
+                ret = (Spectrum)CoefficientSpectrum.add(ret, bxdfs[i].rho(nSamples, samples1, samples2));
         return ret;
     }
     public Spectrum rho(int nSamples, Point2f[] samples1, Point2f[] samples2) {
@@ -81,7 +80,7 @@ public class BSDF {
         Spectrum ret = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags))
-                ret += bxdfs[i].rho(wo, nSamples, samples);
+                ret = (Spectrum)CoefficientSpectrum.add(ret, bxdfs[i].rho(wo, nSamples, samples));
         return ret;
     }
     public Spectrum rho(Vector3f wo, int nSamples, Point2f[] samples) {
@@ -91,7 +90,7 @@ public class BSDF {
     public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u, BxDF.BxDFType type) {
         //ProfilePhase pp(Prof::BSDFSampling);
         // Choose which _BxDF_ to sample
-        BxDF.BxDFSample sample = new BxDF.BxDFSample;
+        BxDF.BxDFSample sample = new BxDF.BxDFSample();
         sample.pdf = 0;
         sample.wiWorld = null;
         sample.sampledType = BxDF.BxDFType.BSDF_NONE;
@@ -123,7 +122,10 @@ public class BSDF {
 
         sample.pdf = 0;
         sample.sampledType = bxdf.type;
-        sample.f = bxdf.Sample_f(wo, wi, uRemapped, sample.pdf, sample.sampledType);
+        BxDF.BxDFSample bsample = bxdf.Sample_f(wo, uRemapped);
+        sample.f = bsample.f;
+        wi = bsample.wiWorld;
+        sample.pdf = bsample.pdf;
         //VLOG(2) << "For wo = " << wo << ", sampled f = " << f << ", pdf = "
         //        << *pdf << ", ratio = " << ((*pdf > 0) ? (f / *pdf) : Spectrum(0.))
         //    << ", wi = " << wi;
@@ -131,23 +133,24 @@ public class BSDF {
             sample.sampledType = BxDF.BxDFType.BSDF_NONE;
             return sample;
         }
+
         sample.wiWorld = LocalToWorld(wi);
 
         // Compute overall PDF with all matching _BxDF_s
-        if (!(bxdf.type & BxDF.BxDFType.BSDF_SPECULAR) && matchingComps > 1)
+        if (!((bxdf.type.value & BxDF.BxDFType.BSDF_SPECULAR.value) != 0) && matchingComps > 1)
             for (int i = 0; i < nBxDFs; ++i)
                 if (bxdfs[i] != bxdf && bxdfs[i].MatchesFlags(type))
                     sample.pdf += bxdfs[i].Pdf(wo, wi);
         if (matchingComps > 1) sample.pdf /= matchingComps;
 
         // Compute value of BSDF for sampled direction
-        if (!(bxdf.type & BxDF.BxDFType.BSDF_SPECULAR) && matchingComps > 1) {
+        if (!((bxdf.type.value & BxDF.BxDFType.BSDF_SPECULAR.value) != 0) && matchingComps > 1) {
             boolean reflect = Normal3f.Dot(sample.wiWorld, ng) * Normal3f.Dot(woWorld, ng) > 0;
             for (int i = 0; i < nBxDFs; ++i)
                 if (bxdfs[i].MatchesFlags(type) &&
-                    ((reflect && (bxdfs[i].type & BxDF.BxDFType.BSDF_REFLECTION)) ||
-                    (!reflect && (bxdfs[i].type & BxDF.BxDFType.BSDF_TRANSMISSION))))
-            sample.f += bxdfs[i].f(wo, wi);
+                    ((reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_REFLECTION.value) != 0)) ||
+                    (!reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_TRANSMISSION.value) != 0))))
+            sample.f = (Spectrum)CoefficientSpectrum.add(sample.f, bxdfs[i].f(wo, wi));
         }
         //VLOG(2) << "Overall f = " << f << ", pdf = " << *pdf << ", ratio = "
          //       << ((*pdf > 0) ? (f / *pdf) : Spectrum(0.));
