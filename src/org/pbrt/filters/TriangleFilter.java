@@ -13,15 +13,24 @@ package org.pbrt.filters;
 import org.pbrt.core.Filter;
 import org.pbrt.core.ParamSet;
 import org.pbrt.core.Point2f;
+import org.pbrt.core.Vector2f;
 
 public class TriangleFilter extends Filter {
 
-    public static Filter Create(ParamSet paramSet) {
-        return null;
+    public TriangleFilter(Vector2f radius) {
+        super(radius);
     }
 
     @Override
     public float Evaluate(Point2f p) {
-        return 0;
+        return Math.max(0, radius.x - Math.abs(p.x)) * Math.max(0, radius.y - Math.abs(p.y));
     }
+
+    public static Filter Create(ParamSet paramSet) {
+        // Find common filter parameters
+        float xw = paramSet.FindOneFloat("xwidth", 2);
+        float yw = paramSet.FindOneFloat("ywidth", 2);
+        return new TriangleFilter(new Vector2f(xw, yw));
+    }
+
 }

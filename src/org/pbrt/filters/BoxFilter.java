@@ -13,15 +13,22 @@ package org.pbrt.filters;
 import org.pbrt.core.Filter;
 import org.pbrt.core.ParamSet;
 import org.pbrt.core.Point2f;
+import org.pbrt.core.Vector2f;
 
 public class BoxFilter extends Filter {
 
-    public static Filter Create(ParamSet paramSet) {
-        return null;
+    public BoxFilter(Vector2f radius) {
+        super(radius);
     }
 
     @Override
     public float Evaluate(Point2f p) {
-        return 0;
+        return 1;
+    }
+
+    public static Filter Create(ParamSet paramSet) {
+        float xw = paramSet.FindOneFloat("xwidth", 0.5f);
+        float yw = paramSet.FindOneFloat("ywidth", 0.5f);
+        return new BoxFilter(new Vector2f(xw, yw));
     }
 }
