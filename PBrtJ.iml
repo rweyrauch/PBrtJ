@@ -8,5 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="java-cup-0.11a" level="project" />
+    <orderEntry type="library" name="jflex-1.7.0-SNAPSHOT" level="project" />
   </component>
 </module>

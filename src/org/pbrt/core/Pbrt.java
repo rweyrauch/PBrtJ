@@ -61,4 +61,31 @@ public class Pbrt
     }
 
     public static float Lerp(float t, float v1, float v2) { return (1 - t) * v1 + t * v2; }
+
+    public static class QuadRes {
+        public float t0, t1;
+    }
+    public static QuadRes Quadratic(float a, float b, float c) {
+        // Find quadratic discriminant
+        double discrim = (double)b * (double)b - 4 * (double)a * (double)c;
+        if (discrim < 0) return null;
+        double rootDiscrim = Math.sqrt(discrim);
+
+        // Compute quadratic _t_ values
+        double q;
+        if (b < 0)
+            q = -.5 * (b - rootDiscrim);
+        else
+            q = -.5 * (b + rootDiscrim);
+        QuadRes res = new QuadRes();
+        res.t0 = (float)q / a;
+        res.t1 = c / (float)q;
+        if (res.t0 > res.t1) {
+            float temp = res.t0;
+            res.t0 = res.t1;
+            res.t1 = temp;
+        }
+        return res;
+    }
+
 }

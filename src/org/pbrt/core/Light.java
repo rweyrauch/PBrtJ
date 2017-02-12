@@ -18,7 +18,7 @@ public abstract class Light {
     public static final int FlagArea = 4;
     public static final int FlagInfinite = 8;
 
-    public class VisibilityTester {
+    public static class VisibilityTester {
         private Interaction p0, p1;
 
         public VisibilityTester() {

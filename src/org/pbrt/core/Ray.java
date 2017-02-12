@@ -16,7 +16,7 @@ public class Ray {
     public Vector3f d;
     public float tMax = Pbrt.Infinity;
     public float time = 0.0f;
-    Medium medium = null;
+    public Medium medium = null;
 
     // Ray Public Methods
     public Ray() {

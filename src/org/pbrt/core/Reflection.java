@@ -110,7 +110,7 @@ public class Reflection {
     }
 
     public static Vector3f Reflect(Vector3f wo, Vector3f n) {
-        return wo.negate() + 2 * Vector3f.Dot(wo, n) * n;
+        return wo.negate().add(n.scale(2 * Vector3f.Dot(wo, n)));
     }
 
     public static Vector3f Refract(Vector3f wi, Normal3f n, float eta) {
@@ -122,7 +122,7 @@ public class Reflection {
         // Handle total internal reflection for transmission
         if (sin2ThetaT >= 1) return null;
         float cosThetaT = (float)Math.sqrt(1 - sin2ThetaT);
-        Vector3f wt = eta * wi.negate() + (eta * cosThetaI - cosThetaT) * (new Vector3f(n));
+        Vector3f wt = (wi.negate().add(new Vector3f(n).scale(eta * cosThetaI - cosThetaT))).scale(eta);
         return wt;
     }
 

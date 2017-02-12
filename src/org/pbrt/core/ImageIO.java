@@ -10,7 +10,8 @@
 
 package org.pbrt.core;
 
-public abstract class Integrator {
+public class ImageIO {
+    public static void Write(String filename, float[] rgb, Bounds2i outputBounds, Point2i totalResolution) {
 
-    public abstract void Render(Scene scene);
+    }
 }

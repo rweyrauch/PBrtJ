@@ -12,36 +12,29 @@ package org.pbrt.core;
 
 public abstract class BxDF {
 
-    public enum BxDFType {
-        BSDF_NONE(0),
-        BSDF_REFLECTION(1 << 0),
-        BSDF_TRANSMISSION(1 << 1),
-        BSDF_DIFFUSE(1 << 2),
-        BSDF_GLOSSY(1 << 3),
-        BSDF_SPECULAR(1 << 4),
-        BSDF_ALL(0x1f);
-
-        public int value;
-        BxDFType(int value) {
-            this.value = value;
-        }
-    }
-
+    public static final int BSDF_NONE = 0;
+    public static final int BSDF_REFLECTION = (1 << 0);
+    public static final int BSDF_TRANSMISSION = (1 << 1);
+    public static final int BSDF_DIFFUSE = (1 << 2);
+    public static final int BSDF_GLOSSY = (1 << 3);
+    public static final int BSDF_SPECULAR = (1 << 4);
+    public static final int BSDF_ALL = (BSDF_REFLECTION | BSDF_TRANSMISSION | BSDF_DIFFUSE | BSDF_GLOSSY | BSDF_SPECULAR);
+    
     // BxDF Public Data
-    public BxDFType type;
+    public int type;
 
     // BxDF Interface
-    public BxDF(BxDFType type) {
+    public BxDF(int type) {
         this.type = type;
     }
-    public boolean MatchesFlags(BxDFType t) { return (type.value & t.value) == type.value; }
+    public boolean MatchesFlags(int t) { return (type & t) == type; }
     public abstract Spectrum f(Vector3f wo, Vector3f wi);
 
     public static class BxDFSample {
         public Spectrum f;
         public Vector3f wiWorld;
         public float pdf;
-        public BxDF.BxDFType sampledType;
+        public int sampledType;
     }
 
     public BxDFSample Sample_f(Vector3f wo, Point2f u) {

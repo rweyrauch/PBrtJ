@@ -85,11 +85,11 @@ public abstract class Camera {
         public float pdfDir;
     }
     public class CameraWi {
-        Vector3f wi;
-        float pdf;
-        Point2f pRaster;
-        Light.VisibilityTester vis;
-        Spectrum swe;
+        public Vector3f wi;
+        public float pdf;
+        public Point2f pRaster;
+        public Light.VisibilityTester vis;
+        public Spectrum swe;
     }
     public CameraWe We(Ray ray) {
         Error.Error("Camera::We() is not implemented!");

@@ -12,6 +12,7 @@ package org.pbrt.core;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Stack;
 import org.pbrt.shapes.*;
 import org.pbrt.textures.*;
@@ -95,7 +96,7 @@ public class Api {
         public Material CreateMaterial(ParamSet params) {
             TextureParams mp = new TextureParams(params, materialParams, floatTextures, spectrumTextures);
             Material mtl;
-            if (currentNamedMaterial != "") {
+            if (!Objects.equals(currentNamedMaterial, "")) {
                 mtl = namedMaterials.get(currentNamedMaterial);
                 if (mtl == null) {
                     Error.Error("Named material \"%s\" not defined. Using \"matte\".", currentNamedMaterial);
@@ -103,19 +104,19 @@ public class Api {
                 }
             } else {
                 mtl = MakeMaterial(material, mp);
-                if (mtl == null && material != "" && material != "none")
+                if (mtl == null && !Objects.equals(material, "") && !Objects.equals(material, "none"))
                     mtl = MakeMaterial("matte", mp);
             }
             return mtl;
         }
         public MediumInterface CreateMediumInterface() {
             MediumInterface m = new MediumInterface();
-            if (currentInsideMedium != "") {
+            if (!Objects.equals(currentInsideMedium, "")) {
                 m.inside = renderOptions.namedMedia.get(currentInsideMedium);
                 if (m.inside == null)
                     Error.Error("Named medium \"%s\" undefined.", currentInsideMedium);
             }
-            if (currentOutsideMedium != "") {
+            if (!Objects.equals(currentOutsideMedium, "")) {
                 m.outside = renderOptions.namedMedia.get(currentOutsideMedium);
                 if (m.outside == null)
                     Error.Error("Named medium \"%s\" undefined.", currentOutsideMedium);
@@ -177,25 +178,25 @@ public class Api {
     private static ArrayList<Shape> MakeShapes(String name, Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
         ArrayList<Shape> shapes = new ArrayList<>();
         Shape s = null;
-        if (name == "sphere")
+        if (Objects.equals(name, "sphere"))
             s = Sphere.Create(object2world, world2object, reverseOrientation, paramSet);
             // Create remaining single _Shape_ types
-        else if (name == "cylinder")
+        else if (Objects.equals(name, "cylinder"))
             s = Cylinder.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (name == "disk")
+        else if (Objects.equals(name, "disk"))
             s = Disk.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (name == "cone")
+        else if (Objects.equals(name, "cone"))
             s = Cone.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (name == "paraboloid")
+        else if (Objects.equals(name, "paraboloid"))
             s = Paraboloid.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (name == "hyperboloid")
+        else if (Objects.equals(name, "hyperboloid"))
             s = Hyperboloid.Create(object2world, world2object, reverseOrientation, paramSet);
 
         if (s != null) shapes.add(s);
             // Create multiple-_Shape_ types
-        else if (name == "curve")
+        else if (Objects.equals(name, "curve"))
             shapes.addAll(Curve.Create(object2world, world2object, reverseOrientation, paramSet));
-        else if (name == "trianglemesh") {
+        else if (Objects.equals(name, "trianglemesh")) {
             if (Pbrt.options.ToPly) {
                 /*
                  int count = 1;
@@ -252,13 +253,13 @@ public class Api {
                 shapes.addAll(Triangle.Create(object2world, world2object, reverseOrientation, paramSet, graphicsState.floatTextures));
             }
         }
-        else if (name == "plymesh")
+        else if (Objects.equals(name, "plymesh"))
             shapes.addAll(PlyMesh.Create(object2world, world2object, reverseOrientation, paramSet, graphicsState.floatTextures));
-        else if (name == "heightfield")
+        else if (Objects.equals(name, "heightfield"))
             shapes.addAll(HeightField.Create(object2world, world2object, reverseOrientation, paramSet));
-        else if (name == "loopsubdiv")
+        else if (Objects.equals(name, "loopsubdiv"))
             shapes.addAll(LoopSubdiv.Create(object2world, world2object, reverseOrientation, paramSet));
-        else if (name == "nurbs")
+        else if (Objects.equals(name, "nurbs"))
             shapes.addAll(NURBS.Create(object2world, world2object, reverseOrientation, paramSet));
         else
             Error.Warning("Shape \"%s\" unknown.", name);
@@ -270,21 +271,21 @@ public class Api {
 
     private static Material MakeMaterial(String name, TextureParams mp) {
         Material material = null;
-        if (name == "" || name == "none")
+        if (Objects.equals(name, "") || Objects.equals(name, "none"))
             return null;
-        else if (name == "matte")
+        else if (Objects.equals(name, "matte"))
             material = MatteMaterial.Create(mp);
-        else if (name == "plastic")
+        else if (Objects.equals(name, "plastic"))
             material = PlasticMaterial.Create(mp);
-        else if (name == "translucent")
+        else if (Objects.equals(name, "translucent"))
             material = TranslucentMaterial.Create(mp);
-        else if (name == "glass")
+        else if (Objects.equals(name, "glass"))
             material = GlassMaterial.Create(mp);
-        else if (name == "mirror")
+        else if (Objects.equals(name, "mirror"))
             material = MirrorMaterial.Create(mp);
-        else if (name == "hair")
+        else if (Objects.equals(name, "hair"))
             material = HairMaterial.Create(mp);
-        else if (name == "mix") {
+        else if (Objects.equals(name, "mix")) {
             String m1 = mp.FindString("namedmaterial1", "");
             String m2 = mp.FindString("namedmaterial2", "");
             Material mat1 = graphicsState.namedMaterials.get(m1);
@@ -299,24 +300,24 @@ public class Api {
             }
 
             material = MixMaterial.Create(mp, mat1, mat2);
-        } else if (name == "metal")
+        } else if (Objects.equals(name, "metal"))
             material = MetalMaterial.Create(mp);
-        else if (name == "substrate")
+        else if (Objects.equals(name, "substrate"))
             material = SubstrateMaterial.Create(mp);
-        else if (name == "uber")
+        else if (Objects.equals(name, "uber"))
             material = UberMaterial.Create(mp);
-        else if (name == "subsurface")
+        else if (Objects.equals(name, "subsurface"))
             material = SubsurfaceMaterial.Create(mp);
-        else if (name == "kdsubsurface")
+        else if (Objects.equals(name, "kdsubsurface"))
             material = KdSubsurfaceMaterial.Create(mp);
-        else if (name == "fourier")
+        else if (Objects.equals(name, "fourier"))
             material = FourierMaterial.Create(mp);
         else {
             Error.Warning("Material \"%s\" unknown. Using \"matte\".", name);
             material = MatteMaterial.Create(mp);
         }
 
-        if ((name == "subsurface" || name == "kdsubsurface") && (renderOptions.IntegratorName != "path" && (renderOptions.IntegratorName != "volpath"))) {
+        if ((Objects.equals(name, "subsurface") || Objects.equals(name, "kdsubsurface")) && (!Objects.equals(renderOptions.IntegratorName, "path") && (!Objects.equals(renderOptions.IntegratorName, "volpath")))) {
             Error.Warning("Subsurface scattering material \"%s\" used, but \"%s\" integrator doesn't support subsurface scattering. Use \"path\" or \"volpath\".",
                     name, renderOptions.IntegratorName);
         }
@@ -329,29 +330,29 @@ public class Api {
 
     private static Texture<Float> MakeFloatTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Float> tex = null;
-        if (name == "constant")
+        if (Objects.equals(name, "constant"))
             tex = ConstantTexture.CreateFloat(tex2world, tp);
-        else if (name == "scale")
+        else if (Objects.equals(name, "scale"))
             tex = ScaleTexture.CreateFloat(tex2world, tp);
-        else if (name == "mix")
+        else if (Objects.equals(name, "mix"))
             tex = MixTexture.CreateFloat(tex2world, tp);
-        else if (name == "bilerp")
+        else if (Objects.equals(name, "bilerp"))
             tex = BilerpTexture.CreateFloat(tex2world, tp);
-        else if (name == "imagemap")
+        else if (Objects.equals(name, "imagemap"))
             tex = ImageMap.CreateFloat(tex2world, tp);
-        else if (name == "uv")
+        else if (Objects.equals(name, "uv"))
             tex = UVTexture.CreateFloat(tex2world, tp);
-        else if (name == "checkerboard")
+        else if (Objects.equals(name, "checkerboard"))
             tex = CheckerBoardTexture.CreateFloat(tex2world, tp);
-        else if (name == "dots")
+        else if (Objects.equals(name, "dots"))
             tex = DotsTexture.CreateFloat(tex2world, tp);
-        else if (name == "fbm")
+        else if (Objects.equals(name, "fbm"))
             tex = FBMTexture.CreateFloat(tex2world, tp);
-        else if (name == "wrinkled")
+        else if (Objects.equals(name, "wrinkled"))
             tex = WrinkledTexture.CreateFloat(tex2world, tp);
-        else if (name == "marble")
+        else if (Objects.equals(name, "marble"))
             tex = MarbleTexture.CreateFloat(tex2world, tp);
-        else if (name == "windy")
+        else if (Objects.equals(name, "windy"))
             tex = WindyTexture.CreateFloat(tex2world, tp);
         else
             Error.Warning("Float texture \"%s\" unknown.", name);
@@ -361,29 +362,29 @@ public class Api {
 
     private static Texture<Spectrum> MakeSpectrumTexture(String name, Transform tex2world, TextureParams tp) {
         Texture<Spectrum> tex = null;
-        if (name == "constant")
+        if (Objects.equals(name, "constant"))
             tex = ConstantTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "scale")
+        else if (Objects.equals(name, "scale"))
             tex = ScaleTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "mix")
+        else if (Objects.equals(name, "mix"))
             tex = MixTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "bilerp")
+        else if (Objects.equals(name, "bilerp"))
             tex = BilerpTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "imagemap")
+        else if (Objects.equals(name, "imagemap"))
             tex = ImageMap.CreateSpectrum(tex2world, tp);
-        else if (name == "uv")
+        else if (Objects.equals(name, "uv"))
             tex = UVTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "checkerboard")
+        else if (Objects.equals(name, "checkerboard"))
             tex = CheckerBoardTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "dots")
+        else if (Objects.equals(name, "dots"))
             tex = DotsTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "fbm")
+        else if (Objects.equals(name, "fbm"))
             tex = FBMTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "wrinkled")
+        else if (Objects.equals(name, "wrinkled"))
             tex = WrinkledTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "marble")
+        else if (Objects.equals(name, "marble"))
             tex = MarbleTexture.CreateSpectrum(tex2world, tp);
-        else if (name == "windy")
+        else if (Objects.equals(name, "windy"))
             tex = WindyTexture.CreateSpectrum(tex2world, tp);
         else
             Error.Warning("Spectrum texture \"%s\" unknown.", name);
@@ -397,7 +398,7 @@ public class Api {
                  sig_s = Spectrum.FromRGB(sig_s_rgb);
         String preset = paramSet.FindOneString("preset", "");
         Medium.ScatteringProps props = Medium.GetMediumScatteringProperties(preset);
-        if (preset != "" && props == null) {
+        if (!Objects.equals(preset, "") && props == null) {
             Error.Warning("Material preset \"%s\" not found.  Using defaults.", preset);
         } else {
             sig_a = props.sigma_a;
@@ -410,9 +411,9 @@ public class Api {
         sig_s = paramSet.FindOneSpectrum("sigma_s", sig_s);
         sig_s.scale(scale);
         Medium m = null;
-        if (name == "homogeneous") {
+        if (Objects.equals(name, "homogeneous")) {
             m = new HomogeneousMedium(sig_a, sig_s, g);
-        } else if (name == "heterogeneous") {
+        } else if (Objects.equals(name, "heterogeneous")) {
             Float[] data = paramSet.FindFloat("density");
             if (data == null) {
                 Error.Error("No \"density\" values provided for heterogeneous medium?");
@@ -437,17 +438,17 @@ public class Api {
 
     private static Light MakeLight(String name,ParamSet paramSet, Transform light2world, MediumInterface mediumInterface) {
         Light light = null;
-        if (name == "point")
+        if (Objects.equals(name, "point"))
             light = Point.Create(light2world, mediumInterface.outside, paramSet);
-        else if (name == "spot")
+        else if (Objects.equals(name, "spot"))
             light = Spot.Create(light2world, mediumInterface.outside, paramSet);
-        else if (name == "goniometric")
+        else if (Objects.equals(name, "goniometric"))
             light = Goniometric.Create(light2world, mediumInterface.outside, paramSet);
-        else if (name == "projection")
+        else if (Objects.equals(name, "projection"))
             light = Projection.Create(light2world, mediumInterface.outside, paramSet);
-        else if (name == "distant")
+        else if (Objects.equals(name, "distant"))
             light = Distant.Create(light2world, paramSet);
-        else if (name == "infinite" || name == "exinfinite")
+        else if (Objects.equals(name, "infinite") || Objects.equals(name, "exinfinite"))
             light = Infinite.Create(light2world, paramSet);
         else
             Error.Warning("Light \"%s\" unknown.", name);
@@ -457,7 +458,7 @@ public class Api {
 
     private static AreaLight MakeAreaLight(String name, Transform light2world, MediumInterface mediumInterface, ParamSet paramSet, Shape shape) {
         AreaLight area = null;
-        if (name == "area" || name == "diffuse")
+        if (Objects.equals(name, "area") || Objects.equals(name, "diffuse"))
             area = Diffuse.Create(light2world, mediumInterface.outside, paramSet, shape);
         else
             Error.Warning("Area light \"%s\" unknown.", name);
@@ -467,9 +468,9 @@ public class Api {
 
     private static Primitive MakeAccelerator(String name, Primitive[] prims, ParamSet paramSet) {
         Primitive accel = null;
-        if (name == "bvh")
+        if (Objects.equals(name, "bvh"))
             accel = BVHAccel.Create(prims, paramSet);
-        else if (name == "kdtree")
+        else if (Objects.equals(name, "kdtree"))
             accel = KdTreeAccel.Create(prims, paramSet);
         else
             Error.Warning("Accelerator \"%s\" unknown.", name);
@@ -483,13 +484,13 @@ public class Api {
         TransformCache.TransformPair c2w0 = transformCache.Lookup(cam2worldSet.at(0));
         TransformCache.TransformPair c2w1 = transformCache.Lookup(cam2worldSet.at(1));
         AnimatedTransform animatedCam2World = new AnimatedTransform(c2w0.t, transformStart, c2w1.t, transformEnd);
-        if (name == "perspective")
+        if (Objects.equals(name, "perspective"))
             camera = PerspectiveCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
-        else if (name == "orthographic")
+        else if (Objects.equals(name, "orthographic"))
             camera = OrthographicCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
-        else if (name == "realistic")
+        else if (Objects.equals(name, "realistic"))
             camera = RealisticCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
-        else if (name == "environment")
+        else if (Objects.equals(name, "environment"))
             camera = EnvironmentCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
         else
             Error.Warning("Camera \"%s\" unknown.", name);
@@ -499,17 +500,17 @@ public class Api {
 
     private static Sampler MakeSampler(String name, ParamSet paramSet, Film film) {
         Sampler sampler = null;
-        if (name == "lowdiscrepancy" || name == "02sequence")
+        if (Objects.equals(name, "lowdiscrepancy") || Objects.equals(name, "02sequence"))
             sampler = ZeroTwoSequence.Create(paramSet);
-        else if (name == "maxmindist")
+        else if (Objects.equals(name, "maxmindist"))
             sampler = MaxMinSampler.Create(paramSet);
-        else if (name == "halton")
+        else if (Objects.equals(name, "halton"))
             sampler = HaltonSampler.Create(paramSet, film.GetSampleBounds());
-        else if (name == "sobol")
+        else if (Objects.equals(name, "sobol"))
             sampler = SobolSampler.Create(paramSet, film.GetSampleBounds());
-        else if (name == "random")
+        else if (Objects.equals(name, "random"))
             sampler = RandomSampler.Create(paramSet);
-        else if (name == "stratified")
+        else if (Objects.equals(name, "stratified"))
             sampler = StratifiedSampler.Create(paramSet);
         else
             Error.Warning("Sampler \"%s\" unknown.", name);
@@ -519,15 +520,15 @@ public class Api {
 
     private static Filter MakeFilter(String name, ParamSet paramSet) {
         Filter filter = null;
-        if (name == "box")
+        if (Objects.equals(name, "box"))
             filter = BoxFilter.Create(paramSet);
-        else if (name == "gaussian")
+        else if (Objects.equals(name, "gaussian"))
             filter = GaussianFilter.Create(paramSet);
-        else if (name == "mitchell")
+        else if (Objects.equals(name, "mitchell"))
             filter = MitchellFilter.Create(paramSet);
-        else if (name == "sinc")
-            filter = SincFilter.Create(paramSet);
-        else if (name == "triangle")
+        else if (Objects.equals(name, "sinc"))
+            filter = LanczosSincFilter.Create(paramSet);
+        else if (Objects.equals(name, "triangle"))
             filter = TriangleFilter.Create(paramSet);
         else {
             Error.Error("Filter \"%s\" unknown.", name);
@@ -538,7 +539,7 @@ public class Api {
 
     private static Film MakeFilm(String name, ParamSet paramSet, Filter filter) {
         Film film = null;
-        if (name == "image")
+        if (Objects.equals(name, "image"))
             film = Film.Create(paramSet, filter);
         else
             Error.Warning("Film \"%s\" unknown.", name);

@@ -10,6 +10,8 @@
 
 package org.pbrt.core;
 
+import java.util.Objects;
+
 public abstract class Medium {
     public class MediumSample {
         public Spectrum spectrum;
@@ -98,7 +100,7 @@ public abstract class Medium {
     }
     public static ScatteringProps GetMediumScatteringProperties(String name) {
         for (MeasuredSS mss : SubsurfaceParameterTable) {
-            if (name == mss.name) {
+            if (Objects.equals(name, mss.name)) {
                 ScatteringProps props = new ScatteringProps();
                 props.sigma_a = Spectrum.FromRGB(toFloatArray(mss.sigma_a));
                 props.sigma_s = Spectrum.FromRGB(toFloatArray(mss.sigma_prime_s));

@@ -11,6 +11,7 @@ package org.pbrt.core;
 
 import org.apache.commons.lang.NotImplementedException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ParamSet {
 
@@ -108,7 +109,7 @@ public class ParamSet {
 
     public boolean EraseInt(String name) {
         for (int i = 0; i < ints.size(); ++i) {
-            if (ints.get(i).Name == name) {
+            if (Objects.equals(ints.get(i).Name, name)) {
                 ints.remove(i);
                 return true;
             }
@@ -118,7 +119,7 @@ public class ParamSet {
 
     public boolean EraseBoolean(String name) {
         for (int i = 0; i < bools.size(); ++i) {
-            if (bools.get(i).Name == name) {
+            if (Objects.equals(bools.get(i).Name, name)) {
                 bools.remove(i);
                 return true;
             }
@@ -128,7 +129,7 @@ public class ParamSet {
 
     public boolean EraseFloat(String name) {
         for (int i = 0; i < floats.size(); ++i) {
-            if (floats.get(i).Name == name) {
+            if (Objects.equals(floats.get(i).Name, name)) {
                 floats.remove(i);
                 return true;
             }
@@ -138,7 +139,7 @@ public class ParamSet {
 
     public boolean ErasePoint2f(String name) {
         for (int i = 0; i < point2fs.size(); ++i) {
-            if (point2fs.get(i).Name == name) {
+            if (Objects.equals(point2fs.get(i).Name, name)) {
                 point2fs.remove(i);
                 return true;
             }
@@ -148,7 +149,7 @@ public class ParamSet {
 
     public boolean EraseVector2f(String name) {
         for (int i = 0; i < vector2fs.size(); ++i) {
-            if (vector2fs.get(i).Name == name) {
+            if (Objects.equals(vector2fs.get(i).Name, name)) {
                 vector2fs.remove(i);
                 return true;
             }
@@ -158,7 +159,7 @@ public class ParamSet {
 
     public boolean ErasePoint3f(String name) {
         for (int i = 0; i < point3fs.size(); ++i) {
-            if (point3fs.get(i).Name == name) {
+            if (Objects.equals(point3fs.get(i).Name, name)) {
                 point3fs.remove(i);
                 return true;
             }
@@ -168,7 +169,7 @@ public class ParamSet {
 
     public boolean EraseVector3f(String name) {
         for (int i = 0; i < vector3fs.size(); ++i) {
-            if (vector3fs.get(i).Name == name) {
+            if (Objects.equals(vector3fs.get(i).Name, name)) {
                 vector3fs.remove(i);
                 return true;
             }
@@ -178,7 +179,7 @@ public class ParamSet {
 
     public boolean EraseNormal3f(String name) {
         for (int i = 0; i < normals.size(); ++i) {
-            if (normals.get(i).Name == name) {
+            if (Objects.equals(normals.get(i).Name, name)) {
                 normals.remove(i);
                 return true;
             }
@@ -188,7 +189,7 @@ public class ParamSet {
 
     public boolean EraseSpectrum(String name) {
         for (int i = 0; i < spectra.size(); ++i) {
-            if (spectra.get(i).Name == name) {
+            if (Objects.equals(spectra.get(i).Name, name)) {
                 spectra.remove(i);
                 return true;
             }
@@ -198,7 +199,7 @@ public class ParamSet {
 
     public boolean EraseString(String name) {
         for (int i = 0; i < strings.size(); ++i) {
-            if (strings.get(i).Name == name) {
+            if (Objects.equals(strings.get(i).Name, name)) {
                 strings.remove(i);
                 return true;
             }
@@ -208,7 +209,7 @@ public class ParamSet {
 
     public boolean EraseTexture(String name) {
         for (int i = 0; i < textures.size(); ++i) {
-            if (textures.get(i).Name == name) {
+            if (Objects.equals(textures.get(i).Name, name)) {
                 textures.remove(i);
                 return true;
             }
@@ -218,7 +219,7 @@ public class ParamSet {
 
     public float FindOneFloat(String name, float d) {
         for (ParamSetItem<Float> cur : floats) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -228,7 +229,7 @@ public class ParamSet {
 
     public int FindOneInt(String name, int d) {
         for (ParamSetItem<Integer> cur : ints) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -238,7 +239,7 @@ public class ParamSet {
 
     public boolean FindOneBoolean(String name, boolean d) {
         for (ParamSetItem<Boolean> cur : bools) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -248,7 +249,7 @@ public class ParamSet {
 
     public Point2f FindOnePoint2f(String name, Point2f d) {
         for (ParamSetItem<Point2f> cur : point2fs) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -258,7 +259,7 @@ public class ParamSet {
 
     public Vector2f FindOneVector2f(String name, Vector2f d) {
         for (ParamSetItem<Vector2f> cur : vector2fs) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -268,7 +269,7 @@ public class ParamSet {
 
     public Point3f FindOnePoint3f(String name, Point3f d) {
         for (ParamSetItem<Point3f> cur : point3fs) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -278,7 +279,7 @@ public class ParamSet {
 
     public Vector3f FindOneVector3f(String name, Vector3f d) {
         for (ParamSetItem<Vector3f> cur : vector3fs) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -288,7 +289,7 @@ public class ParamSet {
 
     public Normal3f FindOneNormal3f(String name, Normal3f d) {
         for (ParamSetItem<Normal3f> cur : normals) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -298,7 +299,7 @@ public class ParamSet {
 
     public Spectrum FindOneSpectrum(String name, Spectrum d) {
         for (ParamSetItem<Spectrum> cur : spectra) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -308,7 +309,7 @@ public class ParamSet {
 
     public String FindOneString(String name, String d) {
         for (ParamSetItem<String> cur : strings) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -318,14 +319,14 @@ public class ParamSet {
 
     public String FindOneFilename(String name, String d) {
         String filename = FindOneString(name, "");
-        if (filename == "") return d;
+        if (Objects.equals(filename, "")) return d;
         filename = FileUtil.AbsolutePath(FileUtil.ResolveFilename(filename));
         return filename;
     }
 
     public String FindTexture(String name) {
         for (ParamSetItem<String> cur : textures) {
-            if (cur.Name == name && cur.Values.length == 1) {
+            if (Objects.equals(cur.Name, name) && cur.Values.length == 1) {
                 cur.LookedUp = true;
                 return cur.Values[0];
             }
@@ -335,7 +336,7 @@ public class ParamSet {
 
     public Float[] FindFloat(String name) {
         for (ParamSetItem<Float> cur : floats) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -345,7 +346,7 @@ public class ParamSet {
 
     public Integer[] FindInt(String name) {
         for (ParamSetItem<Integer> cur : ints) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -355,7 +356,7 @@ public class ParamSet {
 
     public Boolean[] FindBoolean(String name) {
         for (ParamSetItem<Boolean> cur : bools) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -365,7 +366,7 @@ public class ParamSet {
 
     public Point2f[] FindPoint2f(String name) {
         for (ParamSetItem<Point2f> cur : point2fs) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -375,7 +376,7 @@ public class ParamSet {
 
     public Vector2f[] FindVector2f(String name) {
         for (ParamSetItem<Vector2f> cur : vector2fs) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -385,7 +386,7 @@ public class ParamSet {
 
     public Point3f[] FindPoint3f(String name) {
         for (ParamSetItem<Point3f> cur : point3fs) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -395,7 +396,7 @@ public class ParamSet {
 
     public Vector3f[] FindVector3f(String name) {
         for (ParamSetItem<Vector3f> cur : vector3fs) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -405,7 +406,7 @@ public class ParamSet {
 
     public Normal3f[] FindNormal3f(String name) {
         for (ParamSetItem<Normal3f> cur : normals) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -415,7 +416,7 @@ public class ParamSet {
 
     public Spectrum[] FindSpectrum(String name) {
         for (ParamSetItem<Spectrum> cur : spectra) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }
@@ -425,7 +426,7 @@ public class ParamSet {
 
     public String[] FindString(String name) {
         for (ParamSetItem<String> cur : strings) {
-            if (cur.Name == name) {
+            if (Objects.equals(cur.Name, name)) {
                 cur.LookedUp = true;
                 return cur.Values;
             }

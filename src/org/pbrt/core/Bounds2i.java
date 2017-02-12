@@ -61,7 +61,7 @@ public class Bounds2i {
             return 1;
     }
 
-    Vector2i Offset(Point2i p) {
+    public Vector2i Offset(Point2i p) {
         Vector2i o = p.subtract(pMin);
         if (pMax.x > pMin.x) o.x /= pMax.x - pMin.x;
         if (pMax.y > pMin.y) o.y /= pMax.y - pMin.y;

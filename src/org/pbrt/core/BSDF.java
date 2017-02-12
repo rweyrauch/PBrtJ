@@ -33,14 +33,14 @@ public class BSDF {
         bxdfs[nBxDFs++] = b;
     }
 
-    public int NumComponents(BxDF.BxDFType flags) {
+    public int NumComponents(int flags) {
         int num = 0;
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags)) ++num;
         return num;
     }
     public int NumComponents() {
-        return NumComponents(BxDF.BxDFType.BSDF_ALL);
+        return NumComponents(BxDF.BSDF_ALL);
     }
     public Vector3f WorldToLocal(Vector3f v) {
         return new Vector3f(Vector3f.Dot(v, ss), Vector3f.Dot(v, ts), Normal3f.Dot(v, ns));
@@ -50,22 +50,22 @@ public class BSDF {
                 ss.y * v.x + ts.y * v.y + ns.y * v.z,
                 ss.z * v.x + ts.z * v.y + ns.z * v.z);
     }
-    public Spectrum f(Vector3f woW, Vector3f wiW, BxDF.BxDFType flags) {
+    public Spectrum f(Vector3f woW, Vector3f wiW, int flags) {
         //ProfilePhase pp(Prof::BSDFEvaluation);
         Vector3f wi = WorldToLocal(wiW), wo = WorldToLocal(woW);
         if (wo.z == 0) return new Spectrum(0);
         boolean reflect = Normal3f.Dot(wiW, ng) * Normal3f.Dot(woW, ng) > 0;
         Spectrum f = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
-            if (bxdfs[i].MatchesFlags(flags) && ((reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_REFLECTION.value) != 0)) ||
-                (!reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_TRANSMISSION.value) != 0))))
+            if (bxdfs[i].MatchesFlags(flags) && ((reflect && ((bxdfs[i].type & BxDF.BSDF_REFLECTION) != 0)) ||
+                (!reflect && ((bxdfs[i].type & BxDF.BSDF_TRANSMISSION) != 0))))
                 f = (Spectrum)CoefficientSpectrum.add(f, bxdfs[i].f(wo, wi));
         return f;
     }
     public Spectrum f(Vector3f woW, Vector3f wiW) {
-        return f(woW, wiW, BxDF.BxDFType.BSDF_ALL);
+        return f(woW, wiW, BxDF.BSDF_ALL);
     }
-    public Spectrum rho(int nSamples, Point2f[] samples1, Point2f[] samples2, BxDF.BxDFType flags) {
+    public Spectrum rho(int nSamples, Point2f[] samples1, Point2f[] samples2, int flags) {
         Spectrum ret = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags))
@@ -73,10 +73,10 @@ public class BSDF {
         return ret;
     }
     public Spectrum rho(int nSamples, Point2f[] samples1, Point2f[] samples2) {
-        return rho(nSamples, samples1, samples2, BxDF.BxDFType.BSDF_ALL);
+        return rho(nSamples, samples1, samples2, BxDF.BSDF_ALL);
     }
 
-    public Spectrum rho(Vector3f wo, int nSamples, Point2f[] samples, BxDF.BxDFType flags) {
+    public Spectrum rho(Vector3f wo, int nSamples, Point2f[] samples, int flags) {
         Spectrum ret = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags))
@@ -84,16 +84,16 @@ public class BSDF {
         return ret;
     }
     public Spectrum rho(Vector3f wo, int nSamples, Point2f[] samples) {
-        return rho(wo, nSamples, samples, BxDF.BxDFType.BSDF_ALL);
+        return rho(wo, nSamples, samples, BxDF.BSDF_ALL);
     }
 
-    public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u, BxDF.BxDFType type) {
+    public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u, int type) {
         //ProfilePhase pp(Prof::BSDFSampling);
         // Choose which _BxDF_ to sample
         BxDF.BxDFSample sample = new BxDF.BxDFSample();
         sample.pdf = 0;
         sample.wiWorld = null;
-        sample.sampledType = BxDF.BxDFType.BSDF_NONE;
+        sample.sampledType = BxDF.BSDF_NONE;
         sample.f = new Spectrum(0);
         int matchingComps = NumComponents(type);
         if (matchingComps == 0) {
@@ -130,26 +130,26 @@ public class BSDF {
         //        << *pdf << ", ratio = " << ((*pdf > 0) ? (f / *pdf) : Spectrum(0.))
         //    << ", wi = " << wi;
         if (sample.pdf == 0) {
-            sample.sampledType = BxDF.BxDFType.BSDF_NONE;
+            sample.sampledType = BxDF.BSDF_NONE;
             return sample;
         }
 
         sample.wiWorld = LocalToWorld(wi);
 
         // Compute overall PDF with all matching _BxDF_s
-        if (!((bxdf.type.value & BxDF.BxDFType.BSDF_SPECULAR.value) != 0) && matchingComps > 1)
+        if (!((bxdf.type & BxDF.BSDF_SPECULAR) != 0) && matchingComps > 1)
             for (int i = 0; i < nBxDFs; ++i)
                 if (bxdfs[i] != bxdf && bxdfs[i].MatchesFlags(type))
                     sample.pdf += bxdfs[i].Pdf(wo, wi);
         if (matchingComps > 1) sample.pdf /= matchingComps;
 
         // Compute value of BSDF for sampled direction
-        if (!((bxdf.type.value & BxDF.BxDFType.BSDF_SPECULAR.value) != 0) && matchingComps > 1) {
+        if (!((bxdf.type & BxDF.BSDF_SPECULAR) != 0) && matchingComps > 1) {
             boolean reflect = Normal3f.Dot(sample.wiWorld, ng) * Normal3f.Dot(woWorld, ng) > 0;
             for (int i = 0; i < nBxDFs; ++i)
                 if (bxdfs[i].MatchesFlags(type) &&
-                    ((reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_REFLECTION.value) != 0)) ||
-                    (!reflect && ((bxdfs[i].type.value & BxDF.BxDFType.BSDF_TRANSMISSION.value) != 0))))
+                    ((reflect && ((bxdfs[i].type & BxDF.BSDF_REFLECTION) != 0)) ||
+                    (!reflect && ((bxdfs[i].type & BxDF.BSDF_TRANSMISSION) != 0))))
             sample.f = (Spectrum)CoefficientSpectrum.add(sample.f, bxdfs[i].f(wo, wi));
         }
         //VLOG(2) << "Overall f = " << f << ", pdf = " << *pdf << ", ratio = "
@@ -157,10 +157,10 @@ public class BSDF {
         return sample;
     }
     public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u) {
-        return Sample_f(woWorld, u, BxDF.BxDFType.BSDF_ALL);
+        return Sample_f(woWorld, u, BxDF.BSDF_ALL);
     }
 
-    public float Pdf(Vector3f woWorld, Vector3f wiWorld, BxDF.BxDFType flags) {
+    public float Pdf(Vector3f woWorld, Vector3f wiWorld, int flags) {
         //ProfilePhase pp(Prof::BSDFPdf);
         if (nBxDFs == 0.f) return 0.f;
         Vector3f wo = WorldToLocal(woWorld), wi = WorldToLocal(wiWorld);
@@ -176,7 +176,7 @@ public class BSDF {
         return v;
     }
     public float Pdf(Vector3f wo, Vector3f wi) {
-        return Pdf(wo, wi, BxDF.BxDFType.BSDF_ALL);
+        return Pdf(wo, wi, BxDF.BSDF_ALL);
     }
     public String ToString() {
         return "";

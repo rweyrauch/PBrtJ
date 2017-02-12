@@ -48,6 +48,11 @@ public class Bounds2f {
         return pMax.subtract(pMin);
     }
 
+    public float Area() {
+        Vector2f d = pMax.subtract(pMin);
+        return (d.x * d.y);
+    }
+
     public int MaximumExtent() {
         Vector2f diag = Diagonal();
         if (diag.x > diag.y)
@@ -56,10 +61,10 @@ public class Bounds2f {
             return 1;
     }
 
-    Point2f Lerp(Point2f t) {
+    public Point2f Lerp(Point2f t) {
         return new Point2f(Pbrt.Lerp(t.x, pMin.x, pMax.x), Pbrt.Lerp(t.y, pMin.y, pMax.y));
     }
-    Vector2f Offset(Point2f p) {
+    public Vector2f Offset(Point2f p) {
         Vector2f o = p.subtract(pMin);
         if (pMax.x > pMin.x) o.x /= pMax.x - pMin.x;
         if (pMax.y > pMin.y) o.y /= pMax.y - pMin.y;

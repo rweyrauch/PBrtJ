@@ -10,7 +10,8 @@
 
 package org.pbrt.core;
 
-public abstract class Integrator {
-
-    public abstract void Render(Scene scene);
+public class FloatFile {
+    public static float[] Read(String filename) {
+        return null;
+    }
 }

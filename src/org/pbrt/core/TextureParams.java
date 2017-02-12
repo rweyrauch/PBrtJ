@@ -11,6 +11,8 @@
 package org.pbrt.core;
 
 import java.util.Map;
+import java.util.Objects;
+
 import org.pbrt.textures.ConstantTexture;
 
 public class TextureParams {
@@ -31,8 +33,8 @@ public class TextureParams {
     }
     public Texture<Spectrum> GetSpectrumTexture(String name, Spectrum def) {
         String texname = geomParams.FindTexture(name);
-        if (texname == "") texname = materialParams.FindTexture(name);
-        if (texname != "") {
+        if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
+        if (!Objects.equals(texname, "")) {
             if (spectrumTextures.get(texname) != null)
                 return spectrumTextures.get(texname);
             else
@@ -44,8 +46,8 @@ public class TextureParams {
     }
     public Texture<Spectrum> GetSpectrumTextureOrNull(String name) {
         String texname = geomParams.FindTexture(name);
-        if (texname == "") texname = materialParams.FindTexture(name);
-        if (texname != "") {
+        if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
+        if (!Objects.equals(texname, "")) {
             if (spectrumTextures.get(texname) != null)
                 return spectrumTextures.get(texname);
             else {
@@ -60,8 +62,8 @@ public class TextureParams {
     }
     public Texture<Float> GetFloatTexture(String name, float def) {
         String texname = geomParams.FindTexture(name);
-        if (texname == "") texname = materialParams.FindTexture(name);
-        if (texname != "") {
+        if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
+        if (!Objects.equals(texname, "")) {
             if (floatTextures.get(texname) != null)
                 return floatTextures.get(texname);
             else
@@ -72,8 +74,8 @@ public class TextureParams {
     }
     public Texture<Float> GetFloatTextureOrNull(String name) {
         String texname = geomParams.FindTexture(name);
-        if (texname == "") texname = materialParams.FindTexture(name);
-        if (texname != "") {
+        if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
+        if (!Objects.equals(texname, "")) {
             if (floatTextures.get(texname) != null)
                 return floatTextures.get(texname);
             else {

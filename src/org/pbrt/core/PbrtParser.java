@@ -31,7 +31,7 @@
    version 2.2 of Bison.  */
 
 /* First part of user declarations.  */
-/* "pbrtscene.y":1  */ /* lalr1.java:91  */
+/* "PbrtParser.y":1  */ /* lalr1.java:91  */
 
 /*
  * PBrtJ -- Port of pbrt v3 to Java.
@@ -45,6 +45,8 @@ package org.pbrt.core;
 
 import java.util.ArrayList;
 import org.pbrt.core.Api;
+import org.pbrt.core.Parser;
+import org.pbrt.core.Parser.PbrtParameter;
 
 /*
 If this file is not pbrtscene.y, it was generated from pbrtscene.y and
@@ -52,16 +54,16 @@ should not be edited directly.
 */
 
 
-/* "pbrtscene.java":56  */ /* lalr1.java:91  */
+/* "PbrtParser.java":58  */ /* lalr1.java:91  */
 
-/* "pbrtscene.java":58  */ /* lalr1.java:92  */
+/* "PbrtParser.java":60  */ /* lalr1.java:92  */
 
 /**
- * A Bison parser, automatically generated from <tt>pbrtscene.y</tt>.
+ * A Bison parser, automatically generated from <tt>PbrtParser.y</tt>.
  *
  * @author LALR (1) parser skeleton written by Paolo Bonzini.
  */
-class YYParser
+public class PbrtParser
 {
     /** Version number for the Bison executable that generated this parser.  */
   public static final String bisonVersion = "3.0.4";
@@ -77,7 +79,7 @@ class YYParser
 
   /**
    * Communication interface between the scanner and the Bison-generated
-   * parser <tt>YYParser</tt>.
+   * parser <tt>PbrtParser</tt>.
    */
   public interface Lexer {
     /** Token returned by the scanner to signal the end of its input.  */
@@ -129,49 +131,51 @@ class YYParser
     /** Token number,to be returned by the scanner.  */
     static final int MAKENAMEDMATERIAL = 279;
     /** Token number,to be returned by the scanner.  */
-    static final int MEDIUMINTERFACE = 280;
+    static final int MAKENAMEDMEDIUM = 280;
     /** Token number,to be returned by the scanner.  */
-    static final int MATERIAL = 281;
+    static final int MEDIUMINTERFACE = 281;
     /** Token number,to be returned by the scanner.  */
-    static final int NAMEDMATERIAL = 282;
+    static final int MATERIAL = 282;
     /** Token number,to be returned by the scanner.  */
-    static final int OBJECTBEGIN = 283;
+    static final int NAMEDMATERIAL = 283;
     /** Token number,to be returned by the scanner.  */
-    static final int OBJECTEND = 284;
+    static final int OBJECTBEGIN = 284;
     /** Token number,to be returned by the scanner.  */
-    static final int OBJECTINSTANCE = 285;
+    static final int OBJECTEND = 285;
     /** Token number,to be returned by the scanner.  */
-    static final int PIXELFILTER = 286;
+    static final int OBJECTINSTANCE = 286;
     /** Token number,to be returned by the scanner.  */
-    static final int REVERSEORIENTATION = 287;
+    static final int PIXELFILTER = 287;
     /** Token number,to be returned by the scanner.  */
-    static final int ROTATE = 288;
+    static final int REVERSEORIENTATION = 288;
     /** Token number,to be returned by the scanner.  */
-    static final int SAMPLER = 289;
+    static final int ROTATE = 289;
     /** Token number,to be returned by the scanner.  */
-    static final int SCALE = 290;
+    static final int SAMPLER = 290;
     /** Token number,to be returned by the scanner.  */
-    static final int SHAPE = 291;
+    static final int SCALE = 291;
     /** Token number,to be returned by the scanner.  */
-    static final int STARTTIME = 292;
+    static final int SHAPE = 292;
     /** Token number,to be returned by the scanner.  */
-    static final int INTEGRATOR = 293;
+    static final int STARTTIME = 293;
     /** Token number,to be returned by the scanner.  */
-    static final int TEXTURE = 294;
+    static final int INTEGRATOR = 294;
     /** Token number,to be returned by the scanner.  */
-    static final int TRANSFORMBEGIN = 295;
+    static final int TEXTURE = 295;
     /** Token number,to be returned by the scanner.  */
-    static final int TRANSFORMEND = 296;
+    static final int TRANSFORMBEGIN = 296;
     /** Token number,to be returned by the scanner.  */
-    static final int TRANSFORMTIMES = 297;
+    static final int TRANSFORMEND = 297;
     /** Token number,to be returned by the scanner.  */
-    static final int TRANSFORM = 298;
+    static final int TRANSFORMTIMES = 298;
     /** Token number,to be returned by the scanner.  */
-    static final int TRANSLATE = 299;
+    static final int TRANSFORM = 299;
     /** Token number,to be returned by the scanner.  */
-    static final int WORLDBEGIN = 300;
+    static final int TRANSLATE = 300;
     /** Token number,to be returned by the scanner.  */
-    static final int WORLDEND = 301;
+    static final int WORLDBEGIN = 301;
+    /** Token number,to be returned by the scanner.  */
+    static final int WORLDEND = 302;
 
 
     
@@ -213,7 +217,7 @@ class YYParser
    * Instantiates the Bison-generated parser.
    * @param yylexer The scanner that will supply tokens to the parser.
    */
-  public YYParser (Lexer yylexer) 
+  public PbrtParser (Lexer yylexer) 
   {
     
     this.yylexer = yylexer;
@@ -409,7 +413,7 @@ class YYParser
       {
           case 3:
   if (yyn == 3)
-    /* "pbrtscene.y":53  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":58  */ /* lalr1.java:489  */
     {
 		yyval = ((ArrayList<String>)(yystack.valueAt (1-(1))));
 	};
@@ -418,7 +422,7 @@ class YYParser
 
   case 4:
   if (yyn == 4)
-    /* "pbrtscene.y":57  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":62  */ /* lalr1.java:489  */
     {
 		yyval = ((ArrayList<Float>)(yystack.valueAt (1-(1))));
 	};
@@ -427,7 +431,7 @@ class YYParser
 
   case 5:
   if (yyn == 5)
-    /* "pbrtscene.y":64  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":69  */ /* lalr1.java:489  */
     {
 		yyval = ((ArrayList<String>)(yystack.valueAt (3-(2))));
 	};
@@ -436,7 +440,7 @@ class YYParser
 
   case 6:
   if (yyn == 6)
-    /* "pbrtscene.y":68  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":73  */ /* lalr1.java:489  */
     {
 		yyval = ((String)(yystack.valueAt (1-(1))));
 	};
@@ -445,7 +449,7 @@ class YYParser
 
   case 7:
   if (yyn == 7)
-    /* "pbrtscene.y":75  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":80  */ /* lalr1.java:489  */
     {
 		yyval = ((String)(yystack.valueAt (1-(1))));
 	};
@@ -454,7 +458,7 @@ class YYParser
 
   case 8:
   if (yyn == 8)
-    /* "pbrtscene.y":82  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":87  */ /* lalr1.java:489  */
     {
 		ArrayList<String> slist = ((ArrayList<String>)(yystack.valueAt (2-(1))));
 		slist.add(((String)(yystack.valueAt (2-(2)))));
@@ -465,7 +469,7 @@ class YYParser
 
   case 9:
   if (yyn == 9)
-    /* "pbrtscene.y":88  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":93  */ /* lalr1.java:489  */
     {
 	    ArrayList<String> slist = new ArrayList<String>(16);
 		slist.add(((String)(yystack.valueAt (1-(1)))));
@@ -476,7 +480,7 @@ class YYParser
 
   case 10:
   if (yyn == 10)
-    /* "pbrtscene.y":97  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":102  */ /* lalr1.java:489  */
     {
 		yyval = ((ArrayList<Float>)(yystack.valueAt (3-(2))));
 	};
@@ -485,7 +489,7 @@ class YYParser
 
   case 11:
   if (yyn == 11)
-    /* "pbrtscene.y":101  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":106  */ /* lalr1.java:489  */
     {
 		yyval = ((Float)(yystack.valueAt (1-(1))));
 	};
@@ -494,7 +498,7 @@ class YYParser
 
   case 12:
   if (yyn == 12)
-    /* "pbrtscene.y":108  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":113  */ /* lalr1.java:489  */
     {
 		yyval = ((Float)(yystack.valueAt (1-(1))));
 	};
@@ -503,7 +507,7 @@ class YYParser
 
   case 13:
   if (yyn == 13)
-    /* "pbrtscene.y":115  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":120  */ /* lalr1.java:489  */
     {
 		ArrayList<Float> flist = ((ArrayList<Float>)(yystack.valueAt (2-(1))));
 		flist.add(((Float)(yystack.valueAt (2-(2)))));
@@ -514,7 +518,7 @@ class YYParser
 
   case 14:
   if (yyn == 14)
-    /* "pbrtscene.y":121  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":126  */ /* lalr1.java:489  */
     {
 		ArrayList<Float> flist = new ArrayList<Float>(16);
 		flist.add(((Float)(yystack.valueAt (1-(1)))));
@@ -525,7 +529,7 @@ class YYParser
 
   case 15:
   if (yyn == 15)
-    /* "pbrtscene.y":130  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":135  */ /* lalr1.java:489  */
     {
 		ArrayList<PbrtParameter> plist = ((ArrayList<PbrtParameter>)(yystack.valueAt (2-(2))));
 		plist.add(((PbrtParameter)(yystack.valueAt (2-(1)))));
@@ -536,7 +540,7 @@ class YYParser
 
   case 16:
   if (yyn == 16)
-    /* "pbrtscene.y":136  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":141  */ /* lalr1.java:489  */
     {
 		// empty list
 		yyval = null;
@@ -546,7 +550,7 @@ class YYParser
 
   case 17:
   if (yyn == 17)
-    /* "pbrtscene.y":144  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":149  */ /* lalr1.java:489  */
     {
 		yyval = new PbrtParameter(((String)(yystack.valueAt (2-(1)))), ((ArrayList<Object>)(yystack.valueAt (2-(2)))));
 	};
@@ -555,9 +559,9 @@ class YYParser
 
   case 20:
   if (yyn == 20)
-    /* "pbrtscene.y":156  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":161  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtAccelerator(((String)(yystack.valueAt (3-(2)))), params);
@@ -568,7 +572,7 @@ class YYParser
 
   case 21:
   if (yyn == 21)
-    /* "pbrtscene.y":164  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":169  */ /* lalr1.java:489  */
     {
 		Api.pbrtActiveTransformAll();
 	};
@@ -577,7 +581,7 @@ class YYParser
 
   case 22:
   if (yyn == 22)
-    /* "pbrtscene.y":168  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":173  */ /* lalr1.java:489  */
     {
 		Api.pbrtActiveTransformEndTime();
 	};
@@ -586,7 +590,7 @@ class YYParser
 
   case 23:
   if (yyn == 23)
-    /* "pbrtscene.y":172  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":177  */ /* lalr1.java:489  */
     {
 		Api.pbrtActiveTransformStartTime();
 	};
@@ -595,9 +599,9 @@ class YYParser
 
   case 24:
   if (yyn == 24)
-    /* "pbrtscene.y":176  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":181  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_ILLUMINANT)
 			Api.pbrtAreaLightSource(((String)(yystack.valueAt (3-(2)))), params);
@@ -608,7 +612,7 @@ class YYParser
 
   case 25:
   if (yyn == 25)
-    /* "pbrtscene.y":184  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":189  */ /* lalr1.java:489  */
     {
 		Api.pbrtAttributeBegin();
 	};
@@ -617,7 +621,7 @@ class YYParser
 
   case 26:
   if (yyn == 26)
-    /* "pbrtscene.y":188  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":193  */ /* lalr1.java:489  */
     {
 		Api.pbrtAttributeEnd();
 	};
@@ -626,9 +630,9 @@ class YYParser
 
   case 27:
   if (yyn == 27)
-    /* "pbrtscene.y":192  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":197  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtCamera(((String)(yystack.valueAt (3-(2)))), params);
@@ -639,7 +643,7 @@ class YYParser
 
   case 28:
   if (yyn == 28)
-    /* "pbrtscene.y":200  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":205  */ /* lalr1.java:489  */
     {
 		ArrayList<Float> values = ((ArrayList<Float>)(yystack.valueAt (2-(2))));
 		if (values.size() == 16) {
@@ -659,7 +663,7 @@ class YYParser
 
   case 29:
   if (yyn == 29)
-    /* "pbrtscene.y":215  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":220  */ /* lalr1.java:489  */
     {
 		Api.pbrtCoordinateSystem(((String)(yystack.valueAt (2-(2)))));
 	};
@@ -668,7 +672,7 @@ class YYParser
 
   case 30:
   if (yyn == 30)
-    /* "pbrtscene.y":219  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":224  */ /* lalr1.java:489  */
     {
 		Api.pbrtCoordSysTransform(((String)(yystack.valueAt (2-(2)))));
 	};
@@ -677,9 +681,9 @@ class YYParser
 
   case 31:
   if (yyn == 31)
-    /* "pbrtscene.y":223  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":228  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtFilm(((String)(yystack.valueAt (3-(2)))), params);
@@ -690,7 +694,7 @@ class YYParser
 
   case 32:
   if (yyn == 32)
-    /* "pbrtscene.y":231  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":236  */ /* lalr1.java:489  */
     {
 		Api.pbrtIdentity();
 	};
@@ -699,7 +703,7 @@ class YYParser
 
   case 33:
   if (yyn == 33)
-    /* "pbrtscene.y":235  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":240  */ /* lalr1.java:489  */
     {
 		//include_push($2, yylex)
 		Parser.PushInclude(((String)(yystack.valueAt (2-(2)))));
@@ -709,9 +713,9 @@ class YYParser
 
   case 34:
   if (yyn == 34)
-    /* "pbrtscene.y":240  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":245  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_ILLUMINANT)
 			Api.pbrtLightSource(((String)(yystack.valueAt (3-(2)))), params);
@@ -725,7 +729,7 @@ class YYParser
 
   case 35:
   if (yyn == 35)
-    /* "pbrtscene.y":251  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":256  */ /* lalr1.java:489  */
     {
     	Api.pbrtLookAt(((Float)(yystack.valueAt (10-(2)))), ((Float)(yystack.valueAt (10-(3)))), ((Float)(yystack.valueAt (10-(4)))), ((Float)(yystack.valueAt (10-(5)))), ((Float)(yystack.valueAt (10-(6)))), ((Float)(yystack.valueAt (10-(7)))), ((Float)(yystack.valueAt (10-(8)))), ((Float)(yystack.valueAt (10-(9)))), ((Float)(yystack.valueAt (10-(10)))));
 	};
@@ -734,9 +738,9 @@ class YYParser
 
   case 36:
   if (yyn == 36)
-    /* "pbrtscene.y":255  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":260  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtMakeNamedMaterial(((String)(yystack.valueAt (3-(2)))), params);
@@ -747,9 +751,22 @@ class YYParser
 
   case 37:
   if (yyn == 37)
-    /* "pbrtscene.y":263  */ /* lalr1.java:489  */
+    /* "PbrtParser.y":268  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		if (params != null) {
+			//InitParamSet(params, SPECTRUM_REFLECTANCE)
+    		Api.pbrtMakeNamedMedium(((String)(yystack.valueAt (3-(2)))), params);
+    	}
+	};
+  break;
+    
+
+  case 38:
+  if (yyn == 38)
+    /* "PbrtParser.y":276  */ /* lalr1.java:489  */
+    {
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
 			//InitParamSet(params, SPECTRUM_REFLECTANCE)
 	    	Api.pbrtMaterial(((String)(yystack.valueAt (3-(2)))), params);
@@ -758,65 +775,65 @@ class YYParser
   break;
     
 
-  case 38:
-  if (yyn == 38)
-    /* "pbrtscene.y":271  */ /* lalr1.java:489  */
+  case 39:
+  if (yyn == 39)
+    /* "PbrtParser.y":284  */ /* lalr1.java:489  */
     {
         Api.pbrtMediumInterface(((String)(yystack.valueAt (2-(2)))), ((String)(yystack.valueAt (2-(2)))));
     };
   break;
     
 
-  case 39:
-  if (yyn == 39)
-    /* "pbrtscene.y":275  */ /* lalr1.java:489  */
+  case 40:
+  if (yyn == 40)
+    /* "PbrtParser.y":288  */ /* lalr1.java:489  */
     {
         Api.pbrtMediumInterface(((String)(yystack.valueAt (3-(2)))), ((String)(yystack.valueAt (3-(3)))));
     };
   break;
     
 
-  case 40:
-  if (yyn == 40)
-    /* "pbrtscene.y":279  */ /* lalr1.java:489  */
+  case 41:
+  if (yyn == 41)
+    /* "PbrtParser.y":292  */ /* lalr1.java:489  */
     {
     	Api.pbrtNamedMaterial(((String)(yystack.valueAt (2-(2)))));
 	};
   break;
     
 
-  case 41:
-  if (yyn == 41)
-    /* "pbrtscene.y":283  */ /* lalr1.java:489  */
+  case 42:
+  if (yyn == 42)
+    /* "PbrtParser.y":296  */ /* lalr1.java:489  */
     {
 		Api.pbrtObjectBegin(((String)(yystack.valueAt (2-(2)))));
 	};
   break;
     
 
-  case 42:
-  if (yyn == 42)
-    /* "pbrtscene.y":287  */ /* lalr1.java:489  */
+  case 43:
+  if (yyn == 43)
+    /* "PbrtParser.y":300  */ /* lalr1.java:489  */
     {
 		Api.pbrtObjectEnd();
 	};
   break;
     
 
-  case 43:
-  if (yyn == 43)
-    /* "pbrtscene.y":291  */ /* lalr1.java:489  */
+  case 44:
+  if (yyn == 44)
+    /* "PbrtParser.y":304  */ /* lalr1.java:489  */
     {
 		Api.pbrtObjectInstance(((String)(yystack.valueAt (2-(2)))));
 	};
   break;
     
 
-  case 44:
-  if (yyn == 44)
-    /* "pbrtscene.y":295  */ /* lalr1.java:489  */
+  case 45:
+  if (yyn == 45)
+    /* "PbrtParser.y":308  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
     		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtPixelFilter(((String)(yystack.valueAt (3-(2)))), params);
@@ -825,29 +842,29 @@ class YYParser
   break;
     
 
-  case 45:
-  if (yyn == 45)
-    /* "pbrtscene.y":303  */ /* lalr1.java:489  */
+  case 46:
+  if (yyn == 46)
+    /* "PbrtParser.y":316  */ /* lalr1.java:489  */
     {
 		Api.pbrtReverseOrientation();
 	};
   break;
     
 
-  case 46:
-  if (yyn == 46)
-    /* "pbrtscene.y":307  */ /* lalr1.java:489  */
+  case 47:
+  if (yyn == 47)
+    /* "PbrtParser.y":320  */ /* lalr1.java:489  */
     {
 		Api.pbrtRotate(((Float)(yystack.valueAt (5-(2)))), ((Float)(yystack.valueAt (5-(3)))), ((Float)(yystack.valueAt (5-(4)))), ((Float)(yystack.valueAt (5-(5)))));
 	};
   break;
     
 
-  case 47:
-  if (yyn == 47)
-    /* "pbrtscene.y":311  */ /* lalr1.java:489  */
+  case 48:
+  if (yyn == 48)
+    /* "PbrtParser.y":324  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
     		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtSampler(((String)(yystack.valueAt (3-(2)))), params);
@@ -856,20 +873,20 @@ class YYParser
   break;
     
 
-  case 48:
-  if (yyn == 48)
-    /* "pbrtscene.y":319  */ /* lalr1.java:489  */
+  case 49:
+  if (yyn == 49)
+    /* "PbrtParser.y":332  */ /* lalr1.java:489  */
     {
 		Api.pbrtScale(((Float)(yystack.valueAt (4-(2)))), ((Float)(yystack.valueAt (4-(3)))), ((Float)(yystack.valueAt (4-(4)))));
 	};
   break;
     
 
-  case 49:
-  if (yyn == 49)
-    /* "pbrtscene.y":323  */ /* lalr1.java:489  */
+  case 50:
+  if (yyn == 50)
+    /* "PbrtParser.y":336  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
     		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtShape(((String)(yystack.valueAt (3-(2)))), params);
@@ -878,11 +895,11 @@ class YYParser
   break;
     
 
-  case 50:
-  if (yyn == 50)
-    /* "pbrtscene.y":331  */ /* lalr1.java:489  */
+  case 51:
+  if (yyn == 51)
+    /* "PbrtParser.y":344  */ /* lalr1.java:489  */
     {
- 		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
+ 		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (3-(3)))));
 		if (params != null) {
   	  		//InitParamSet(params, SPECTRUM_REFLECTANCE)
     		Api.pbrtIntegrator(((String)(yystack.valueAt (3-(2)))), params);
@@ -891,11 +908,11 @@ class YYParser
   break;
     
 
-  case 51:
-  if (yyn == 51)
-    /* "pbrtscene.y":339  */ /* lalr1.java:489  */
+  case 52:
+  if (yyn == 52)
+    /* "PbrtParser.y":352  */ /* lalr1.java:489  */
     {
-		ParamSet params = PbrtParameter.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (5-(5)))));
+		ParamSet params = Parser.CreateParamSet(((ArrayList<PbrtParameter>)(yystack.valueAt (5-(5)))));
 		if (params != null) {
 	   	 	//InitParamSet(params, SPECTRUM_REFLECTANCE)
 			Api.pbrtTexture(((String)(yystack.valueAt (5-(2)))), ((String)(yystack.valueAt (5-(3)))), ((String)(yystack.valueAt (5-(4)))), params);
@@ -904,36 +921,36 @@ class YYParser
   break;
     
 
-  case 52:
-  if (yyn == 52)
-    /* "pbrtscene.y":347  */ /* lalr1.java:489  */
+  case 53:
+  if (yyn == 53)
+    /* "PbrtParser.y":360  */ /* lalr1.java:489  */
     {
 		Api.pbrtTransformBegin();
 	};
   break;
     
 
-  case 53:
-  if (yyn == 53)
-    /* "pbrtscene.y":351  */ /* lalr1.java:489  */
+  case 54:
+  if (yyn == 54)
+    /* "PbrtParser.y":364  */ /* lalr1.java:489  */
     {
 		Api.pbrtTransformEnd();
 	};
   break;
     
 
-  case 54:
-  if (yyn == 54)
-    /* "pbrtscene.y":355  */ /* lalr1.java:489  */
+  case 55:
+  if (yyn == 55)
+    /* "PbrtParser.y":368  */ /* lalr1.java:489  */
     {
 		Api.pbrtTransformTimes(((Float)(yystack.valueAt (3-(2)))), ((Float)(yystack.valueAt (3-(3)))));
 	};
   break;
     
 
-  case 55:
-  if (yyn == 55)
-    /* "pbrtscene.y":359  */ /* lalr1.java:489  */
+  case 56:
+  if (yyn == 56)
+    /* "PbrtParser.y":372  */ /* lalr1.java:489  */
     {
 		ArrayList<Float> values = ((ArrayList<Float>)(yystack.valueAt (2-(2))));
 		if (values.size() == 16) {		
@@ -950,27 +967,27 @@ class YYParser
   break;
     
 
-  case 56:
-  if (yyn == 56)
-    /* "pbrtscene.y":373  */ /* lalr1.java:489  */
+  case 57:
+  if (yyn == 57)
+    /* "PbrtParser.y":386  */ /* lalr1.java:489  */
     {
 		Api.pbrtTranslate(((Float)(yystack.valueAt (4-(2)))), ((Float)(yystack.valueAt (4-(3)))), ((Float)(yystack.valueAt (4-(4)))));
 	};
   break;
     
 
-  case 57:
-  if (yyn == 57)
-    /* "pbrtscene.y":377  */ /* lalr1.java:489  */
+  case 58:
+  if (yyn == 58)
+    /* "PbrtParser.y":390  */ /* lalr1.java:489  */
     {
 		Api.pbrtWorldBegin();
 	};
   break;
     
 
-  case 58:
-  if (yyn == 58)
-    /* "pbrtscene.y":381  */ /* lalr1.java:489  */
+  case 59:
+  if (yyn == 59)
+    /* "PbrtParser.y":394  */ /* lalr1.java:489  */
     {
 		Api.pbrtWorldEnd();
 	};
@@ -978,7 +995,7 @@ class YYParser
     
 
 
-/* "pbrtscene.java":982  */ /* lalr1.java:489  */
+/* "PbrtParser.java":999  */ /* lalr1.java:489  */
         default: break;
       }
 
@@ -1285,7 +1302,7 @@ class YYParser
     return yyvalue == yytable_ninf_;
   }
 
-  private static final byte yypact_ninf_ = -45;
+  private static final byte yypact_ninf_ = -46;
   private static final byte yytable_ninf_ = -1;
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -1295,19 +1312,19 @@ class YYParser
   {
     return new byte[]
     {
-      46,    13,    -7,    18,   -45,   -45,    23,    19,    24,    25,
-      26,   -45,    28,    30,    29,    32,    33,    34,    35,    36,
-     -45,    37,    38,   -45,    39,    42,    41,    44,    45,    47,
-     -45,   -45,    48,    19,    51,   -45,   -45,    49,    46,   -45,
-      80,   -45,   -45,   -45,    80,    80,   -45,    88,   -45,   -45,
-     -45,   -45,    80,   -45,    80,    89,    80,    92,    80,   -45,
-     -45,   -45,    80,    91,    80,    93,    80,    80,    94,    95,
-     -45,    96,   -45,   -45,     1,   -45,    80,   -45,   -45,   -45,
-       8,   -45,   -45,    97,   -45,   -45,   -45,   -45,    98,   -45,
-      99,   -45,   -45,   102,   -45,   101,   -45,    14,   -45,   -45,
-     -45,   -45,   -45,   -45,   -45,   103,   104,   -45,    80,   -45,
-     -45,     2,   105,   -45,   -45,   -45,   -45,   106,   107,   108,
-     109,   -45
+      48,    14,    -7,    19,   -46,   -46,    24,    20,    25,    26,
+      27,   -46,    29,    31,    30,    33,    34,    35,    36,    37,
+      38,   -46,    39,    40,   -46,    41,    42,    43,    44,    46,
+      47,   -46,   -46,    49,    20,    50,   -46,   -46,    51,    48,
+     -46,    55,   -46,   -46,   -46,    55,    55,   -46,    81,   -46,
+     -46,   -46,   -46,    55,   -46,    55,    91,    55,    55,    94,
+      55,   -46,   -46,   -46,    55,    93,    55,    95,    55,    55,
+      96,    97,   -46,    98,   -46,   -46,     1,   -46,    55,   -46,
+     -46,   -46,     9,   -46,   -46,    99,   -46,   -46,   -46,   -46,
+     -46,   100,   -46,   101,   -46,   -46,   104,   -46,   103,   -46,
+      15,   -46,   -46,   -46,   -46,   -46,   -46,   -46,   105,   106,
+     -46,    55,   -46,   -46,     2,   107,   -46,   -46,   -46,   -46,
+     108,   109,   110,   111,   -46
     };
   }
 
@@ -1321,17 +1338,17 @@ class YYParser
     {
        0,     0,     0,     0,    25,    26,     0,     0,     0,     0,
        0,    32,     0,     0,     0,     0,     0,     0,     0,     0,
-      42,     0,     0,    45,     0,     0,     0,     0,     0,     0,
-      52,    53,     0,     0,     0,    57,    58,     0,     2,    19,
-      16,    21,    22,    23,    16,    16,    12,     0,    28,    11,
-      29,    30,    16,    33,    16,     0,    16,    38,    16,    40,
-      41,    43,    16,     0,    16,     0,    16,    16,     0,     0,
-      55,     0,     1,    18,     0,    20,    16,    24,    27,    14,
-       0,    31,    34,     0,    36,    39,    37,    44,     0,    47,
-       0,    49,    50,     0,    54,     0,     7,     0,    17,     3,
-       6,     4,    15,    13,    10,     0,     0,    48,    16,    56,
-       9,     0,     0,    46,    51,     8,     5,     0,     0,     0,
-       0,    35
+       0,    43,     0,     0,    46,     0,     0,     0,     0,     0,
+       0,    53,    54,     0,     0,     0,    58,    59,     0,     2,
+      19,    16,    21,    22,    23,    16,    16,    12,     0,    28,
+      11,    29,    30,    16,    33,    16,     0,    16,    16,    39,
+      16,    41,    42,    44,    16,     0,    16,     0,    16,    16,
+       0,     0,    56,     0,     1,    18,     0,    20,    16,    24,
+      27,    14,     0,    31,    34,     0,    36,    37,    40,    38,
+      45,     0,    48,     0,    50,    51,     0,    55,     0,     7,
+       0,    17,     3,     6,     4,    15,    13,    10,     0,     0,
+      49,    16,    57,     9,     0,     0,    47,    52,     8,     5,
+       0,     0,     0,     0,    35
     };
   }
 
@@ -1341,8 +1358,8 @@ class YYParser
   {
     return new byte[]
     {
-     -45,   -45,   -45,   -45,   -45,   -45,   -31,   -45,   -45,   -44,
-     -45,   -45,     4
+     -46,   -46,   -46,   -46,   -46,   -46,   -32,   -46,   -46,   -45,
+     -46,   -46,    13
     };
   }
 
@@ -1352,8 +1369,8 @@ class YYParser
   {
     return new byte[]
     {
-      -1,    37,    98,    99,   100,   111,    48,    49,    80,    75,
-      76,    38,    39
+      -1,    38,   101,   102,   103,   114,    49,    50,    82,    77,
+      78,    39,    40
     };
   }
 
@@ -1365,18 +1382,18 @@ class YYParser
   {
     return new byte[]
     {
-      77,    78,    70,    41,    96,   115,    46,    97,    81,   116,
-      82,    42,    84,   103,    86,   104,    40,   110,    87,    79,
-      89,    44,    91,    92,    46,    47,    45,    50,    51,    52,
-      43,    53,   102,    54,    55,    56,    57,    58,    59,    60,
-      61,    62,    73,   101,    63,    64,    65,    66,    67,    72,
-      68,     0,     0,    69,     1,     2,    71,     3,     4,     5,
-       6,     7,     8,     9,   114,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    74,    28,    29,    30,    31,    32,    33,
-      34,    35,    36,    79,    83,    85,    88,    93,    90,     0,
-      94,    95,   105,   106,   107,   108,   109,     0,   112,   113,
-     117,   118,   119,   120,   121
+      79,    80,    72,    42,    99,   118,    47,   100,    83,   119,
+      84,    43,    86,    87,   106,    89,   107,    41,   113,    90,
+      81,    92,    45,    94,    95,    47,    48,    46,    51,    52,
+      53,    44,    54,   105,    55,    56,    57,    58,    59,    60,
+      61,    62,    63,    64,   104,    66,    65,    68,    67,    69,
+      70,    74,    75,     0,    71,    73,     1,     2,    76,     3,
+       4,     5,     6,     7,     8,     9,   117,    10,    11,    12,
+      13,    14,    15,    16,    17,    18,    19,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    81,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,    85,    88,    91,    96,
+      93,     0,    97,    98,   108,   109,   110,   111,   112,     0,
+     115,   116,   120,   121,   122,   123,   124
     };
   }
 
@@ -1385,18 +1402,18 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-      44,    45,    33,    10,     3,     3,     5,     6,    52,     7,
-      54,    18,    56,     5,    58,     7,     3,     3,    62,     5,
-      64,     3,    66,    67,     5,     6,     3,     3,     3,     3,
-      37,     3,    76,     3,     5,     3,     3,     3,     3,     3,
-       3,     3,    38,    74,     5,     3,     5,     3,     3,     0,
-       3,    -1,    -1,     5,     8,     9,     5,    11,    12,    13,
-      14,    15,    16,    17,   108,    19,    20,    21,    22,    23,
-      24,    25,    26,    27,    28,    29,    30,    31,    32,    33,
-      34,    35,    36,     3,    38,    39,    40,    41,    42,    43,
-      44,    45,    46,     5,     5,     3,     5,     3,     5,    -1,
-       5,     5,     5,     5,     5,     3,     5,    -1,     5,     5,
-       5,     5,     5,     5,     5
+      45,    46,    34,    10,     3,     3,     5,     6,    53,     7,
+      55,    18,    57,    58,     5,    60,     7,     3,     3,    64,
+       5,    66,     3,    68,    69,     5,     6,     3,     3,     3,
+       3,    38,     3,    78,     3,     5,     3,     3,     3,     3,
+       3,     3,     3,     3,    76,     3,     5,     3,     5,     3,
+       3,     0,    39,    -1,     5,     5,     8,     9,     3,    11,
+      12,    13,    14,    15,    16,    17,   111,    19,    20,    21,
+      22,    23,    24,    25,    26,    27,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,     5,    39,    40,    41,
+      42,    43,    44,    45,    46,    47,     5,     3,     5,     3,
+       5,    -1,     5,     5,     5,     5,     5,     3,     5,    -1,
+       5,     5,     5,     5,     5,     5,     5
     };
   }
 
@@ -1409,17 +1426,17 @@ private static final byte yycheck_[] = yycheck_init();
     {
        0,     8,     9,    11,    12,    13,    14,    15,    16,    17,
       19,    20,    21,    22,    23,    24,    25,    26,    27,    28,
-      29,    30,    31,    32,    33,    34,    35,    36,    38,    39,
-      40,    41,    42,    43,    44,    45,    46,    48,    58,    59,
-       3,    10,    18,    37,     3,     3,     5,     6,    53,    54,
-       3,     3,     3,     3,     3,     5,     3,     3,     3,     3,
-       3,     3,     3,     5,     3,     5,     3,     3,     3,     5,
-      53,     5,     0,    59,     3,    56,    57,    56,    56,     5,
-      55,    56,    56,     5,    56,     3,    56,    56,     5,    56,
-       5,    56,    56,     3,     5,     5,     3,     6,    49,    50,
-      51,    53,    56,     5,     7,     5,     5,     5,     3,     5,
-       3,    52,     5,     5,    56,     3,     7,     5,     5,     5,
-       5,     5
+      29,    30,    31,    32,    33,    34,    35,    36,    37,    39,
+      40,    41,    42,    43,    44,    45,    46,    47,    49,    59,
+      60,     3,    10,    18,    38,     3,     3,     5,     6,    54,
+      55,     3,     3,     3,     3,     3,     5,     3,     3,     3,
+       3,     3,     3,     3,     3,     5,     3,     5,     3,     3,
+       3,     5,    54,     5,     0,    60,     3,    57,    58,    57,
+      57,     5,    56,    57,    57,     5,    57,    57,     3,    57,
+      57,     5,    57,     5,    57,    57,     3,     5,     5,     3,
+       6,    50,    51,    52,    54,    57,     5,     7,     5,     5,
+       5,     3,     5,     3,    53,     5,     5,    57,     3,     7,
+       5,     5,     5,     5,     5
     };
   }
 
@@ -1429,12 +1446,12 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       0,    47,    48,    49,    49,    50,    50,    51,    52,    52,
-      53,    53,    54,    55,    55,    56,    56,    57,    58,    58,
-      59,    59,    59,    59,    59,    59,    59,    59,    59,    59,
-      59,    59,    59,    59,    59,    59,    59,    59,    59,    59,
-      59,    59,    59,    59,    59,    59,    59,    59,    59,    59,
-      59,    59,    59,    59,    59,    59,    59,    59,    59
+       0,    48,    49,    50,    50,    51,    51,    52,    53,    53,
+      54,    54,    55,    56,    56,    57,    57,    58,    59,    59,
+      60,    60,    60,    60,    60,    60,    60,    60,    60,    60,
+      60,    60,    60,    60,    60,    60,    60,    60,    60,    60,
+      60,    60,    60,    60,    60,    60,    60,    60,    60,    60,
+      60,    60,    60,    60,    60,    60,    60,    60,    60,    60
     };
   }
 
@@ -1447,9 +1464,9 @@ private static final byte yycheck_[] = yycheck_init();
        0,     2,     1,     1,     1,     3,     1,     1,     2,     1,
        3,     1,     1,     2,     1,     2,     0,     2,     2,     1,
        3,     2,     2,     2,     3,     1,     1,     3,     2,     2,
-       2,     3,     1,     2,     3,    10,     3,     3,     2,     3,
-       2,     2,     1,     2,     3,     1,     5,     3,     4,     3,
-       3,     5,     1,     1,     3,     2,     4,     1,     1
+       2,     3,     1,     2,     3,    10,     3,     3,     3,     2,
+       3,     2,     2,     1,     2,     3,     1,     5,     3,     4,
+       3,     3,     5,     1,     1,     3,     2,     4,     1,     1
     };
   }
 
@@ -1464,7 +1481,7 @@ private static final byte yycheck_[] = yycheck_init();
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
-     295,   296,   297,   298,   299,   300,   301
+     295,   296,   297,   298,   299,   300,   301,   302
     };
   }
 
@@ -1480,12 +1497,12 @@ private static final byte yycheck_[] = yycheck_init();
   "AREALIGHTSOURCE", "ATTRIBUTEBEGIN", "ATTRIBUTEEND", "CAMERA",
   "CONCATTRANSFORM", "COORDINATESYSTEM", "COORDSYSTRANSFORM", "ENDTIME",
   "FILM", "IDENTITY", "INCLUDE", "LIGHTSOURCE", "LOOKAT",
-  "MAKENAMEDMATERIAL", "MEDIUMINTERFACE", "MATERIAL", "NAMEDMATERIAL",
-  "OBJECTBEGIN", "OBJECTEND", "OBJECTINSTANCE", "PIXELFILTER",
-  "REVERSEORIENTATION", "ROTATE", "SAMPLER", "SCALE", "SHAPE", "STARTTIME",
-  "INTEGRATOR", "TEXTURE", "TRANSFORMBEGIN", "TRANSFORMEND",
-  "TRANSFORMTIMES", "TRANSFORM", "TRANSLATE", "WORLDBEGIN", "WORLDEND",
-  "$accept", "start", "array", "string_array",
+  "MAKENAMEDMATERIAL", "MAKENAMEDMEDIUM", "MEDIUMINTERFACE", "MATERIAL",
+  "NAMEDMATERIAL", "OBJECTBEGIN", "OBJECTEND", "OBJECTINSTANCE",
+  "PIXELFILTER", "REVERSEORIENTATION", "ROTATE", "SAMPLER", "SCALE",
+  "SHAPE", "STARTTIME", "INTEGRATOR", "TEXTURE", "TRANSFORMBEGIN",
+  "TRANSFORMEND", "TRANSFORMTIMES", "TRANSFORM", "TRANSLATE", "WORLDBEGIN",
+  "WORLDEND", "$accept", "start", "array", "string_array",
   "single_element_string_array", "string_list", "number_array",
   "single_element_number_array", "number_list", "param_list",
   "param_list_entry", "pbrt_stmt_list", "pbrt_stmt", null
@@ -1498,12 +1515,12 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new short[]
     {
-       0,    48,    48,    52,    56,    63,    67,    74,    81,    87,
-      96,   100,   107,   114,   120,   129,   136,   143,   150,   151,
-     155,   163,   167,   171,   175,   183,   187,   191,   199,   214,
-     218,   222,   230,   234,   239,   250,   254,   262,   270,   274,
-     278,   282,   286,   290,   294,   302,   306,   310,   318,   322,
-     330,   338,   346,   350,   354,   358,   372,   376,   380
+       0,    53,    53,    57,    61,    68,    72,    79,    86,    92,
+     101,   105,   112,   119,   125,   134,   141,   148,   155,   156,
+     160,   168,   172,   176,   180,   188,   192,   196,   204,   219,
+     223,   227,   235,   239,   244,   255,   259,   267,   275,   283,
+     287,   291,   295,   299,   303,   307,   315,   319,   323,   331,
+     335,   343,   351,   359,   363,   367,   371,   385,   389,   393
     };
   }
 
@@ -1563,7 +1580,7 @@ private static final byte yycheck_[] = yycheck_init();
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46
+      45,    46,    47
     };
   }
 
@@ -1575,231 +1592,20 @@ private static final byte yycheck_[] = yycheck_init();
       return yyundef_token_;
   }
 
-  private static final int yylast_ = 114;
+  private static final int yylast_ = 116;
   private static final int yynnts_ = 13;
   private static final int yyempty_ = -2;
-  private static final int yyfinal_ = 72;
+  private static final int yyfinal_ = 74;
   private static final int yyterror_ = 1;
   private static final int yyerrcode_ = 256;
-  private static final int yyntokens_ = 47;
+  private static final int yyntokens_ = 48;
 
-  private static final int yyuser_token_number_max_ = 301;
+  private static final int yyuser_token_number_max_ = 302;
   private static final int yyundef_token_ = 2;
 
 /* User implementation code.  */
 
 }
 
-/* "pbrtscene.y":386  */ /* lalr1.java:1070  */
+/* "PbrtParser.y":399  */ /* lalr1.java:1070  */
 
-
-class PbrtParameter {
-
-    public String type;
-    public String name;
-    public Object value;
-
-    public PbrtParameter(String typename, Object value) {
-        String[] tokens = typename.split(" ");
-        assert tokens.length == 2;
-        this.type = tokens[0];
-        this.name = tokens[1];
-        this.value = value;
-    }
-
-    public static ParamSet CreateParamSet(ArrayList<PbrtParameter> paramlist) {
-        if (paramlist == null) return null;
-
-        ParamSet pset = new ParamSet();
-        for (PbrtParameter param : paramlist) {
-            if (param.type == "int") {
-                if (param.value instanceof Float[]) {
-                    // parser converts all values to float, convert back to int
-                    Float[] fvalue = (Float[])param.value;
-                    Integer[] ivalue = new Integer[fvalue.length];
-                    for (int i = 0; i < fvalue.length; i++) {
-                        ivalue[i] = (int)Math.floor(fvalue[i]);
-                    }
-                    pset.AddInt(param.name, ivalue);
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'integer' parameter.\n");
-                }
-            }
-            else if (param.type == "bool") {
-                if (param.value instanceof Boolean[]) {
-                    pset.AddBoolean(param.name, (Boolean[])param.value);
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'bool' parameter.\n");
-                }
-            }
-            else if (param.type == "float") {
-                if (param.value instanceof Float[]) {
-                    pset.AddFloat(param.name, (Float[])param.value);
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'float' parameter.\n");
-                }
-            }
-            else if (param.type == "point2") {
-                if (param.value instanceof Float[]) {
-                    Float[] pvalues = (Float[])param.value;
-                    if (pvalues.length % 2 == 0) {
-                        Point2f[] points = new Point2f[pvalues.length/2];
-                        for (int i = 0; i < pvalues.length; i += 2) {
-                            points[i] = new Point2f(pvalues[i], pvalues[i+1]);
-                        }
-                        pset.AddPoint2f(param.name, points);
-                    }
-                    else {
-                        Error.Error("Length of 'point2' parameter list must be a factor of 2.");
-                    }
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'point2' parameter.\n");
-                }
-            }
-            else if (param.type == "vector2") {
-                if (param.value instanceof Float[]) {
-                    Float[] vvalues = (Float[])param.value;
-                    if (vvalues.length % 2 == 0) {
-                        Vector2f[] vectors = new Vector2f[vvalues.length/2];
-                        for (int i = 0; i < vvalues.length; i += 2) {
-                            vectors[i] = new Vector2f(vvalues[i], vvalues[i+1]);
-                        }
-                        pset.AddVector2f(param.name, vectors);
-                    }
-                    else {
-                        Error.Error("Length of 'vector2' parameter list must be a factor of 2.");
-                    }
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'vector2' parameter.\n");
-                }
-            }
-            else if (param.type == "point3") {
-                if (param.value instanceof Float[]) {
-                    Float[] pvalues = (Float[])param.value;
-                    if (pvalues.length % 3 == 0) {
-                        Point3f[] points = new Point3f[pvalues.length/3];
-                        for (int i = 0; i < pvalues.length; i += 3) {
-                            points[i] = new Point3f(pvalues[i], pvalues[i+1], pvalues[i+2]);
-                        }
-                        pset.AddPoint3f(param.name, points);
-                    }
-                    else {
-                        Error.Error("Length of 'point3' parameter list must be a factor of 3.");
-                    }
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'point3' parameter.\n");
-                }
-            }
-            else if (param.type == "vector3") {
-                if (param.value instanceof Float[]) {
-                    Float[] vvalues = (Float[])param.value;
-                    if (vvalues.length % 3 == 0) {
-                        Vector3f[] vectors = new Vector3f[vvalues.length/3];
-                        for (int i = 0; i < vvalues.length; i += 3) {
-                            vectors[i] = new Vector3f(vvalues[i], vvalues[i+1], vvalues[i+2]);
-                        }
-                        pset.AddVector3f(param.name, vectors);
-                    }
-                    else {
-                        Error.Error("Length of 'vector3' parameter list must be a factor of 3.");
-                    }
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'vector3' parameter.\n");
-                }
-            }
-            else if (param.type == "normal") {
-                if (param.value instanceof Float[]) {
-                    Float[] nvalues = (Float[])param.value;
-                    if (nvalues.length % 3 == 0) {
-                        Normal3f[] normals = new Normal3f[nvalues.length/3];
-                        for (int i = 0; i < nvalues.length; i += 3) {
-                            normals[i] = new Normal3f(nvalues[i], nvalues[i+1], nvalues[i+2]);
-                        }
-                        pset.AddNormal3f(param.name, normals);
-                    }
-                    else {
-                        Error.Error("Length of 'normal' parameter list must be a factor of 3.");
-                    }
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'normal' parameter.\n");
-                }
-            }
-            else if (param.type == "rgb" || param.type == "color") {
-                if (param.value instanceof Float[]) {
-                    Float[] cvalues = (Float[])param.value;
-                    if (cvalues.length % 3 == 0) {
-                        pset.AddRGBSpectrum(param.name, cvalues);
-                    }
-                    else {
-                        Error.Error("Length of 'rgb' or 'color' parameter list must be a factor of 3.");
-                    }
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'rgb' or 'color' parameter.\n");
-                }
-            }
-            else if (param.type == "xyz") {
-                if (param.value instanceof Float[]) {
-                    Float[] xvalues = (Float[])param.value;
-                    if (xvalues.length % 3 == 0) {
-                        pset.AddXYZSpectrum(param.name, xvalues);
-                    }
-                    else {
-                        Error.Error("Length of 'xyz' parameter list must be a factor of 3.");
-                    }
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'xyz' parameter'.\n");
-                }
-            }
-            else if (param.type == "blackbody") {
-                if (param.value instanceof Float[]) {
-                    pset.AddBlackbodySpectrum(param.name, (Float[])param.value);
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'blackbody' parameter.\n");
-                }
-            }
-            else if (param.type == "spectrum") {
-                if (param.value instanceof Float[]) {
-                    pset.AddSampledSpectrum(param.name, (Float[])param.value);
-                }
-                else if (param.value instanceof String[]) {
-                    pset.AddSampledSpectrumFiles(param.name, (String[])param.value);
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'spectrum' parameter.\n");
-                }
-            }
-            else if (param.type == "string") {
-                if (param.value instanceof String[]) {
-                    pset.AddString(param.name, (String[])param.value);
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'string' parameter.\n");
-                }
-            }
-            else if (param.type == "texture") {
-                if (param.value instanceof String[]) {
-                    String[] strings = (String[])param.value;
-                    pset.AddTexture(param.name, strings[0]);
-                }
-                else {
-                    Error.Error("Unexpected value array type for 'texture' parameter.\n");
-                }
-            }
-            else {
-                Error.Error("Unknown parameter type: %s\n", param.type);
-            }
-        }
-        return pset;
-    }
-}
