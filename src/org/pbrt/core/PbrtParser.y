@@ -26,7 +26,7 @@ should not be edited directly.
 %define parser_class_name {PbrtParser}
 %define public
 
-%token <String> STRING IDENTIFIER
+%token <String> STRING
 %token <Float> NUMBER
 %token LBRACK RBRACK
 
@@ -86,13 +86,17 @@ string_list
 	: string_list STRING
 	{
 		ArrayList<String> slist = $1;
-		slist.add($2);
+		if ($2 != null) {
+		    slist.add($2);
+		}
 		$$ = slist;
 	}
 	| STRING
 	{
 	    ArrayList<String> slist = new ArrayList<String>(16);
-		slist.add($1);
+	    if ($1 != null) {
+		    slist.add($1);
+		}
 		$$ = slist;
 	}
 	;
@@ -119,13 +123,17 @@ number_list
 	: number_list NUMBER
 	{
 		ArrayList<Float> flist = $1;
-		flist.add($2);
+		if ($2 != null) {
+		    flist.add($2);
+		}
 		$$ = flist;
 	}
 	| NUMBER
 	{
 		ArrayList<Float> flist = new ArrayList<Float>(16);
-		flist.add($1);
+		if ($1 != null) {
+		    flist.add($1);
+		}
 		$$ = flist;
 	}
 	;
@@ -134,20 +142,29 @@ param_list
 	: param_list_entry param_list
 	{
 		ArrayList<PbrtParameter> plist = $2;
-		plist.add($1);
+		if ($2 == null) {
+		    plist = new ArrayList<PbrtParameter>(4);
+		}
+		if ($1 != null) {
+		    plist.add($1);
+		}
 		$$ = plist;
 	}
 	|
 	{
 		// empty list
-		$$ = null;
+		ArrayList<PbrtParameter> plist = new ArrayList<PbrtParameter>(4);
+		$$ = plist;
 	}
 	;
 
 param_list_entry
 	: STRING array
 	{
-		$$ = new PbrtParameter($1, $2);
+	    if (($1 != null) && ($2 != null)) {
+	        System.out.printf("Param type: %s  Num: %d\n", $1, $2.size());
+		    $$ = new PbrtParameter($1, $2);
+		}
 	}
 	;
 

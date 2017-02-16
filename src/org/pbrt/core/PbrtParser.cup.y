@@ -10,11 +10,24 @@
 package org.pbrt.core;
 
 import java.util.ArrayList;
+import java_cup.runtime.*;
+import java.io.*;
 import org.pbrt.core.Parser.PbrtParameter;
 
 parser code {:
-    PbrtFlexLexer lexer;
-    public parser(PbrtFlexLexer lexer) { this.lexer = lexer; }
+    private Yylex lexer;
+    private String filename;
+    public parser(String filename) {
+        this();
+        this.filename = filename;
+        this.symbolFactory = new DefaultSymbolFactory();
+        try {
+            lexer = new Yylex(new FileReader(filename));
+        }
+        catch (IOException ex) {
+            Error.Error("Unable to open file \"" + filename + "\"");
+        }
+    }
 :}
 
 scan with {: return lexer.next_token(); :};
@@ -39,10 +52,9 @@ non terminal Float single_element_number_array;
 non terminal ArrayList<PbrtParameter> param_list;
 non terminal PbrtParameter param_list_entry;
 non terminal ArrayList<Object> array;
-non terminal scene, pbrt_stmt, pbrt_stmt_list;
+non terminal pbrt_stmt, pbrt_stmt_list;
 
-scene ::= pbrt_stmt_list:sl
-	;
+start with pbrt_stmt_list;
 
 array ::= string_array:sa
 	{:

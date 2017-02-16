@@ -29,108 +29,23 @@ public abstract class SeparableBSSRDF extends BSSRDF {
 
     @Override
     public Spectrum S(SurfaceInteraction pi, Vector3f wi) {
-        //ProfilePhase pp(Prof::BSSRDFEvaluation);
-        float Ft = Reflection.FrDielectric(Reflection.CosTheta(po.wo), 1, eta);
-        return (1 - Ft) * Sp(pi) * Sw(wi);
+        return null;
     }
 
     @Override
     public BSSRDFSample Sample_S(Scene scene, float u1, Point2f u2) {
-        //ProfilePhase pp(Prof::BSSRDFSampling);
-        BSSRDFSample Sp = Sample_Sp(scene, u1, u2);
-        if (!Sp.s.IsBlack()) {
-            // Initialize material model at sampled surface interaction
-            Sp.si.bsdf = new BSDF(Sp.si);
-            Sp.si.bsdf.Add(SeparableBSSRDFAdapter(this));
-            Sp.si.wo = new Vector3f(Sp.si.shading.n);
-        }
-        return Sp;
+        return null;
     }
 
     public Spectrum Sw(Vector3f w) {
-        float c = 1 - 2 * FresnelMoment1(1 / eta);
-        return (1 - Reflection.FrDielectric(Reflection.CosTheta(w), 1, eta)) / (c * (float)Math.PI);
+        return null;
     }
     public Spectrum Sp(SurfaceInteraction pi) {
         return Sr(Point3f.Distance(po.p, pi.p));
     }
 
     public BSSRDFSample Sample_Sp(Scene scene, float u1, Point2f u2) {
-        //ProfilePhase pp(Prof::BSSRDFEvaluation);
-        // Choose projection axis for BSSRDF sampling
-        Vector3f vx, vy, vz;
-        if (u1 < .5f) {
-            vx = ss;
-            vy = ts;
-            vz = new Vector3f(ns);
-            u1 *= 2;
-        } else if (u1 < .75f) {
-            // Prepare for sampling rays with respect to _ss_
-            vx = ts;
-            vy = new Vector3f(ns);
-            vz = ss;
-            u1 = (u1 - .5f) * 4;
-        } else {
-            // Prepare for sampling rays with respect to _ts_
-            vx = new Vector3f(ns);
-            vy = ss;
-            vz = ts;
-            u1 = (u1 - .75f) * 4;
-        }
-
-        // Choose spectral channel for BSSRDF sampling
-        int ch = Pbrt.Clamp((int)(u1 * Spectrum.nSamples), 0, Spectrum.nSamples - 1);
-        u1 = u1 * Spectrum.nSamples - ch;
-
-        // Sample BSSRDF profile in polar coordinates
-        float r = Sample_Sr(ch, u2.at(0));
-        if (r < 0) return Spectrum(0.f);
-        float phi = 2 * (float)Math.PI * u2.at(1);
-
-        // Compute BSSRDF profile bounds and intersection height
-        float rMax = Sample_Sr(ch, 0.999f);
-        if (r >= rMax) return Spectrum(0.f);
-        float l = 2 * (float)Math.sqrt(rMax * rMax - r * r);
-
-        // Compute BSSRDF sampling ray segment
-        Interaction base;
-        base.p = po.p + r * (vx * (float)Math.cos(phi) + vy * (float)Math.sin(phi)) - l * vz * 0.5f;
-        base.time = po.time;
-        Point3f pTarget = base.p + l * vz;
-
-        // Intersect BSSRDF sampling ray against the scene geometry
-
-        // Declare _IntersectionChain_ and linked list
-        struct IntersectionChain {
-            SurfaceInteraction si;
-            IntersectionChain *next = nullptr;
-        };
-        IntersectionChain *chain = ARENA_ALLOC(arena, IntersectionChain)();
-
-        // Accumulate chain of intersections along ray
-        IntersectionChain *ptr = chain;
-        int nFound = 0;
-        while (scene.Intersect(base.SpawnRayTo(pTarget), &ptr->si)) {
-            base = ptr->si;
-            // Append admissible intersection to _IntersectionChain_
-            if (ptr->si.primitive->GetMaterial() == this->material) {
-                IntersectionChain *next = ARENA_ALLOC(arena, IntersectionChain)();
-                ptr->next = next;
-                ptr = next;
-                nFound++;
-            }
-        }
-
-        // Randomly choose one of several intersections during BSSRDF sampling
-        if (nFound == 0) return Spectrum(0.0f);
-        int selected = Pbrt.Clamp((int)(u1 * nFound), 0, nFound - 1);
-        while (selected-- > 0) chain = chain->next;
-    *pi = chain->si;
-
-        // Compute sample PDF and return the spatial BSSRDF term $\Sp$
-    *pdf = this->Pdf_Sp(*pi) / nFound;
-        return this->Sp(*pi);
-
+        return null;
     }
     public float Pdf_Sp(SurfaceInteraction pi) {
         // Express $\pti-\pto$ and $\bold{n}_i$ with respect to local coordinates at

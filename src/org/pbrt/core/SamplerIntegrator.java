@@ -30,6 +30,7 @@ public abstract class SamplerIntegrator extends Integrator {
         Vector2i sampleExtent = sampleBounds.Diagonal();
         int tileSize = 16;
         Point2i nTiles = new Point2i((sampleExtent.x + tileSize - 1) / tileSize, (sampleExtent.y + tileSize - 1) / tileSize);
+        /*
         ProgressReporter reporter(nTiles.x * nTiles.y, "Rendering");
         {
             ParallelFor2D([&](Point2i tile) {
@@ -124,85 +125,19 @@ public abstract class SamplerIntegrator extends Integrator {
             reporter.Done();
         }
         LOG(INFO) << "Rendering finished";
-
+        */
         // Save final image after rendering
-        camera.film.WriteImage();
+        camera.film.WriteImage(1);
     }
 
     public abstract Spectrum Li(RayDifferential ray, Scene scene, Sampler sampler, int depth);
 
     public Spectrum SpecularReflect(RayDifferential ray, SurfaceInteraction isect, Scene scene, Sampler sampler, int depth) {
-        // Compute specular reflection direction _wi_ and BSDF value
-        Vector3f wo = isect.wo;
-        int type = BxDF.BSDF_REFLECTION | BxDF.BSDF_SPECULAR;
-        BxDF.BxDFSample bxdfs = isect.bsdf.Sample_f(wo, sampler.Get2D(), type);
-        Spectrum f = bxdfs.f;
-        float pdf = bxdfs.pdf;
-        Vector3f wi = bxdfs.wiWorld;
-
-        // Return contribution of specular reflection
-        Normal3f ns = isect.shading.n;
-        if (pdf > 0 && !f.IsBlack() && Normal3f.AbsDot(wi, ns) != 0) {
-            // Compute ray differential _rd_ for specular reflection
-            RayDifferential rd = isect.SpawnRay(wi);
-            if (ray.hasDifferentials) {
-                rd.hasDifferentials = true;
-                rd.rxOrigin = isect.p.add(isect.dpdx);
-                rd.ryOrigin = isect.p.add(isect.dpdy);
-                // Compute differential reflected directions
-                Normal3f dndx = isect.shading.dndu.scale(isect.dudx).add(isect.shading.dndv.scale(isect.dvdx));
-                Normal3f dndy = isect.shading.dndu.scale(isect.dudy).add(isect.shading.dndv.scale(isect.dvdy));
-                Vector3f dwodx = ray.rxDirection.negate().subtract(wo), dwody = ray.ryDirection.negate().subtract(wo);
-                float dDNdx = Normal3f.Dot(dwodx, ns) + Normal3f.Dot(wo, dndx);
-                float dDNdy = Normal3f.Dot(dwody, ns) + Normal3f.Dot(wo, dndy);
-                rd.rxDirection = wi.subtract(dwodx.add(new Vector3f(dndx.scale(Normal3f.Dot(wo, ns)).add(ns.scale(dDNdx))).scale(2));
-                rd.ryDirection = wi.subtract(dwody.add(new Vector3f(dndy.scale(Normal3f.Dot(wo, ns)).add(ns.scale(dDNdy))).scale(2));
-            }
-            return f * Li(rd, scene, sampler, depth + 1) * Normal3f.AbsDot(wi, ns) / pdf;
-        } else
-            return new Spectrum(0);
+        return null;
     }
 
     public Spectrum SpecularTransmit(RayDifferential ray, SurfaceInteraction isect, Scene scene, Sampler sampler, int depth) {
-        Vector3f wo = isect.wo;
-        Point3f p = isect.p;
-        Normal3f ns = isect.shading.n;
-        BSDF bsdf = isect.bsdf;
-        BxDF.BxDFSample bxdfs = bsdf.Sample_f(wo, sampler.Get2D(), BxDF.BSDF_TRANSMISSION | BxDF.BSDF_SPECULAR);
-        Spectrum f = bxdfs.f;
-        float pdf = bxdfs.pdf;
-        Vector3f wi = bxdfs.wiWorld;
-        Spectrum L = new Spectrum(0);
-        if (pdf > 0 && !f.IsBlack() && Normal3f.AbsDot(wi, ns) != 0) {
-            // Compute ray differential _rd_ for specular transmission
-            RayDifferential rd = new RayDifferential(isect.SpawnRay(wi));
-            if (ray.hasDifferentials) {
-                rd.hasDifferentials = true;
-                rd.rxOrigin = p.add(isect.dpdx);
-                rd.ryOrigin = p.add(isect.dpdy);
-
-                float eta = bsdf.eta;
-                Vector3f w = wo.negate();
-                if (Normal3f.Dot(wo, ns) < 0) eta = 1 / eta;
-
-                Normal3f dndx = isect.shading.dndu * isect.dudx + isect.shading.dndv * isect.dvdx;
-                Normal3f dndy = isect.shading.dndu * isect.dudy + isect.shading.dndv * isect.dvdy;
-
-                Vector3f dwodx = ray.rxDirection.negate().subtract(wo),
-                         dwody = ray.ryDirection.negate().subtract(wo);
-                float dDNdx = Normal3f.Dot(dwodx, ns) + Normal3f.Dot(wo, dndx);
-                float dDNdy = Normal3f.Dot(dwody, ns) + Normal3f.Dot(wo, dndy);
-
-                float mu = eta * Normal3f.Dot(w, ns) - Normal3f.Dot(wi, ns);
-                float dmudx = (eta - (eta * eta * Normal3f.Dot(w, ns)) / Normal3f.Dot(wi, ns)) * dDNdx;
-                float dmudy = (eta - (eta * eta * Normal3f.Dot(w, ns)) / Normal3f.Dot(wi, ns)) * dDNdy;
-
-                rd.rxDirection = wi + eta * dwodx - Vector3f(mu * dndx + dmudx * ns);
-                rd.ryDirection = wi + eta * dwody - Vector3f(mu * dndy + dmudy * ns);
-            }
-            L = f * Li(rd, scene, sampler, depth + 1) * Normal3f.AbsDot(wi, ns) / pdf;
-        }
-        return L;
+        return null;
     }
 
     protected Camera camera;

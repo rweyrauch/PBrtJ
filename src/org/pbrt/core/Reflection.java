@@ -40,27 +40,7 @@ public class Reflection {
     }
 
     public static Spectrum FrConductor(float cosThetaI, Spectrum etai, Spectrum etat, Spectrum k) {
-        cosThetaI = Pbrt.Clamp(cosThetaI, -1, 1);
-        Spectrum eta = (Spectrum)CoefficientSpectrum.divide(etat, etai);
-        Spectrum etak = (Spectrum)CoefficientSpectrum.divide(k, etai);
-
-        float cosThetaI2 = cosThetaI * cosThetaI;
-        float sinThetaI2 = 1 - cosThetaI2;
-        Spectrum eta2 = (Spectrum)CoefficientSpectrum.multiply(eta, eta);
-        Spectrum etak2 = (Spectrum)CoefficientSpectrum.multiply(etak, etak);
-
-        Spectrum t0 = (Spectrum)CoefficientSpectrum.subtract(eta2, etak2) - sinThetaI2;
-        Spectrum a2plusb2 = Spectrum.Sqrt(CoefficientSpectrum.multiply(t0, t0) + 4 * CoefficientSpectrum.multiply(eta2, etak2));
-        Spectrum t1 = a2plusb2 + cosThetaI2;
-        Spectrum a = Spectrum.Sqrt(0.5f * (a2plusb2 + t0));
-        Spectrum t2 = 2 * cosThetaI * a;
-        Spectrum Rs = (Spectrum)CoefficientSpectrum.divide(CoefficientSpectrum.subtract(t1, t2), CoefficientSpectrum.add(t1, t2));
-
-        Spectrum t3 = (Spectrum)CoefficientSpectrum.scale(a2plusb2, cosThetaI2) + sinThetaI2 * sinThetaI2;
-        Spectrum t4 = (Spectrum)CoefficientSpectrum.scale(t2, sinThetaI2);
-        Spectrum Rp = Rs * CoefficientSpectrum.divide(CoefficientSpectrum.subtract(t3, t4), CoefficientSpectrum.add(t3, t4));
-
-        return 0.5f * CoefficientSpectrum.add(Rp, Rs);
+        return null;
     }
 
     // BSDF Inline Functions

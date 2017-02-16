@@ -514,15 +514,15 @@ public class ParamSet {
         throw new NotImplementedException("TODO");
     }
 
-    private ArrayList<ParamSetItem<Boolean>> bools;
-    private ArrayList<ParamSetItem<Integer>> ints;
-    private ArrayList<ParamSetItem<Float>> floats;
-    private ArrayList<ParamSetItem<Point2f>> point2fs;
-    private ArrayList<ParamSetItem<Vector2f>> vector2fs;
-    private ArrayList<ParamSetItem<Point3f>> point3fs;
-    private ArrayList<ParamSetItem<Vector3f>> vector3fs;
-    private ArrayList<ParamSetItem<Normal3f>> normals;
-    private ArrayList<ParamSetItem<Spectrum>> spectra;
-    private ArrayList<ParamSetItem<String>> strings;
-    private ArrayList<ParamSetItem<String>> textures;
+    private ArrayList<ParamSetItem<Boolean>> bools = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Integer>> ints = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Float>> floats = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Point2f>> point2fs = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Vector2f>> vector2fs = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Point3f>> point3fs = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Vector3f>> vector3fs = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Normal3f>> normals = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<Spectrum>> spectra = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<String>> strings = new ArrayList<>(1);
+    private ArrayList<ParamSetItem<String>> textures = new ArrayList<>(1);
 }

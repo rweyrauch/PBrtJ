@@ -38,14 +38,14 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
             float rOptical = r * sigma_t.at(ch);
 
             // Compute spline weights to interpolate BSSRDF on channel _ch_
-            int rhoOffset, radiusOffset;
-            float rhoWeights[] = { 0, 0, 0, 0};
-            float radiusWeights[] = { 0, 0, 0, 0};
-            if (!CatmullRomWeights(table.nRhoSamples, table.rhoSamples,
-                    rho.at(ch), &rhoOffset, rhoWeights) ||
-            !CatmullRomWeights(table.nRadiusSamples, table.radiusSamples,
-                    rOptical, &radiusOffset, radiusWeights))
-            continue;
+            Interpolation.Weights wRho = Interpolation.CatmullRomWeights(table.nRhoSamples, table.rhoSamples, rho.at(ch));
+            Interpolation.Weights wRadius = Interpolation.CatmullRomWeights(table.nRadiusSamples, table.radiusSamples, rOptical);
+            if (wRho == null || wRadius == null)
+                continue;
+            int rhoOffset = wRho.offset;
+            float[] rhoWeights = wRho.weights;
+            int radiusOffset = wRadius.offset;
+            float[] radiusWeights = wRadius.weights;
 
             // Set BSSRDF value _Sr[ch]_ using tensor spline interpolation
             float sr = 0;
@@ -64,16 +64,17 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
         // Transform BSSRDF value into world space units
         Sr.multiply(sigma_t); // * sigma_t ^ 2
         Sr.multiply(sigma_t);
-        return Sr.Clamp();
+        return (Spectrum)Sr.Clamp(0, Pbrt.Infinity);
     }
 
     @Override
     public float Sample_Sr(int ch, float u) {
         if (sigma_t.at(ch) == 0) return -1;
-        return SampleCatmullRom2D(table.nRhoSamples, table.nRadiusSamples,
+        Interpolation.SampleCR sampCR = Interpolation.SampleCatmullRom2D(table.nRhoSamples, table.nRadiusSamples,
                 table.rhoSamples, table.radiusSamples,
                 table.profile, table.profileCDF,
-                rho.at(ch), u) / sigma_t.at(ch);
+                rho.at(ch), u);
+         return sampCR.sample / sigma_t.at(ch);
     }
 
     @Override
@@ -82,14 +83,14 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
         float rOptical = r * sigma_t.at(ch);
 
         // Compute spline weights to interpolate BSSRDF density on channel _ch_
-        int rhoOffset, radiusOffset;
-        float rhoWeights[] = { 0, 0, 0, 0};
-        float radiusWeights[] = {0, 0, 0, 0};
-        if (!CatmullRomWeights(table.nRhoSamples, table.rhoSamples, rho.at(ch),
-                &rhoOffset, rhoWeights) ||
-        !CatmullRomWeights(table.nRadiusSamples, table.radiusSamples,
-                rOptical, &radiusOffset, radiusWeights))
-        return 0;
+        Interpolation.Weights wRho = Interpolation.CatmullRomWeights(table.nRhoSamples, table.rhoSamples, rho.at(ch));
+        Interpolation.Weights wRadius = Interpolation.CatmullRomWeights(table.nRadiusSamples, table.radiusSamples, rOptical);
+        if (wRho == null || wRadius == null)
+            return 0;
+        int rhoOffset = wRho.offset;
+        float[] rhoWeights = wRho.weights;
+        int radiusOffset = wRadius.offset;
+        float[] radiusWeights = wRadius.weights;
 
         // Return BSSRDF profile density for channel _ch_
         float sr = 0, rhoEff = 0;

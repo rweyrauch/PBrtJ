@@ -652,7 +652,6 @@ public class Api {
     }
 
     public static void pbrtFilm(String type, ParamSet params) {
-
     }
 
     public static void pbrtSampler(String name, ParamSet params) {

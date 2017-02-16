@@ -1,84 +1,79 @@
 package org.pbrt.core;
 
-import com.intellij.lexer.*;
-import org.pbrt.core.PbrtParser.Lexer;
-
 %%
 
-%class PbrtFlexLexer
-%implements FlexLexer
-%unicode
-%function advance
-%type Integer
-%cup
+%public
+%integer
+%function yylex
+%char
+%scanerror java.lang.Error
 
 %{
+    public Object getLVal () { return null; }
+    public void yyerror (String msg) {
+        Error.Error(msg);
+    }
 %}
 
-IDENTIFIER = [a-zA-Z_][a-zA-Z0-9_]*
+LINE_COMMENT = #[^\n]*
 DIGIT = [0-9]
 FLOAT_NUMBER = [-+]*{DIGIT}*\.{DIGIT}*
 INTEGER_NUMBER = [-+]*{DIGIT}+
-LINE_COMMENT = #[^\n]*
-STRING_LITERAL = \" ( [^\\\"] | \\[^] )* ( \" | \\ )?
+STRING_LITERAL = \"([^\\\"]|\\[^])*(\")
 WHITE_SPACE = [ \r\n\t]+
 
 %%
 
-"Accelerator"		{ return Lexer.ACCELERATOR; }
-"ActiveTransform"	{ return Lexer.ACTIVETRANSFORM; }
-"All"				{ return Lexer.ALL; }
-"AreaLightSource"	{ return Lexer.AREALIGHTSOURCE; }
-"AttributeBegin" 	{ return Lexer.ATTRIBUTEBEGIN; }
-"AttributeEnd" 		{ return Lexer.ATTRIBUTEEND; }
-"Camera"			{ return Lexer.CAMERA; }
-"ConcatTransform" 	{ return Lexer.CONCATTRANSFORM; }
-"CoordinateSystem"	{ return Lexer.COORDINATESYSTEM; }
-"CoordSysTransform"	{ return Lexer.COORDSYSTRANSFORM; }
-"EndTime"			{ return Lexer.ENDTIME; }
-"Film"				{ return Lexer.FILM; }
-"Identity"			{ return Lexer.IDENTITY; }
-"Include"			{ return Lexer.INCLUDE; }
-"LightSource" 		{ return Lexer.LIGHTSOURCE; }
-"LookAt"			{ return Lexer.LOOKAT; }
-"MakeNamedMedium"	{ return Lexer.MAKENAMEDMEDIUM; }
-"MakeNamedMaterial"	{ return Lexer.MAKENAMEDMATERIAL; }
-"Material"			{ return Lexer.MATERIAL; }
-"MediumInterface"   { return Lexer.MEDIUMINTERFACE; }
-"NamedMaterial"		{ return Lexer.NAMEDMATERIAL; }
-"ObjectBegin" 		{ return Lexer.OBJECTBEGIN; }
-"ObjectEnd" 		{ return Lexer.OBJECTEND; }
-"ObjectInstance" 	{ return Lexer.OBJECTINSTANCE; }
-"PixelFilter"		{ return Lexer.PIXELFILTER; }
-"ReverseOrientation" { return Lexer.REVERSEORIENTATION; }
-"Rotate"			{ return Lexer.ROTATE;	}
-"Sampler"			{ return Lexer.SAMPLER; }
-"Scale" 			{ return Lexer.SCALE; }
-"Shape"				{ return Lexer.SHAPE; }
-"StartTime"			{ return Lexer.STARTTIME; }
-"Integrator"	    { return Lexer.INTEGRATOR; }
-"Texture"			{ return Lexer.TEXTURE; }
-"TransformBegin"	{ return Lexer.TRANSFORMBEGIN;	}
-"TransformEnd"		{ return Lexer.TRANSFORMEND; }
-"TransformTimes"	{ return Lexer.TRANSFORMTIMES; }
-"Transform"			{ return Lexer.TRANSFORM; }
-"Translate"		    { return Lexer.TRANSLATE; }
-"WorldBegin" 		{ return Lexer.WORLDBEGIN; }
-"WorldEnd"			{ return Lexer.WORLDEND; }
+"Accelerator"		{ return Parser.ACCELERATOR; }
+"ActiveTransform"	{ return Parser.ACTIVETRANSFORM; }
+"All"				{ return Parser.ALL; }
+"AreaLightSource"	{ return Parser.AREALIGHTSOURCE; }
+"AttributeBegin" 	{ return Parser.ATTRIBUTEBEGIN; }
+"AttributeEnd" 		{ return Parser.ATTRIBUTEEND; }
+"Camera"			{ return Parser.CAMERA; }
+"ConcatTransform" 	{ return Parser.CONCATTRANSFORM; }
+"CoordinateSystem"	{ return Parser.COORDINATESYSTEM; }
+"CoordSysTransform"	{ return Parser.COORDSYSTRANSFORM; }
+"EndTime"			{ return Parser.ENDTIME; }
+"Film"				{ return Parser.FILM; }
+"Identity"			{ return Parser.IDENTITY; }
+"Include"			{ return Parser.INCLUDE; }
+"LightSource" 		{ return Parser.LIGHTSOURCE; }
+"LookAt"			{ return Parser.LOOKAT; }
+"MakeNamedMedium"	{ return Parser.MAKENAMEDMEDIUM; }
+"MakeNamedMaterial"	{ return Parser.MAKENAMEDMATERIAL; }
+"Material"			{ return Parser.MATERIAL; }
+"MediumInterface"   { return Parser.MEDIUMINTERFACE; }
+"NamedMaterial"		{ return Parser.NAMEDMATERIAL; }
+"ObjectBegin" 		{ return Parser.OBJECTBEGIN; }
+"ObjectEnd" 		{ return Parser.OBJECTEND; }
+"ObjectInstance" 	{ return Parser.OBJECTINSTANCE; }
+"PixelFilter"		{ return Parser.PIXELFILTER; }
+"ReverseOrientation" { return Parser.REVERSEORIENTATION; }
+"Rotate"			{ return Parser.ROTATE; }
+"Sampler"			{ return Parser.SAMPLER; }
+"Scale" 			{ return Parser.SCALE; }
+"Shape"				{ return Parser.SHAPE; }
+"StartTime"			{ return Parser.STARTTIME; }
+"Integrator"	    { return Parser.INTEGRATOR; }
+"Texture"			{ return Parser.TEXTURE; }
+"TransformBegin"	{ return Parser.TRANSFORMBEGIN; }
+"TransformEnd"		{ return Parser.TRANSFORMEND; }
+"TransformTimes"	{ return Parser.TRANSFORMTIMES; }
+"Transform"			{ return Parser.TRANSFORM; }
+"Translate"		    { return Parser.TRANSLATE; }
+"WorldBegin" 		{ return Parser.WORLDBEGIN; }
+"WorldEnd"			{ return Parser.WORLDEND; }
 
+{FLOAT_NUMBER}      { return Parser.NUMBER; }
+{INTEGER_NUMBER}    { return Parser.NUMBER; }
 
-{FLOAT_NUMBER}      { return Lexer.NUMBER; }
-{INTEGER_NUMBER}    { return Lexer.NUMBER; }
+"["				    { return Parser.LBRACK; }
+"]"				    { return Parser.RBRACK; }
 
-{IDENTIFIER}        { return Lexer.IDENTIFIER; }
-
-"["				    { return Lexer.LBRACK; }
-"]"				    { return Lexer.RBRACK; }
-
-{STRING_LITERAL}	{ return Lexer.STRING; }
-
+{STRING_LITERAL}	{ return Parser.STRING; }
 
 {WHITE_SPACE}       { }
 {LINE_COMMENT}      { }
 
-.				    { Error.Error("Illegal character: %c (0x%x)", yytext[0], (int)yytext[0])); }
+.				    { Error.Error("Illegal character: %c (0x%x)", yytext().charAt(0), (int)yytext().charAt(0)); }
