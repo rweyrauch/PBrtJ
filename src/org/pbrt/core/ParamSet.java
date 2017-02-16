@@ -81,19 +81,36 @@ public class ParamSet {
     public void AddRGBSpectrum(String name, Float[] v) {
         EraseSpectrum(name);
         assert v.length % 3 == 0;
-        throw new NotImplementedException("TODO");
+        int nValues = v.length/3;
+        Spectrum[] s = new Spectrum[nValues];
+        for (int i = 0; i < nValues; i++) {
+            s[i] = Spectrum.FromRGB(v[i*3], v[i*3+1], v[i*3+2]);
+        }
+        spectra.add(new ParamSetItem<>(name, s));
     }
 
     public void AddXYZSpectrum(String name, Float[] v) {
         EraseSpectrum(name);
         assert v.length % 3 == 0;
-        throw new NotImplementedException("TODO");
+        int nValues = v.length/3;
+        Spectrum[] s = new Spectrum[nValues];
+        for (int i = 0; i < nValues; i++) {
+            s[i] = Spectrum.FromXYZ(v[i*3], v[i*3+1], v[i*3+2]);
+        }
+        spectra.add(new ParamSetItem<>(name, s));
     }
 
-    public void AddBlackbodySpectrum(String name, Float[] v) {
+    public void AddBlackbodySpectrum(String name, Float[] values) {
         EraseSpectrum(name);
-        assert v.length % 2 == 0;
-        throw new NotImplementedException("TODO");
+        assert values.length % 2 == 0;
+        int nValues = values.length/2;
+        Spectrum[] s = new Spectrum[nValues];
+        for (int i = 0; i < nValues; ++i) {
+            float[] v = Spectrum.BlackbodyNormalized(Spectrum.CIE_lambda, values[2 * i]);
+            s[i] = Spectrum.FromSampled(Spectrum.CIE_lambda, v);
+            s[i].scale(values[2 * i + 1]);
+        }
+        spectra.add(new ParamSetItem<>(name, s));
     }
 
     public void AddSampledSpectrumFiles(String name, String[] filenames) {
@@ -101,10 +118,19 @@ public class ParamSet {
         throw new NotImplementedException("TODO");
     }
 
-    public void AddSampledSpectrum(String name, Float[] v) {
+    public void AddSampledSpectrum(String name, Float[] values) {
         EraseSpectrum(name);
-        assert v.length % 2 == 0;
-        throw new NotImplementedException("TODO");
+        assert values.length % 2 == 0;
+        int nValues = values.length/2;
+        float[] wl = new float[nValues];
+        float[] v = new float[nValues];
+        for (int i = 0; i < nValues; ++i) {
+            wl[i] = values[2 * i];
+            v[i] = values[2 * i + 1];
+        }
+        Spectrum[] s = new Spectrum[1];
+        s[0] = Spectrum.FromSampled(wl, v);
+        spectra.add(new ParamSetItem<>(name, s));
     }
 
     public boolean EraseInt(String name) {

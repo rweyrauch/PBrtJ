@@ -90,11 +90,12 @@ public class Spectrum extends CoefficientSpectrum {
         return Pbrt.Lerp(t, vals[offset], vals[offset + 1]);
     }
 
-    public static void Blackbody(float[] lambda, float T, float[] Le) {
+    public static float[] Blackbody(float[] lambda, float T) {
         int n = lambda.length;
+        float[] Le = new float[n];
         if (T <= 0) {
             for (int i = 0; i < n; ++i) Le[i] = 0.f;
-            return;
+            return Le;
         }
         float c = 299792458f;
         float h = 6.62606957e-34f;
@@ -107,16 +108,16 @@ public class Spectrum extends CoefficientSpectrum {
                     (lambda5 * ((float) Math.exp((h * c) / (l * kb * T)) - 1));
             assert (!Float.isNaN(Le[i]));
         }
-
+        return Le;
     }
 
-    public static void BlackbodyNormalized(float[] lambda, float T, float[] Le) {
-        Blackbody(lambda, T, Le);
+    public static float[] BlackbodyNormalized(float[] lambda, float T) {
+        float[] Le = Blackbody(lambda, T);
         // Normalize _Le_ values based on maximum blackbody radiance
         float[] lambdaMax = {2.8977721e-3f / T * 1e9f};
-        float[] maxL = {0.0f};
-        Blackbody(lambdaMax, T, maxL);
+        float[] maxL = Blackbody(lambdaMax, T);
         for (int i = 0; i < lambda.length; ++i) Le[i] /= maxL[0];
+        return Le;
     }
 
     public static final int nCIESamples = 471;
@@ -909,6 +910,10 @@ public class Spectrum extends CoefficientSpectrum {
         Spectrum r = new Spectrum(0.0f);
         XYZToRGB(xyz, r.c);
         return r;
+    }
+    public static Spectrum FromXYZ(float x, float y, float z) {
+        float[] xyz = {x, y, z};
+        return FromXYZ(xyz);
     }
 
     public float y() {

@@ -164,15 +164,15 @@ public class Api {
 
     private enum APIState { Uninitialized, OptionsBlock, WorldBlock };
     private static APIState currentApiState = APIState.Uninitialized;
-    private static TransformSet curTransform;
+    private static TransformSet curTransform = new TransformSet();
     private static int activeTransformBits = AllTransformsBits;
     private static Map<String, TransformSet> namedCoordinateSystems;
-    private static RenderOptions renderOptions;
-    private static GraphicsState graphicsState;
+    private static RenderOptions renderOptions = new RenderOptions();
+    private static GraphicsState graphicsState = new GraphicsState();
     private static Stack<GraphicsState> pushedGraphicsStates;
     private static Stack<TransformSet> pushedTransforms;
     private static Stack<Integer> pushedActiveTransformBits;
-    private static TransformCache transformCache;
+    private static TransformCache transformCache = new TransformCache();
     private static int catIndentCount = 0;
 
     private static ArrayList<Shape> MakeShapes(String name, Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
@@ -594,6 +594,7 @@ public class Api {
 
     public static void pbrtTranslate(float dx, float dy, float dz) {
         VERIFY_INITIALIZED("Translate");
+        /*
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
                 curTransform.set(i, curTransform.at(i).concatenate(Transform.Translate(new Vector3f(dx, dy, dz))));
@@ -601,6 +602,7 @@ public class Api {
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
             System.out.format("%sTranslate %.9g %.9g %.9g\n", new String(spaces, 0, catIndentCount), dx, dy, dz);
+        */
     }
 
     public static void pbrtRotate(float angle, float ax, float ay, float az) {

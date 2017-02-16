@@ -126,7 +126,11 @@ public class Parser {
             else if (Objects.equals(param.type, "bool")) {
                 if (param.value instanceof ArrayList) {
                     ArrayList<Boolean> blist = (ArrayList<Boolean>)param.value;
-                    pset.AddBoolean(param.name, (Boolean[])blist.toArray());
+                    Boolean[] barray = new Boolean[blist.size()];
+                    for (int i = 0; i < barray.length; i++) {
+                        barray[i] = blist.get(i);
+                    }
+                    pset.AddBoolean(param.name, barray);
                 }
                 else {
                     Error.Error("Unexpected value array type for 'bool' parameter. Got %s.\n", param.value.getClass().toString());
@@ -137,7 +141,7 @@ public class Parser {
                     ArrayList<Float> flist = (ArrayList<Float>)param.value;
                     Float[] farray = new Float[flist.size()];
                     for (int i = 0; i < farray.length; i++) {
-                        farray[i] = (Float)flist.get(i);
+                        farray[i] = flist.get(i);
                     }
                     pset.AddFloat(param.name, farray);
                 }
@@ -148,10 +152,11 @@ public class Parser {
             else if (Objects.equals(param.type, "point2")) {
                 if (param.value instanceof ArrayList) {
                     ArrayList<Float> pvalues = (ArrayList<Float>)param.value;
-                    if (pvalues.size() % 2 == 0) {
-                        Point2f[] points = new Point2f[pvalues.size()/2];
-                        for (int i = 0; i < pvalues.size(); i += 2) {
-                            points[i] = new Point2f(pvalues.get(i), pvalues.get(i+1));
+                    int nItems = pvalues.size();
+                    if (nItems % 2 == 0) {
+                        Point2f[] points = new Point2f[nItems/2];
+                        for (int i = 0; i < points.length; i++) {
+                            points[i] = new Point2f(pvalues.get(i*2), pvalues.get(i*2+1));
                         }
                         pset.AddPoint2f(param.name, points);
                     }
@@ -164,12 +169,13 @@ public class Parser {
                 }
             }
             else if (Objects.equals(param.type, "vector2")) {
-                if (param.value instanceof Float[]) {
-                    Float[] vvalues = (Float[])param.value;
-                    if (vvalues.length % 2 == 0) {
-                        Vector2f[] vectors = new Vector2f[vvalues.length/2];
-                        for (int i = 0; i < vvalues.length; i += 2) {
-                            vectors[i] = new Vector2f(vvalues[i], vvalues[i+1]);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> vvalues = (ArrayList<Float>)param.value;
+                    int nItems = vvalues.size();
+                    if (nItems % 2 == 0) {
+                        Vector2f[] vectors = new Vector2f[nItems/2];
+                        for (int i = 0; i < vectors.length; i++) {
+                            vectors[i] = new Vector2f(vvalues.get(i*2), vvalues.get(i*2+1));
                         }
                         pset.AddVector2f(param.name, vectors);
                     }
@@ -182,12 +188,13 @@ public class Parser {
                 }
             }
             else if (Objects.equals(param.type, "point3")) {
-                if (param.value instanceof Float[]) {
-                    Float[] pvalues = (Float[])param.value;
-                    if (pvalues.length % 3 == 0) {
-                        Point3f[] points = new Point3f[pvalues.length/3];
-                        for (int i = 0; i < pvalues.length; i += 3) {
-                            points[i] = new Point3f(pvalues[i], pvalues[i+1], pvalues[i+2]);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> pvalues = (ArrayList<Float>)param.value;
+                    int nItems = pvalues.size();
+                    if (nItems % 3 == 0) {
+                        Point3f[] points = new Point3f[nItems/3];
+                        for (int i = 0; i < points.length; i++) {
+                            points[i] = new Point3f(pvalues.get(i*3), pvalues.get(i*3+1), pvalues.get(i*3+2));
                         }
                         pset.AddPoint3f(param.name, points);
                     }
@@ -200,12 +207,13 @@ public class Parser {
                 }
             }
             else if (Objects.equals(param.type, "vector3")) {
-                if (param.value instanceof Float[]) {
-                    Float[] vvalues = (Float[])param.value;
-                    if (vvalues.length % 3 == 0) {
-                        Vector3f[] vectors = new Vector3f[vvalues.length/3];
-                        for (int i = 0; i < vvalues.length; i += 3) {
-                            vectors[i] = new Vector3f(vvalues[i], vvalues[i+1], vvalues[i+2]);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> vvalues = (ArrayList<Float>)param.value;
+                    int nItems = vvalues.size();
+                    if (nItems % 3 == 0) {
+                        Vector3f[] vectors = new Vector3f[nItems/3];
+                        for (int i = 0; i < vectors.length; i++) {
+                            vectors[i] = new Vector3f(vvalues.get(i*3), vvalues.get(i*3+1), vvalues.get(i*3+2));
                         }
                         pset.AddVector3f(param.name, vectors);
                     }
@@ -218,12 +226,13 @@ public class Parser {
                 }
             }
             else if (Objects.equals(param.type, "normal")) {
-                if (param.value instanceof Float[]) {
-                    Float[] nvalues = (Float[])param.value;
-                    if (nvalues.length % 3 == 0) {
-                        Normal3f[] normals = new Normal3f[nvalues.length/3];
-                        for (int i = 0; i < nvalues.length; i += 3) {
-                            normals[i] = new Normal3f(nvalues[i], nvalues[i+1], nvalues[i+2]);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> nvalues = (ArrayList<Float>)param.value;
+                    int nItems = nvalues.size();
+                    if (nItems % 3 == 0) {
+                        Normal3f[] normals = new Normal3f[nItems/3];
+                        for (int i = 0; i < normals.length; i++) {
+                            normals[i] = new Normal3f(nvalues.get(i*3), nvalues.get(i*3+1), nvalues.get(i*3+2));
                         }
                         pset.AddNormal3f(param.name, normals);
                     }
@@ -236,10 +245,14 @@ public class Parser {
                 }
             }
             else if (Objects.equals(param.type, "rgb") || Objects.equals(param.type, "color")) {
-                if (param.value instanceof Float[]) {
-                    Float[] cvalues = (Float[])param.value;
-                    if (cvalues.length % 3 == 0) {
-                        pset.AddRGBSpectrum(param.name, cvalues);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> cvalues = (ArrayList<Float>)param.value;
+                    if (cvalues.size() % 3 == 0) {
+                        Float[] carray = new Float[cvalues.size()];
+                        for (int i = 0; i < carray.length; i++) {
+                            carray[i] = cvalues.get(i);
+                        }
+                        pset.AddRGBSpectrum(param.name, carray);
                     }
                     else {
                         Error.Error("Length of 'rgb' or 'color' parameter list must be a factor of 3.");
@@ -250,10 +263,14 @@ public class Parser {
                 }
             }
             else if (Objects.equals(param.type, "xyz")) {
-                if (param.value instanceof Float[]) {
-                    Float[] xvalues = (Float[])param.value;
-                    if (xvalues.length % 3 == 0) {
-                        pset.AddXYZSpectrum(param.name, xvalues);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> xvalues = (ArrayList<Float>)param.value;
+                    if (xvalues.size() % 3 == 0) {
+                        Float[] xarray = new Float[xvalues.size()];
+                        for (int i = 0; i < xarray.length; i++) {
+                            xarray[i] = xvalues.get(i);
+                        }
+                        pset.AddXYZSpectrum(param.name, xarray);
                     }
                     else {
                         Error.Error("Length of 'xyz' parameter list must be a factor of 3.");
@@ -264,16 +281,26 @@ public class Parser {
                 }
             }
             else if (Objects.equals(param.type, "blackbody")) {
-                if (param.value instanceof Float[]) {
-                    pset.AddBlackbodySpectrum(param.name, (Float[])param.value);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> values = (ArrayList<Float>)param.value;
+                    Float[] barray = new Float[values.size()];
+                    for (int i = 0; i < barray.length; i++) {
+                        barray[i] = values.get(i);
+                    }
+                    pset.AddBlackbodySpectrum(param.name, barray);
                 }
                 else {
                     Error.Error("Unexpected value array type for 'blackbody' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "spectrum")) {
-                if (param.value instanceof Float[]) {
-                    pset.AddSampledSpectrum(param.name, (Float[])param.value);
+                if (param.value instanceof ArrayList) {
+                    ArrayList<Float> values = (ArrayList<Float>)param.value;
+                    Float[] sarray = new Float[values.size()];
+                    for (int i = 0; i < sarray.length; i++) {
+                        sarray[i] = values.get(i);
+                    }
+                    pset.AddSampledSpectrum(param.name, sarray);
                 }
                 else if (param.value instanceof String[]) {
                     pset.AddSampledSpectrumFiles(param.name, (String[])param.value);
@@ -289,7 +316,11 @@ public class Parser {
                 }
                 else if (param.value instanceof ArrayList) {
                     ArrayList<String> slist = (ArrayList<String>)param.value;
-                    pset.AddString(param.name, (String[])slist.toArray());
+                    String[] strings = new String[slist.size()];
+                    for (int i= 0; i < strings.length; i++) {
+                        strings[i] = slist.get(i);
+                    }
+                    pset.AddString(param.name, strings);
                 }
                 else {
                     Error.Error("Unexpected value array type for 'string' parameter. Got %s.\n", param.value.getClass().toString());
@@ -384,7 +415,7 @@ public class Parser {
                 parseCoordinateSystem(currentCommand.command);
                 break;
             case COORDSYSTRANSFORM:
-                parseConcatTransform(currentCommand.command);
+                parseCoordSysTransform(currentCommand.command);
                 break;
             case FILM:
                 parseFilm(currentCommand.command);
@@ -549,7 +580,7 @@ public class Parser {
     // COORDSYSTRANSFORM STRING
     private void parseCoordSysTransform(ArrayList<TokenValue> command) {
         assert(command.size() == 2);
-        Api.pbrtCoordinateSystem(command.get(1).value);
+        Api.pbrtCoordSysTransform(command.get(1).value);
     }
 
     // FILM STRING param_list
@@ -806,7 +837,7 @@ public class Parser {
                 i++;
                 while (command.get(i).token != RBRACK) {
                     if (command.get(i).token == STRING) {
-                        arrayList.add(command.get(i).value);
+                        arrayList.add(new String(command.get(i).value));
                     }
                     else if (command.get(i).token == NUMBER) {
                         arrayList.add(Float.parseFloat(command.get(i).value));
