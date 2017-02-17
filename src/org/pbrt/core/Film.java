@@ -17,8 +17,7 @@ public class Film {
         Pixel() {}
         float xyz[] = {0, 0, 0};
         float filterWeightSum = 0;
-        //AtomicFloat splatXYZ[];
-        float pad;
+        AtomicFloat splatXYZ[] = {new AtomicFloat(0), new AtomicFloat(0), new AtomicFloat(0)};
     }
     Pixel[] pixels;
     private static final int filterTableWidth = 16;
@@ -35,8 +34,7 @@ public class Film {
     public class FilmTile {
         // FilmTile Public Methods
         public FilmTile(Bounds2i pixelBounds, Vector2f filterRadius,
-             float[] filterTable, int filterTableSize,
-                 float maxSampleLuminance) {
+             float[] filterTable, int filterTableSize, float maxSampleLuminance) {
             this.pixelBounds = pixelBounds;
             this.filterRadius = filterRadius;
             this.invFilterRadius = new Vector2f(1 / filterRadius.x, 1 / filterRadius.y);
@@ -163,16 +161,86 @@ public class Film {
 
     }
     public void SetImage(Spectrum[] img) {
+        int nPixels = croppedPixelBounds.Area();
+        for (int i = 0; i < nPixels; ++i) {
+            Pixel p = pixels[i];
+            img[i].ToXYZ(p.xyz);
+            p.filterWeightSum = 1;
+            p.splatXYZ[0].set(0);
+            p.splatXYZ[1].set(0);
+            p.splatXYZ[2].set(0);
+        }
 
     }
     public void AddSplat(Point2f p, Spectrum v) {
+        //ProfilePhase pp(Prof::SplatFilm);
 
+        if (v.HasNaNs()) {
+            //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
+            return;
+        } else if (v.y() < 0) {
+            //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with negative luminance %f at (%f, %f)", v.y(), p.x, p.y);
+            return;
+        } else if (Float.isInfinite(v.y())) {
+            //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with infinite luminance at (%f, %f)", p.x, p.y);
+            return;
+        }
+
+        if (!InsideExclusive((Point2i)p, croppedPixelBounds)) return;
+        if (v.y() > maxSampleLuminance)
+            v *= maxSampleLuminance / v.y();
+        float[] xyz = Spectrum.ToXYZ(v);
+        Pixel pixel = GetPixel((Point2i)p);
+        for (int i = 0; i < 3; ++i) pixel.splatXYZ[i].add(xyz[i]);
     }
-    public void WriteImage(float splatScale) {
 
+    public void WriteImage(float splatScale) {
+        // Convert image to RGB and compute final pixel values
+        //LOG(INFO) << "Converting image to RGB and computing final weighted pixel values";
+        float[] rgb = new float[3 * croppedPixelBounds.Area()]);
+        int offset = 0;
+        for (Point2i p : croppedPixelBounds) {
+            // Convert pixel XYZ color to RGB
+            Pixel pixel = GetPixel(p);
+            XYZToRGB(pixel.xyz, rgb[3 * offset]);
+
+            // Normalize pixel with weight sum
+            float filterWeightSum = pixel.filterWeightSum;
+            if (filterWeightSum != 0) {
+                float invWt = 1 / filterWeightSum;
+                rgb[3 * offset] = Math.max(0, rgb[3 * offset] * invWt);
+                rgb[3 * offset + 1] = Math.max(0, rgb[3 * offset + 1] * invWt);
+                rgb[3 * offset + 2] = Math.max(0, rgb[3 * offset + 2] * invWt);
+            }
+
+            // Add splat value at pixel
+            float[] splatRGB = new float[3];
+            float[] splatXYZ = {pixel.splatXYZ[0].get(), pixel.splatXYZ[1].get(), pixel.splatXYZ[2].get()};
+            XYZToRGB(splatXYZ, splatRGB);
+            rgb[3 * offset] += splatScale * splatRGB[0];
+            rgb[3 * offset + 1] += splatScale * splatRGB[1];
+            rgb[3 * offset + 2] += splatScale * splatRGB[2];
+
+            // Scale pixel value by _scale_
+            rgb[3 * offset] *= scale;
+            rgb[3 * offset + 1] *= scale;
+            rgb[3 * offset + 2] *= scale;
+            ++offset;
+        }
+
+        // Write RGB image
+        //LOG(INFO) << "Writing image " << filename << " with bounds " << croppedPixelBounds;
+        ImageIO.Write(filename, rgb, croppedPixelBounds, fullResolution);
     }
     public void Clear() {
-
+        for (Point2i p : croppedPixelBounds) {
+            Pixel pixel = GetPixel(p);
+            for (int c = 0; c < 3; ++c) {
+                pixel.splatXYZ[c].set(0);
+                pixel.xyz[c] = 0;
+            }
+            pixel.filterWeightSum = 0;
+        }
     }
 
     // Film Public Data
@@ -183,7 +251,40 @@ public class Film {
     Bounds2i croppedPixelBounds;
 
     public static Film Create(ParamSet paramSet, Filter filter) {
-        return null;
+        // Intentionally use FindOneString() rather than FindOneFilename() here
+        // so that the rendered image is left in the working directory, rather
+        // than the directory the scene file lives in.
+        String filename = paramSet.FindOneString("filename", "");
+        if (!Pbrt.options.ImageFile.isEmpty()) {
+            if (!filename.isEmpty()) {
+                Error.Warning("Output filename supplied on command line, \"%s\", ignored " +
+                        "due to filename provided in scene description file, \"%s\".",
+                        Pbrt.options.ImageFile, filename);
+            } else {
+                filename = Pbrt.options.ImageFile;
+            }
+        }
+        if (filename.isEmpty()) filename = "pbrt.exr";
+
+        int xres = paramSet.FindOneInt("xresolution", 1280);
+        int yres = paramSet.FindOneInt("yresolution", 720);
+        if (Pbrt.options.QuickRender) xres = Math.max(1, xres / 4);
+        if (Pbrt.options.QuickRender) yres = Math.max(1, yres / 4);
+        Bounds2f crop = new Bounds2f(new Point2f(0, 0), new Point2f(1, 1));
+        Float[] cr = paramSet.FindFloat("cropwindow");
+        if (cr != null && cr.length == 4) {
+            crop.pMin.x = Pbrt.Clamp(Math.min(cr[0], cr[1]), 0, 1);
+            crop.pMax.x = Pbrt.Clamp(Math.max(cr[0], cr[1]), 0, 1);
+            crop.pMin.y = Pbrt.Clamp(Math.min(cr[2], cr[3]), 0, 1);
+            crop.pMax.y = Pbrt.Clamp(Math.max(cr[2], cr[3]), 0, 1);
+        } else if (cr != null) {
+            Error.Error("%d values supplied for \"cropwindow\". Expected 4.", cr.length);
+        }
+
+        float scale = paramSet.FindOneFloat("scale", 1);
+        float diagonal = paramSet.FindOneFloat("diagonal", 35);
+        float maxSampleLuminance = paramSet.FindOneFloat("maxsampleluminance", Pbrt.Infinity);
+        return new Film(new Point2i(xres, yres), crop, filter, diagonal, filename, scale, maxSampleLuminance);
     }
 
     // Film Private Methods

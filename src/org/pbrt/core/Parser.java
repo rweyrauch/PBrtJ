@@ -83,10 +83,6 @@ public class Parser {
         return true;
     }
 
-    public static void PushInclude(String filename) {
-        Error.Warning("Parser does not support include statement yet.");
-    }
-
     public static class PbrtParameter {
 
         public String type;
@@ -187,7 +183,7 @@ public class Parser {
                     Error.Error("Unexpected value array type for 'vector2' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
-            else if (Objects.equals(param.type, "point3")) {
+            else if ((Objects.equals(param.type, "point3")) || (Objects.equals(param.type, "point"))) {
                 if (param.value instanceof ArrayList) {
                     ArrayList<Float> pvalues = (ArrayList<Float>)param.value;
                     int nItems = pvalues.size();
@@ -601,7 +597,14 @@ public class Parser {
     // INCLUDE STRING
     private void parseInclude(ArrayList<TokenValue> command) {
         assert(command.size() == 2);
-        PushInclude(command.get(1).value);
+        String filename = command.get(1).value;
+        try {
+            scanner.yyreset(new java.io.FileReader(filename));
+        }
+        catch (Exception e) {
+            Error.Error("Failed to parse included file, %s. Error: %s", filename, e.toString());
+            e.printStackTrace();
+        }
     }
 
     // LIGHTSOURCE STRING param_list

@@ -23,6 +23,7 @@ import org.pbrt.filters.*;
 import org.pbrt.samplers.*;
 import org.pbrt.accelerators.*;
 import org.pbrt.media.*;
+import org.pbrt.integrators.*;
 
 public class Api {
 
@@ -30,6 +31,7 @@ public class Api {
     private static final int StartTransformBits = 1 << 0;
     private static final int EndTransformBits = 1 << 1;
     private static final int AllTransformsBits = (1 << MaxTransforms) - 1;
+
     private static class TransformSet {
         // TransformSet Public Methods
         public Transform at(int i) {
@@ -37,19 +39,23 @@ public class Api {
             assert (i < MaxTransforms);
             return t[i];
         }
+
         public void set(int i, Transform t) {
             assert (i >= 0);
             assert (i < MaxTransforms);
             this.t[i] = t;
         }
+
         public static TransformSet Inverse(TransformSet ts) {
             TransformSet tInv = new TransformSet();
             for (int i = 0; i < MaxTransforms; ++i) tInv.t[i] = Transform.Inverse(ts.t[i]);
             return tInv;
         }
+
         public boolean IsAnimated() {
-            for (int i = 0; i < MaxTransforms - 1; ++i)
+            for (int i = 0; i < MaxTransforms - 1; ++i) {
                 if (t[i] != t[i + 1]) return true;
+            }
             return false;
         }
 
@@ -59,13 +65,75 @@ public class Api {
     private static class RenderOptions {
         // RenderOptions Public Methods
         public Integrator MakeIntegrator() {
-            return null;
+            Camera camera = MakeCamera();
+            if (camera == null) {
+                Error.Error("Unable to create camera");
+                return null;
+            }
+
+            Sampler sampler = MakeSampler(SamplerName, SamplerParams, camera.film);
+            if (sampler == null) {
+                Error.Error("Unable to create sampler.");
+                return null;
+            }
+
+            Integrator integrator = null;
+            if (Objects.equals(IntegratorName, "whitted")) {
+                integrator = WhittedIntegrator.Create(IntegratorParams, sampler, camera);
+            } else if (Objects.equals(IntegratorName, "directlighting")) {
+                integrator = DirectLightingIntegrator.Create(IntegratorParams, sampler, camera);
+            } else if (Objects.equals(IntegratorName, "path")) {
+                integrator = PathIntegrator.Create(IntegratorParams, sampler, camera);
+            } else if (Objects.equals(IntegratorName, "volpath")) {
+                integrator = VolPathIntegrator.Create(IntegratorParams, sampler, camera);
+            } else if (Objects.equals(IntegratorName, "bdpt")) {
+                integrator = BDPTIntegrator.Create(IntegratorParams, sampler, camera);
+            } else if (Objects.equals(IntegratorName, "mlt")) {
+                integrator = MLTIntegrator.Create(IntegratorParams, camera);
+            } else if (Objects.equals(IntegratorName, "sppm")) {
+                integrator = SPPMIntegrator.Create(IntegratorParams, camera);
+            } else {
+                Error.Error("Integrator \"%s\" unknown.", IntegratorName);
+                return null;
+            }
+
+            if (renderOptions.haveScatteringMedia && !Objects.equals(IntegratorName, "volpath") &&
+                    !Objects.equals(IntegratorName, "bdpt") && !Objects.equals(IntegratorName, "mlt")) {
+                Error.Warning("Scene has scattering media but \"%s\" integrator doesn't support "+
+                        "volume scattering. Consider using \"volpath\", \"bdpt\", or "+
+                        "\"mlt\".", IntegratorName);
+            }
+
+            IntegratorParams.ReportUnused();
+            // Warn if no light sources are defined
+            if (lights.isEmpty()) {
+                Error.Warning("No light sources defined in scene; rendering a black image.");
+            }
+            return integrator;
         }
+
         public Scene MakeScene() {
-            return null;
+            Primitive accelerator = MakeAccelerator(AcceleratorName, primitives, AcceleratorParams);
+            if (accelerator == null) {
+                accelerator = new BVHAccel(primitives);
+            }
+            Scene scene = new Scene(accelerator, lights);
+            // Erase primitives and lights from _RenderOptions_
+            primitives.clear();
+            lights.clear();
+            return scene;
         }
+
         public Camera MakeCamera() {
-            return null;
+            Filter filter = MakeFilter(FilterName, FilterParams);
+            Film film = MakeFilm(FilmName, FilmParams, filter);
+            if (film == null) {
+                Error.Error("Unable to create film.");
+                return null;
+            }
+            Camera camera = Api.MakeCamera(CameraName, CameraParams, CameraToWorld,
+                    renderOptions.transformStartTime, renderOptions.transformEndTime, film);
+            return camera;
         }
 
         // RenderOptions Public Data
@@ -73,7 +141,7 @@ public class Api {
         public String FilterName = "box";
         public ParamSet FilterParams;
         public String FilmName = "image";
-        public ParamSet FilmParamsPair;
+        public ParamSet FilmParams;
         public String SamplerName = "halton";
         public ParamSet SamplerParams;
         public String AcceleratorName = "bvh";
@@ -109,17 +177,20 @@ public class Api {
             }
             return mtl;
         }
+
         public MediumInterface CreateMediumInterface() {
             MediumInterface m = new MediumInterface();
             if (!Objects.equals(currentInsideMedium, "")) {
                 m.inside = renderOptions.namedMedia.get(currentInsideMedium);
-                if (m.inside == null)
+                if (m.inside == null) {
                     Error.Error("Named medium \"%s\" undefined.", currentInsideMedium);
+                }
             }
             if (!Objects.equals(currentOutsideMedium, "")) {
                 m.outside = renderOptions.namedMedia.get(currentOutsideMedium);
-                if (m.outside == null)
+                if (m.outside == null) {
                     Error.Error("Named medium \"%s\" undefined.", currentOutsideMedium);
+                }
             }
             return m;
         }
@@ -143,6 +214,7 @@ public class Api {
             Transform t;
             Transform tInv;
         }
+
         // TransformCache Public Methods
         public TransformPair Lookup(Transform t) {
             TransformPair entry = cache.get(t);
@@ -154,6 +226,7 @@ public class Api {
             }
             return entry;
         }
+
         public void Clear() {
             cache.clear();
         }
@@ -162,41 +235,45 @@ public class Api {
         private Map<Transform, TransformPair> cache;
     }
 
-    private enum APIState { Uninitialized, OptionsBlock, WorldBlock };
+    private enum APIState {Uninitialized, OptionsBlock, WorldBlock}
+
+
     private static APIState currentApiState = APIState.Uninitialized;
     private static TransformSet curTransform = new TransformSet();
     private static int activeTransformBits = AllTransformsBits;
     private static Map<String, TransformSet> namedCoordinateSystems;
     private static RenderOptions renderOptions = new RenderOptions();
     private static GraphicsState graphicsState = new GraphicsState();
-    private static Stack<GraphicsState> pushedGraphicsStates;
-    private static Stack<TransformSet> pushedTransforms;
-    private static Stack<Integer> pushedActiveTransformBits;
+    private static Stack<GraphicsState> pushedGraphicsStates = new Stack<>();
+    private static Stack<TransformSet> pushedTransforms = new Stack<>();
+    private static Stack<Integer> pushedActiveTransformBits = new Stack<>();
     private static TransformCache transformCache = new TransformCache();
     private static int catIndentCount = 0;
 
     private static ArrayList<Shape> MakeShapes(String name, Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
         ArrayList<Shape> shapes = new ArrayList<>();
         Shape s = null;
-        if (Objects.equals(name, "sphere"))
+        if (Objects.equals(name, "sphere")) {
             s = Sphere.Create(object2world, world2object, reverseOrientation, paramSet);
-            // Create remaining single _Shape_ types
-        else if (Objects.equals(name, "cylinder"))
+        }
+        else if (Objects.equals(name, "cylinder")) {
             s = Cylinder.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (Objects.equals(name, "disk"))
+        } else if (Objects.equals(name, "disk")) {
             s = Disk.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (Objects.equals(name, "cone"))
+        } else if (Objects.equals(name, "cone")) {
             s = Cone.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (Objects.equals(name, "paraboloid"))
+        } else if (Objects.equals(name, "paraboloid")) {
             s = Paraboloid.Create(object2world, world2object, reverseOrientation, paramSet);
-        else if (Objects.equals(name, "hyperboloid"))
+        } else if (Objects.equals(name, "hyperboloid")) {
             s = Hyperboloid.Create(object2world, world2object, reverseOrientation, paramSet);
+        }
 
-        if (s != null) shapes.add(s);
-            // Create multiple-_Shape_ types
-        else if (Objects.equals(name, "curve"))
+        if (s != null) {
+            shapes.add(s);
+        }
+        else if (Objects.equals(name, "curve")) {
             shapes.addAll(Curve.Create(object2world, world2object, reverseOrientation, paramSet));
-        else if (Objects.equals(name, "trianglemesh")) {
+        } else if (Objects.equals(name, "trianglemesh")) {
             if (Pbrt.options.ToPly) {
                 /*
                  int count = 1;
@@ -248,21 +325,20 @@ public class Api {
                 }
                 System.out.format("\n");
                 */
-            }
-            else {
+            } else {
                 shapes.addAll(Triangle.Create(object2world, world2object, reverseOrientation, paramSet, graphicsState.floatTextures));
             }
-        }
-        else if (Objects.equals(name, "plymesh"))
+        } else if (Objects.equals(name, "plymesh")) {
             shapes.addAll(PlyMesh.Create(object2world, world2object, reverseOrientation, paramSet, graphicsState.floatTextures));
-        else if (Objects.equals(name, "heightfield"))
+        } else if (Objects.equals(name, "heightfield")) {
             shapes.addAll(HeightField.Create(object2world, world2object, reverseOrientation, paramSet));
-        else if (Objects.equals(name, "loopsubdiv"))
+        } else if (Objects.equals(name, "loopsubdiv")) {
             shapes.addAll(LoopSubdiv.Create(object2world, world2object, reverseOrientation, paramSet));
-        else if (Objects.equals(name, "nurbs"))
+        } else if (Objects.equals(name, "nurbs")) {
             shapes.addAll(NURBS.Create(object2world, world2object, reverseOrientation, paramSet));
-        else
+        } else {
             Error.Warning("Shape \"%s\" unknown.", name);
+        }
         paramSet.ReportUnused();
         return shapes;
     }
@@ -271,21 +347,21 @@ public class Api {
 
     private static Material MakeMaterial(String name, TextureParams mp) {
         Material material = null;
-        if (Objects.equals(name, "") || Objects.equals(name, "none"))
+        if (Objects.equals(name, "") || Objects.equals(name, "none")) {
             return null;
-        else if (Objects.equals(name, "matte"))
+        } else if (Objects.equals(name, "matte")) {
             material = MatteMaterial.Create(mp);
-        else if (Objects.equals(name, "plastic"))
+        } else if (Objects.equals(name, "plastic")) {
             material = PlasticMaterial.Create(mp);
-        else if (Objects.equals(name, "translucent"))
+        } else if (Objects.equals(name, "translucent")) {
             material = TranslucentMaterial.Create(mp);
-        else if (Objects.equals(name, "glass"))
+        } else if (Objects.equals(name, "glass")) {
             material = GlassMaterial.Create(mp);
-        else if (Objects.equals(name, "mirror"))
+        } else if (Objects.equals(name, "mirror")) {
             material = MirrorMaterial.Create(mp);
-        else if (Objects.equals(name, "hair"))
+        } else if (Objects.equals(name, "hair")) {
             material = HairMaterial.Create(mp);
-        else if (Objects.equals(name, "mix")) {
+        } else if (Objects.equals(name, "mix")) {
             String m1 = mp.FindString("namedmaterial1", "");
             String m2 = mp.FindString("namedmaterial2", "");
             Material mat1 = graphicsState.namedMaterials.get(m1);
@@ -300,19 +376,19 @@ public class Api {
             }
 
             material = MixMaterial.Create(mp, mat1, mat2);
-        } else if (Objects.equals(name, "metal"))
+        } else if (Objects.equals(name, "metal")) {
             material = MetalMaterial.Create(mp);
-        else if (Objects.equals(name, "substrate"))
+        } else if (Objects.equals(name, "substrate")) {
             material = SubstrateMaterial.Create(mp);
-        else if (Objects.equals(name, "uber"))
+        } else if (Objects.equals(name, "uber")) {
             material = UberMaterial.Create(mp);
-        else if (Objects.equals(name, "subsurface"))
+        } else if (Objects.equals(name, "subsurface")) {
             material = SubsurfaceMaterial.Create(mp);
-        else if (Objects.equals(name, "kdsubsurface"))
+        } else if (Objects.equals(name, "kdsubsurface")) {
             material = KdSubsurfaceMaterial.Create(mp);
-        else if (Objects.equals(name, "fourier"))
+        } else if (Objects.equals(name, "fourier")) {
             material = FourierMaterial.Create(mp);
-        else {
+        } else {
             Error.Warning("Material \"%s\" unknown. Using \"matte\".", name);
             material = MatteMaterial.Create(mp);
         }
@@ -322,9 +398,11 @@ public class Api {
                     name, renderOptions.IntegratorName);
         }
         mp.ReportUnused();
-        if (material == null) Error.Error("Unable to create material \"%s\"", name);
-        else
+        if (material == null) {
+            Error.Error("Unable to create material \"%s\"", name);
+        } else {
             ++nMaterialsCreated;
+        }
         return material;
     }
 
@@ -395,7 +473,7 @@ public class Api {
     private static Medium MakeMedium(String name, ParamSet paramSet, Transform medium2world) {
         float sig_a_rgb[] = {.0011f, .0024f, .014f}, sig_s_rgb[] = {2.55f, 3.21f, 3.77f};
         Spectrum sig_a = Spectrum.FromRGB(sig_a_rgb),
-                 sig_s = Spectrum.FromRGB(sig_s_rgb);
+                sig_s = Spectrum.FromRGB(sig_s_rgb);
         String preset = paramSet.FindOneString("preset", "");
         Medium.ScatteringProps props = Medium.GetMediumScatteringProperties(preset);
         if (!Objects.equals(preset, "") && props == null) {
@@ -430,13 +508,14 @@ public class Api {
             }
             Transform data2Medium = Transform.Translate(new Vector3f(p0)).concatenate(Transform.Scale(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z));
             m = new GridDensityMedium(sig_a, sig_s, g, nx, ny, nz, medium2world.concatenate(data2Medium), data);
-        } else
+        } else {
             Error.Warning("Medium \"%s\" unknown.", name);
+        }
         paramSet.ReportUnused();
         return m;
     }
 
-    private static Light MakeLight(String name,ParamSet paramSet, Transform light2world, MediumInterface mediumInterface) {
+    private static Light MakeLight(String name, ParamSet paramSet, Transform light2world, MediumInterface mediumInterface) {
         Light light = null;
         if (Objects.equals(name, "point"))
             light = Point.Create(light2world, mediumInterface.outside, paramSet);
@@ -543,7 +622,7 @@ public class Api {
             film = Film.Create(paramSet, filter);
         else
             Error.Warning("Film \"%s\" unknown.", name);
-        
+
         paramSet.ReportUnused();
         return film;
     }
@@ -579,7 +658,7 @@ public class Api {
         //CleanupProfiler();
     }
 
-    private static char[] spaces = new char[]{ ' ' };
+    private static char[] spaces = new char[]{' '};
 
     public static void pbrtIdentity() {
         VERIFY_INITIALIZED("Identity");
@@ -594,7 +673,7 @@ public class Api {
 
     public static void pbrtTranslate(float dx, float dy, float dz) {
         VERIFY_INITIALIZED("Translate");
-        /*
+
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
                 curTransform.set(i, curTransform.at(i).concatenate(Transform.Translate(new Vector3f(dx, dy, dz))));
@@ -602,128 +681,587 @@ public class Api {
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
             System.out.format("%sTranslate %.9g %.9g %.9g\n", new String(spaces, 0, catIndentCount), dx, dy, dz);
-        */
     }
 
     public static void pbrtRotate(float angle, float ax, float ay, float az) {
-
+        VERIFY_INITIALIZED("Rotate");
+        for (int i = 0; i < MaxTransforms; ++i) {
+            if ((activeTransformBits & (1 << i)) != 0) {
+                curTransform[i] = curTransform[i] * Transform.Rotate(angle, new Vector3f(ax, ay, az));
+            }
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sRotate %.9g %.9g %.9g %.9g\n", catIndentCount, "", angle,
+                    ax, ay, az);
     }
 
     public static void pbrtScale(float sx, float sy, float sz) {
+        VERIFY_INITIALIZED("Scale");
+        for (int i = 0; i < MaxTransforms; ++i) {
+            if ((activeTransformBits & (1 << i)) != 0) {
+                curTransform[i] =
+                        curTransform[i] * Transform.Scale(sx, sy, sz);
+            }
+        }
 
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sScale %.9g %.9g %.9g\n", catIndentCount, "", sx, sy, sz);
+        }
     }
 
     public static void pbrtLookAt(float ex, float ey, float ez, float lx, float ly, float lz, float ux, float uy, float uz) {
-
+        VERIFY_INITIALIZED("LookAt");
+        Transform lookAt = Transform.LookAt(new Point3f(ex, ey, ez), new Point3f(lx, ly, lz), new Vector3f(ux, uy, uz));
+        for (int i = 0; i < MaxTransforms; ++i) {
+            if ((activeTransformBits & (1 << i)) != 0) {
+                curTransform.set(i, curTransform.at(i) * lookAt);
+            }
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sLookAt %.9g %.9g %.9g\n%*s%.9g %.9g %.9g\n"
+                    "%*s%.9g %.9g %.9g\n",
+                    catIndentCount, "", ex, ey, ez, catIndentCount + 8, "", lx, ly, lz,
+                    catIndentCount + 8, "", ux, uy, uz);
+        }
     }
 
-    public static void pbrtConcatTransform(float[] transform) {
-
+    public static void pbrtConcatTransform(float[] tr) {
+        VERIFY_INITIALIZED("ConcatTransform");
+        for (int i = 0; i < MaxTransforms; ++i) {
+            if ((activeTransformBits & (1 << i)) != 0) {
+                curTransform[i] = curTransform[i] *
+                        new Transform(new Matrix4x4(tr[0], tr[4], tr[8], tr[12], tr[1], tr[5],
+                                tr[9], tr[13], tr[2], tr[6], tr[10], tr[14],
+                                tr[3], tr[7], tr[11], tr[15]));
+            }
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sConcatTransform [ ", catIndentCount, "");
+            for (int i = 0; i < 16; ++i) System.out.format("%.9g ", tr[i]);
+            System.out.format(" ]\n");
+        }
     }
 
-    public static void pbrtTransform(float[] transform) {
-
+    public static void pbrtTransform(float[] tr) {
+        VERIFY_INITIALIZED("Transform");
+        for (int i = 0; i < MaxTransforms; ++i) {
+            if ((activeTransformBits & (1 << i)) != 0) {
+                curTransform[i] = new Transform(new Matrix4x4(
+                        tr[0], tr[4], tr[8], tr[12], tr[1], tr[5], tr[9], tr[13], tr[2],
+                        tr[6], tr[10], tr[14], tr[3], tr[7], tr[11], tr[15]));
+            }
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sTransform [ ", catIndentCount, "");
+            for (int i = 0; i < 16; ++i) System.out.format("%.9g ", tr[i]);
+            System.out.format(" ]\n");
+        }
     }
 
     public static void pbrtCoordinateSystem(String name) {
-
+        VERIFY_INITIALIZED("CoordinateSystem");
+        namedCoordinateSystems.put(name, curTransform);
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sCoordinateSystem \"%s\"\n", catIndentCount, "", name);
     }
 
     public static void pbrtCoordSysTransform(String name) {
-
+        VERIFY_INITIALIZED("CoordSysTransform");
+        if (namedCoordinateSystems.containsKey(name))
+            curTransform = namedCoordinateSystems.get(name);
+        else
+            Error.Warning("Couldn't find named coordinate system \"%s\"", name);
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sCoordSysTransform \"%s\"\n", catIndentCount, "", name);
     }
 
     public static void pbrtActiveTransformAll() {
-
+        activeTransformBits = AllTransformsBits;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sActiveTransform All\n", catIndentCount, "");
     }
 
     public static void pbrtActiveTransformEndTime() {
-
+        activeTransformBits = EndTransformBits;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sActiveTransform EndTime\n", catIndentCount, "");
     }
 
     public static void pbrtActiveTransformStartTime() {
-
+        activeTransformBits = StartTransformBits;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sActiveTransform StartTime\n", catIndentCount, "");
     }
 
     public static void pbrtTransformTimes(float start, float end) {
-
+        VERIFY_OPTIONS("TransformTimes");
+        renderOptions.transformStartTime = start;
+        renderOptions.transformEndTime = end;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sTransformTimes %.9g %.9g\n", catIndentCount, "", start, end);
     }
 
     public static void pbrtPixelFilter(String name, ParamSet params) {
-
+        VERIFY_OPTIONS("PixelFilter");
+        renderOptions.FilterName = name;
+        renderOptions.FilterParams = params;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sPixelFilter \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtFilm(String type, ParamSet params) {
+        VERIFY_OPTIONS("Film");
+        renderOptions.FilmParams = params;
+        renderOptions.FilmName = type;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sFilm \"%s\" ", catIndentCount, "", type);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtSampler(String name, ParamSet params) {
-
+        VERIFY_OPTIONS("Sampler");
+        renderOptions.SamplerName = name;
+        renderOptions.SamplerParams = params;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sSampler \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtAccelerator(String name, ParamSet params) {
+        VERIFY_OPTIONS("Accelerator");
+        renderOptions.AcceleratorName = name;
+        renderOptions.AcceleratorParams = params;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sAccelerator \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtIntegrator(String name, ParamSet params) {
+        VERIFY_OPTIONS("Integrator");
+        renderOptions.IntegratorName = name;
+        renderOptions.IntegratorParams = params;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sIntegrator \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
-    public static void pbrtCamera(String name, ParamSet cameraParams) {
+    public static void pbrtCamera(String name, ParamSet params) {
+        VERIFY_OPTIONS("Camera");
+        renderOptions.CameraName = name;
+        renderOptions.CameraParams = params;
+        renderOptions.CameraToWorld = Transform.Inverse(curTransform);
+        namedCoordinateSystems.put("camera", renderOptions.CameraToWorld);
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sCamera \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtMakeNamedMedium(String name, ParamSet params) {
+        VERIFY_INITIALIZED("MakeNamedMedium");
+        WARN_IF_ANIMATED_TRANSFORM("MakeNamedMedium");
+        String type = params.FindOneString("type", "");
+        if (type == "")
+            Error.Error("No parameter string \"type\" found in MakeNamedMedium");
+        else {
+            Medium medium = MakeMedium(type, params, curTransform[0]);
+            if (medium != null) renderOptions.namedMedia.put(name, medium);
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sMakeNamedMedium \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtMediumInterface(String insideName, String outsideName) {
+        VERIFY_INITIALIZED("MediumInterface");
+        graphicsState.currentInsideMedium = insideName;
+        graphicsState.currentOutsideMedium = outsideName;
+        renderOptions.haveScatteringMedia = true;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sMediumInterface \"%s\" \"%s\"\n", catIndentCount, "",
+                    insideName, outsideName);
     }
 
     public static void pbrtWorldBegin() {
+        VERIFY_OPTIONS("WorldBegin");
+        currentApiState = APIState.WorldBlock;
+        for (int i = 0; i < MaxTransforms; ++i) curTransform[i] = Transform();
+        activeTransformBits = AllTransformsBits;
+        namedCoordinateSystems.put("world", curTransform);
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("\n\nWorldBegin\n\n");
     }
 
     public static void pbrtAttributeBegin() {
+        VERIFY_WORLD("AttributeBegin");
+        pushedGraphicsStates.push(graphicsState);
+        pushedTransforms.push(curTransform);
+        pushedActiveTransformBits.push(activeTransformBits);
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("\n%*sAttributeBegin\n", catIndentCount, "");
+            catIndentCount += 4;
+        }
     }
 
     public static void pbrtAttributeEnd() {
+        VERIFY_WORLD("AttributeEnd");
+        if (pushedGraphicsStates.empty()) {
+            Error.Error("Unmatched pbrtAttributeEnd() encountered. Ignoring it.");
+            return;
+        }
+        graphicsState = pushedGraphicsStates.pop();
+        curTransform = pushedTransforms.pop();
+        activeTransformBits = pushedActiveTransformBits.pop();
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            catIndentCount -= 4;
+            System.out.format("%*sAttributeEnd\n", catIndentCount, "");
+        }
     }
 
     public static void pbrtTransformBegin() {
+        VERIFY_WORLD("TransformBegin");
+        pushedTransforms.push(curTransform);
+        pushedActiveTransformBits.push(activeTransformBits);
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sTransformBegin\n", catIndentCount, "");
+            catIndentCount += 4;
+        }
     }
 
     public static void pbrtTransformEnd() {
+        VERIFY_WORLD("TransformEnd");
+        if (pushedTransforms.empty()) {
+            Error.Error("Unmatched pbrtTransformEnd() encountered. Ignoring it.");
+            return;
+        }
+        curTransform = pushedTransforms.pop();
+        activeTransformBits = pushedActiveTransformBits.pop();
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            catIndentCount -= 4;
+            System.out.format("%*sTransformEnd\n", catIndentCount, "");
+        }
     }
 
     public static void pbrtTexture(String name, String type, String texname, ParamSet params) {
+        VERIFY_WORLD("Texture");
+        TextureParams tp = new TextureParams(params, params, graphicsState.floatTextures, graphicsState.spectrumTextures);
+        if (Objects.equals(type, "float")) {
+            // Create _Float_ texture and store in _floatTextures_
+            if (graphicsState.floatTextures.containsKey(name)) {
+                Error.Warning("Texture \"%s\" being redefined", name);
+            }
+            WARN_IF_ANIMATED_TRANSFORM("Texture");
+            Texture<Float> ft = MakeFloatTexture(texname, curTransform[0], tp);
+            if (ft != null) graphicsState.floatTextures.put(name, ft);
+        } else if (Objects.equals(type, "color") || Objects.equals(type, "spectrum")) {
+            // Create _color_ texture and store in _spectrumTextures_
+            if (graphicsState.spectrumTextures.containsKey(name))
+                Error.Warning("Texture \"%s\" being redefined", name);
+            WARN_IF_ANIMATED_TRANSFORM("Texture");
+            Texture<Spectrum> st = MakeSpectrumTexture(texname, curTransform[0], tp);
+            if (st != null) graphicsState.spectrumTextures.put(name, st);
+        } else {
+            Error.Error("Texture type \"%s\" unknown.", type);
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sTexture \"%s\" \"%s\" \"%s\" ", catIndentCount, "",
+                    name, type, texname);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtMaterial(String name, ParamSet params) {
+        VERIFY_WORLD("Material");
+        graphicsState.material = name;
+        graphicsState.materialParams = params;
+        graphicsState.currentNamedMaterial = "";
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sMaterial \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtMakeNamedMaterial(String name, ParamSet params) {
+        VERIFY_WORLD("MakeNamedMaterial");
+        // error checking, warning if replace, what to use for transform?
+        ParamSet emptyParams = new ParamSet();
+        TextureParams mp = new TextureParams(params, emptyParams, graphicsState.floatTextures, graphicsState.spectrumTextures);
+        String matName = mp.FindString("type");
+        WARN_IF_ANIMATED_TRANSFORM("MakeNamedMaterial");
+        if (matName.isEmpty()) {
+            Error.Error("No parameter string \"type\" found in MakeNamedMaterial");
+        }
+
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sMakeNamedMaterial \"%s\" ", catIndentCount, "",
+                    name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        } else {
+            Material mtl = MakeMaterial(matName, mp);
+            if (graphicsState.namedMaterials.containsKey(name))
+                Error.Warning("Named material \"%s\" redefined.", name);
+            graphicsState.namedMaterials.put(name, mtl);
+        }
     }
 
     public static void pbrtNamedMaterial(String name) {
+        VERIFY_WORLD("NamedMaterial");
+        graphicsState.currentNamedMaterial = name;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sNamedMaterial \"%s\"\n", catIndentCount, "", name);
     }
 
     public static void pbrtLightSource(String name, ParamSet params) {
+        VERIFY_WORLD("LightSource");
+        WARN_IF_ANIMATED_TRANSFORM("LightSource");
+        MediumInterface mi = graphicsState.CreateMediumInterface();
+        Light lt = MakeLight(name, params, curTransform[0], mi);
+        if (lt == null) {
+            Error.Error("LightSource: light type \"%s\" unknown.", name);
+        } else {
+            renderOptions.lights.add(lt);
+        }
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sLightSource \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtAreaLightSource(String name, ParamSet params) {
+        VERIFY_WORLD("AreaLightSource");
+        graphicsState.areaLight = name;
+        graphicsState.areaLightParams = params;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sAreaLightSource \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
     }
 
     public static void pbrtShape(String name, ParamSet params) {
+        VERIFY_WORLD("Shape");
+        Primitive[] prims;
+        AreaLight[] areaLights;
+        if (Pbrt.options.Cat || (Pbrt.options.ToPly && !Objects.equals(name, "trianglemesh"))) {
+            System.out.format("%*sShape \"%s\" ", catIndentCount, "", name);
+            params.Print(catIndentCount);
+            System.out.format("\n");
+        }
+
+        if (!curTransform.IsAnimated()) {
+            // Initialize _prims_ and _areaLights_ for static shape
+
+            // Create shapes for shape _name_
+            Transform ObjToWorld, WorldToObj;
+            transformCache.Lookup(curTransform[0], ObjToWorld, WorldToObj);
+            ArrayList<Shape> shapes = MakeShapes(name, ObjToWorld, WorldToObj, graphicsState.reverseOrientation, params);
+            if (shapes.isEmpty()) return;
+            Material mtl = graphicsState.CreateMaterial(params);
+            params.ReportUnused();
+            MediumInterface mi = graphicsState.CreateMediumInterface();
+            for (Shape s : shapes) {
+                // Possibly create area light for shape
+                AreaLight area = null;
+                if (!graphicsState.areaLight.isEmpty()) {
+                    area = MakeAreaLight(graphicsState.areaLight, curTransform[0], mi, graphicsState.areaLightParams, s);
+                    if (area != null) areaLights.add(area);
+                }
+                prims.push_back(new GeometricPrimitive(s, mtl, area, mi));
+            }
+        } else {
+            // Initialize _prims_ and _areaLights_ for animated shape
+
+            // Create initial shape or shapes for animated shape
+            if (graphicsState.areaLight != "")
+                Error.Warning("Ignoring currently set area light when creating "
+                        "animated shape");
+            Transform identity;
+            transformCache.Lookup(new Transform(), identity, null);
+            ArrayList<Shape> shapes = MakeShapes(name, identity, identity, graphicsState.reverseOrientation, params);
+            if (shapes.isEmpty()) return;
+
+            // Create _GeometricPrimitive_(s) for animated shape
+            Material mtl = graphicsState.CreateMaterial(params);
+            params.ReportUnused();
+            MediumInterface mi = graphicsState.CreateMediumInterface();
+            for (Shape s : shapes)
+                prims.push_back(
+                        new GeometricPrimitive(s, mtl, null, mi));
+
+            // Create single _TransformedPrimitive_ for _prims_
+
+            // Get _animatedObjectToWorld_ transform for shape
+            assert(MaxTransforms == 2, "TransformCache assumes only two transforms");
+            Transform ObjToWorld[2];
+            transformCache.Lookup(curTransform[0], ObjToWorld[0], null);
+            transformCache.Lookup(curTransform[1], ObjToWorld[1], null);
+            AnimatedTransform animatedObjectToWorld new AnimatedTransform(ObjToWorld[0], renderOptions.transformStartTime, ObjToWorld[1],
+                    renderOptions.transformEndTime);
+            if (prims.size() > 1) {
+                Primitive bvh = new BVHAccel(prims);
+                prims.clear();
+                prims.push_back(bvh);
+            }
+            prims[0] = new TransformedPrimitive(prims[0], animatedObjectToWorld);
+        }
+        // Add _prims_ and _areaLights_ to scene or current instance
+        if (renderOptions.currentInstance) {
+            if (areaLights.size())
+                Error.Warning("Area lights not supported with object instancing");
+            renderOptions.currentInstance.insert(
+                    renderOptions.currentInstance.end(), prims.begin(), prims.end());
+        } else {
+            renderOptions.primitives.insert(renderOptions.primitives.end(),
+                    prims.begin(), prims.end());
+            if (areaLights.size())
+                renderOptions.lights.insert(renderOptions.lights.end(),
+                        areaLights.begin(), areaLights.end());
+        }
     }
 
     public static void pbrtReverseOrientation() {
+        VERIFY_WORLD("ReverseOrientation");
+        graphicsState.reverseOrientation = !graphicsState.reverseOrientation;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sReverseOrientation\n", catIndentCount, "");
+        }
     }
 
     public static void pbrtObjectBegin(String name) {
+        VERIFY_WORLD("ObjectBegin");
+        pbrtAttributeBegin();
+        if (renderOptions.currentInstance != null)
+            Error.Error("ObjectBegin called inside of instance definition");
+        renderOptions.instances.put(name, Primitive[]);
+        renderOptions.currentInstance = renderOptions.instances.get(name);
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sObjectBegin \"%s\"\n", catIndentCount, "", name);
+        }
     }
 
     public static void pbrtObjectEnd() {
+        VERIFY_WORLD("ObjectEnd");
+        if (renderOptions.currentInstance == null)
+            Error.Error("ObjectEnd called outside of instance definition");
+        renderOptions.currentInstance = null;
+        pbrtAttributeEnd();
+        //++nObjectInstancesCreated;
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sObjectEnd\n", catIndentCount, "");
+        }
     }
 
     public static void pbrtObjectInstance(String name) {
+        VERIFY_WORLD("ObjectInstance");
+        // Perform object instance error checking
+        if (Pbrt.options.Cat || Pbrt.options.ToPly)
+            System.out.format("%*sObjectInstance \"%s\"\n", catIndentCount, "", name);
+        if (renderOptions.currentInstance != null) {
+            Error.Error("ObjectInstance can't be called inside instance definition");
+            return;
+        }
+        if (!renderOptions.instances.containsKey(name)) {
+            Error.Error("Unable to find instance named \"%s\"", name);
+            return;
+        }
+        Primitive[] in = renderOptions.instances.get(name);
+        if (in.empty()) return;
+        //++nObjectInstancesUsed;
+        if (in.size() > 1) {
+            // Create aggregate for instance _Primitive_s
+            std::shared_ptr<Primitive> accel(
+                    MakeAccelerator(renderOptions.AcceleratorName, in,
+                            renderOptions.AcceleratorParams));
+            if (!accel) accel = std::make_shared<BVHAccel>(in);
+            in.erase(in.begin(), in.end());
+            in.push_back(accel);
+        }
+        assert(MaxTransforms == 2, "TransformCache assumes only two transforms");
+        // Create _animatedInstanceToWorld_ transform for instance
+        Transform InstanceToWorld[2];
+        transformCache.Lookup(curTransform[0], &InstanceToWorld[0], null);
+        transformCache.Lookup(curTransform[1], &InstanceToWorld[1], null);
+        AnimatedTransform animatedInstanceToWorld = new AnimatedTransform(
+                InstanceToWorld[0], renderOptions.transformStartTime,
+                InstanceToWorld[1], renderOptions.transformEndTime);
+        Primitive prim = new TransformedPrimitive(in[0], animatedInstanceToWorld));
+        renderOptions.primitives.add(prim);
     }
 
     public static void pbrtWorldEnd() {
+        VERIFY_WORLD("WorldEnd");
+        // Ensure there are no pushed graphics states
+        while (!pushedGraphicsStates.empty()) {
+            Error.Warning("Missing end to pbrtAttributeBegin()");
+            pushedGraphicsStates.pop();
+            pushedTransforms.pop();
+        }
+        while (!pushedTransforms.empty()) {
+            Error.Warning("Missing end to pbrtTransformBegin()");
+            pushedTransforms.pop();
+        }
+
+        // Create scene and render
+        if (Pbrt.options.Cat || Pbrt.options.ToPly) {
+            System.out.format("%*sWorldEnd\n", catIndentCount, "");
+        } else {
+            Integrator integrator = renderOptions.MakeIntegrator();
+            Scene scene = renderOptions.MakeScene();
+
+            // This is kind of ugly; we directly override the current profiler
+            // state to switch from parsing/scene construction related stuff to
+            // rendering stuff and then switch it back below. The underlying
+            // issue is that all the rest of the profiling system assumes
+            // hierarchical inheritance of profiling state; this is the only
+            // place where that isn't the case.
+            CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::SceneConstruction));
+            ProfilerState = ProfToBits(Prof::IntegratorRender);
+
+            if ((scene != null) && (integrator != null)) {
+                integrator.Render(scene);
+            }
+
+            MergeWorkerThreadStats();
+            ReportThreadStats();
+            if (!Pbrt.options.Quiet) {
+                PrintStats(stdout);
+                ReportProfilerResults(stdout);
+                ClearStats();
+                ClearProfiler();
+            }
+
+            CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::IntegratorRender));
+            ProfilerState = ProfToBits(Prof::SceneConstruction);
+        }
+
+        // Clean up after rendering
+        graphicsState = new GraphicsState();
+        transformCache.Clear();
+        currentApiState = APIState.OptionsBlock;
+
+        for (int i = 0; i < MaxTransforms; ++i) curTransform[i] = new Transform();
+        activeTransformBits = AllTransformsBits;
+        namedCoordinateSystems.clear();
+        ImageTexture<Float, Float>.ClearCache();
+        ImageTexture<Spectrum, Spectrum>.ClearCache();
     }
 
     private static void VERIFY_INITIALIZED(String func) {
@@ -731,4 +1269,26 @@ public class Api {
             Error.Error("pbrtInit() must be before calling \"%s()\". Ignoring.", func);
         }
     }
- }
+
+    private static void VERIFY_OPTIONS(String func) {
+        VERIFY_INITIALIZED(func);
+        if (!(Pbrt.options.Cat || Pbrt.options.ToPly) && currentApiState == APIState.WorldBlock) {
+            Error.Error("Options cannot be set inside world block; \"%s\" not allowed.  Ignoring.", func);
+        }
+    }
+
+    private static void VERIFY_WORLD(String func) {
+        VERIFY_INITIALIZED(func);
+        if(!(Pbrt.options.Cat || Pbrt.options.ToPly) && currentApiState ==APIState.OptionsBlock)  {
+            Error.Error("Scene description must be inside world block; \"%s\" not allowed. Ignoring.", func);
+        }
+    }
+
+    private static void WARN_IF_ANIMATED_TRANSFORM(String func) {
+        if (curTransform.IsAnimated()) {
+            Error.Warning("Animated transformations set; ignoring for \"%s\" " +
+                    "and using the start transform only", func);
+        }
+    }
+
+}
