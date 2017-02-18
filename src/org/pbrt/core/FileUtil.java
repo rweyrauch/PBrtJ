@@ -16,6 +16,10 @@ public class FileUtil {
 
     private static String searchDirectory;
 
+    static {
+        searchDirectory = "";
+    }
+
     public static boolean IsAbsolutePath(String filename) {
         Path path = Paths.get(filename);
         return path.isAbsolute();
