@@ -349,7 +349,12 @@ public class Parser {
         public String value;
         public TokenValue(int token, String value) {
             this.token = token;
-            this.value = value;
+            if (token != STRING) {
+                this.value = value;
+            }
+            else {
+                this.value = value.substring(1, value.length()-1);
+            }
         }
     }
     private class CommandTokens {
@@ -357,8 +362,6 @@ public class Parser {
     }
 
     public void parse() {
-
-
         try {
             int token = 0;
             CommandTokens currentCommand = null;
@@ -825,7 +828,7 @@ public class Parser {
         ArrayList<PbrtParameter> params = new ArrayList<>(2);
         for (int i = firstParam; i < command.size(); i++) {
             assert(command.get(i).token == STRING);
-            String paramName = command.get(i).value.substring(1, command.get(i).value.length()-1);
+            String paramName = command.get(i).value;
             i++;
 
             if (command.get(i).token == STRING) {
@@ -840,7 +843,7 @@ public class Parser {
                 i++;
                 while (command.get(i).token != RBRACK) {
                     if (command.get(i).token == STRING) {
-                        arrayList.add(new String(command.get(i).value));
+                         arrayList.add(command.get(i).value);
                     }
                     else if (command.get(i).token == NUMBER) {
                         arrayList.add(Float.parseFloat(command.get(i).value));

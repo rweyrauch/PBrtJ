@@ -12,7 +12,7 @@ package org.pbrt.core;
 
 public class Quaternion {
     // Quaternion Public Data
-    public Vector3f v;
+    public Vector3f v = new Vector3f();
     public float w;
 
     // Quaternion Public Methods

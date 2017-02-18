@@ -174,7 +174,7 @@ public class Film {
     }
     public void AddSplat(Point2f p, Spectrum v) {
         //ProfilePhase pp(Prof::SplatFilm);
-
+/*
         if (v.HasNaNs()) {
             //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
             return;
@@ -190,11 +190,13 @@ public class Film {
         if (v.y() > maxSampleLuminance)
             v *= maxSampleLuminance / v.y();
         float[] xyz = Spectrum.ToXYZ(v);
-        Pixel pixel = GetPixel((Point2i)p);
+        Pixel pixel = GetPixel(new Point2i(p));
         for (int i = 0; i < 3; ++i) pixel.splatXYZ[i].add(xyz[i]);
+        */
     }
 
     public void WriteImage(float splatScale) {
+        /*
         // Convert image to RGB and compute final pixel values
         //LOG(INFO) << "Converting image to RGB and computing final weighted pixel values";
         float[] rgb = new float[3 * croppedPixelBounds.Area()]);
@@ -231,8 +233,10 @@ public class Film {
         // Write RGB image
         //LOG(INFO) << "Writing image " << filename << " with bounds " << croppedPixelBounds;
         ImageIO.Write(filename, rgb, croppedPixelBounds, fullResolution);
+        */
     }
     public void Clear() {
+        /*
         for (Point2i p : croppedPixelBounds) {
             Pixel pixel = GetPixel(p);
             for (int c = 0; c < 3; ++c) {
@@ -241,6 +245,7 @@ public class Film {
             }
             pixel.filterWeightSum = 0;
         }
+        */
     }
 
     // Film Public Data

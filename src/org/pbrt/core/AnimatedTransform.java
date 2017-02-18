@@ -839,9 +839,9 @@ public class AnimatedTransform {
     }
     
     public static class MatComponents {
-        Vector3f T;
-        Quaternion R;
-        Matrix4x4 S;
+        Vector3f T = new Vector3f();
+        Quaternion R = new Quaternion();
+        Matrix4x4 S = new Matrix4x4();
     }
     
     public static MatComponents Decompose(Matrix4x4 m) {

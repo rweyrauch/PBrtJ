@@ -10,10 +10,9 @@
 
 package org.pbrt.core;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Stack;
+import java.lang.reflect.Array;
+import java.util.*;
+
 import org.pbrt.shapes.*;
 import org.pbrt.textures.*;
 import org.pbrt.materials.*;
@@ -34,32 +33,24 @@ public class Api {
 
     private static class TransformSet {
         // TransformSet Public Methods
-        public Transform at(int i) {
-            assert (i >= 0);
-            assert (i < MaxTransforms);
-            return t[i];
+        public TransformSet() {
+            trans[0] = new Transform();
+            trans[1] = new Transform();
         }
-
-        public void set(int i, Transform t) {
-            assert (i >= 0);
-            assert (i < MaxTransforms);
-            this.t[i] = t;
-        }
-
         public static TransformSet Inverse(TransformSet ts) {
             TransformSet tInv = new TransformSet();
-            for (int i = 0; i < MaxTransforms; ++i) tInv.t[i] = Transform.Inverse(ts.t[i]);
+            for (int i = 0; i < MaxTransforms; ++i) tInv.trans[i] = Transform.Inverse(ts.trans[i]);
             return tInv;
         }
 
         public boolean IsAnimated() {
             for (int i = 0; i < MaxTransforms - 1; ++i) {
-                if (t[i] != t[i + 1]) return true;
+                if (trans[i] != trans[i + 1]) return true;
             }
             return false;
         }
 
-        private Transform t[] = new Transform[MaxTransforms];
+        public Transform trans[] = new Transform[MaxTransforms];
     }
 
     private static class RenderOptions {
@@ -113,9 +104,10 @@ public class Api {
         }
 
         public Scene MakeScene() {
-            Primitive accelerator = MakeAccelerator(AcceleratorName, primitives, AcceleratorParams);
+            Primitive[] prims = (Primitive[])primitives.toArray();
+            Primitive accelerator = MakeAccelerator(AcceleratorName, prims, AcceleratorParams);
             if (accelerator == null) {
-                accelerator = new BVHAccel(primitives);
+                accelerator = new BVHAccel(prims);
             }
             Scene scene = new Scene(accelerator, lights);
             // Erase primitives and lights from _RenderOptions_
@@ -151,10 +143,10 @@ public class Api {
         public String CameraName = "perspective";
         public ParamSet CameraParams;
         public TransformSet CameraToWorld;
-        public Map<String, Medium> namedMedia;
-        public ArrayList<Light> lights;
-        public ArrayList<Primitive> primitives;
-        public Map<String, ArrayList<Primitive>> instances;
+        public HashMap<String, Medium> namedMedia = new HashMap<>();
+        public ArrayList<Light> lights = new ArrayList<>();
+        public ArrayList<Primitive> primitives = new ArrayList<>();
+        public HashMap<String, ArrayList<Primitive>> instances = new HashMap<>();
         public ArrayList<Primitive> currentInstance = null;
         boolean haveScatteringMedia = false;
     }
@@ -180,13 +172,13 @@ public class Api {
 
         public MediumInterface CreateMediumInterface() {
             MediumInterface m = new MediumInterface();
-            if (!Objects.equals(currentInsideMedium, "")) {
+            if (!currentInsideMedium.isEmpty()) {
                 m.inside = renderOptions.namedMedia.get(currentInsideMedium);
                 if (m.inside == null) {
                     Error.Error("Named medium \"%s\" undefined.", currentInsideMedium);
                 }
             }
-            if (!Objects.equals(currentOutsideMedium, "")) {
+            if (!currentOutsideMedium.isEmpty()) {
                 m.outside = renderOptions.namedMedia.get(currentOutsideMedium);
                 if (m.outside == null) {
                     Error.Error("Named medium \"%s\" undefined.", currentOutsideMedium);
@@ -196,21 +188,21 @@ public class Api {
         }
 
         // Graphics State
-        public String currentInsideMedium, currentOutsideMedium;
-        public Map<String, Texture<Float>> floatTextures;
-        public Map<String, Texture<Spectrum>> spectrumTextures;
+        public String currentInsideMedium = "", currentOutsideMedium = "";
+        public HashMap<String, Texture<Float>> floatTextures = new HashMap<>();
+        public HashMap<String, Texture<Spectrum>> spectrumTextures = new HashMap<>();
         public ParamSet materialParams;
         public String material = "matte";
-        public Map<String, Material> namedMaterials;
-        public String currentNamedMaterial;
+        public HashMap<String, Material> namedMaterials = new HashMap<>();
+        public String currentNamedMaterial = "";
         public ParamSet areaLightParams;
-        public String areaLight;
+        public String areaLight = "";
         public boolean reverseOrientation = false;
     }
 
     private static class TransformCache {
 
-        private class TransformPair {
+        public class TransformPair {
             Transform t;
             Transform tInv;
         }
@@ -232,7 +224,7 @@ public class Api {
         }
 
         // TransformCache Private Data
-        private Map<Transform, TransformPair> cache;
+        private HashMap<Transform, TransformPair> cache = new HashMap<>();
     }
 
     private enum APIState {Uninitialized, OptionsBlock, WorldBlock}
@@ -241,7 +233,7 @@ public class Api {
     private static APIState currentApiState = APIState.Uninitialized;
     private static TransformSet curTransform = new TransformSet();
     private static int activeTransformBits = AllTransformsBits;
-    private static Map<String, TransformSet> namedCoordinateSystems;
+    private static HashMap<String, TransformSet> namedCoordinateSystems = new HashMap<>();
     private static RenderOptions renderOptions = new RenderOptions();
     private static GraphicsState graphicsState = new GraphicsState();
     private static Stack<GraphicsState> pushedGraphicsStates = new Stack<>();
@@ -560,8 +552,8 @@ public class Api {
     private static Camera MakeCamera(String name, ParamSet paramSet, TransformSet cam2worldSet, float transformStart, float transformEnd, Film film) {
         Camera camera = null;
         MediumInterface mediumInterface = graphicsState.CreateMediumInterface();
-        TransformCache.TransformPair c2w0 = transformCache.Lookup(cam2worldSet.at(0));
-        TransformCache.TransformPair c2w1 = transformCache.Lookup(cam2worldSet.at(1));
+        TransformCache.TransformPair c2w0 = transformCache.Lookup(cam2worldSet.trans[0]);
+        TransformCache.TransformPair c2w1 = transformCache.Lookup(cam2worldSet.trans[1]);
         AnimatedTransform animatedCam2World = new AnimatedTransform(c2w0.t, transformStart, c2w1.t, transformEnd);
         if (Objects.equals(name, "perspective"))
             camera = PerspectiveCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
@@ -664,7 +656,7 @@ public class Api {
         VERIFY_INITIALIZED("Identity");
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform.set(i, new Transform());
+                curTransform.trans[i] = new Transform();
             }
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
@@ -676,7 +668,7 @@ public class Api {
 
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform.set(i, curTransform.at(i).concatenate(Transform.Translate(new Vector3f(dx, dy, dz))));
+                curTransform.trans[i] = curTransform.trans[i].concatenate(Transform.Translate(new Vector3f(dx, dy, dz)));
             }
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
@@ -687,25 +679,23 @@ public class Api {
         VERIFY_INITIALIZED("Rotate");
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform[i] = curTransform[i] * Transform.Rotate(angle, new Vector3f(ax, ay, az));
+                curTransform.trans[i] = curTransform.trans[i].concatenate(Transform.Rotate(angle, new Vector3f(ax, ay, az)));
             }
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sRotate %.9g %.9g %.9g %.9g\n", catIndentCount, "", angle,
-                    ax, ay, az);
+            System.out.format("%sRotate %.9g %.9g %.9g %.9g\n", new String(spaces, 0, catIndentCount), angle, ax, ay, az);
     }
 
     public static void pbrtScale(float sx, float sy, float sz) {
         VERIFY_INITIALIZED("Scale");
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform[i] =
-                        curTransform[i] * Transform.Scale(sx, sy, sz);
+                curTransform.trans[i] = curTransform.trans[i].concatenate(Transform.Scale(sx, sy, sz));
             }
         }
 
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sScale %.9g %.9g %.9g\n", catIndentCount, "", sx, sy, sz);
+            System.out.format("%sScale %.9g %.9g %.9g\n", new String(spaces, 0, catIndentCount), sx, sy, sz);
         }
     }
 
@@ -714,14 +704,13 @@ public class Api {
         Transform lookAt = Transform.LookAt(new Point3f(ex, ey, ez), new Point3f(lx, ly, lz), new Vector3f(ux, uy, uz));
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform.set(i, curTransform.at(i) * lookAt);
+                curTransform.trans[i] = curTransform.trans[i].concatenate(lookAt);
             }
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sLookAt %.9g %.9g %.9g\n%*s%.9g %.9g %.9g\n"
-                    "%*s%.9g %.9g %.9g\n",
-                    catIndentCount, "", ex, ey, ez, catIndentCount + 8, "", lx, ly, lz,
-                    catIndentCount + 8, "", ux, uy, uz);
+            System.out.format("%sLookAt %.9g %.9g %.9g\n%s%.9g %.9g %.9g\n%s%.9g %.9g %.9g\n",
+                    new String(spaces, 0, catIndentCount), ex, ey, ez, new String(spaces, 0, catIndentCount+8), lx, ly, lz,
+                    new String(spaces, 0, catIndentCount+8), ux, uy, uz);
         }
     }
 
@@ -729,14 +718,13 @@ public class Api {
         VERIFY_INITIALIZED("ConcatTransform");
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform[i] = curTransform[i] *
-                        new Transform(new Matrix4x4(tr[0], tr[4], tr[8], tr[12], tr[1], tr[5],
+                curTransform.trans[i] = curTransform.trans[i].concatenate(new Transform(new Matrix4x4(tr[0], tr[4], tr[8], tr[12], tr[1], tr[5],
                                 tr[9], tr[13], tr[2], tr[6], tr[10], tr[14],
-                                tr[3], tr[7], tr[11], tr[15]));
+                                tr[3], tr[7], tr[11], tr[15])));
             }
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sConcatTransform [ ", catIndentCount, "");
+            System.out.format("%sConcatTransform [ ", new String(spaces, 0, catIndentCount));
             for (int i = 0; i < 16; ++i) System.out.format("%.9g ", tr[i]);
             System.out.format(" ]\n");
         }
@@ -746,13 +734,13 @@ public class Api {
         VERIFY_INITIALIZED("Transform");
         for (int i = 0; i < MaxTransforms; ++i) {
             if ((activeTransformBits & (1 << i)) != 0) {
-                curTransform[i] = new Transform(new Matrix4x4(
+                curTransform.trans[i] = new Transform(new Matrix4x4(
                         tr[0], tr[4], tr[8], tr[12], tr[1], tr[5], tr[9], tr[13], tr[2],
                         tr[6], tr[10], tr[14], tr[3], tr[7], tr[11], tr[15]));
             }
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sTransform [ ", catIndentCount, "");
+            System.out.format("%sTransform [ ", new String(spaces, 0, catIndentCount));
             for (int i = 0; i < 16; ++i) System.out.format("%.9g ", tr[i]);
             System.out.format(" ]\n");
         }
@@ -762,7 +750,7 @@ public class Api {
         VERIFY_INITIALIZED("CoordinateSystem");
         namedCoordinateSystems.put(name, curTransform);
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sCoordinateSystem \"%s\"\n", catIndentCount, "", name);
+            System.out.format("%sCoordinateSystem \"%s\"\n", new String(spaces, 0, catIndentCount), name);
     }
 
     public static void pbrtCoordSysTransform(String name) {
@@ -772,25 +760,25 @@ public class Api {
         else
             Error.Warning("Couldn't find named coordinate system \"%s\"", name);
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sCoordSysTransform \"%s\"\n", catIndentCount, "", name);
+            System.out.format("%sCoordSysTransform \"%s\"\n", new String(spaces, 0, catIndentCount), name);
     }
 
     public static void pbrtActiveTransformAll() {
         activeTransformBits = AllTransformsBits;
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sActiveTransform All\n", catIndentCount, "");
+            System.out.format("%sActiveTransform All\n", new String(spaces, 0, catIndentCount));
     }
 
     public static void pbrtActiveTransformEndTime() {
         activeTransformBits = EndTransformBits;
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sActiveTransform EndTime\n", catIndentCount, "");
+            System.out.format("%sActiveTransform EndTime\n", new String(spaces, 0, catIndentCount));
     }
 
     public static void pbrtActiveTransformStartTime() {
         activeTransformBits = StartTransformBits;
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sActiveTransform StartTime\n", catIndentCount, "");
+            System.out.format("%sActiveTransform StartTime\n", new String(spaces, 0, catIndentCount));
     }
 
     public static void pbrtTransformTimes(float start, float end) {
@@ -798,7 +786,7 @@ public class Api {
         renderOptions.transformStartTime = start;
         renderOptions.transformEndTime = end;
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sTransformTimes %.9g %.9g\n", catIndentCount, "", start, end);
+            System.out.format("%sTransformTimes %.9g %.9g\n", new String(spaces, 0, catIndentCount), start, end);
     }
 
     public static void pbrtPixelFilter(String name, ParamSet params) {
@@ -806,7 +794,7 @@ public class Api {
         renderOptions.FilterName = name;
         renderOptions.FilterParams = params;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sPixelFilter \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sPixelFilter \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -817,7 +805,7 @@ public class Api {
         renderOptions.FilmParams = params;
         renderOptions.FilmName = type;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sFilm \"%s\" ", catIndentCount, "", type);
+            System.out.format("%sFilm \"%s\" ", new String(spaces, 0, catIndentCount), type);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -828,7 +816,7 @@ public class Api {
         renderOptions.SamplerName = name;
         renderOptions.SamplerParams = params;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sSampler \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sSampler \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -839,7 +827,7 @@ public class Api {
         renderOptions.AcceleratorName = name;
         renderOptions.AcceleratorParams = params;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sAccelerator \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sAccelerator \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -850,7 +838,7 @@ public class Api {
         renderOptions.IntegratorName = name;
         renderOptions.IntegratorParams = params;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sIntegrator \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sIntegrator \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -860,10 +848,10 @@ public class Api {
         VERIFY_OPTIONS("Camera");
         renderOptions.CameraName = name;
         renderOptions.CameraParams = params;
-        renderOptions.CameraToWorld = Transform.Inverse(curTransform);
+        renderOptions.CameraToWorld = TransformSet.Inverse(curTransform);
         namedCoordinateSystems.put("camera", renderOptions.CameraToWorld);
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sCamera \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sCamera \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -873,14 +861,14 @@ public class Api {
         VERIFY_INITIALIZED("MakeNamedMedium");
         WARN_IF_ANIMATED_TRANSFORM("MakeNamedMedium");
         String type = params.FindOneString("type", "");
-        if (type == "")
+        if (type.isEmpty())
             Error.Error("No parameter string \"type\" found in MakeNamedMedium");
         else {
-            Medium medium = MakeMedium(type, params, curTransform[0]);
+            Medium medium = MakeMedium(type, params, curTransform.trans[0]);
             if (medium != null) renderOptions.namedMedia.put(name, medium);
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sMakeNamedMedium \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sMakeNamedMedium \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -892,14 +880,14 @@ public class Api {
         graphicsState.currentOutsideMedium = outsideName;
         renderOptions.haveScatteringMedia = true;
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sMediumInterface \"%s\" \"%s\"\n", catIndentCount, "",
+            System.out.format("%sMediumInterface \"%s\" \"%s\"\n", new String(spaces, 0, catIndentCount),
                     insideName, outsideName);
     }
 
     public static void pbrtWorldBegin() {
         VERIFY_OPTIONS("WorldBegin");
         currentApiState = APIState.WorldBlock;
-        for (int i = 0; i < MaxTransforms; ++i) curTransform[i] = Transform();
+        for (int i = 0; i < MaxTransforms; ++i) curTransform.trans[i] = new Transform();
         activeTransformBits = AllTransformsBits;
         namedCoordinateSystems.put("world", curTransform);
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
@@ -912,7 +900,7 @@ public class Api {
         pushedTransforms.push(curTransform);
         pushedActiveTransformBits.push(activeTransformBits);
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("\n%*sAttributeBegin\n", catIndentCount, "");
+            System.out.format("\n%sAttributeBegin\n", new String(spaces, 0, catIndentCount));
             catIndentCount += 4;
         }
     }
@@ -928,7 +916,7 @@ public class Api {
         activeTransformBits = pushedActiveTransformBits.pop();
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
             catIndentCount -= 4;
-            System.out.format("%*sAttributeEnd\n", catIndentCount, "");
+            System.out.format("%sAttributeEnd\n", new String(spaces, 0, catIndentCount));
         }
     }
 
@@ -937,7 +925,7 @@ public class Api {
         pushedTransforms.push(curTransform);
         pushedActiveTransformBits.push(activeTransformBits);
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sTransformBegin\n", catIndentCount, "");
+            System.out.format("%sTransformBegin\n", new String(spaces, 0, catIndentCount));
             catIndentCount += 4;
         }
     }
@@ -952,7 +940,7 @@ public class Api {
         activeTransformBits = pushedActiveTransformBits.pop();
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
             catIndentCount -= 4;
-            System.out.format("%*sTransformEnd\n", catIndentCount, "");
+            System.out.format("%sTransformEnd\n", new String(spaces, 0, catIndentCount));
         }
     }
 
@@ -965,21 +953,20 @@ public class Api {
                 Error.Warning("Texture \"%s\" being redefined", name);
             }
             WARN_IF_ANIMATED_TRANSFORM("Texture");
-            Texture<Float> ft = MakeFloatTexture(texname, curTransform[0], tp);
+            Texture<Float> ft = MakeFloatTexture(texname, curTransform.trans[0], tp);
             if (ft != null) graphicsState.floatTextures.put(name, ft);
         } else if (Objects.equals(type, "color") || Objects.equals(type, "spectrum")) {
             // Create _color_ texture and store in _spectrumTextures_
             if (graphicsState.spectrumTextures.containsKey(name))
                 Error.Warning("Texture \"%s\" being redefined", name);
             WARN_IF_ANIMATED_TRANSFORM("Texture");
-            Texture<Spectrum> st = MakeSpectrumTexture(texname, curTransform[0], tp);
+            Texture<Spectrum> st = MakeSpectrumTexture(texname, curTransform.trans[0], tp);
             if (st != null) graphicsState.spectrumTextures.put(name, st);
         } else {
             Error.Error("Texture type \"%s\" unknown.", type);
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sTexture \"%s\" \"%s\" \"%s\" ", catIndentCount, "",
-                    name, type, texname);
+            System.out.format("%sTexture \"%s\" \"%s\" \"%s\" ", new String(spaces, 0, catIndentCount), name, type, texname);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -991,7 +978,7 @@ public class Api {
         graphicsState.materialParams = params;
         graphicsState.currentNamedMaterial = "";
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sMaterial \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sMaterial \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -1002,15 +989,14 @@ public class Api {
         // error checking, warning if replace, what to use for transform?
         ParamSet emptyParams = new ParamSet();
         TextureParams mp = new TextureParams(params, emptyParams, graphicsState.floatTextures, graphicsState.spectrumTextures);
-        String matName = mp.FindString("type");
+        String matName = mp.FindString("type","");
         WARN_IF_ANIMATED_TRANSFORM("MakeNamedMaterial");
         if (matName.isEmpty()) {
             Error.Error("No parameter string \"type\" found in MakeNamedMaterial");
         }
 
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sMakeNamedMaterial \"%s\" ", catIndentCount, "",
-                    name);
+            System.out.format("%sMakeNamedMaterial \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         } else {
@@ -1025,21 +1011,21 @@ public class Api {
         VERIFY_WORLD("NamedMaterial");
         graphicsState.currentNamedMaterial = name;
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sNamedMaterial \"%s\"\n", catIndentCount, "", name);
+            System.out.format("%sNamedMaterial \"%s\"\n", new String(spaces, 0, catIndentCount), name);
     }
 
     public static void pbrtLightSource(String name, ParamSet params) {
         VERIFY_WORLD("LightSource");
         WARN_IF_ANIMATED_TRANSFORM("LightSource");
         MediumInterface mi = graphicsState.CreateMediumInterface();
-        Light lt = MakeLight(name, params, curTransform[0], mi);
+        Light lt = MakeLight(name, params, curTransform.trans[0], mi);
         if (lt == null) {
             Error.Error("LightSource: light type \"%s\" unknown.", name);
         } else {
             renderOptions.lights.add(lt);
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sLightSource \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sLightSource \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -1050,7 +1036,7 @@ public class Api {
         graphicsState.areaLight = name;
         graphicsState.areaLightParams = params;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sAreaLightSource \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sAreaLightSource \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -1058,10 +1044,10 @@ public class Api {
 
     public static void pbrtShape(String name, ParamSet params) {
         VERIFY_WORLD("Shape");
-        Primitive[] prims;
-        AreaLight[] areaLights;
+        ArrayList<Primitive> prims = new ArrayList<>();
+        ArrayList<AreaLight> areaLights = new ArrayList<>();
         if (Pbrt.options.Cat || (Pbrt.options.ToPly && !Objects.equals(name, "trianglemesh"))) {
-            System.out.format("%*sShape \"%s\" ", catIndentCount, "", name);
+            System.out.format("%sShape \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
             System.out.format("\n");
         }
@@ -1070,8 +1056,10 @@ public class Api {
             // Initialize _prims_ and _areaLights_ for static shape
 
             // Create shapes for shape _name_
-            Transform ObjToWorld, WorldToObj;
-            transformCache.Lookup(curTransform[0], ObjToWorld, WorldToObj);
+            TransformCache.TransformPair tp = transformCache.Lookup(curTransform.trans[0]);
+            Transform ObjToWorld = tp.t;
+            Transform WorldToObj = tp.tInv;
+
             ArrayList<Shape> shapes = MakeShapes(name, ObjToWorld, WorldToObj, graphicsState.reverseOrientation, params);
             if (shapes.isEmpty()) return;
             Material mtl = graphicsState.CreateMaterial(params);
@@ -1081,59 +1069,56 @@ public class Api {
                 // Possibly create area light for shape
                 AreaLight area = null;
                 if (!graphicsState.areaLight.isEmpty()) {
-                    area = MakeAreaLight(graphicsState.areaLight, curTransform[0], mi, graphicsState.areaLightParams, s);
+                    area = MakeAreaLight(graphicsState.areaLight, curTransform.trans[0], mi, graphicsState.areaLightParams, s);
                     if (area != null) areaLights.add(area);
                 }
-                prims.push_back(new GeometricPrimitive(s, mtl, area, mi));
+                prims.add(new GeometricPrimitive(s, mtl, area, mi));
             }
         } else {
             // Initialize _prims_ and _areaLights_ for animated shape
 
             // Create initial shape or shapes for animated shape
-            if (graphicsState.areaLight != "")
-                Error.Warning("Ignoring currently set area light when creating "
-                        "animated shape");
-            Transform identity;
-            transformCache.Lookup(new Transform(), identity, null);
-            ArrayList<Shape> shapes = MakeShapes(name, identity, identity, graphicsState.reverseOrientation, params);
+            if (!graphicsState.areaLight.isEmpty()) {
+                Error.Warning("Ignoring currently set area light when creating animated shape");
+            }
+            TransformCache.TransformPair tp = transformCache.Lookup(new Transform());
+            ArrayList<Shape> shapes = MakeShapes(name, tp.t, tp.t, graphicsState.reverseOrientation, params);
             if (shapes.isEmpty()) return;
 
             // Create _GeometricPrimitive_(s) for animated shape
             Material mtl = graphicsState.CreateMaterial(params);
             params.ReportUnused();
             MediumInterface mi = graphicsState.CreateMediumInterface();
-            for (Shape s : shapes)
-                prims.push_back(
-                        new GeometricPrimitive(s, mtl, null, mi));
+            for (Shape s : shapes) {
+                prims.add(new GeometricPrimitive(s, mtl, null, mi));
+            }
 
             // Create single _TransformedPrimitive_ for _prims_
 
             // Get _animatedObjectToWorld_ transform for shape
-            assert(MaxTransforms == 2, "TransformCache assumes only two transforms");
-            Transform ObjToWorld[2];
-            transformCache.Lookup(curTransform[0], ObjToWorld[0], null);
-            transformCache.Lookup(curTransform[1], ObjToWorld[1], null);
-            AnimatedTransform animatedObjectToWorld new AnimatedTransform(ObjToWorld[0], renderOptions.transformStartTime, ObjToWorld[1],
+            TransformCache.TransformPair tp0 = transformCache.Lookup(curTransform.trans[0]);
+            TransformCache.TransformPair tp1 = transformCache.Lookup(curTransform.trans[1]);
+            AnimatedTransform animatedObjectToWorld = new AnimatedTransform(tp0.t, renderOptions.transformStartTime, tp1.t,
                     renderOptions.transformEndTime);
             if (prims.size() > 1) {
-                Primitive bvh = new BVHAccel(prims);
+                Primitive[] primArray = new Primitive[1];
+                Primitive bvh = new BVHAccel(prims.toArray(primArray));
                 prims.clear();
-                prims.push_back(bvh);
+                prims.add(bvh);
             }
-            prims[0] = new TransformedPrimitive(prims[0], animatedObjectToWorld);
+            prims.set(0, new TransformedPrimitive(prims.get(0), animatedObjectToWorld));
         }
         // Add _prims_ and _areaLights_ to scene or current instance
-        if (renderOptions.currentInstance) {
-            if (areaLights.size())
+        if (renderOptions.currentInstance != null) {
+            if (!areaLights.isEmpty()) {
                 Error.Warning("Area lights not supported with object instancing");
-            renderOptions.currentInstance.insert(
-                    renderOptions.currentInstance.end(), prims.begin(), prims.end());
+            }
+            renderOptions.currentInstance.addAll(prims);
         } else {
-            renderOptions.primitives.insert(renderOptions.primitives.end(),
-                    prims.begin(), prims.end());
-            if (areaLights.size())
-                renderOptions.lights.insert(renderOptions.lights.end(),
-                        areaLights.begin(), areaLights.end());
+            renderOptions.primitives.addAll(prims);
+            if (!areaLights.isEmpty()) {
+                renderOptions.lights.addAll(areaLights);
+            }
         }
     }
 
@@ -1141,7 +1126,7 @@ public class Api {
         VERIFY_WORLD("ReverseOrientation");
         graphicsState.reverseOrientation = !graphicsState.reverseOrientation;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sReverseOrientation\n", catIndentCount, "");
+            System.out.format("%sReverseOrientation\n", new String(spaces, 0, catIndentCount));
         }
     }
 
@@ -1150,10 +1135,10 @@ public class Api {
         pbrtAttributeBegin();
         if (renderOptions.currentInstance != null)
             Error.Error("ObjectBegin called inside of instance definition");
-        renderOptions.instances.put(name, Primitive[]);
+        renderOptions.instances.put(name, new ArrayList<>());
         renderOptions.currentInstance = renderOptions.instances.get(name);
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sObjectBegin \"%s\"\n", catIndentCount, "", name);
+            System.out.format("%sObjectBegin \"%s\"\n", new String(spaces, 0, catIndentCount), name);
         }
     }
 
@@ -1165,7 +1150,7 @@ public class Api {
         pbrtAttributeEnd();
         //++nObjectInstancesCreated;
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sObjectEnd\n", catIndentCount, "");
+            System.out.format("%sObjectEnd\n", new String(spaces, 0, catIndentCount));
         }
     }
 
@@ -1173,7 +1158,7 @@ public class Api {
         VERIFY_WORLD("ObjectInstance");
         // Perform object instance error checking
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
-            System.out.format("%*sObjectInstance \"%s\"\n", catIndentCount, "", name);
+            System.out.format("%sObjectInstance \"%s\"\n", new String(spaces, 0, catIndentCount), name);
         if (renderOptions.currentInstance != null) {
             Error.Error("ObjectInstance can't be called inside instance definition");
             return;
@@ -1182,27 +1167,25 @@ public class Api {
             Error.Error("Unable to find instance named \"%s\"", name);
             return;
         }
-        Primitive[] in = renderOptions.instances.get(name);
-        if (in.empty()) return;
+        ArrayList<Primitive> in = renderOptions.instances.get(name);
+        if (in.isEmpty()) return;
         //++nObjectInstancesUsed;
         if (in.size() > 1) {
             // Create aggregate for instance _Primitive_s
-            std::shared_ptr<Primitive> accel(
-                    MakeAccelerator(renderOptions.AcceleratorName, in,
-                            renderOptions.AcceleratorParams));
-            if (!accel) accel = std::make_shared<BVHAccel>(in);
-            in.erase(in.begin(), in.end());
-            in.push_back(accel);
+            Primitive[] inPrims = (Primitive[])in.toArray();
+            Primitive accel = MakeAccelerator(renderOptions.AcceleratorName, inPrims, renderOptions.AcceleratorParams);
+            if (accel == null) accel = new BVHAccel(inPrims);
+            in.clear();
+            in.add(accel);
         }
-        assert(MaxTransforms == 2, "TransformCache assumes only two transforms");
+
         // Create _animatedInstanceToWorld_ transform for instance
-        Transform InstanceToWorld[2];
-        transformCache.Lookup(curTransform[0], &InstanceToWorld[0], null);
-        transformCache.Lookup(curTransform[1], &InstanceToWorld[1], null);
+        TransformCache.TransformPair tp0 = transformCache.Lookup(curTransform.trans[0]);
+        TransformCache.TransformPair tp1 = transformCache.Lookup(curTransform.trans[1]);
         AnimatedTransform animatedInstanceToWorld = new AnimatedTransform(
-                InstanceToWorld[0], renderOptions.transformStartTime,
-                InstanceToWorld[1], renderOptions.transformEndTime);
-        Primitive prim = new TransformedPrimitive(in[0], animatedInstanceToWorld));
+                tp0.t, renderOptions.transformStartTime,
+                tp1.t, renderOptions.transformEndTime);
+        Primitive prim = new TransformedPrimitive(in.get(0), animatedInstanceToWorld);
         renderOptions.primitives.add(prim);
     }
 
@@ -1221,7 +1204,7 @@ public class Api {
 
         // Create scene and render
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
-            System.out.format("%*sWorldEnd\n", catIndentCount, "");
+            System.out.format("%sWorldEnd\n", new String(spaces, 0, catIndentCount));
         } else {
             Integrator integrator = renderOptions.MakeIntegrator();
             Scene scene = renderOptions.MakeScene();
@@ -1232,24 +1215,24 @@ public class Api {
             // issue is that all the rest of the profiling system assumes
             // hierarchical inheritance of profiling state; this is the only
             // place where that isn't the case.
-            CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::SceneConstruction));
-            ProfilerState = ProfToBits(Prof::IntegratorRender);
+            //CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::SceneConstruction));
+            //ProfilerState = ProfToBits(Prof::IntegratorRender);
 
             if ((scene != null) && (integrator != null)) {
                 integrator.Render(scene);
             }
 
-            MergeWorkerThreadStats();
-            ReportThreadStats();
+            //MergeWorkerThreadStats();
+            //ReportThreadStats();
             if (!Pbrt.options.Quiet) {
-                PrintStats(stdout);
-                ReportProfilerResults(stdout);
-                ClearStats();
-                ClearProfiler();
+                //PrintStats(stdout);
+                //ReportProfilerResults(stdout);
+                //ClearStats();
+                //ClearProfiler();
             }
 
-            CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::IntegratorRender));
-            ProfilerState = ProfToBits(Prof::SceneConstruction);
+            //CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::IntegratorRender));
+            //ProfilerState = ProfToBits(Prof::SceneConstruction);
         }
 
         // Clean up after rendering
@@ -1257,11 +1240,11 @@ public class Api {
         transformCache.Clear();
         currentApiState = APIState.OptionsBlock;
 
-        for (int i = 0; i < MaxTransforms; ++i) curTransform[i] = new Transform();
+        for (int i = 0; i < MaxTransforms; ++i) curTransform.trans[i] = new Transform();
         activeTransformBits = AllTransformsBits;
         namedCoordinateSystems.clear();
-        ImageTexture<Float, Float>.ClearCache();
-        ImageTexture<Spectrum, Spectrum>.ClearCache();
+        //ImageTexture<Float, Float>.ClearCache();
+        //ImageTexture<Spectrum, Spectrum>.ClearCache();
     }
 
     private static void VERIFY_INITIALIZED(String func) {

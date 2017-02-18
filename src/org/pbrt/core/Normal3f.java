@@ -49,6 +49,10 @@ public class Normal3f {
         assert (!v.HasNaNs());
         return new Normal3f(x + v.x, y + v.y, z + v.z);
     }
+    public Normal3f subtract(Normal3f n) {
+        assert (!n.HasNaNs());
+        return new Normal3f(x - n.x, y - n.y, z - n.z);
+    }
     public boolean HasNaNs() {
         return Float.isNaN(x) || Float.isNaN(y) || Float.isNaN(z);
     }
