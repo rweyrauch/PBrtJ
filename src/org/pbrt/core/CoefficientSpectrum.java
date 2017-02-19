@@ -160,12 +160,12 @@ public class CoefficientSpectrum {
     public CoefficientSpectrum negate() {
         CoefficientSpectrum ret = new CoefficientSpectrum(0.0f, c.length);
         for (int i = 0; i < c.length; ++i) {
-            ret.c[i] = c[i];
+            ret.c[i] = -c[i];
         }
         return ret;
     }
 
-    public static CoefficientSpectrum Exp(CoefficientSpectrum s, float e) {
+    public static CoefficientSpectrum Exp(CoefficientSpectrum s) {
         CoefficientSpectrum ret = new CoefficientSpectrum(0.0f, s.c.length);
         for (int i = 0; i < s.c.length; ++i) {
             ret.c[i] = (float)Math.exp(s.c[i]);

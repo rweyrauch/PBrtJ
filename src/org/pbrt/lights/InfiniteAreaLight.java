@@ -172,7 +172,7 @@ public class InfiniteAreaLight extends Light {
         String texmap = paramSet.FindOneFilename("mapname", "");
         int nSamples = paramSet.FindOneInt("samples", paramSet.FindOneInt("nsamples", 1));
         if (Pbrt.options.QuickRender) nSamples = Math.max(1, nSamples / 4);
-        Spectrum Lsc = Spectrum.multiply(L, sc);
+        Spectrum Lsc = Spectrum.Multiply(L, sc);
         return new InfiniteAreaLight(light2world, Lsc, nSamples, texmap);
     }
 

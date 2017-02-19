@@ -36,7 +36,11 @@ public class AnimatedTransform {
         }
     }
 
-    private DerivativeTerm c1[], c2[], c3[], c4[], c5[];
+    private DerivativeTerm c1[] = {null, null, null};
+    private DerivativeTerm c2[] = {null, null, null};
+    private DerivativeTerm c3[] = {null, null, null};
+    private DerivativeTerm c4[] = {null, null, null};
+    private DerivativeTerm c5[] = {null, null, null};
 
     // Interval Definitions
     private static class Interval {
@@ -102,10 +106,10 @@ public class AnimatedTransform {
         Interval r2 = ic4.add(ic5.multiply(tInterval)).multiply(Sin(new Interval(2 * theta).multiply(tInterval)));
         Interval range = ic1.add(r1.add(r2));
 
-        if (range.low > 0. || range.high < 0. || range.low == range.high) return null;
+        if (range.low > 0 || range.high < 0 || range.low == range.high) return null;
         if (depth > 0) {
             // Split _tInterval_ and check both resulting intervals
-            Float mid = (tInterval.low + tInterval.high) * 0.5f;
+            float mid = (tInterval.low + tInterval.high) * 0.5f;
             zeros.addAll(IntervalFindZeros(c1, c2, c3, c4, c5, theta, new Interval(tInterval.low, mid), depth - 1));
             zeros.addAll(IntervalFindZeros(c1, c2, c3, c4, c5, theta, new Interval(mid, tInterval.high), depth - 1));
         } else {

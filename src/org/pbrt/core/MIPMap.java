@@ -235,7 +235,7 @@ public class MIPMap<T> {
     }
 
     private float clamp(float v) { return Pbrt.Clamp(v, 0, Pbrt.Infinity); }
-    private Spectrum clamp(Spectrum v) { return v.Clamp(0, Pbrt.Infinity); }
+    private Spectrum clamp(Spectrum v) { return v.clamp(0, Pbrt.Infinity); }
 
     //SampledSpectrum clamp(SampledSpectrum v) {
     //    return v.Clamp(0, Pbrt.Infinity);

@@ -78,7 +78,7 @@ public class Film {
 
                     // Update pixel values with filtered sample contribution
                     FilmTilePixel pixel = GetPixel(new Point2i(x, y));
-                    pixel.contribSum = (Spectrum)CoefficientSpectrum.add(pixel.contribSum, CoefficientSpectrum.scale(L, sampleWeight * filterWeight));
+                    pixel.contribSum = Spectrum.Add(pixel.contribSum, Spectrum.Scale(L, sampleWeight * filterWeight));
                     pixel.filterWeightSum += filterWeight;
                 }
             }

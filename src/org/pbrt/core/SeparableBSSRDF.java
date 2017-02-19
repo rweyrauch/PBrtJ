@@ -61,9 +61,9 @@ public abstract class SeparableBSSRDF extends BSSRDF {
 
         // Return combined probability from all BSSRDF sampling strategies
         float pdf = 0, axisProb[] = {.25f, .25f, .5f};
-        float chProb = 1 / (float)Spectrum.nSamples;
+        float chProb = 1 / (float)Spectrum.numSamples();
         for (int axis = 0; axis < 3; ++axis)
-            for (int ch = 0; ch < Spectrum.nSamples; ++ch)
+            for (int ch = 0; ch < Spectrum.numSamples(); ++ch)
                 pdf += Pdf_Sr(ch, rProj[axis]) * Math.abs(nLocal.at(axis)) * chProb *
                 axisProb[axis];
         return pdf;

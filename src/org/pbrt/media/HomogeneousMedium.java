@@ -21,7 +21,7 @@ public class HomogeneousMedium extends Medium {
     public HomogeneousMedium(Spectrum sigma_a, Spectrum sigma_s, float g) {
         this.sigma_a = sigma_a;
         this.sigma_s = sigma_s;
-        this.sigma_t = (Spectrum) CoefficientSpectrum.add(sigma_s, sigma_a);
+        this.sigma_t = Spectrum.Add(sigma_s, sigma_a);
         this.g = g;
     }
 

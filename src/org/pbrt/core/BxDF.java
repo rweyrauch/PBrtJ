@@ -52,7 +52,7 @@ public abstract class BxDF {
             // Estimate one term of $\rho_\roman{hd}$
             BxDFSample sample = Sample_f(w, u[i]);
             if (sample.pdf > 0) {
-                r = (Spectrum)CoefficientSpectrum.add(r, CoefficientSpectrum.scale(sample.f, Reflection.AbsCosTheta(sample.wiWorld) / sample.pdf));
+                r = Spectrum.Add(r, Spectrum.Scale(sample.f, Reflection.AbsCosTheta(sample.wiWorld) / sample.pdf));
             }
         }
         r.invScale(nSamples);
@@ -67,7 +67,7 @@ public abstract class BxDF {
             float pdfo = Sampling.UniformHemispherePdf();
             BxDFSample sample = Sample_f(wo, u2[i]);
             if (sample.pdf > 0) {
-                r = (Spectrum)CoefficientSpectrum.add(r, CoefficientSpectrum.scale(sample.f, Reflection.AbsCosTheta(sample.wiWorld) * Reflection.AbsCosTheta(wo) / (pdfo * sample.pdf)));
+                r = Spectrum.Add(r, Spectrum.Scale(sample.f, Reflection.AbsCosTheta(sample.wiWorld) * Reflection.AbsCosTheta(wo) / (pdfo * sample.pdf)));
             }
         }
         r.invScale((float)Math.PI * nSamples);

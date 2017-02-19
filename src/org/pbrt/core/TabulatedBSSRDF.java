@@ -19,7 +19,7 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
                     Spectrum sigma_s, BSSRDFTable table) {
         super(po, eta, material, mode);
         this.table = table;
-        this.sigma_t = (Spectrum)CoefficientSpectrum.add(sigma_a,sigma_s);
+        this.sigma_t = Spectrum.Add(sigma_a, sigma_s);
         for (int c = 0; c < sigma_s.numSamples(); ++c) {
             if (this.sigma_t.at(c) != 0) {
                 this.rho.set(c, sigma_s.at(c) / this.sigma_t.at(c));
@@ -64,7 +64,7 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
         // Transform BSSRDF value into world space units
         Sr.multiply(sigma_t); // * sigma_t ^ 2
         Sr.multiply(sigma_t);
-        return (Spectrum)Sr.Clamp(0, Pbrt.Infinity);
+        return Sr.clamp(0, Pbrt.Infinity);
     }
 
     @Override

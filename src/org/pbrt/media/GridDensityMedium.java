@@ -40,8 +40,8 @@ public class GridDensityMedium extends Medium {
         this.density = new Float[nx * ny * nz];
         this.density = data.clone();
         // Precompute values for Monte Carlo sampling of _GridDensityMedium_
-        this.sigma_t = CoefficientSpectrum.add(sigma_a,sigma_s).at(0);
-        if (new Spectrum(sigma_t).notEqual((Spectrum)CoefficientSpectrum.add(sigma_a,sigma_s)))
+        this.sigma_t = Spectrum.Add(sigma_a,sigma_s).at(0);
+        if (new Spectrum(sigma_t).notEqual(Spectrum.Add(sigma_a,sigma_s)))
             Error.Error("GridDensityMedium requires a spectrally uniform attenuation coefficient!");
         float maxDensity = 0;
         for (int i = 0; i < nx * ny * nz; ++i)

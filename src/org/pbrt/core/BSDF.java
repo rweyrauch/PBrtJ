@@ -59,7 +59,7 @@ public class BSDF {
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags) && ((reflect && ((bxdfs[i].type & BxDF.BSDF_REFLECTION) != 0)) ||
                 (!reflect && ((bxdfs[i].type & BxDF.BSDF_TRANSMISSION) != 0))))
-                f = (Spectrum)CoefficientSpectrum.add(f, bxdfs[i].f(wo, wi));
+                f = Spectrum.Add(f, bxdfs[i].f(wo, wi));
         return f;
     }
     public Spectrum f(Vector3f woW, Vector3f wiW) {
@@ -69,7 +69,7 @@ public class BSDF {
         Spectrum ret = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags))
-                ret = (Spectrum)CoefficientSpectrum.add(ret, bxdfs[i].rho(nSamples, samples1, samples2));
+                ret = Spectrum.Add(ret, bxdfs[i].rho(nSamples, samples1, samples2));
         return ret;
     }
     public Spectrum rho(int nSamples, Point2f[] samples1, Point2f[] samples2) {
@@ -80,7 +80,7 @@ public class BSDF {
         Spectrum ret = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags))
-                ret = (Spectrum)CoefficientSpectrum.add(ret, bxdfs[i].rho(wo, nSamples, samples));
+                ret = Spectrum.Add(ret, bxdfs[i].rho(wo, nSamples, samples));
         return ret;
     }
     public Spectrum rho(Vector3f wo, int nSamples, Point2f[] samples) {
@@ -150,7 +150,7 @@ public class BSDF {
                 if (bxdfs[i].MatchesFlags(type) &&
                     ((reflect && ((bxdfs[i].type & BxDF.BSDF_REFLECTION) != 0)) ||
                     (!reflect && ((bxdfs[i].type & BxDF.BSDF_TRANSMISSION) != 0))))
-            sample.f = (Spectrum)CoefficientSpectrum.add(sample.f, bxdfs[i].f(wo, wi));
+            sample.f = Spectrum.Add(sample.f, bxdfs[i].f(wo, wi));
         }
         //VLOG(2) << "Overall f = " << f << ", pdf = " << *pdf << ", ratio = "
          //       << ((*pdf > 0) ? (f / *pdf) : Spectrum(0.));

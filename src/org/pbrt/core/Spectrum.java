@@ -11,50 +11,283 @@ package org.pbrt.core;
 
 import org.apache.commons.lang.NotImplementedException;
 
-public class Spectrum extends CoefficientSpectrum {
+import java.io.InputStream;
+import java.io.PrintStream;
 
-    public enum SpectrumType { Reflectance, Illuminant }
+public final class Spectrum {
 
-    public static final int nSamples = 3;
+    private static final int nSamples = 3;
+    private final float[] c = { 0, 0, 0 };
 
     public static final int sampledLambdaStart = 400;
     public static final int sampledLambdaEnd = 700;
     public static final int nSpectralSamples = 60;
 
-    public static boolean SpectrumSamplesSorted(float[] lambda, float[] vals) {
-        for (int i = 0; i < lambda.length - 1; ++i)
-            if (lambda[i] > lambda[i + 1]) return false;
-        return true;
-    }
 
-    public static void SortSpectrumSamples(float[] lambda, float[] vals) {
-        assert (lambda.length == vals.length);
-        throw new NotImplementedException();
-    }
-
-    private static float interp(float[] lambda, float[] vals, float w, int i) {
-        return Pbrt.Lerp((w - lambda[i]) / (lambda[i + 1] - lambda[i]), vals[i],
-                vals[i + 1]);
-    }
-
-    @Override
-    public Spectrum Clamp(float low, float high) {
-        Spectrum ret = new Spectrum(0.0f);
-        for (int i = 0; i < c.length; ++i) {
-            ret.c[i] = Pbrt.Clamp(c[i], low, high);
+    public Spectrum(float v) {
+        for (int i = 0; i < c.length; i++) {
+            c[i] = v;
         }
-        assert !ret.HasNaNs();
-        return ret;
     }
 
-    public static Spectrum multiply(Spectrum s1, Spectrum s2) {
-        assert (!s1.HasNaNs());
-        assert (!s2.HasNaNs());
+    public static int numSamples() {
+        return nSamples;
+    }
+
+    public void print(PrintStream ps) {
+        ps.print("[ ");
+        for (int i = 0; i < c.length; i++) {
+            ps.printf("%f", c[i]);
+            if (i != c.length - 1) ps.printf(", ");
+        }
+        ps.print("]");
+    }
+
+    public void add(Spectrum s2) {
+        assert (!s2.hasNaNs());
+        for (int i = 0; i < c.length; ++i) {
+            this.c[i] += s2.c[i];
+        }
+    }
+    public static Spectrum Add(Spectrum s1, Spectrum s2) {
+        assert !s1.hasNaNs();
+        assert !s2.hasNaNs();
+        Spectrum cs = new Spectrum(0);
+        for (int i = 0; i < s1.c.length; ++i) {
+            cs.c[i] = s1.c[i] + s2.c[i];
+        }
+        return cs;
+    }
+
+    public void subtract(Spectrum s2) {
+        assert (!s2.hasNaNs());
+        for (int i = 0; i < c.length; ++i) {
+            this.c[i] -= s2.c[i];
+        }
+    }
+    public static Spectrum Subtract(Spectrum s1, Spectrum s2) {
+        assert !s1.hasNaNs();
+        assert !s2.hasNaNs();
+        Spectrum cs = new Spectrum(0);
+        for (int i = 0; i < s1.c.length; ++i) {
+            cs.c[i] = s1.c[i] - s2.c[i];
+        }
+        return cs;
+    }
+
+    public void divide(Spectrum s2) {
+        assert (!s2.hasNaNs());
+        for (int i = 0; i < c.length; ++i) {
+            assert s2.c[i] != 0.0f;
+            this.c[i] /= s2.c[i];
+        }
+    }
+    public static Spectrum divide(Spectrum s1, Spectrum s2) {
+        assert (!s1.hasNaNs());
+        assert (!s2.hasNaNs());
+        Spectrum cs = new Spectrum(0);
+        for (int i = 0; i < s1.c.length; i++) {
+            assert s2.c[i] != 0.0f;
+            cs.c[i] = s1.c[i] / s2.c[i];
+        }
+        return cs;
+    }
+
+    public void multiply(Spectrum s2) {
+        assert (!s2.hasNaNs());
+        for (int i = 0; i < c.length; ++i) {
+            this.c[i] *= s2.c[i];
+        }
+    }
+    public static Spectrum Multiply(Spectrum s1, Spectrum s2) {
+        assert (!s1.hasNaNs());
+        assert (!s2.hasNaNs());
         Spectrum cs = new Spectrum(0);
         for (int i = 0; i < s1.c.length; i++) {
             cs.c[i] = s1.c[i] * s2.c[i];
         }
         return cs;
+    }
+
+    public void scale(float a) {
+        for (int i = 0; i < c.length; ++i) {
+            this.c[i] *= a;
+        }
+        assert (!hasNaNs());
+    }
+    public static Spectrum Scale(Spectrum s, float a) {
+        Spectrum ss = new Spectrum(0);
+        for (int i = 0; i < s.c.length; ++i) {
+            ss.c[i] = s.c[i] * a;
+        }
+        return ss;
+    }
+
+    public void invScale(float a) {
+        assert (a != 0.0f);
+        for (int i = 0; i < c.length; ++i) {
+            this.c[i] /= a;
+        }
+    }
+    public Spectrum negate() {
+        Spectrum ret = new Spectrum(0.0f);
+        for (int i = 0; i < c.length; ++i) {
+            ret.c[i] = -c[i];
+        }
+        return ret;
+    }
+
+    public boolean equal(Spectrum s2) {
+        for (int i = 0; i < c.length; ++i) {
+            if (c[i] != s2.c[i]) return false;
+        }
+        return true;
+    }
+    public boolean notEqual(Spectrum s2) {
+        return !equal(s2);
+    }
+
+    public boolean isBlack() {
+        for (int i = 0; i < c.length; ++i) {
+            if (c[i] != 0) return false;
+        }
+        return true;
+    }
+
+    public float y() {
+        final float[] YWeight = {0.212671f, 0.715160f, 0.072169f};
+        return YWeight[0] * c[0] + YWeight[1] * c[1] + YWeight[2] * c[2];
+    }
+
+    public Spectrum clamp(float low, float high) {
+        Spectrum ret = new Spectrum(0.0f);
+        for (int i = 0; i < c.length; ++i) {
+            ret.c[i] = Pbrt.Clamp(c[i], low, high);
+        }
+        assert !ret.hasNaNs();
+        return ret;
+    }
+
+    public boolean hasNaNs() {
+        for (int i = 0; i < c.length; i++) {
+            if (Float.isNaN(c[i])) return true;
+        }
+        return false;
+    }
+
+    public void set(int i, float v) {
+        assert (i >= 0 && i < c.length);
+        c[i] = v;
+    }
+    public float at(int i) {
+        assert (i >= 0 && i < c.length);
+        return c[i];
+    }
+
+    public float maxComponentValue() {
+        float m = c[0];
+        for (int i = 1; i < c.length; ++i)
+            m = Math.max(m, c[i]);
+        return m;
+    }
+
+    public boolean write(PrintStream f) {
+        for (int i = 0; i < c.length; ++i)
+            f.printf("%f ", c[i]);
+        return true;
+    }
+    public boolean read(InputStream f) {
+        throw new NotImplementedException("TODO");
+    }
+
+
+    public static Spectrum FromRGB(float[] rgb) {
+        Spectrum s = new Spectrum(0.0f);
+        s.c[0] = rgb[0];
+        s.c[1] = rgb[1];
+        s.c[2] = rgb[2];
+        assert (!s.hasNaNs());
+        return s;
+    }
+
+    public static Spectrum FromRGB(float r, float g, float b) {
+        Spectrum s = new Spectrum(0.0f);
+        s.c[0] = r;
+        s.c[1] = g;
+        s.c[2] = b;
+        assert (!s.hasNaNs());
+        return s;
+    }
+
+    public float[] toRGB() {
+        float[] rgb = new float[nSamples];
+        rgb[0] = c[0];
+        rgb[1] = c[1];
+        rgb[2] = c[2];
+        return rgb;
+    }
+
+    public void ToXYZ(float[] xyz) {
+        RGBToXYZ(c, xyz);
+    }
+
+    public static Spectrum FromXYZ(float[] xyz) {
+        Spectrum r = new Spectrum(0.0f);
+        XYZToRGB(xyz, r.c);
+        return r;
+    }
+    public static Spectrum FromXYZ(float x, float y, float z) {
+        float[] xyz = {x, y, z};
+        return FromXYZ(xyz);
+    }
+
+    public static Spectrum FromSampled(float[] lambda, float[] v) {
+        // Sort samples if unordered, use sorted for returned spectrum
+        if (!SpectrumSamplesSorted(lambda, v)) {
+            float[] slambda = lambda.clone();
+            float[] sv = v.clone();
+            SortSpectrumSamples(slambda, sv);
+            return FromSampled(slambda, sv);
+        }
+        float[] xyz = {0, 0, 0};
+        for (int i = 0; i < nCIESamples; ++i) {
+            float val = InterpolateSpectrumSamples(lambda, v, CIE_lambda[i]);
+            xyz[0] += val * CIE_X[i];
+            xyz[1] += val * CIE_Y[i];
+            xyz[2] += val * CIE_Z[i];
+        }
+        float scale = (CIE_lambda[nCIESamples - 1] - CIE_lambda[0]) / (CIE_Y_integral * nCIESamples);
+        xyz[0] *= scale;
+        xyz[1] *= scale;
+        xyz[2] *= scale;
+        return FromXYZ(xyz);
+    }
+
+    public static Spectrum Sqrt(Spectrum s) {
+        Spectrum ret = new Spectrum(0.0f);
+        for (int i = 0; i < s.c.length; ++i) {
+            ret.c[i] = (float)Math.sqrt(s.c[i]);
+        }
+        assert !ret.hasNaNs();
+        return ret;
+    }
+
+    public static Spectrum Pow(Spectrum s, float e) {
+        Spectrum ret = new Spectrum(0.0f);
+        for (int i = 0; i < s.c.length; ++i) {
+            ret.c[i] = (float)Math.pow(s.c[i], e);
+        }
+        assert !ret.hasNaNs();
+        return ret;
+    }
+
+    public static Spectrum Exp(Spectrum s) {
+        Spectrum ret = new Spectrum(0.0f);
+        for (int i = 0; i < s.c.length; ++i) {
+            ret.c[i] = (float)Math.exp(s.c[i]);
+        }
+        assert !ret.hasNaNs();
+        return ret;
     }
 
     public static float AverageSpectrumSamples(float[] lambda, float[] vals, float lambdaStart, float lambdaEnd) {
@@ -895,74 +1128,19 @@ public class Spectrum extends CoefficientSpectrum {
             810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824,
             825, 826, 827, 828, 829, 830};
 
-    public Spectrum(float v) {
-        super(v, nSamples);
+    public static boolean SpectrumSamplesSorted(float[] lambda, float[] vals) {
+        for (int i = 0; i < lambda.length - 1; ++i)
+            if (lambda[i] > lambda[i + 1]) return false;
+        return true;
     }
 
-    public static Spectrum FromRGB(float[] rgb) {
-        Spectrum s = new Spectrum(0.0f);
-        s.c[0] = rgb[0];
-        s.c[1] = rgb[1];
-        s.c[2] = rgb[2];
-        assert (!s.HasNaNs());
-        return s;
-    }
-    public static Spectrum FromRGB(float r, float g, float b) {
-        Spectrum s = new Spectrum(0.0f);
-        s.c[0] = r;
-        s.c[1] = g;
-        s.c[2] = b;
-        assert (!s.HasNaNs());
-        return s;
+    public static void SortSpectrumSamples(float[] lambda, float[] vals) {
+        assert (lambda.length == vals.length);
+        throw new NotImplementedException();
     }
 
-    public float[] ToRGB() {
-        float[] rgb = new float[nSamples];
-        rgb[0] = c[0];
-        rgb[1] = c[1];
-        rgb[2] = c[2];
-        return rgb;
+    private static float interp(float[] lambda, float[] vals, float w, int i) {
+        return Pbrt.Lerp((w - lambda[i]) / (lambda[i + 1] - lambda[i]), vals[i],
+                vals[i + 1]);
     }
-
-    public void ToXYZ(float[] xyz) {
-        RGBToXYZ(c, xyz);
-    }
-
-    public static Spectrum FromXYZ(float[] xyz) {
-        Spectrum r = new Spectrum(0.0f);
-        XYZToRGB(xyz, r.c);
-        return r;
-    }
-    public static Spectrum FromXYZ(float x, float y, float z) {
-        float[] xyz = {x, y, z};
-        return FromXYZ(xyz);
-    }
-
-    public float y() {
-        float[] YWeight = {0.212671f, 0.715160f, 0.072169f};
-        return YWeight[0] * c[0] + YWeight[1] * c[1] + YWeight[2] * c[2];
-    }
-
-    public static Spectrum FromSampled(float[] lambda, float[] v) {
-        // Sort samples if unordered, use sorted for returned spectrum
-        if (!SpectrumSamplesSorted(lambda, v)) {
-            float[] slambda = lambda.clone();
-            float[] sv = v.clone();
-            SortSpectrumSamples(slambda, sv);
-            return FromSampled(slambda, sv);
-        }
-        float[] xyz = {0, 0, 0};
-        for (int i = 0; i < nCIESamples; ++i) {
-            float val = InterpolateSpectrumSamples(lambda, v, CIE_lambda[i]);
-            xyz[0] += val * CIE_X[i];
-            xyz[1] += val * CIE_Y[i];
-            xyz[2] += val * CIE_Z[i];
-        }
-        float scale = (CIE_lambda[nCIESamples - 1] - CIE_lambda[0]) / (CIE_Y_integral * nCIESamples);
-        xyz[0] *= scale;
-        xyz[1] *= scale;
-        xyz[2] *= scale;
-        return FromXYZ(xyz);
-    }
-
 }

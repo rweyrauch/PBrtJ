@@ -124,4 +124,31 @@ public class Pbrt
         return res;
     }
 
+    public static float NextFloatUp(float v) {
+        // Handle infinity and negative zero for _NextFloatUp()_
+        if (Float.isInfinite(v) && v > 0) return v;
+        if (v == -0.f) v = 0.f;
+
+        // Advance _v_ to next higher float
+        int ui = Float.floatToRawIntBits(v);
+        if (v >= 0) {
+            ++ui;
+        } else {
+            --ui;
+        }
+        return Float.intBitsToFloat(ui);
+    }
+
+    public static float NextFloatDown(float v) {
+    // Handle infinity and positive zero for _NextFloatDown()_
+        if (Float.isInfinite(v) && v > 0) return v;
+        if (v == 0.f) v = -0.f;
+        int ui = Float.floatToRawIntBits(v);
+        if (v > 0)
+            --ui;
+        else
+            ++ui;
+        return Float.intBitsToFloat(ui);
+    }
+
 }

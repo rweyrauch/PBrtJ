@@ -43,7 +43,7 @@ public class OrenNayar extends BxDF {
             sinAlpha = sinThetaI;
             tanBeta = sinThetaO / Reflection.AbsCosTheta(wo);
         }
-        return (Spectrum)CoefficientSpectrum.scale(R, (A + B * maxCos * sinAlpha * tanBeta)/ (float)Math.PI);
+        return Spectrum.Scale(R, (A + B * maxCos * sinAlpha * tanBeta)/ (float)Math.PI);
     }
 
     @Override

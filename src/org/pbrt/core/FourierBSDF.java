@@ -70,7 +70,7 @@ public class FourierBSDF extends BxDF {
             float B = Interpolation.Fourier(Arrays.copyOfRange(ak, 2 * bsdfTable.mMax, mMax), mMax, cosPhi);
             float G = 1.39829f * Y - 0.100913f * B - 0.297375f * R;
             float[] rgb = {R * scale, G * scale, B * scale};
-            return Spectrum.FromRGB(rgb).Clamp(0, Pbrt.Infinity);
+            return Spectrum.FromRGB(rgb).clamp(0, Pbrt.Infinity);
         }
     }
 
@@ -157,7 +157,7 @@ public class FourierBSDF extends BxDF {
         float B = Interpolation.Fourier(Arrays.copyOfRange(ak, 2 * bsdfTable.mMax, mMax), mMax, cosPhi);
         float G = 1.39829f * Y - 0.100913f * B - 0.297375f * R;
         float[] rgb = {R * scale, G * scale, B * scale};
-        result.f = Spectrum.FromRGB(rgb).Clamp(0, Pbrt.Infinity);
+        result.f = Spectrum.FromRGB(rgb).clamp(0, Pbrt.Infinity);
         return result;
     }
 
