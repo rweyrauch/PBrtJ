@@ -56,26 +56,27 @@ public abstract class Light {
     }
 
     public class LiResult {
-        Spectrum spectrum;
-        Vector3f wi;
-        float pdf;
-        VisibilityTester vis;
+        public Spectrum spectrum;
+        public Vector3f wi;
+        public float pdf;
+        public VisibilityTester vis;
     }
     public class LeResult {
-        Spectrum spectrum;
-        Ray ray;
-        Normal3f nLight;
-        float pdfPos;
-        float pdfDir;
+        public Spectrum spectrum;
+        public Ray ray;
+        public Normal3f nLight;
+        public float pdfPos;
+        public float pdfDir;
     }
     public class PdfResult {
-        float pdfPos;
-        float pdfDir;
+        public float pdfPos;
+        public float pdfDir;
     }
+
     public Light() {
     }
 
-    public Light(int flags,  Transform LightToWorld,
+    public Light(int flags, Transform LightToWorld,
            MediumInterface mediumInterface, int nSamples) {
         this.flags = flags;
         this.nSamples = Math.max(1, nSamples);

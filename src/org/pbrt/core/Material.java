@@ -17,7 +17,7 @@ public abstract class Material {
         Importance
     }
 
-    public abstract void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes);
+    public abstract SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes);
 
     public static void Bump(Texture<Float> d, SurfaceInteraction si) {
         // Compute offset positions and evaluate displacement texture

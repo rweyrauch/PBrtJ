@@ -46,6 +46,42 @@ public class Pbrt
         else return v;
     }
 
+    public static float Log2(float x) {
+        float invLog2 = 1.442695040888963387004650940071f;
+        return (float)Math.log(x) * invLog2;
+    }
+
+
+    public static int Log2Int(int v) {
+        return (Integer.SIZE - 1) - Integer.numberOfLeadingZeros(v);
+    }
+    public static long Log2Int(long v) {
+        return (Long.SIZE - 1) - Long.numberOfLeadingZeros(v);
+    }
+
+    public static int Mod(int a, int b) {
+        int result = a - (a / b) * b;
+        return (int)((result < 0) ? result + b : result);
+    }
+
+    public static float Mod(float a, float b) {
+        return a % b;
+    }
+
+    public static boolean IsPowerOf2(int v) {
+        return (v > 0) && ((v & (v - 1)) == 0);
+    }
+
+    public static int RoundUpPow2(int v) {
+        v--;
+        v |= v >> 1;
+        v |= v >> 2;
+        v |= v >> 4;
+        v |= v >> 8;
+        v |= v >> 16;
+        return v + 1;
+    }
+
     public static int FindInterval(int size, Predicate<Integer> pred) {
         int first = 0, len = size;
         while (len > 0) {

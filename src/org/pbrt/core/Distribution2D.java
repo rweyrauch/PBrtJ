@@ -30,8 +30,8 @@ public class Distribution2D {
     }
 
     public static class ContSample {
-        Point2f sample;
-        float pdf;
+        public Point2f sample;
+        public float pdf;
     }
     public ContSample SampleContinuous(Point2f u) {
         Distribution1D.ContSample d1 = pMarginal.SampleContinuous(u.y);

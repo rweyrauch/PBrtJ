@@ -13,6 +13,8 @@ import org.apache.commons.lang.NotImplementedException;
 
 public class Spectrum extends CoefficientSpectrum {
 
+    public enum SpectrumType { Reflectance, Illuminant }
+
     public static final int nSamples = 3;
 
     public static final int sampledLambdaStart = 400;
@@ -33,6 +35,26 @@ public class Spectrum extends CoefficientSpectrum {
     private static float interp(float[] lambda, float[] vals, float w, int i) {
         return Pbrt.Lerp((w - lambda[i]) / (lambda[i + 1] - lambda[i]), vals[i],
                 vals[i + 1]);
+    }
+
+    @Override
+    public Spectrum Clamp(float low, float high) {
+        Spectrum ret = new Spectrum(0.0f);
+        for (int i = 0; i < c.length; ++i) {
+            ret.c[i] = Pbrt.Clamp(c[i], low, high);
+        }
+        assert !ret.HasNaNs();
+        return ret;
+    }
+
+    public static Spectrum multiply(Spectrum s1, Spectrum s2) {
+        assert (!s1.HasNaNs());
+        assert (!s2.HasNaNs());
+        Spectrum cs = new Spectrum(0);
+        for (int i = 0; i < s1.c.length; i++) {
+            cs.c[i] = s1.c[i] * s2.c[i];
+        }
+        return cs;
     }
 
     public static float AverageSpectrumSamples(float[] lambda, float[] vals, float lambdaStart, float lambdaEnd) {

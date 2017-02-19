@@ -387,7 +387,7 @@ public class Parser {
         assert(currentCommand != null);
         int commandToken = currentCommand.command.get(0).token;
         assert(isCommand(commandToken));
-        System.out.printf("Command: %s  Num Args: %d\n", currentCommand.command.get(0).value, currentCommand.command.size()-1);
+        //System.out.printf("Command: %s  Num Args: %d\n", currentCommand.command.get(0).value, currentCommand.command.size()-1);
         switch (commandToken) {
             case ACCELERATOR:
                 parseAccelerator(currentCommand.command);

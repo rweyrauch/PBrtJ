@@ -21,7 +21,7 @@ public class TranslucentMaterial extends Material {
     }
 
     @Override
-    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
-
+    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+        return null;
     }
 }

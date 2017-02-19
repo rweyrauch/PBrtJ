@@ -14,4 +14,12 @@ public class ImageIO {
     public static void Write(String filename, float[] rgb, Bounds2i outputBounds, Point2i totalResolution) {
 
     }
+
+    public static class SpectrumImage {
+        public Spectrum[] image;
+        public Point2i resultion;
+    }
+    public static SpectrumImage Read(String filename) {
+        return null;
+    }
 }

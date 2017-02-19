@@ -10,18 +10,41 @@
 
 package org.pbrt.materials;
 
-import org.pbrt.core.Material;
-import org.pbrt.core.SurfaceInteraction;
-import org.pbrt.core.TextureParams;
+import org.pbrt.core.*;
 
 public class MatteMaterial extends Material {
 
-    public static Material Create(TextureParams mp) {
-        return null;
+    public MatteMaterial(Texture<Spectrum> Kd, Texture<Float> sigma, Texture<Float> bumpMap) {
+        this.Kd = Kd;
+        this.sigma = sigma;
+        this.bumpMap = bumpMap;
     }
 
     @Override
-    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+        // Perform bump mapping with _bumpMap_, if present
+        if (bumpMap != null) Bump(bumpMap, si);
 
+        // Evaluate textures for _MatteMaterial_ material and allocate BRDF
+        si.bsdf = new BSDF(si, 1);
+        Spectrum r = (Kd.Evaluate(si)).Clamp(0, Pbrt.Infinity);
+        float sig = Pbrt.Clamp(sigma.Evaluate(si), 0, 90);
+        if (!r.IsBlack()) {
+            if (sig == 0)
+                si.bsdf.Add(new LambertianReflection(r));
+        else
+            si.bsdf.Add(new OrenNayar(r, sig));
+        }
+        return si;
     }
+
+    public static Material Create(TextureParams mp) {
+        Texture<Spectrum> Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.5f));
+        Texture<Float> sigma = mp.GetFloatTexture("sigma", 0.f);
+        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        return new MatteMaterial(Kd, sigma, bumpMap);
+    }
+
+    private Texture<Spectrum> Kd;
+    private Texture<Float> sigma, bumpMap;
 }

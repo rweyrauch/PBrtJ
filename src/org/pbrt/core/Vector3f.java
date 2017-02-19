@@ -175,5 +175,13 @@ public class Vector3f {
         return x.scale(sinTheta * (float)Math.cos(phi)).add(y.scale(sinTheta * (float)Math.sin(phi))).add(z.scale(cosTheta));
     }
 
+    public static float SphericalTheta(Vector3f v) {
+        return (float)Math.acos(Pbrt.Clamp(v.z, -1, 1));
+    }
+
+    public static float SphericalPhi(Vector3f v) {
+        float p = (float)Math.atan2(v.y, v.x);
+        return (p < 0) ? (p + 2 * (float)Math.PI) : p;
+    }
 
 }

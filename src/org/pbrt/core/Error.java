@@ -14,9 +14,11 @@ public class Error {
     public synchronized static void Warning(String format, Object... args) {
         if (Pbrt.options.Quiet) return;
         System.out.format(format, args);
+        System.out.println();
     }
     public synchronized static void Error(String format, Object... args) {
         System.err.format(format, args);
+        System.err.println();
     }
 
 }

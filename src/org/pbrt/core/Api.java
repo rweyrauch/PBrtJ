@@ -10,7 +10,6 @@
 
 package org.pbrt.core;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import org.pbrt.shapes.*;
@@ -520,7 +519,7 @@ public class Api {
         else if (Objects.equals(name, "distant"))
             light = Distant.Create(light2world, paramSet);
         else if (Objects.equals(name, "infinite") || Objects.equals(name, "exinfinite"))
-            light = Infinite.Create(light2world, paramSet);
+            light = InfiniteAreaLight.Create(light2world, paramSet);
         else
             Error.Warning("Light \"%s\" unknown.", name);
         paramSet.ReportUnused();
