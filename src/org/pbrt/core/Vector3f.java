@@ -168,7 +168,11 @@ public class Vector3f {
     }
 
     public static Vector3f Faceforward(Vector3f v, Vector3f v2) {
-        return (Dot(v, v2) < 0.f) ? v.negate() : v;
+        return (Dot(v, v2) < 0) ? v.negate() : v;
+    }
+
+    public static Vector3f SphericalDirection(float sinTheta, float cosTheta, float phi) {
+        return new Vector3f(sinTheta * (float)Math.cos(phi), sinTheta * (float)Math.sin(phi), cosTheta);
     }
 
     public static Vector3f SphericalDirection(float sinTheta, float cosTheta, float phi, Vector3f x,  Vector3f y, Vector3f z) {
