@@ -44,7 +44,7 @@ public class Api {
 
         public boolean IsAnimated() {
             for (int i = 0; i < MaxTransforms - 1; ++i) {
-                if (trans[i] != trans[i + 1]) return true;
+                if (trans[i].notEqual(trans[i + 1])) return true;
             }
             return false;
         }
@@ -529,7 +529,7 @@ public class Api {
     private static AreaLight MakeAreaLight(String name, Transform light2world, MediumInterface mediumInterface, ParamSet paramSet, Shape shape) {
         AreaLight area = null;
         if (Objects.equals(name, "area") || Objects.equals(name, "diffuse"))
-            area = Diffuse.Create(light2world, mediumInterface.outside, paramSet, shape);
+            area = DiffuseAreaLight.Create(light2world, mediumInterface.outside, paramSet, shape);
         else
             Error.Warning("Area light \"%s\" unknown.", name);
         paramSet.ReportUnused();
@@ -911,6 +911,7 @@ public class Api {
             return;
         }
         graphicsState = pushedGraphicsStates.pop();
+        graphicsState.areaLight = ""; // WHY????
         curTransform = pushedTransforms.pop();
         activeTransformBits = pushedActiveTransformBits.pop();
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
@@ -1065,6 +1066,7 @@ public class Api {
             params.ReportUnused();
             MediumInterface mi = graphicsState.CreateMediumInterface();
             for (Shape s : shapes) {
+                assert s != null;
                 // Possibly create area light for shape
                 AreaLight area = null;
                 if (!graphicsState.areaLight.isEmpty()) {

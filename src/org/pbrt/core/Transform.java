@@ -44,10 +44,10 @@ public class Transform {
         return new Transform(Matrix4x4.Transpose(t.m), Matrix4x4.Transpose(t.mInv));
     }
     public boolean equal(Transform t) {
-        return t.m == m && t.mInv == mInv;
+        return t.m.equal(m) && t.mInv.equal(mInv);
     }
     public boolean notEqual(Transform t) {
-        return t.m != m || t.mInv != mInv;
+        return t.m.notEqual(m) || t.mInv.notEqual(mInv);
     }
     public boolean less(Transform t2) {
         for (int i = 0; i < 4; ++i) {
@@ -73,7 +73,7 @@ public class Transform {
     private static boolean NOT_ONE(float x) {
         return (x < 0.999f || x > 1.001f);
     }
-    boolean HasScale() {
+    public boolean HasScale() {
         float la2 = xform(new Vector3f(1, 0, 0)).LengthSquared();
         float lb2 = xform(new Vector3f(0, 1, 0)).LengthSquared();
         float lc2 = xform(new Vector3f(0, 0, 1)).LengthSquared();

@@ -14,16 +14,18 @@ import org.pbrt.core.*;
 
 public class ConstantTexture<T> extends Texture {
 
-    private T value;
-    public ConstantTexture(T value) {
-        this.value = value;
-    }
-    public T Evaluate(SurfaceInteraction si) { return value; }
-
     public static ConstantTexture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
         return new ConstantTexture<>(tp.FindFloat("value", 1.0f));
     }
     public static ConstantTexture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
         return new ConstantTexture<>(tp.FindSpectrum("value", new Spectrum(1.f)));
     }
+
+    public ConstantTexture(T value) {
+        this.value = value;
+    }
+
+    public T Evaluate(SurfaceInteraction si) { return value; }
+
+    private final T value;
 }
