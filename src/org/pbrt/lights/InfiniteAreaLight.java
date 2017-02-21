@@ -34,7 +34,7 @@ public class InfiniteAreaLight extends Light {
             texels = new Spectrum[1];
             texels[0] = L;
         }
-        Lmap = new MIPMap<>(resolution, texels);
+        Lmap = new MIPMap<>(resolution, texels, new Spectrum(0));
 
         // Initialize sampling PDFs for infinite area light
 /*

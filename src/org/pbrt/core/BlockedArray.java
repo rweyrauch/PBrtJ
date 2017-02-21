@@ -9,9 +9,9 @@
 
 package org.pbrt.core;
 
-public class BlockedArray<T> {
+public class BlockedArray {
 
-    public BlockedArray(int uRes, int vRes, int logBlockSize, T[] d, Class<T> cls) throws IllegalAccessException, InstantiationException {
+    public BlockedArray(int uRes, int vRes, int logBlockSize, Object[] d) {
         this.uRes = uRes;
         this.vRes = vRes;
         this.logBlockSize = logBlockSize;
@@ -19,7 +19,9 @@ public class BlockedArray<T> {
 
         int nAlloc = RoundUp(uRes) * RoundUp(vRes);
         this.data = new Object[nAlloc];
-        for (int i = 0; i < nAlloc; i++) this.data[i] = cls.newInstance();
+        for (int i = 0; i < nAlloc; i++) {
+            this.data[i] = new Object();
+        }
         if (d != null) {
             for (int v = 0; v < vRes; ++v) {
                 for (int u = 0; u < uRes; ++u) {
@@ -40,15 +42,15 @@ public class BlockedArray<T> {
     public int Block(int a) { return a >> logBlockSize; }
     public int Offset(int a) { return (a & (BlockSize() - 1)); }
 
-    public T at(int u, int v) {
+    public Object at(int u, int v) {
         int bu = Block(u), bv = Block(v);
         int ou = Offset(u), ov = Offset(v);
         int offset = BlockSize() * BlockSize() * (uBlocks * bv + bu);
         offset += BlockSize() * ov + ou;
-        return (T)data[offset];
+        return data[offset];
     }
 
-    public void set(int u, int v, T value) {
+    public void set(int u, int v, Object value) {
         int bu = Block(u), bv = Block(v);
         int ou = Offset(u), ov = Offset(v);
         int offset = BlockSize() * BlockSize() * (uBlocks * bv + bu);

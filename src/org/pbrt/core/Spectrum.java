@@ -14,7 +14,7 @@ import org.apache.commons.lang.NotImplementedException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-public final class Spectrum {
+public final class Spectrum implements ArithmeticOps<Spectrum> {
 
     private static final int nSamples = 3;
     private final float[] c = { 0, 0, 0 };
@@ -43,12 +43,81 @@ public final class Spectrum {
         ps.print("]");
     }
 
-    public void add(Spectrum s2) {
-        assert (!s2.hasNaNs());
+    @Override
+    public Spectrum lerp(float t, Spectrum v1) {
+        assert (!v1.hasNaNs());
+        Spectrum rs = new Spectrum(0);
+        for (int i = 0; i < c.length; i++) {
+            rs.c[i] = Pbrt.Lerp(t, c[i], v1.c[i]);
+        }
+        return rs;
+    }
+    @Override
+    public Spectrum add(Spectrum addend) {
+        assert (!addend.hasNaNs());
+        Spectrum rs = new Spectrum(0);
+        for (int i = 0; i < addend.c.length; ++i) {
+            rs.c[i] = c[i] + addend.c[i];
+        }
+        return rs;
+    }
+
+    @Override
+    public void accum(Spectrum addend) {
+        assert (!addend.hasNaNs());
         for (int i = 0; i < c.length; ++i) {
-            this.c[i] += s2.c[i];
+            this.c[i] += addend.c[i];
         }
     }
+    @Override
+    public Spectrum subtract(Spectrum subtrahend) {
+        assert !subtrahend.hasNaNs();
+        Spectrum rs = new Spectrum(0);
+        for (int i = 0; i < subtrahend.c.length; ++i) {
+            rs.c[i] = c[i] - subtrahend.c[i];
+        }
+        return rs;
+    }
+    @Override
+    public Spectrum multiply(Spectrum multiplicand) {
+        assert !multiplicand.hasNaNs();
+        Spectrum rs = new Spectrum(0);
+        for (int i = 0; i < multiplicand.c.length; i++) {
+            rs.c[i] = c[i] * multiplicand.c[i];
+        }
+        return rs;
+    }
+    @Override
+    public Spectrum scale(float scalar) {
+        Spectrum rs = new Spectrum(0);
+        for (int i = 0; i < c.length; ++i) {
+            rs.c[i] = c[i] * scalar;
+        }
+        assert !rs.hasNaNs();
+        return rs;
+    }
+
+    @Override
+    public Spectrum divide(Spectrum divisor) {
+        assert (!divisor.hasNaNs());
+        Spectrum rs = new Spectrum(0.0f);
+        for (int i = 0; i < c.length; ++i) {
+            assert divisor.c[i] != 0.0f;
+            rs.c[i] = this.c[i] / divisor.c[i];
+        }
+        return rs;
+    }
+
+    @Override
+    public Spectrum clamp(float low, float high) {
+        Spectrum rs = new Spectrum(0.0f);
+        for (int i = 0; i < c.length; ++i) {
+            rs.c[i] = Pbrt.Clamp(c[i], low, high);
+        }
+        assert !rs.hasNaNs();
+        return rs;
+    }
+
     public static Spectrum Add(Spectrum s1, Spectrum s2) {
         assert !s1.hasNaNs();
         assert !s2.hasNaNs();
@@ -57,13 +126,6 @@ public final class Spectrum {
             cs.c[i] = s1.c[i] + s2.c[i];
         }
         return cs;
-    }
-
-    public void subtract(Spectrum s2) {
-        assert (!s2.hasNaNs());
-        for (int i = 0; i < c.length; ++i) {
-            this.c[i] -= s2.c[i];
-        }
     }
     public static Spectrum Subtract(Spectrum s1, Spectrum s2) {
         assert !s1.hasNaNs();
@@ -74,15 +136,7 @@ public final class Spectrum {
         }
         return cs;
     }
-
-    public void divide(Spectrum s2) {
-        assert (!s2.hasNaNs());
-        for (int i = 0; i < c.length; ++i) {
-            assert s2.c[i] != 0.0f;
-            this.c[i] /= s2.c[i];
-        }
-    }
-    public static Spectrum divide(Spectrum s1, Spectrum s2) {
+    public static Spectrum Divide(Spectrum s1, Spectrum s2) {
         assert (!s1.hasNaNs());
         assert (!s2.hasNaNs());
         Spectrum cs = new Spectrum(0);
@@ -91,13 +145,6 @@ public final class Spectrum {
             cs.c[i] = s1.c[i] / s2.c[i];
         }
         return cs;
-    }
-
-    public void multiply(Spectrum s2) {
-        assert (!s2.hasNaNs());
-        for (int i = 0; i < c.length; ++i) {
-            this.c[i] *= s2.c[i];
-        }
     }
     public static Spectrum Multiply(Spectrum s1, Spectrum s2) {
         assert (!s1.hasNaNs());
@@ -109,12 +156,6 @@ public final class Spectrum {
         return cs;
     }
 
-    public void scale(float a) {
-        for (int i = 0; i < c.length; ++i) {
-            this.c[i] *= a;
-        }
-        assert (!hasNaNs());
-    }
     public static Spectrum Scale(Spectrum s, float a) {
         Spectrum ss = new Spectrum(0);
         for (int i = 0; i < s.c.length; ++i) {
@@ -157,15 +198,6 @@ public final class Spectrum {
     public float y() {
         final float[] YWeight = {0.212671f, 0.715160f, 0.072169f};
         return YWeight[0] * c[0] + YWeight[1] * c[1] + YWeight[2] * c[2];
-    }
-
-    public Spectrum clamp(float low, float high) {
-        Spectrum ret = new Spectrum(0.0f);
-        for (int i = 0; i < c.length; ++i) {
-            ret.c[i] = Pbrt.Clamp(c[i], low, high);
-        }
-        assert !ret.hasNaNs();
-        return ret;
     }
 
     public boolean hasNaNs() {
