@@ -55,4 +55,9 @@ public class FileUtil {
         return value.endsWith(ending);
     }
 
+    public static String GetExtension(String filename) {
+        int point = filename.lastIndexOf('.');
+        if (point == -1) return "(Unknown)";
+        return filename.substring(point+1, filename.length());
+    }
 }

@@ -1,4 +1,3 @@
-
 /*
  * PBrtJ -- Port of pbrt v3 to Java.
  * Copyright (c) 2017 Rick Weyrauch.
@@ -10,13 +9,9 @@
 
 package org.pbrt.core;
 
-public abstract class TextureMapping2D {
+public abstract class TextureSpectrum extends Texture<Spectrum> {
 
-    public static class MapPoint {
-        public Point2f st;
-        public Vector2f dstdx, dstdy;
-    }
-
-    public abstract MapPoint Map(SurfaceInteraction si);
+    @Override
+    public abstract Spectrum Evaluate(SurfaceInteraction si);
 
 }

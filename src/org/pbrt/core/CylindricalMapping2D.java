@@ -34,7 +34,7 @@ public class CylindricalMapping2D extends TextureMapping2D {
             result.dstdy.y = 1 - result.dstdy.y;
         else if (result.dstdy.y < -.5f)
             result.dstdy.y = -(result.dstdy.y + 1);
-        result.point = st;
+        result.st = st;
         return result;
     }
 

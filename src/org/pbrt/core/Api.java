@@ -408,7 +408,7 @@ public class Api {
         else if (Objects.equals(name, "bilerp"))
             tex = BilerpTexture.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "imagemap"))
-            tex = ImageMap.CreateFloat(tex2world, tp);
+            tex = ImageTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "uv"))
             tex = UVTexture.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "checkerboard"))
@@ -440,7 +440,7 @@ public class Api {
         else if (Objects.equals(name, "bilerp"))
             tex = BilerpTexture.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "imagemap"))
-            tex = ImageMap.CreateSpectrum(tex2world, tp);
+            tex = ImageTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "uv"))
             tex = UVTexture.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "checkerboard"))
@@ -1244,8 +1244,8 @@ public class Api {
         for (int i = 0; i < MaxTransforms; ++i) curTransform.trans[i] = new Transform();
         activeTransformBits = AllTransformsBits;
         namedCoordinateSystems.clear();
-        //ImageTexture<Float, Float>.ClearCache();
-        //ImageTexture<Spectrum, Spectrum>.ClearCache();
+        ImageTextureFloat.ClearCacheFloat();
+        ImageTextureSpectrum.ClearCacheSpectrum();
     }
 
     private static void VERIFY_INITIALIZED(String func) {

@@ -28,7 +28,7 @@ public class PlanarMapping2D extends TextureMapping2D {
         Vector3f vec = new Vector3f(si.p);
         result.dstdx = new Vector2f(Vector3f.Dot(si.dpdx, vs), Vector3f.Dot(si.dpdx, vt));
         result.dstdy = new Vector2f(Vector3f.Dot(si.dpdy, vs), Vector3f.Dot(si.dpdy, vt));
-        result.point = new Point2f(ds + Vector3f.Dot(vec, vs), dt + Vector3f.Dot(vec, vt));
+        result.st = new Point2f(ds + Vector3f.Dot(vec, vs), dt + Vector3f.Dot(vec, vt));
         return result;
     }
 

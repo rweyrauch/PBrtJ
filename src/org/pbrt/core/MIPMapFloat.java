@@ -11,16 +11,9 @@ package org.pbrt.core;
 
 import java.util.ArrayList;
 
-public class MIPMap<T extends ArithmeticOps<T>> {
+public class MIPMapFloat {
 
-    public enum ImageWrap { Repeat, Black, Clamp }
-
-    private static class ResampleWeight {
-        public int firstTexel;
-        public float[] weight;
-    }
-
-    public MIPMap(Point2i resolution, T[] data, boolean doTri, float maxAniso, ImageWrap wrapMode, T black){
+    public MIPMapFloat(Point2i resolution, float[] data, boolean doTri, float maxAniso, Texture.ImageWrap wrapMode, float black){
         this.doTrilinear = doTri;
         this.maxAnisotropy = maxAniso;
         this.wrapMode = wrapMode;
@@ -28,7 +21,7 @@ public class MIPMap<T extends ArithmeticOps<T>> {
         this.black = black;
         //ProfilePhase _(Prof::MIPMapCreation);
 
-        Object[] resampledImage = null;
+        Float[] resampledImage = null;
         if (!Pbrt.IsPowerOf2(resolution.x) || !Pbrt.IsPowerOf2(resolution.y)) {
             // Resample image to power-of-two resolution
             Point2i resPow2 = new Point2i(Pbrt.RoundUpPow2(resolution.x), Pbrt.RoundUpPow2(resolution.y));
@@ -36,56 +29,52 @@ public class MIPMap<T extends ArithmeticOps<T>> {
             //        resPow2 << ". Ratio= " << (Float(resPow2.x * resPow2.y) /
             //        Float(resolution.x * resolution.y));
             // Resample image in $s$ direction
-            ResampleWeight[] sWeights = resampleWeights(resolution.x, resPow2.x);
-            resampledImage = new Object[resPow2.x * resPow2.y];
+            MIPMapSpectrum.ResampleWeight[] sWeights = resampleWeights(resolution.x, resPow2.x);
+            resampledImage = new Float[resPow2.x * resPow2.y];
 
             // Apply _sWeights_ to zoom in $s$ direction
             for (int t = 0; t < resolution.y; t++) {
                 for (int s = 0; s < resPow2.x; ++s) {
                     // Compute texel $(s,t)$ in $s$-zoomed image
-                    resampledImage[t * resPow2.x + s] = 0;
+                    resampledImage[t * resPow2.x + s] = black;
                     for (int j = 0; j < 4; ++j) {
                         int origS = sWeights[s].firstTexel + j;
-                        if (wrapMode == ImageWrap.Repeat)
+                        if (wrapMode == Texture.ImageWrap.Repeat)
                             origS = Pbrt.Mod(origS, resolution.x);
-                        else if (wrapMode == ImageWrap.Clamp)
+                        else if (wrapMode == Texture.ImageWrap.Clamp)
                             origS = Pbrt.Clamp(origS, 0, resolution.x - 1);
                         if (origS >= 0 && origS < resolution.x) {
-                            T pixel = (T)resampledImage[t * resPow2.x + s];
-                            resampledImage[t * resPow2.x + s] = pixel.add(data[t * resolution.x + origS].scale(sWeights[s].weight[j]));
+                            resampledImage[t * resPow2.x + s] += sWeights[s].weight[j] * data[t * resolution.x + origS];
                         }
                     }
                 }
             }
 
             // Resample image in $t$ direction
-            ResampleWeight[] tWeights = resampleWeights(resolution.y, resPow2.y);
-            Object[] workData = new Object[resolution.y * resolution.y];
+            MIPMapSpectrum.ResampleWeight[] tWeights = resampleWeights(resolution.y, resPow2.y);
+            Float[] workData = new Float[resolution.y * resolution.y];
             for (int s = 0; s < resPow2.x; s++) {
                 for (int t = 0; t < resPow2.y; ++t) {
-                    workData[t] = 0.f;
+                    workData[t] = black;
                     for (int j = 0; j < 4; ++j) {
                         int offset = tWeights[t].firstTexel + j;
-                        if (wrapMode == ImageWrap.Repeat)
+                        if (wrapMode == Texture.ImageWrap.Repeat)
                             offset = Pbrt.Mod(offset, resolution.y);
-                        else if (wrapMode == ImageWrap.Clamp)
+                        else if (wrapMode == Texture.ImageWrap.Clamp)
                             offset = Pbrt.Clamp(offset, 0, resolution.y - 1);
                         if (offset >= 0 && offset < resolution.y) {
-                            T pixel = (T)resampledImage[offset * resPow2.x + s];
-                            T workPixel = (T)workData[t];
-                            workData[t] = workPixel.add(pixel.scale(tWeights[t].weight[j]));
+                            workData[t] += tWeights[t].weight[j] * resampledImage[offset * resPow2.x + s];
                         }
                     }
                 }
                 for (int t = 0; t < resPow2.y; ++t) {
-                    T workPixel = (T)workData[t];
-                    resampledImage[t * resPow2.x + s] = workPixel.clamp(0, Pbrt.Infinity);
+                    resampledImage[t * resPow2.x + s] = Pbrt.Clamp(workData[t], 0, Pbrt.Infinity);
                 }
             }
             resolution = resPow2;
         }
         else {
-            resampledImage = new Object[resolution.x * resolution.y];
+            resampledImage = new Float[resolution.x * resolution.y];
             for (int s = 0; s < resolution.x; s++) {
                 for (int t = 0; t < resolution.y; t++) {
                     resampledImage[t * resolution.x + s] = data[t * resolution.x + s];
@@ -98,18 +87,20 @@ public class MIPMap<T extends ArithmeticOps<T>> {
 
         // Initialize most detailed level of MIPMap
         int logBlockSize = 16;
-        pyramid.set(0, new BlockedArray(resolution.x, resolution.y, logBlockSize, resampledImage));
+        pyramid.add(new BlockedArray(resolution.x, resolution.y, logBlockSize, resampledImage));
         for (int i = 1; i < nLevels; ++i) {
             // Initialize $i$th MIPMap level from $i-1$st level
             int sRes = Math.max(1, pyramid.get(i - 1).uSize() / 2);
             int tRes = Math.max(1, pyramid.get(i - 1).vSize() / 2);
-            pyramid.set(i, new BlockedArray(sRes, tRes, logBlockSize, null));
+            pyramid.add(new BlockedArray(sRes, tRes, logBlockSize, null));
 
             // Filter four texels from finer level of pyramid
             for (int t = 0; t < tRes; t++) {
                 for (int s = 0; s < sRes; ++s) {
-                    pyramid.get(i).set(s, t, (Texel(i - 1, 2 * s, 2 * t).add(Texel(i - 1, 2 * s + 1, 2 * t)).add(Texel(i - 1, 2 * s, 2 * t + 1)).add(
-                            Texel(i - 1, 2 * s + 1, 2 * t + 1))).scale(0.25f));
+                    pyramid.get(i).set(s, t, .25f * (Texel(i - 1, 2 * s, 2 * t) +
+                            Texel(i - 1, 2 * s + 1, 2 * t) +
+                            Texel(i - 1, 2 * s, 2 * t + 1) +
+                            Texel(i - 1, 2 * s + 1, 2 * t + 1)));
                 }
             }
         }
@@ -125,14 +116,14 @@ public class MIPMap<T extends ArithmeticOps<T>> {
         //mipMapMemory += (4 * resolution.x * resolution.y * sizeof(T)) / 3;
     }
 
-    public MIPMap(Point2i resolution, T[] data, T black) {
-        this(resolution, data, false, 8, ImageWrap.Repeat, black);
+    public MIPMapFloat(Point2i resolution, float[] data, float black) {
+        this(resolution, data, false, 8, Texture.ImageWrap.Repeat, black);
     }
 
     public int Width() { return resolution.x; }
     public int Height() { return resolution.y; }
     public int Levels(){ return pyramid.size(); }
-    public T Texel(int level, int s, int t) {
+    public Float Texel(int level, int s, int t) {
         assert(level < pyramid.size());
         BlockedArray l = pyramid.get(level);
         // Compute texel $(s,t)$ accounting for boundary conditions
@@ -151,10 +142,10 @@ public class MIPMap<T extends ArithmeticOps<T>> {
                 break;
             }
         }
-        return (T)l.at(s, t);
+        return (Float)l.at(s, t);
     }
 
-    public T Lookup(Point2f st, float width) {
+    public float Lookup(Point2f st, float width) {
 
         //++nTrilerpLookups;
         //ProfilePhase p(Prof::TexFiltTrilerp);
@@ -169,18 +160,18 @@ public class MIPMap<T extends ArithmeticOps<T>> {
         else {
             int iLevel = (int)Math.floor(level);
             float delta = level - iLevel;
-            return triangle(iLevel, st).lerp(delta, triangle(iLevel + 1, st));
+            return Pbrt.Lerp(delta, triangle(iLevel, st), triangle(iLevel + 1, st));
         }
     }
-    public T Lookup(Point2f st) {
+    public float Lookup(Point2f st) {
         return this.Lookup(st, 0);
     }
 
 
-    public T Lookup(Point2f st, Vector2f dst0, Vector2f dst1) {
+    public float Lookup(Point2f st, Vector2f dst0, Vector2f dst1) {
         if (doTrilinear) {
             float width = Math.max(Math.max(Math.abs(dst0.x), Math.abs(dst0.y)),
-                Math.max(Math.abs(dst1.x), Math.abs(dst1.y)));
+                    Math.max(Math.abs(dst1.x), Math.abs(dst1.y)));
             return Lookup(st, 2 * width);
         }
 
@@ -207,13 +198,14 @@ public class MIPMap<T extends ArithmeticOps<T>> {
         // Choose level of detail for EWA lookup and perform EWA filtering
         float lod = Math.max(0, Levels() - 1 + Pbrt.Log2(minorLength));
         int ilod = (int)Math.floor(lod);
-        return EWA(ilod, st, dst0, dst1).lerp(lod - ilod, EWA(ilod + 1, st, dst0, dst1));
+        return Pbrt.Lerp(lod - ilod, EWA(ilod, st, dst0, dst1),
+                EWA(ilod + 1, st, dst0, dst1));
     }
 
-    private ResampleWeight[] resampleWeights(int oldRes, int newRes) {
+    private MIPMapSpectrum.ResampleWeight[] resampleWeights(int oldRes, int newRes) {
         assert(newRes >= oldRes);
 
-        ResampleWeight[] wt = new ResampleWeight[newRes];
+        MIPMapSpectrum.ResampleWeight[] wt = new MIPMapSpectrum.ResampleWeight[newRes];
         float filterwidth = 2;
         for (int i = 0; i < newRes; ++i) {
             // Compute image resampling weights for _i_th texel
@@ -231,17 +223,20 @@ public class MIPMap<T extends ArithmeticOps<T>> {
         return wt;
     }
 
-    private T triangle(int level, Point2f st) {
+    private float triangle(int level, Point2f st) {
         level = Pbrt.Clamp(level, 0, Levels() - 1);
         float s = st.x * pyramid.get(level).uSize() - 0.5f;
         float t = st.y * pyramid.get(level).vSize() - 0.5f;
         int s0 = (int)Math.floor(s), t0 = (int)Math.floor(t);
         float ds = s - s0, dt = t - t0;
 
-        return Texel(level, s0, t0).scale((1 - ds) * (1 - dt)).add(Texel(level, s0, t0 + 1).scale((1 - ds) * dt).add(Texel(level, s0 + 1, t0).scale(ds * (1 - dt)).add(Texel(level, s0 + 1, t0 + 1).scale(ds * dt))));
+        return (1 - ds) * (1 - dt) * Texel(level, s0, t0) +
+                (1 - ds) * dt * Texel(level, s0, t0 + 1) +
+                ds * (1 - dt) * Texel(level, s0 + 1, t0) +
+                ds * dt * Texel(level, s0 + 1, t0 + 1);
     }
-    
-    private T EWA(int level, Point2f st, Vector2f dst0, Vector2f dst1) {
+
+    private float EWA(int level, Point2f st, Vector2f dst0, Vector2f dst1) {
         if (level >= Levels()) return Texel(Levels() - 1, 0, 0);
         // Convert EWA coordinates to appropriate scale for level
         st.x = st.x * pyramid.get(level).uSize() - 0.5f;
@@ -271,7 +266,7 @@ public class MIPMap<T extends ArithmeticOps<T>> {
 
 
         // Scan over ellipse bound and compute quadratic equation
-        T sum = black;
+        float sum = black;
         float sumWts = 0;
         for (int it = t0; it <= t1; ++it) {
             float tt = it - st.y;
@@ -282,18 +277,18 @@ public class MIPMap<T extends ArithmeticOps<T>> {
                 if (r2 < 1) {
                     int index = Math.min((int)(r2 * WeightLUTSize), WeightLUTSize - 1);
                     float weight = weightLut[index];
-                    sum = sum.add(Texel(level, is, it).scale(weight));
+                    sum += Texel(level, is, it) * weight;
                     sumWts += weight;
                 }
             }
         }
-        return sum.scale(1 / sumWts);
+        return sum / sumWts;
     }
 
     private final boolean doTrilinear;
     private final float maxAnisotropy;
-    private final ImageWrap wrapMode;
-    private final T black;
+    private final Texture.ImageWrap wrapMode;
+    private final float black;
     private Point2i resolution;
     ArrayList<BlockedArray> pyramid;
     private static final int WeightLUTSize = 128;

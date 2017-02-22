@@ -28,7 +28,7 @@ public class UVMapping2D extends TextureMapping2D {
         // Compute texture differentials for 2D identity mapping
         result.dstdx = new Vector2f(su * si.dudx, sv * si.dvdx);
         result.dstdy = new Vector2f(su * si.dudy, sv * si.dvdy);
-        result.point = new Point2f(su * si.uv.x + du, sv * si.uv.y + dv);
+        result.st = new Point2f(su * si.uv.x + du, sv * si.uv.y + dv);
         return result;
     }
 

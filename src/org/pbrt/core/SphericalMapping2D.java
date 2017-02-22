@@ -36,7 +36,7 @@ public class SphericalMapping2D extends TextureMapping2D {
             result.dstdx.y = 1 - result.dstdx.y;
         else if (result.dstdx.y < -.5f)
             result.dstdx.y = -(result.dstdx.y + 1);
-        result.point = st;
+        result.st = st;
 
         return result;
     }

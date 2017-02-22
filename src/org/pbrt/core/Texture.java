@@ -10,8 +10,43 @@
 
 package org.pbrt.core;
 
+import com.sun.istack.internal.NotNull;
+
+import java.util.Objects;
+
 public abstract class Texture<T> {
+
+    public enum ImageWrap { Repeat, Black, Clamp }
+
     public abstract T Evaluate(SurfaceInteraction si);
+
+    public static class TexInfo implements Comparable<TexInfo> {
+        public TexInfo(String filename, boolean doTrilinear, float maxAniso, Texture.ImageWrap wrapMode, float scale, boolean gamma) {
+            this.filename = filename;
+            this.doTrilinear = doTrilinear;
+            this.maxAniso = maxAniso;
+            this.wrapMode = wrapMode;
+            this.scale = scale;
+            this.gamma = gamma;
+        }
+
+        @Override
+        public int compareTo(@NotNull TexInfo t2) {
+            if (!Objects.equals(filename, t2.filename)) return filename.compareTo(t2.filename);
+            if (doTrilinear != t2.doTrilinear) return -1;
+            if (maxAniso != t2.maxAniso) return (maxAniso < t2.maxAniso) ? -1 : 1;
+            if (scale != t2.scale) return (scale < t2.scale) ? -1 : 1;
+            if (gamma != t2.gamma) return -1;
+            return (wrapMode != t2.wrapMode) ? -1 : 0;
+        }
+
+        public String filename;
+        public boolean doTrilinear;
+        public float maxAniso;
+        public Texture.ImageWrap wrapMode;
+        public float scale;
+        public boolean gamma;
+    }
 
     public static float Lanczos(float x, float tau) {
         x = Math.abs(x);

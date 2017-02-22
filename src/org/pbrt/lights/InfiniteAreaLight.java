@@ -24,7 +24,7 @@ public class InfiniteAreaLight extends Light {
             ImageIO.SpectrumImage image = ImageIO.Read(texMap);
             if (image != null) {
                 texels = image.image;
-                resolution = image.resultion;
+                resolution = image.resolution;
                 for (int i = 0; i < resolution.x * resolution.y; ++i)
                     texels[i].multiply(L);
             }
@@ -34,7 +34,7 @@ public class InfiniteAreaLight extends Light {
             texels = new Spectrum[1];
             texels[0] = L;
         }
-        Lmap = new MIPMap<>(resolution, texels, new Spectrum(0));
+        Lmap = new MIPMapSpectrum(resolution, texels, new Spectrum(0));
 
         // Initialize sampling PDFs for infinite area light
 /*
@@ -176,7 +176,7 @@ public class InfiniteAreaLight extends Light {
         return new InfiniteAreaLight(light2world, Lsc, nSamples, texmap);
     }
 
-    private MIPMap<Spectrum> Lmap;
+    private MIPMapSpectrum Lmap;
     private Point3f worldCenter;
     private float worldRadius;
     private Distribution2D distribution;
