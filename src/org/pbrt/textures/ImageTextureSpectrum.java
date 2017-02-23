@@ -10,14 +10,11 @@
 
 package org.pbrt.textures;
 
-import org.jetbrains.annotations.NotNull;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
-
 import java.util.HashMap;
-import java.util.Objects;
 
-public class ImageTextureSpectrum extends Texture {
+public class ImageTextureSpectrum extends Texture<Spectrum> {
 
     public static ImageTextureSpectrum CreateSpectrum(Transform tex2world, TextureParams tp) {
         // Initialize 2D texture mapping _map_ from _tp_

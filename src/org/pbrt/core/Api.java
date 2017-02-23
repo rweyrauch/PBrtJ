@@ -402,9 +402,9 @@ public class Api {
         if (Objects.equals(name, "constant"))
             tex = ConstantTexture.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "scale"))
-            tex = ScaleTexture.CreateFloat(tex2world, tp);
+            tex = ScaleTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "mix"))
-            tex = MixTexture.CreateFloat(tex2world, tp);
+            tex = MixTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "bilerp"))
             tex = BilerpTexture.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "imagemap"))
@@ -434,9 +434,9 @@ public class Api {
         if (Objects.equals(name, "constant"))
             tex = ConstantTexture.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "scale"))
-            tex = ScaleTexture.CreateSpectrum(tex2world, tp);
+            tex = ScaleTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "mix"))
-            tex = MixTexture.CreateSpectrum(tex2world, tp);
+            tex = MixTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "bilerp"))
             tex = BilerpTexture.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "imagemap"))

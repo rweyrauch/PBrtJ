@@ -10,14 +10,12 @@
 
 package org.pbrt.textures;
 
-import org.jetbrains.annotations.NotNull;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
-
 import java.util.HashMap;
-import java.util.Objects;
 
-public class ImageTextureFloat extends Texture {
+
+public class ImageTextureFloat extends Texture<Float> {
 
     public static ImageTextureFloat CreateFloat(Transform tex2world, TextureParams tp) {
         // Initialize 2D texture mapping _map_ from _tp_
