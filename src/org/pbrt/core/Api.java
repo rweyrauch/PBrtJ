@@ -509,15 +509,15 @@ public class Api {
     private static Light MakeLight(String name, ParamSet paramSet, Transform light2world, MediumInterface mediumInterface) {
         Light light = null;
         if (Objects.equals(name, "point"))
-            light = Point.Create(light2world, mediumInterface.outside, paramSet);
+            light = PointLight.Create(light2world, mediumInterface.outside, paramSet);
         else if (Objects.equals(name, "spot"))
-            light = Spot.Create(light2world, mediumInterface.outside, paramSet);
+            light = SpotLight.Create(light2world, mediumInterface.outside, paramSet);
         else if (Objects.equals(name, "goniometric"))
             light = Goniometric.Create(light2world, mediumInterface.outside, paramSet);
         else if (Objects.equals(name, "projection"))
-            light = Projection.Create(light2world, mediumInterface.outside, paramSet);
+            light = ProjectionLight.Create(light2world, mediumInterface.outside, paramSet);
         else if (Objects.equals(name, "distant"))
-            light = Distant.Create(light2world, paramSet);
+            light = DistantLight.Create(light2world, paramSet);
         else if (Objects.equals(name, "infinite") || Objects.equals(name, "exinfinite"))
             light = InfiniteAreaLight.Create(light2world, paramSet);
         else
