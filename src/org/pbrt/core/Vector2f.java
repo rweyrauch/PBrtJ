@@ -81,6 +81,11 @@ public class Vector2f {
         return y;
     }
 
+    public static float Dot(Vector2f v1, Vector2f v2) {
+        assert (!v1.HasNaNs() && !v2.HasNaNs());
+        return v1.x * v2.x + v1.y * v2.y;
+    }
+
     public float LengthSquared() {
         return x * x + y * y;
     }
