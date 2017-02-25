@@ -153,8 +153,8 @@ public abstract class BSSRDF {
         }
         return Ed / nSamples;
     }
-    public static void ComputeBeamDiffusionBSSRDF(float g, float eta, BSSRDFTable t) {
-
+    public static BSSRDFTable ComputeBeamDiffusionBSSRDF(float g, float eta, BSSRDFTable t) {
+        return t;
     }
 
     public static class SubsurfaceSpectrum {
