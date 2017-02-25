@@ -10,18 +10,32 @@
 
 package org.pbrt.materials;
 
-import org.pbrt.core.Material;
-import org.pbrt.core.SurfaceInteraction;
-import org.pbrt.core.TextureParams;
+import org.pbrt.core.*;
 
 public class MirrorMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
-        return null;
+        Texture<Spectrum> Kr = mp.GetSpectrumTexture("Kr", new Spectrum(0.9f));
+        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        return new MirrorMaterial(Kr, bumpMap);
+    }
+
+    public MirrorMaterial(Texture<Spectrum> r, Texture<Float> bump) {
+        this.Kr = r;
+        this.bumpMap = bump;
     }
 
     @Override
     public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
-        return null;
+        // Perform bump mapping with _bumpMap_, if present
+        if (bumpMap != null) Bump(bumpMap, si);
+        si.bsdf = new BSDF(si, 1);
+        Spectrum R = Kr.Evaluate(si).clamp(0, Pbrt.Infinity);
+        if (!R.isBlack())
+            si.bsdf.Add(new SpecularReflection(R, new FresnelNoOp()));
+        return si;
     }
+
+    private Texture<Spectrum> Kr;
+    private Texture<Float> bumpMap;
 }

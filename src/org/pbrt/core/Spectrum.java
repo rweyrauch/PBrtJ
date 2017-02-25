@@ -16,7 +16,7 @@ import java.io.PrintStream;
 
 public final class Spectrum implements ArithmeticOps<Spectrum> {
 
-    private static final int nSamples = 3;
+    public static final int nSamples = 3;
     private final float[] c = { 0, 0, 0 };
 
     public static final int sampledLambdaStart = 400;

@@ -17,7 +17,7 @@ public class BSDF {
     private Vector3f ss, ts;
     private int nBxDFs = 0;
     private static final int MaxBxDFs = 8;
-    private BxDF bxdfs[] = new BxDF[MaxBxDFs];
+    public BxDF[] bxdfs = new BxDF[MaxBxDFs];
 
     // BSDF Public Methods
     public BSDF(SurfaceInteraction si, float eta) {
