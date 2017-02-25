@@ -88,7 +88,7 @@ public abstract class Medium {
     };
 
     public static class ScatteringProps {
-        Spectrum sigma_a, sigma_s;
+        public Spectrum sigma_a, sigma_s;
     }
     private static float[] toFloatArray(double[] arr) {
         if (arr == null) return null;
