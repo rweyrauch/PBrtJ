@@ -10,32 +10,56 @@
 
 package org.pbrt.samplers;
 
-import org.pbrt.core.ParamSet;
-import org.pbrt.core.Point2f;
-import org.pbrt.core.Sampler;
+import com.intellij.openapi.editor.RangeMarker;
+import org.pbrt.core.*;
 
 public class RandomSampler extends Sampler {
 
-    public RandomSampler(int samplesPerPixel) {
+    public RandomSampler(int samplesPerPixel, int seed) {
         super(samplesPerPixel);
+        this.rng = new RNG(seed);
+    }
+    public RandomSampler(int samplesPerPixel) {
+        this(samplesPerPixel, 0);
+    }
+
+    public void StartPixel(Point2i p) {
+        //ProfilePhase _(Prof::StartPixel);
+        for (int i = 0; i < sampleArray1D.size(); ++i)
+            for (int j = 0; j < sampleArray1D.get(i).length; ++j)
+                sampleArray1D.get(i)[j] = rng.UniformFloat();
+
+        for (int i = 0; i < sampleArray2D.size(); ++i)
+            for (int j = 0; j < sampleArray2D.get(i).length; ++j)
+                sampleArray2D.get(i)[j] = new Point2f(rng.UniformFloat(), rng.UniformFloat());
+        super.StartPixel(p);
     }
 
     @Override
     public float Get1D() {
-        return 0;
+        //ProfilePhase _(Prof::GetSample);
+        assert (currentPixelSampleIndex < samplesPerPixel);
+        return rng.UniformFloat();
     }
 
     @Override
     public Point2f Get2D() {
-        return null;
+        //ProfilePhase _(Prof::GetSample);
+        assert (currentPixelSampleIndex < samplesPerPixel);
+        return new Point2f(rng.UniformFloat(), rng.UniformFloat());
     }
 
     @Override
     public Sampler Clone(int seed) {
-        return null;
+        RandomSampler rs = new RandomSampler(this.samplesPerPixel);
+        rs.rng.SetSequence(seed);
+        return rs;
     }
 
     public static Sampler Create(ParamSet paramSet) {
-        return null;
+        int ns = paramSet.FindOneInt("pixelsamples", 4);
+        return new RandomSampler(ns);
     }
+
+    private RNG rng;
 }

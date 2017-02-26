@@ -11,23 +11,26 @@ package org.pbrt.core;
 
 public class Sampling {
 
-    public static float[] StratifiedSample1D(int nsamples, RNG rng, boolean jitter) {
+    public static Float[] StratifiedSample1D(Float[] samp, int firstIndex, int endIndex, RNG rng, boolean jitter) {
+        int nsamples = endIndex-firstIndex;
         float invNSamples = 1 / (float)nsamples;
-        float[] samp = new float[nsamples];
-        for (int i = 0; i < nsamples; ++i) {
+        for (int i = firstIndex; i < endIndex; ++i) {
             float delta = jitter ? rng.UniformFloat() : 0.5f;
             samp[i] = Math.min((i + delta) * invNSamples, Pbrt.OneMinusEpsilon);
         }
         return samp;
     }
 
-    public static float[] StratifiedSample1D(int nsamples, RNG rng) {
-        return StratifiedSample1D(nsamples, rng, true);
+    public static Float[] StratifiedSample1D(Float[] samp, int nsamples, RNG rng, boolean jitter) {
+        return StratifiedSample1D(samp, 0, nsamples, rng, jitter);
     }
 
-    public static Point2f[] StratifiedSample2D(int nx, int ny, RNG rng, boolean jitter) {
+    public static Float[] StratifiedSample1D(Float[] samp, int nsamples, RNG rng) {
+        return StratifiedSample1D(samp, nsamples, rng, true);
+    }
+
+    public static Point2f[] StratifiedSample2D(Point2f[] samp, int nx, int ny, RNG rng, boolean jitter) {
         float dx = 1 / (float)nx, dy = 1 / (float)ny;
-        Point2f[] samp = new Point2f[nx * ny];
         int i = 0;
         for (int y = 0; y < ny; ++y) {
             for (int x = 0; x < nx; ++x) {
@@ -40,30 +43,57 @@ public class Sampling {
         }
         return samp;
     }
-    public static Point2f[] StratifiedSample2D(int nx, int ny, RNG rng) {
-        return StratifiedSample2D(nx, ny, rng, true);
+
+    public static Point2f[] StratifiedSample2D(Point2f[] samp, int nx, int ny, RNG rng) {
+        return StratifiedSample2D(samp, nx, ny, rng, true);
     }
 
-    public static float[] LatinHypercube(int nSamples, int nDim, RNG rng) {
+    public static Float[] LatinHypercube(Float[] samples, int startIndex, int endIndex, RNG rng) {
         // Generate LHS samples along diagonal
+        int nSamples = endIndex - startIndex;
         float invNSamples = 1 / (float)nSamples;
-        float[] samples = new float[nSamples];
-        for (int i = 0; i < nSamples; ++i)
-            for (int j = 0; j < nDim; ++j) {
+        for (int i = startIndex; i < endIndex; ++i) {
                 float sj = (i + (rng.UniformFloat())) * invNSamples;
-                samples[nDim * i + j] = Math.min(sj, Pbrt.OneMinusEpsilon);
-            }
+                samples[i] = Math.min(sj, Pbrt.OneMinusEpsilon);
+        }
 
         // Permute LHS samples in each dimension
-        for (int i = 0; i < nDim; ++i) {
-            for (int j = 0; j < nSamples; ++j) {
-                int other = j + rng.UniformInt32(nSamples - j);
-                float temp = samples[nDim * j + i];
-                samples[nDim * j + i] = samples[nDim * other + i];
-                samples[nDim * other + i] = temp;
-            }
+        for (int j = startIndex; j < endIndex; ++j) {
+            int other = j + rng.UniformInt32(nSamples - j);
+            float temp = samples[j];
+            samples[j] = samples[other];
+            samples[other] = temp;
         }
         return samples;
+    }
+
+    public static Float[] LatinHypercube(Float[] samples, int nSamples, RNG rng) {
+        return LatinHypercube(samples, 0, nSamples, rng);
+    }
+
+    public static Point2f[] LatinHypercube(Point2f[] samples, int startIndex, int endIndex, RNG rng) {
+        // Generate LHS samples along diagonal
+        int nSamples = endIndex - startIndex;
+        float invNSamples = 1 / (float)nSamples;
+        for (int i = startIndex; i < endIndex; ++i) {
+            float sj = (i + (rng.UniformFloat())) * invNSamples;
+            samples[i].x = Math.min(sj, Pbrt.OneMinusEpsilon);
+        }
+        for (int i = startIndex; i < endIndex; ++i) {
+            float sj = (i + (rng.UniformFloat())) * invNSamples;
+            samples[i].y = Math.min(sj, Pbrt.OneMinusEpsilon);
+        }
+        // Permute LHS samples in each dimension
+        for (int j = startIndex; j < endIndex; ++j) {
+            int other = j + rng.UniformInt32(nSamples - j);
+            Point2f temp = samples[j];
+            samples[j] = samples[other];
+            samples[other] = temp;
+        }
+        return samples;
+    }
+    public static Point2f[] LatinHypercube(Point2f[] samples, int nSamples, RNG rng) {
+        return LatinHypercube(samples, 0, nSamples, rng);
     }
 
     public static Point2f RejectionSampleDisk(RNG rng) {
@@ -141,6 +171,19 @@ public class Sampling {
             theta = PiOver2 - PiOver4 * (uOffset.x / uOffset.y);
         }
         return new Point2f((float)Math.cos(theta), (float)Math.sin(theta)).scale(r);
+    }
+
+    public static <T> T[] Shuffle(T[] samp, int startIndex, int endIndex, int nDimensions, RNG rng) {
+        int count = endIndex-startIndex;
+        for (int i = startIndex; i < endIndex; ++i) {
+            int other = i + rng.UniformInt32(count - i);
+            for (int j = 0; j < nDimensions; ++j) {
+                T temp = samp[nDimensions * i + j];
+                samp[nDimensions * i + j] = samp[nDimensions * other + j];
+                samp[nDimensions * other + j] = temp;
+            }
+        }
+        return samp;
     }
 
     public static Vector3f CosineSampleHemisphere(Point2f u) {

@@ -11,6 +11,7 @@
 package org.pbrt.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class Sampler {
 
@@ -60,17 +61,23 @@ public abstract class Sampler {
     }
     public int RoundCount(int n) { return n; }
 
-    float[] Get1DArray(int n) {
+    Float[] Get1DArray(int n) {
         if (array1DOffset == sampleArray1D.size()) return null;
         assert (samples1DArraySizes.get(array1DOffset) == n);
         assert (currentPixelSampleIndex < samplesPerPixel);
-        return null; //sampleArray1D.get(array1DOffset++)[currentPixelSampleIndex * n];
+        Float[] samples = sampleArray1D.get(array1DOffset++);
+        int startIndex = currentPixelSampleIndex * n;
+        int endIndex = (currentPixelSampleIndex + 1) * n;
+        return Arrays.copyOfRange(samples, startIndex, endIndex);
     }
     public Point2f[] Get2DArray(int n) {
         if (array2DOffset == sampleArray2D.size()) return null;
         assert (samples2DArraySizes.get(array2DOffset) == n);
         assert (currentPixelSampleIndex < samplesPerPixel);
-        return null; //sampleArray2D.get(array2DOffset++)[currentPixelSampleIndex * n];
+        Point2f[] samples = sampleArray2D.get(array2DOffset++);
+        int startIndex = currentPixelSampleIndex * n;
+        int endIndex = (currentPixelSampleIndex + 1) * n;
+        return Arrays.copyOfRange(samples, startIndex, endIndex);
     }
     public boolean StartNextSample() {
         // Reset array offsets for next pixel sample

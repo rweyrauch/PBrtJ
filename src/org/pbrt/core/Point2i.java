@@ -23,6 +23,10 @@ public class Point2i {
         x = (int)p.x;
         y = (int)p.y;
     }
+    public Point2i(Vector2i v) {
+        this.x = v.x;
+        this.y = v.y;
+    }
 
     public Point2i add(Vector2i v) {
         return new Point2i(x + v.x, y + v.y);

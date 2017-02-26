@@ -13,6 +13,9 @@ public class RNG {
     // RNG Private Data
     private long state, inc;
 
+    public static final double DoubleOneMinusEpsilon = 0x1.fffffffffffffp-1;
+    public static final float FloatOneMinusEpsilon = 0x1.fffffep-1f;
+
     private static final long PCG32_DEFAULT_STATE = 0x853c49e6748fea9bL;
     private static final long PCG32_DEFAULT_STREAM = 0xda3e39cb94b95bdbL;
     private static final long PCG32_MULT = 0x5851f42d4c957f2dL;

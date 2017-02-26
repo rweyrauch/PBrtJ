@@ -63,6 +63,10 @@ public class Pbrt
         int result = a - (a / b) * b;
         return (int)((result < 0) ? result + b : result);
     }
+    public static long Mod(long a, long b) {
+        long result = a - (a / b) * b;
+        return (long)((result < 0) ? result + b : result);
+    }
 
     public static float Mod(float a, float b) {
         return a % b;

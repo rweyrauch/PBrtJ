@@ -10,33 +10,58 @@
 
 package org.pbrt.samplers;
 
-import org.pbrt.core.Bounds2i;
-import org.pbrt.core.ParamSet;
-import org.pbrt.core.Point2f;
-import org.pbrt.core.Sampler;
+import org.pbrt.core.*;
+import org.pbrt.core.Error;
 
-public class SobolSampler extends Sampler {
+public class SobolSampler extends GlobalSampler {
 
-    public SobolSampler(int samplesPerPixel) {
-        super(samplesPerPixel);
+    public SobolSampler(int samplesPerPixel, Bounds2i sampleBounds) {
+        super(Pbrt.RoundUpPow2(samplesPerPixel));
+        this.sampleBounds = sampleBounds;
+
+        if (!Pbrt.IsPowerOf2(samplesPerPixel))
+            Error.Warning("Non power-of-two sample count rounded up to % for SobolSampler.", samplesPerPixel);
+        resolution = Pbrt.RoundUpPow2(Math.max(sampleBounds.Diagonal().x, sampleBounds.Diagonal().y));
+        log2Resolution = Pbrt.Log2Int(resolution);
+        if (resolution > 0) assert((1 << log2Resolution) == resolution);
+    }
+
+    public SobolSampler(SobolSampler sampler) {
+        super(Pbrt.RoundUpPow2(sampler.samplesPerPixel));
+        this.sampleBounds = sampler.sampleBounds;
+        this.resolution = sampler.resolution;
+        this.log2Resolution = sampler.log2Resolution;
     }
 
     @Override
-    public float Get1D() {
-        return 0;
+    public int GetIndexForSample(int sampleNum) {
+        return (int)LowDiscrepancy.SobolIntervalToIndex(log2Resolution, sampleNum, new Point2i(currentPixel.subtract(sampleBounds.pMin)));
     }
 
     @Override
-    public Point2f Get2D() {
-        return null;
+    public float SampleDimension(int index, int dim) {
+        if (dim >= SobolMatrices.NumSobolDimensions)
+            Error.Error("SobolSampler can only sample up to %d dimensions! Exiting.", SobolMatrices.NumSobolDimensions);
+        float s = LowDiscrepancy.SobolSampleFloat(index, dim, 0);
+        // Remap Sobol$'$ dimensions used for pixel samples
+        if (dim == 0 || dim == 1) {
+            s = s * resolution + sampleBounds.pMin.at(dim);
+            s = Pbrt.Clamp(s - currentPixel.at(dim), 0, Pbrt.OneMinusEpsilon);
+        }
+        return s;
     }
 
     @Override
     public Sampler Clone(int seed) {
-        return null;
+        return new SobolSampler(this);
     }
 
-    public static Sampler Create(ParamSet paramSet, Bounds2i bounds2i) {
-        return null;
+    public static Sampler Create(ParamSet paramSet, Bounds2i sampleBounds) {
+        int nsamp = paramSet.FindOneInt("pixelsamples", 16);
+        if (Pbrt.options.QuickRender) nsamp = 1;
+        return new SobolSampler(nsamp, sampleBounds);
     }
+
+    private final Bounds2i sampleBounds;
+    private int resolution, log2Resolution;
 }

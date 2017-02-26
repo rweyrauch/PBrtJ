@@ -10,14 +10,16 @@
 
 package org.pbrt.samplers;
 
+import org.pbrt.core.PixelSampler;
+
 import org.pbrt.core.ParamSet;
 import org.pbrt.core.Point2f;
 import org.pbrt.core.Sampler;
 
-public class MaxMinSampler extends Sampler {
+public class MaxMinSampler extends PixelSampler {
 
-    public MaxMinSampler(int samplesPerPixel) {
-        super(samplesPerPixel);
+    public MaxMinSampler(int samplesPerPixel, int nSampledDimensions) {
+        super(samplesPerPixel, nSampledDimensions);
     }
 
     @Override
@@ -38,5 +40,4 @@ public class MaxMinSampler extends Sampler {
     public static Sampler Create(ParamSet paramSet) {
         return null;
     }
-
 }

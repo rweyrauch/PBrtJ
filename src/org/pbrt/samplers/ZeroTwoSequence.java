@@ -10,32 +10,52 @@
 
 package org.pbrt.samplers;
 
-import org.pbrt.core.ParamSet;
-import org.pbrt.core.Point2f;
-import org.pbrt.core.Sampler;
+import org.pbrt.core.*;
+import org.pbrt.core.Error;
 
-public class ZeroTwoSequence extends Sampler {
+public class ZeroTwoSequence extends PixelSampler {
 
-    public ZeroTwoSequence(int samplesPerPixel) {
-        super(samplesPerPixel);
+    public ZeroTwoSequence(int samplesPerPixel, int nSampledDimensions) {
+        super(Pbrt.RoundUpPow2(samplesPerPixel), nSampledDimensions);
+        if (!Pbrt.IsPowerOf2(samplesPerPixel))
+            Error.Warning("Pixel samples being rounded up to power of 2 (from %d to %d).", samplesPerPixel, Pbrt.RoundUpPow2(samplesPerPixel));
     }
 
-    @Override
-    public float Get1D() {
-        return 0;
+    public ZeroTwoSequence(ZeroTwoSequence sampler) {
+        this(sampler.samplesPerPixel, sampler.samples1D.size());
     }
 
-    @Override
-    public Point2f Get2D() {
-        return null;
+    public void StartPixel(Point2i p) {
+        //ProfilePhase _(Prof::StartPixel);
+        // Generate 1D and 2D pixel sample components using $(0,2)$-sequence
+        for (int i = 0; i < samples1D.size(); ++i)
+            samples1D.set(i, LowDiscrepancy.VanDerCorput(1, samplesPerPixel, samples1D.get(i), rng));
+        for (int i = 0; i < samples2D.size(); ++i)
+            samples2D.set(i, LowDiscrepancy.Sobol2D(1, samplesPerPixel, samples2D.get(i), rng));
+
+        // Generate 1D and 2D array samples using $(0,2)$-sequence
+        for (int i = 0; i < samples1DArraySizes.size(); ++i)
+            sampleArray1D.set(i, LowDiscrepancy.VanDerCorput(samples1DArraySizes.get(i), samplesPerPixel, sampleArray1D.get(i), rng));
+        for (int i = 0; i < samples2DArraySizes.size(); ++i)
+            sampleArray2D.set(i, LowDiscrepancy.Sobol2D(samples2DArraySizes.get(i), samplesPerPixel, sampleArray2D.get(i), rng));
+        super.StartPixel(p);
     }
 
     @Override
     public Sampler Clone(int seed) {
-        return null;
+        ZeroTwoSequence lds = new ZeroTwoSequence(this);
+        lds.rng.SetSequence(seed);
+        return lds;
+    }
+
+    public int RoundCount(int count) {
+        return Pbrt.RoundUpPow2(count);
     }
 
     public static Sampler Create(ParamSet paramSet) {
-        return null;
+        int nsamp = paramSet.FindOneInt("pixelsamples", 16);
+        int sd = paramSet.FindOneInt("dimensions", 4);
+        if (Pbrt.options.QuickRender) nsamp = 1;
+        return new ZeroTwoSequence(nsamp, sd);
     }
 }
