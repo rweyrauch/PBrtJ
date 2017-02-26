@@ -52,14 +52,7 @@ public class RNG {
     public float UniformFloat() {
         return Math.min(Pbrt.OneMinusEpsilon, ((float)UniformInt32() * 0x1p-32f));
     }
-    /*
-    template <typename Iterator>
-    void Shuffle(Iterator begin, Iterator end) {
-        for (Iterator it = end - 1; it > begin; --it)
-            std::iter_swap(it,
-                begin + UniformUInt32((uint32_t)(it - begin + 1)));
-    }
-    */
+
     public void Advance(long idelta) {
         long cur_mult = PCG32_MULT, cur_plus = inc, acc_mult = 1,
                 acc_plus = 0, delta = idelta;

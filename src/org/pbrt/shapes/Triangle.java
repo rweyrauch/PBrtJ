@@ -21,6 +21,7 @@ public class Triangle extends Shape {
 
     public Triangle(Transform ObjectToWorld, Transform WorldToObject, boolean reverseOrientation, TriangleMesh mesh, int triNumber) {
         super(ObjectToWorld, WorldToObject, reverseOrientation);
+        this.mesh = mesh;
         this.v = new int[]{mesh.vertexIndices[3*triNumber], mesh.vertexIndices[3*triNumber+1], mesh.vertexIndices[3*triNumber+2]};
     }
 

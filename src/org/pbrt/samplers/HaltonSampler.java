@@ -115,8 +115,8 @@ public class HaltonSampler extends GlobalSampler {
     }
 
 
-    private static Short[] radicalInversePermutations;
-    private Point2i baseScales, baseExponents;
+    private static Short[] radicalInversePermutations = new Short[0];
+    private Point2i baseScales = new Point2i(), baseExponents = new Point2i();
     private int sampleStride;
     private int[] multInverse = { 0, 0 };
     private Point2i pixelForOffset = new Point2i(Integer.MAX_VALUE, Integer.MAX_VALUE);

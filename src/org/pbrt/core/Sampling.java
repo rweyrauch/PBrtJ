@@ -176,7 +176,7 @@ public class Sampling {
     public static <T> T[] Shuffle(T[] samp, int startIndex, int endIndex, int nDimensions, RNG rng) {
         int count = endIndex-startIndex;
         for (int i = startIndex; i < endIndex; ++i) {
-            int other = i + rng.UniformInt32(count - i);
+            int other = i + rng.UniformInt32(count - (i - startIndex));
             for (int j = 0; j < nDimensions; ++j) {
                 T temp = samp[nDimensions * i + j];
                 samp[nDimensions * i + j] = samp[nDimensions * other + j];

@@ -103,7 +103,8 @@ public class Api {
         }
 
         public Scene MakeScene() {
-            Primitive[] prims = (Primitive[])primitives.toArray();
+            Primitive[] primArray = new Primitive[1];
+            Primitive[] prims = primitives.toArray(primArray);
             Primitive accelerator = MakeAccelerator(AcceleratorName, prims, AcceleratorParams);
             if (accelerator == null) {
                 accelerator = new BVHAccel(prims);
@@ -130,18 +131,18 @@ public class Api {
         // RenderOptions Public Data
         public float transformStartTime = 0, transformEndTime = 1;
         public String FilterName = "box";
-        public ParamSet FilterParams;
+        public ParamSet FilterParams = new ParamSet();
         public String FilmName = "image";
-        public ParamSet FilmParams;
+        public ParamSet FilmParams = new ParamSet();
         public String SamplerName = "halton";
-        public ParamSet SamplerParams;
+        public ParamSet SamplerParams = new ParamSet();
         public String AcceleratorName = "bvh";
-        public ParamSet AcceleratorParams;
+        public ParamSet AcceleratorParams = new ParamSet();
         public String IntegratorName = "path";
-        public ParamSet IntegratorParams;
+        public ParamSet IntegratorParams = new ParamSet();
         public String CameraName = "perspective";
-        public ParamSet CameraParams;
-        public TransformSet CameraToWorld;
+        public ParamSet CameraParams = new ParamSet();
+        public TransformSet CameraToWorld = new TransformSet();
         public HashMap<String, Medium> namedMedia = new HashMap<>();
         public ArrayList<Light> lights = new ArrayList<>();
         public ArrayList<Primitive> primitives = new ArrayList<>();
@@ -1169,7 +1170,8 @@ public class Api {
         //++nObjectInstancesUsed;
         if (in.size() > 1) {
             // Create aggregate for instance _Primitive_s
-            Primitive[] inPrims = (Primitive[])in.toArray();
+            Primitive[] primArray = new Primitive[1];
+            Primitive[] inPrims = in.toArray(primArray);
             Primitive accel = MakeAccelerator(renderOptions.AcceleratorName, inPrims, renderOptions.AcceleratorParams);
             if (accel == null) accel = new BVHAccel(inPrims);
             in.clear();

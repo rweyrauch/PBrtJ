@@ -376,6 +376,9 @@ public class Parser {
                 }
                 currentCommand.command.add(new TokenValue(token, scanner.yytext()));
             }
+            if (currentCommand != null) {
+                processCommand(currentCommand);
+            }
         }
         catch (Exception e) {
             Error.Error("Failed to parse file. Error: %s", e.toString());
