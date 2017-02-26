@@ -406,23 +406,19 @@ public class Api {
         else if (Objects.equals(name, "mix"))
             tex = MixTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "bilerp"))
-            tex = BilerpTexture.CreateFloat(tex2world, tp);
+            tex = BilerpTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "imagemap"))
             tex = ImageTextureFloat.CreateFloat(tex2world, tp);
-        else if (Objects.equals(name, "uv"))
-            tex = UVTexture.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "checkerboard"))
-            tex = CheckerBoardTexture.CreateFloat(tex2world, tp);
+            tex = CheckerBoardTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "dots"))
-            tex = DotsTexture.CreateFloat(tex2world, tp);
+            tex = DotsTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "fbm"))
-            tex = FBMTexture.CreateFloat(tex2world, tp);
+            tex = FBmTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "wrinkled"))
-            tex = WrinkledTexture.CreateFloat(tex2world, tp);
-        else if (Objects.equals(name, "marble"))
-            tex = MarbleTexture.CreateFloat(tex2world, tp);
+            tex = WrinkledTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "windy"))
-            tex = WindyTexture.CreateFloat(tex2world, tp);
+            tex = WindyTextureFloat.CreateFloat(tex2world, tp);
         else
             Error.Warning("Float texture \"%s\" unknown.", name);
         tp.ReportUnused();
@@ -438,23 +434,23 @@ public class Api {
         else if (Objects.equals(name, "mix"))
             tex = MixTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "bilerp"))
-            tex = BilerpTexture.CreateSpectrum(tex2world, tp);
+            tex = BilerpTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "imagemap"))
             tex = ImageTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "uv"))
-            tex = UVTexture.CreateSpectrum(tex2world, tp);
+            tex = UVTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "checkerboard"))
-            tex = CheckerBoardTexture.CreateSpectrum(tex2world, tp);
+            tex = CheckerBoardTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "dots"))
-            tex = DotsTexture.CreateSpectrum(tex2world, tp);
+            tex = DotsTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "fbm"))
-            tex = FBMTexture.CreateSpectrum(tex2world, tp);
+            tex = FBmTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "wrinkled"))
-            tex = WrinkledTexture.CreateSpectrum(tex2world, tp);
+            tex = WrinkledTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "marble"))
-            tex = MarbleTexture.CreateSpectrum(tex2world, tp);
+            tex = MarbleTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "windy"))
-            tex = WindyTexture.CreateSpectrum(tex2world, tp);
+            tex = WindyTextureSpectrum.CreateSpectrum(tex2world, tp);
         else
             Error.Warning("Spectrum texture \"%s\" unknown.", name);
         tp.ReportUnused();
@@ -513,7 +509,7 @@ public class Api {
         else if (Objects.equals(name, "spot"))
             light = SpotLight.Create(light2world, mediumInterface.outside, paramSet);
         else if (Objects.equals(name, "goniometric"))
-            light = Goniometric.Create(light2world, mediumInterface.outside, paramSet);
+            light = GonioPhotometricLight.Create(light2world, mediumInterface.outside, paramSet);
         else if (Objects.equals(name, "projection"))
             light = ProjectionLight.Create(light2world, mediumInterface.outside, paramSet);
         else if (Objects.equals(name, "distant"))

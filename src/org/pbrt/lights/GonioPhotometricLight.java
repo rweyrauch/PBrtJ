@@ -17,7 +17,7 @@ public class GonioPhotometricLight extends Light {
 
     public static Light Create(Transform light2world, Medium outside, ParamSet paramSet) {
         Spectrum I = paramSet.FindOneSpectrum("I", new Spectrum(1));
-        Spectrum sc = paramSet.FindOneSpectrum("scale", new Spectrum());
+        Spectrum sc = paramSet.FindOneSpectrum("scale", new Spectrum(0));
         String texname = paramSet.FindOneFilename("mapname", "");
         return new GonioPhotometricLight(light2world, new MediumInterface(outside), I.multiply(sc), texname);
     }

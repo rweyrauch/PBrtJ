@@ -17,6 +17,7 @@ import java.util.Objects;
 public abstract class Texture<T> {
 
     public enum ImageWrap { Repeat, Black, Clamp }
+    public enum AAMethod { None, ClosedForm }
 
     public abstract T Evaluate(SurfaceInteraction si);
 
