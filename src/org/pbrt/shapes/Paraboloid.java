@@ -40,7 +40,7 @@ public class Paraboloid extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        //ProfilePhase p(Prof::ShapeIntersect);
+        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersect);
         float phi;
         Point3f pHit;
         // Transform _Ray_ to object space
@@ -134,6 +134,7 @@ public class Paraboloid extends Shape {
 
     @Override
     public boolean IntersectP(Ray r, boolean testAlphaTexture) {
+        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersectP);
         float phi;
         Point3f pHit;
         // Transform _Ray_ to object space

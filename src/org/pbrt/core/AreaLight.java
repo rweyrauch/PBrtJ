@@ -15,7 +15,10 @@ public abstract class AreaLight extends Light {
     public AreaLight(Transform LightToWorld, MediumInterface medium,
               int nSamples) {
         super(Light.FlagArea, LightToWorld, medium, nSamples);
+        numAreaLights.increment();
     }
     public abstract Spectrum L(Interaction intr, Vector3f w);
+
+    protected static Stats.STAT_COUNTER numAreaLights = new Stats.STAT_COUNTER("Scene/AreaLights");
 
 }

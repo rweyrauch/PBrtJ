@@ -64,14 +64,14 @@ public abstract class GlobalSampler extends Sampler {
         return super.SetSampleNumber(sampleNum);
     }
     public float Get1D() {
-        //ProfilePhase _(Prof::GetSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.GetSample);
         if (dimension >= arrayStartDim && dimension < arrayEndDim)
             dimension = arrayEndDim;
         return SampleDimension(intervalSampleIndex, dimension++);
 
     }
     public Point2f Get2D() {
-        //ProfilePhase _(Prof::GetSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.GetSample);
         if (dimension + 1 >= arrayStartDim && dimension < arrayEndDim)
             dimension = arrayEndDim;
         Point2f p = new Point2f(SampleDimension(intervalSampleIndex, dimension), SampleDimension(intervalSampleIndex, dimension + 1));

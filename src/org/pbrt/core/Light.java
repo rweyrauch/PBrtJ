@@ -83,6 +83,8 @@ public abstract class Light {
         this.mediumInterface = mediumInterface;
         this.LightToWorld = LightToWorld;
         this.WorldToLight = Transform.Inverse(LightToWorld);
+
+        numLights.increment();
     }
 
     public abstract LiResult Sample_Li(Interaction ref, Point2f u);
@@ -102,4 +104,7 @@ public abstract class Light {
 
     // Light Protected Data
     protected Transform LightToWorld, WorldToLight;
+
+    protected static Stats.STAT_COUNTER numLights = new Stats.STAT_COUNTER("Scene/Lights");
+
 }

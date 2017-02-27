@@ -55,7 +55,7 @@ public class RealisticCamera extends Camera {
 
     @Override
     public CameraRay GenerateRay(CameraSample sample) {
-        //ProfilePhase prof(Prof::GenerateCameraRay);
+        Stats.ProfilePhase prof = new Stats.ProfilePhase(Stats.Prof.GenerateCameraRay);
         //++totalRays;
         // Find point on film, _pFilm_, corresponding to _sample.pFilm_
         Point2f s = new Point2f(sample.pFilm.x / film.fullResolution.x, sample.pFilm.y / film.fullResolution.y);

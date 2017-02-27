@@ -39,7 +39,7 @@ public class Sphere extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        //ProfilePhase p(Prof::ShapeIntersect);
+        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersect);
         Float phi;
         Point3f pHit;
         // Transform _Ray_ to object space
@@ -141,7 +141,7 @@ public class Sphere extends Shape {
 
     @Override
     public boolean IntersectP(Ray r, boolean testAlphaTexture) {
-        //ProfilePhase p(Prof::ShapeIntersectP);
+        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersectP);
         Float phi;
         Point3f pHit;
         // Transform _Ray_ to object space

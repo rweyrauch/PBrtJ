@@ -51,7 +51,7 @@ public class BSDF {
                 ss.z * v.x + ts.z * v.y + ns.z * v.z);
     }
     public Spectrum f(Vector3f woW, Vector3f wiW, int flags) {
-        //ProfilePhase pp(Prof::BSDFEvaluation);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFEvaluation);
         Vector3f wi = WorldToLocal(wiW), wo = WorldToLocal(woW);
         if (wo.z == 0) return new Spectrum(0);
         boolean reflect = Normal3f.Dot(wiW, ng) * Normal3f.Dot(woW, ng) > 0;
@@ -88,7 +88,7 @@ public class BSDF {
     }
 
     public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u, int type) {
-        //ProfilePhase pp(Prof::BSDFSampling);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFSampling);
         // Choose which _BxDF_ to sample
         BxDF.BxDFSample sample = new BxDF.BxDFSample();
         sample.pdf = 0;
@@ -161,7 +161,7 @@ public class BSDF {
     }
 
     public float Pdf(Vector3f woWorld, Vector3f wiWorld, int flags) {
-        //ProfilePhase pp(Prof::BSDFPdf);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFPdf);
         if (nBxDFs == 0.f) return 0.f;
         Vector3f wo = WorldToLocal(woWorld), wi = WorldToLocal(wiWorld);
         if (wo.z == 0) return 0;

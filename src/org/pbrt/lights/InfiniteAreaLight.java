@@ -65,7 +65,7 @@ public class InfiniteAreaLight extends Light {
 
     @Override
     public LiResult Sample_Li(Interaction ref, Point2f u) {
-        //ProfilePhase _(Prof::LightSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         LiResult result = new LiResult();
         // Find $(u,v)$ sample coordinates in infinite light texture
         Distribution2D.ContSample samp = distribution.SampleContinuous(u);
@@ -109,7 +109,7 @@ public class InfiniteAreaLight extends Light {
 
     @Override
     public float Pdf_Li(Interaction ref, Vector3f w) {
-        //ProfilePhase _(Prof::LightPdf);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
         Vector3f wi = WorldToLight.xform(w);
         float theta = Vector3f.SphericalTheta(wi), phi = Vector3f.SphericalPhi(wi);
         float sinTheta = (float)Math.sin(theta);
@@ -120,7 +120,7 @@ public class InfiniteAreaLight extends Light {
     @Override
     public LeResult Sample_Le(Point2f u1, Point2f u2, float time) {
         LeResult result = new LeResult();
-        //ProfilePhase _(Prof::LightSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         // Compute direction for infinite light sample ray
         Point2f u = u1;
 
@@ -155,7 +155,7 @@ public class InfiniteAreaLight extends Light {
 
     @Override
     public PdfResult Pdf_Le(Ray ray, Normal3f nLight) {
-        //ProfilePhase _(Prof::LightPdf);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
         Vector3f d = WorldToLight.xform(ray.d).negate();
         float theta = Vector3f.SphericalTheta(d), phi = Vector3f.SphericalPhi(d);
         Point2f uv = new Point2f(phi / (float)Math.PI, theta / (float)Math.PI);

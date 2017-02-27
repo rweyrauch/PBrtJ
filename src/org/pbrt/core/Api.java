@@ -10,6 +10,8 @@
 
 package org.pbrt.core;
 
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.util.*;
 
 import org.pbrt.shapes.*;
@@ -335,7 +337,7 @@ public class Api {
         return shapes;
     }
 
-    private static int nMaterialsCreated = 0;
+    private static Stats.STAT_COUNTER nMaterialsCreated = new Stats.STAT_COUNTER("Scene/Materials created");
 
     private static Material MakeMaterial(String name, TextureParams mp) {
         Material material = null;
@@ -393,7 +395,7 @@ public class Api {
         if (material == null) {
             Error.Error("Unable to create material \"%s\"", name);
         } else {
-            ++nMaterialsCreated;
+            nMaterialsCreated.increment();
         }
         return material;
     }
@@ -631,7 +633,7 @@ public class Api {
         //SampledSpectrum.Init();
         //ParallelInit();  // Threads must be launched before the profiler is
         // initialized.
-        //InitProfiler();
+        Stats.InitProfiler();
     }
 
     public static void pbrtCleanup() {
@@ -1140,17 +1142,22 @@ public class Api {
         }
     }
 
+    private static Stats.STAT_COUNTER nObjectInstancesCreated = new Stats.STAT_COUNTER("Scene/Object instances created");
+
     public static void pbrtObjectEnd() {
         VERIFY_WORLD("ObjectEnd");
         if (renderOptions.currentInstance == null)
             Error.Error("ObjectEnd called outside of instance definition");
         renderOptions.currentInstance = null;
         pbrtAttributeEnd();
-        //++nObjectInstancesCreated;
+        nObjectInstancesCreated.increment();
+
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
             System.out.format("%sObjectEnd\n", new String(spaces, 0, catIndentCount));
         }
     }
+
+    private static Stats.STAT_COUNTER nObjectInstancesUsed = new Stats.STAT_COUNTER("Scene/Object instances used");
 
     public static void pbrtObjectInstance(String name) {
         VERIFY_WORLD("ObjectInstance");
@@ -1167,7 +1174,9 @@ public class Api {
         }
         ArrayList<Primitive> in = renderOptions.instances.get(name);
         if (in.isEmpty()) return;
-        //++nObjectInstancesUsed;
+
+        nObjectInstancesUsed.increment();
+
         if (in.size() > 1) {
             // Create aggregate for instance _Primitive_s
             Primitive[] primArray = new Primitive[1];
@@ -1222,12 +1231,12 @@ public class Api {
             }
 
             //MergeWorkerThreadStats();
-            //ReportThreadStats();
+            Stats.ReportThreadStats();
             if (!Pbrt.options.Quiet) {
-                //PrintStats(stdout);
-                //ReportProfilerResults(stdout);
-                //ClearStats();
-                //ClearProfiler();
+                Stats.PrintStats(new OutputStreamWriter(System.out));
+                Stats.ReportProfilerResults(new OutputStreamWriter(System.out));
+                Stats.ClearStats();
+                Stats.ClearProfiler();
             }
 
             //CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::IntegratorRender));

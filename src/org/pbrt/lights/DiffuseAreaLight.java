@@ -55,7 +55,7 @@ public class DiffuseAreaLight extends AreaLight {
     @Override
     public LiResult Sample_Li(Interaction ref, Point2f u) {
         LiResult result = new LiResult();
-        //ProfilePhase _(Prof::LightSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         Shape.SampleResult sampResult = shape.Sample(ref, u);
         Interaction pShape = sampResult.isect;
         result.pdf = sampResult.pdf;
@@ -78,14 +78,14 @@ public class DiffuseAreaLight extends AreaLight {
 
     @Override
     public float Pdf_Li(Interaction ref, Vector3f wi) {
-        //ProfilePhase _(Prof::LightPdf);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
         return shape.Pdf(ref, wi);
     }
 
     @Override
     public LeResult Sample_Le(Point2f u1, Point2f u2, float time) {
         LeResult result = new LeResult();
-        //ProfilePhase _(Prof::LightSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         // Sample a point on the area light's _Shape_, _pShape_
         Shape.SampleResult sampRes = shape.Sample(u1);
         Interaction pShape = sampRes.isect;
@@ -123,7 +123,7 @@ public class DiffuseAreaLight extends AreaLight {
     @Override
     public PdfResult Pdf_Le(Ray ray, Normal3f nLight) {
         PdfResult result = new PdfResult();
-        //ProfilePhase _(Prof::LightPdf);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
         Interaction it = new Interaction(ray.o, nLight, new Vector3f(), new Vector3f(nLight), ray.time, mediumInterface);
         result.pdfPos = shape.Pdf(it);
         result.pdfDir = twoSided ? (0.5f * Sampling.CosineHemispherePdf(Normal3f.AbsDot(nLight, ray.d)))

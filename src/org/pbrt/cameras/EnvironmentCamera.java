@@ -20,7 +20,7 @@ public class EnvironmentCamera extends Camera {
 
     @Override
     public CameraRay GenerateRay(CameraSample sample) {
-        //ProfilePhase prof(Prof::GenerateCameraRay);
+        Stats.ProfilePhase prof = new Stats.ProfilePhase(Stats.Prof.GenerateCameraRay);
         // Compute environment camera ray direction
         float theta = (float)Math.PI * sample.pFilm.y / film.fullResolution.y;
         float phi = 2 * (float)Math.PI * sample.pFilm.x / film.fullResolution.x;

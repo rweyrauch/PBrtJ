@@ -13,6 +13,7 @@ package org.pbrt.textures;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ImageTextureSpectrum extends Texture<Spectrum> {
 
@@ -20,17 +21,17 @@ public class ImageTextureSpectrum extends Texture<Spectrum> {
         // Initialize 2D texture mapping _map_ from _tp_
         TextureMapping2D map;
         String type = tp.FindString("mapping", "uv");
-        if (type == "uv") {
+        if (Objects.equals(type, "uv")) {
             float su = tp.FindFloat("uscale", 1);
             float sv = tp.FindFloat("vscale", 1);
             float du = tp.FindFloat("udelta", 0);
             float dv = tp.FindFloat("vdelta", 0);
             map = new UVMapping2D(su, sv, du, dv);
-        } else if (type == "spherical")
+        } else if (Objects.equals(type, "spherical"))
             map = new SphericalMapping2D(Transform.Inverse(tex2world));
-        else if (type == "cylindrical")
+        else if (Objects.equals(type, "cylindrical"))
             map = new CylindricalMapping2D(Transform.Inverse(tex2world));
-        else if (type == "planar")
+        else if (Objects.equals(type, "planar"))
             map = new PlanarMapping2D(tp.FindVector3f("v1", new Vector3f(1, 0, 0)),
                     tp.FindVector3f("v2", new Vector3f(0, 1, 0)),
                     tp.FindFloat("udelta", 0),
@@ -45,9 +46,9 @@ public class ImageTextureSpectrum extends Texture<Spectrum> {
         boolean trilerp = tp.FindBool("trilinear", false);
         String wrap = tp.FindString("wrap", "repeat");
         Texture.ImageWrap wrapMode = Texture.ImageWrap.Repeat;
-        if (wrap == "black")
+        if (Objects.equals(wrap, "black"))
             wrapMode = Texture.ImageWrap.Black;
-        else if (wrap == "clamp")
+        else if (Objects.equals(wrap, "clamp"))
             wrapMode = Texture.ImageWrap.Clamp;
         float scale = tp.FindFloat("scale", 1);
         String filename = tp.FindFilename("filename", "");
@@ -86,7 +87,7 @@ public class ImageTextureSpectrum extends Texture<Spectrum> {
             return texturesSpectrum.get(texInfo);
 
         // Create _MIPMap_ for _filename_
-        //ProfilePhase _(Prof::TextureLoading);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.TextureLoading);
         ImageIO.SpectrumImage image = ImageIO.Read(filename);
         if (image == null) {
             Error.Warning("Creating a constant grey texture to replace \"%s\".", filename);

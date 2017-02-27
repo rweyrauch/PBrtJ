@@ -44,7 +44,7 @@ public class Film {
             this.pixels = new FilmTilePixel[Math.max(0, pixelBounds.Area())];
         }
         public void AddSample(Point2f pFilm, Spectrum L, float sampleWeight) {
-            //ProfilePhase _(Prof::AddFilmSample);
+            Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.AddFilmSample);
             if (L.y() > maxSampleLuminance)
                 L.scale(maxSampleLuminance / L.y());
 
@@ -173,7 +173,7 @@ public class Film {
 
     }
     public void AddSplat(Point2f p, Spectrum v) {
-        //ProfilePhase pp(Prof::SplatFilm);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.SplatFilm);
 /*
         if (v.HasNaNs()) {
             //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);

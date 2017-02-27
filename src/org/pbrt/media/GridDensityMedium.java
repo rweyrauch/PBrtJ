@@ -72,7 +72,7 @@ public class GridDensityMedium extends Medium {
 
     @Override
     public Spectrum Tr(Ray rWorld, Sampler sampler) {
-        //ProfilePhase _(Prof::MediumTr);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumTr);
         ++nTrCalls;
 
         Ray ray = WorldToMedium.xform(new Ray(rWorld.o, Vector3f.Normalize(rWorld.d), rWorld.tMax * rWorld.d.Length(), 0, null));
@@ -103,7 +103,7 @@ public class GridDensityMedium extends Medium {
 
     @Override
     public MediumSample Sample(Ray rWorld, Sampler sampler) {
-        //ProfilePhase _(Prof::MediumSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumSample);
         MediumSample ms = new MediumSample();
         ms.spectrum = new Spectrum(1);
         ms.mi = null;

@@ -37,7 +37,7 @@ public class DistantLight extends Light {
 
     @Override
     public LiResult Sample_Li(Interaction ref, Point2f u) {
-        //ProfilePhase _(Prof::LightSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         LiResult result = new LiResult();
         result.wi = wLight;
         result.pdf = 1;
@@ -59,7 +59,7 @@ public class DistantLight extends Light {
 
     @Override
     public LeResult Sample_Le(Point2f u1, Point2f u2, float time) {
-        //ProfilePhase _(Prof::LightSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         LeResult result = new LeResult();
         // Choose point on disk oriented toward infinite light direction
         Vector3f.CoordSystem cs = Vector3f.CoordinateSystem(wLight);

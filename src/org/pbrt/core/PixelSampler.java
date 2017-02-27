@@ -41,7 +41,7 @@ public class PixelSampler extends Sampler {
 
     @Override
     public float Get1D() {
-        //ProfilePhase _(Prof::GetSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.GetSample);
         assert (currentPixelSampleIndex < samplesPerPixel);
         if (current1DDimension < samples1D.size())
             return samples1D.get(current1DDimension++)[currentPixelSampleIndex];
@@ -51,7 +51,7 @@ public class PixelSampler extends Sampler {
 
     @Override
     public Point2f Get2D() {
-        //ProfilePhase _(Prof::GetSample);
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.GetSample);
         assert (currentPixelSampleIndex < samplesPerPixel);
         if (current2DDimension < samples2D.size())
             return samples2D.get(current2DDimension++)[currentPixelSampleIndex];
