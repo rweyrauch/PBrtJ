@@ -114,7 +114,7 @@ public class MIPMapFloat {
                 weightLut[i] = (float)(Math.exp(-alpha * r2) - Math.exp(-alpha));
             }
         }
-        //mipMapMemory += (4 * resolution.x * resolution.y * sizeof(T)) / 3;
+        MIPMapSpectrum.mipMapMemory.increment((4 * resolution.x * resolution.y * 4) / 3);
     }
 
     public MIPMapFloat(Point2i resolution, float[] data, float black) {
@@ -148,7 +148,7 @@ public class MIPMapFloat {
 
     public float Lookup(Point2f st, float width) {
 
-        //++nTrilerpLookups;
+        MIPMapSpectrum.nTrilerpLookups.increment();
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltTrilerp);
         // Compute MIPMap level for trilinear filtering
         float level = Levels() - 1 + Pbrt.Log2((float)Math.max(width, 1e-8));
@@ -176,7 +176,7 @@ public class MIPMapFloat {
             return Lookup(st, 2 * width);
         }
 
-        //++nEWALookups;
+        MIPMapSpectrum.nEWALookups.increment();
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltEWA);
         // Compute ellipse minor and major axes
         if (dst0.LengthSquared() < dst1.LengthSquared()) {

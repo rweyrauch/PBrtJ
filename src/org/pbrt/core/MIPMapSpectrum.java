@@ -121,7 +121,7 @@ public class MIPMapSpectrum {
                 weightLut[i] = (float)(Math.exp(-alpha * r2) - Math.exp(-alpha));
             }
         }
-        //mipMapMemory += (4 * resolution.x * resolution.y * sizeof(T)) / 3;
+        mipMapMemory.increment(4 * resolution.x * resolution.y * (4*3) / 3); // todo: how to get useful size info from java?
     }
 
     public MIPMapSpectrum(Point2i resolution, Spectrum[] data, Spectrum black) {
@@ -155,7 +155,7 @@ public class MIPMapSpectrum {
 
     public Spectrum Lookup(Point2f st, float width) {
 
-        //++nTrilerpLookups;
+        nTrilerpLookups.increment();
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltTrilerp);
         // Compute MIPMap level for trilinear filtering
         float level = Levels() - 1 + Pbrt.Log2((float)Math.max(width, 1e-8));
@@ -183,7 +183,7 @@ public class MIPMapSpectrum {
             return Lookup(st, 2 * width);
         }
 
-        //++nEWALookups;
+        nEWALookups.increment();
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltEWA);
         // Compute ellipse minor and major axes
         if (dst0.LengthSquared() < dst1.LengthSquared()) {
@@ -298,4 +298,7 @@ public class MIPMapSpectrum {
     private static final int WeightLUTSize = 128;
     private static float[] weightLut = new float[WeightLUTSize];
 
+    public static Stats.STAT_COUNTER nEWALookups = new Stats.STAT_COUNTER("Texture/EWA lookups");
+    public static Stats.STAT_COUNTER nTrilerpLookups = new Stats.STAT_COUNTER("Texture/Trilinear lookups");
+    public static Stats.STAT_MEMORY_COUNTER mipMapMemory = new Stats.STAT_MEMORY_COUNTER("Memory/Texture MIP maps");
 }

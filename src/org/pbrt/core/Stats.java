@@ -65,8 +65,8 @@ public class Stats {
             STATS_FUNC(accum);
         }
 
-        public void increment() {
-            var.set(var.get()+1);
+        public void increment(int value) {
+            var.set(var.get()+value);
         }
     }
 
@@ -179,7 +179,7 @@ public class Stats {
 
     public static long ProfToBits(Prof p) { return 1L << p.ordinal(); }
 
-    private static long ProfilerState;
+    public static long ProfilerState;
     public static long CurrentProfilerState() { return ProfilerState; }
 
     private static AtomicBoolean profilerRunning = new AtomicBoolean(false);

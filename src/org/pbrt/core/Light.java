@@ -18,6 +18,10 @@ public abstract class Light {
     public static final int FlagArea = 4;
     public static final int FlagInfinite = 8;
 
+    public static boolean IsDeltaLight(int flags) {
+        return ((flags & FlagDeltaPosition) != 0) || ((flags & FlagDeltaDirection) != 0);
+    }
+
     public static class VisibilityTester {
         private Interaction p0, p1;
 

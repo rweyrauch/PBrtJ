@@ -32,6 +32,7 @@ public abstract class Shape {
         this.WorldToObject = WorldToObject;
         this.reverseOrientation = reverseOrientation;
         this.transformSwapsHandedness = ObjectToWorld.SwapsHandedness();
+        nShapesCreated.increment();
     }
 
     public abstract Bounds3f ObjectBound();
@@ -98,4 +99,5 @@ public abstract class Shape {
         return (float)solidAngle / nSamples;
     }
 
+    private static Stats.STAT_COUNTER nShapesCreated = new Stats.STAT_COUNTER("Scene/Shapes created");
 }
