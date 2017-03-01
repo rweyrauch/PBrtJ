@@ -36,7 +36,7 @@ public abstract class Light {
         }
         public Interaction P0() { return p0; }
         public Interaction P1() { return p1; }
-        boolean Unoccluded(Scene scene) {
+        public boolean Unoccluded(Scene scene) {
             return !scene.IntersectP(p0.SpawnRayTo(p1));
         }
         Spectrum Tr(Scene scene, Sampler sampler) {

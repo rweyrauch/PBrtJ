@@ -18,10 +18,10 @@ public class Scene {
     private Bounds3f worldBound;
 
     // Scene Public Data
-    ArrayList<Light> lights = new ArrayList<>();
+    public ArrayList<Light> lights = new ArrayList<>();
     // Store infinite light sources separately for cases where we only want
     // to loop over them.
-    ArrayList<Light> infiniteLights = new ArrayList<>();
+    public ArrayList<Light> infiniteLights = new ArrayList<>();
 
     // Scene Public Methods
     public Scene(Primitive aggregate,

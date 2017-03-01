@@ -49,6 +49,7 @@ public class Stats {
         public STAT_MEMORY_COUNTER(String title) {
             this.title = title;
             this.STATS_REG = new StatRegisterer(this);
+            var.set(0L);
         }
 
         public void STATS_FUNC(StatsAccumulator accum) {
@@ -58,7 +59,7 @@ public class Stats {
 
         public StatRegisterer STATS_REG;
         private final String title;
-        public ThreadLocal<Long> var;
+        public ThreadLocal<Long> var = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
@@ -74,12 +75,21 @@ public class Stats {
         public STAT_PERCENT(String title) {
             this.title = title;
             this.STATS_REG = new StatRegisterer(this);
+            numVar.set(0L);
+            denomVar.set(0L);
         }
 
         public void STATS_FUNC(StatsAccumulator accum) {
             accum.ReportPercentage(title, numVar.get(), denomVar.get());
             numVar.set(0L);
             denomVar.set(0L);
+        }
+
+        public void incrementNumer(int value) {
+            numVar.set(numVar.get()+value);
+        }
+        public void incrementDenom(int value) {
+            denomVar.set(denomVar.get()+value);
         }
 
         public StatRegisterer STATS_REG;
@@ -97,6 +107,8 @@ public class Stats {
         public STAT_RATIO(String title) {
             this.title = title;
             this.STATS_REG = new StatRegisterer(this);
+            numVar.set(0L);
+            denomVar.set(0L);
         }
 
         public void STATS_FUNC(StatsAccumulator accum) {
@@ -105,10 +117,79 @@ public class Stats {
             denomVar.set(0L);
         }
 
+        public void incrementNumer(int value) {
+            numVar.set(numVar.get()+value);
+        }
+        public void incrementDenom(int value) {
+            denomVar.set(denomVar.get()+value);
+        }
+
         public StatRegisterer STATS_REG;
         private final String title;
         public ThreadLocal<Long> numVar = new ThreadLocal<>();
         public ThreadLocal<Long> denomVar = new ThreadLocal<>();
+
+        @Override
+        public void accept(StatsAccumulator accum) {
+            STATS_FUNC(accum);
+        }
+    }
+
+    public static class STAT_INT_DISTRIBUTION implements Consumer<StatsAccumulator> {
+        public STAT_INT_DISTRIBUTION(String title) {
+            this.title = title;
+            this.STATS_REG = new StatRegisterer(this);
+            sumVar.set(0L);
+            countVar.set(0L);
+            minVar.set(Long.MIN_VALUE);
+            maxVar.set(Long.MAX_VALUE);
+        }
+
+        public void STATS_FUNC(StatsAccumulator accum) {
+            accum.ReportIntDistribution(title, sumVar.get(), countVar.get(), minVar.get(), maxVar.get());
+            sumVar.set(0L);
+            countVar.set(0L);
+            minVar.set(Long.MAX_VALUE);
+            maxVar.set(Long.MIN_VALUE);
+        }
+
+        public StatRegisterer STATS_REG;
+        private final String title;
+        public ThreadLocal<Long> sumVar = new ThreadLocal<>();
+        public ThreadLocal<Long> countVar = new ThreadLocal<>();
+        public ThreadLocal<Long> minVar = new ThreadLocal<>();
+        public ThreadLocal<Long> maxVar = new ThreadLocal<>();
+
+        @Override
+        public void accept(StatsAccumulator accum) {
+            STATS_FUNC(accum);
+        }
+    }
+
+    public static class STAT_FLOAT_DISTRIBUTION implements Consumer<StatsAccumulator> {
+        public STAT_FLOAT_DISTRIBUTION(String title) {
+            this.title = title;
+            this.STATS_REG = new StatRegisterer(this);
+            sumVar.set(0.0);
+            countVar.set(0L);
+            minVar.set(Double.MIN_VALUE);
+            maxVar.set(Double.MAX_VALUE);
+        }
+
+        public void STATS_FUNC(StatsAccumulator accum) {
+            accum.ReportFloatDistribution(title, sumVar.get(), countVar.get(), minVar.get(), maxVar.get());
+            sumVar.set(0.0);
+            countVar.set(0L);
+            minVar.set(Double.MAX_VALUE);
+            maxVar.set(Double.MIN_VALUE);
+        }
+
+        public StatRegisterer STATS_REG;
+        private final String title;
+        public ThreadLocal<Double> sumVar = new ThreadLocal<>();
+        public ThreadLocal<Long> countVar = new ThreadLocal<>();
+        public ThreadLocal<Double> minVar = new ThreadLocal<>();
+        public ThreadLocal<Double> maxVar = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
