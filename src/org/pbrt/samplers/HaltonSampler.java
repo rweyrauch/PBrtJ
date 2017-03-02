@@ -129,7 +129,7 @@ public class HaltonSampler extends GlobalSampler {
     private Short[] PermutationForDimension(int dim) {
         if (dim >= LowDiscrepancy.PrimeTableSize)
             Error.Error("HaltonSampler can only sample %d dimensions.", LowDiscrepancy.PrimeTableSize);
-        return Arrays.copyOfRange(radicalInversePermutations, LowDiscrepancy.PrimeSums[dim], samplesPerPixel);
+        return Arrays.copyOfRange(radicalInversePermutations, LowDiscrepancy.PrimeSums[dim], LowDiscrepancy.PrimeSums[dim] + samplesPerPixel);
     }
 
     private static class ExtGCD {

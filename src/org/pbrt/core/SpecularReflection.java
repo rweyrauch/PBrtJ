@@ -19,7 +19,21 @@ public class SpecularReflection extends BxDF {
 
     @Override
     public Spectrum f(Vector3f wo, Vector3f wi) {
-        return null;
+        return new Spectrum(0);
+    }
+
+    @Override
+    public BxDFSample Sample_f(Vector3f wo, Point2f u) {
+        BxDFSample bs = new BxDFSample();
+        bs.wiWorld = new Vector3f(-wo.x, -wo.y, wo.z);
+        bs.pdf = 1;
+        bs.f = fresnel.Evaluate(Reflection.CosTheta(bs.wiWorld)).multiply(R.scale(1 / Reflection.AbsCosTheta(bs.wiWorld)));
+        return bs;
+    }
+
+    @Override
+    public float Pdf(Vector3f wo, Vector3f wi) {
+        return 0;
     }
 
     @Override

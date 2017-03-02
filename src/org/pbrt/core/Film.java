@@ -42,6 +42,9 @@ public class Film {
             this.filterTableSize = filterTableSize;
             this.maxSampleLuminance = maxSampleLuminance;
             this.pixels = new FilmTilePixel[Math.max(0, pixelBounds.Area())];
+            for (int i = 0; i < this.pixels.length; i++) {
+                this.pixels[i] = new FilmTilePixel();
+            }
         }
         public void AddSample(Point2f pFilm, Spectrum L, float sampleWeight) {
             Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.AddFilmSample);
@@ -164,7 +167,7 @@ public class Film {
         int nPixels = croppedPixelBounds.Area();
         for (int i = 0; i < nPixels; ++i) {
             Pixel p = pixels[i];
-            img[i].ToXYZ(p.xyz);
+            p.xyz = img[i].toXYZ();
             p.filterWeightSum = 1;
             p.splatXYZ[0].set(0);
             p.splatXYZ[1].set(0);
@@ -174,8 +177,8 @@ public class Film {
     }
     public void AddSplat(Point2f p, Spectrum v) {
         Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.SplatFilm);
-/*
-        if (v.HasNaNs()) {
+
+        if (v.hasNaNs()) {
             //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
             return;
         } else if (v.y() < 0) {
@@ -186,66 +189,75 @@ public class Film {
             return;
         }
 
-        if (!InsideExclusive((Point2i)p, croppedPixelBounds)) return;
+        if (!Bounds2i.InsideExclusive(new Point2i(p), croppedPixelBounds)) return;
         if (v.y() > maxSampleLuminance)
-            v *= maxSampleLuminance / v.y();
-        float[] xyz = Spectrum.ToXYZ(v);
+            v = v.scale(maxSampleLuminance / v.y());
+        float[] xyz = v.toXYZ();
         Pixel pixel = GetPixel(new Point2i(p));
         for (int i = 0; i < 3; ++i) pixel.splatXYZ[i].add(xyz[i]);
-        */
+
     }
 
     public void WriteImage(float splatScale) {
-        /*
+
         // Convert image to RGB and compute final pixel values
         //LOG(INFO) << "Converting image to RGB and computing final weighted pixel values";
-        float[] rgb = new float[3 * croppedPixelBounds.Area()]);
+        float[] pixRGB = new float[3];
+        float[] splatRGB = new float[3];
+        float[] rgb = new float[3 * croppedPixelBounds.Area()];
         int offset = 0;
-        for (Point2i p : croppedPixelBounds) {
-            // Convert pixel XYZ color to RGB
-            Pixel pixel = GetPixel(p);
-            XYZToRGB(pixel.xyz, rgb[3 * offset]);
+        for (int py = croppedPixelBounds.pMin.y; py < croppedPixelBounds.pMax.y; py++) {
+            for (int px = croppedPixelBounds.pMin.x; px < croppedPixelBounds.pMax.x; px++) {
+                Point2i p = new Point2i(px, py);
 
-            // Normalize pixel with weight sum
-            float filterWeightSum = pixel.filterWeightSum;
-            if (filterWeightSum != 0) {
-                float invWt = 1 / filterWeightSum;
-                rgb[3 * offset] = Math.max(0, rgb[3 * offset] * invWt);
-                rgb[3 * offset + 1] = Math.max(0, rgb[3 * offset + 1] * invWt);
-                rgb[3 * offset + 2] = Math.max(0, rgb[3 * offset + 2] * invWt);
+                // Convert pixel XYZ color to RGB
+                Pixel pixel = GetPixel(p);
+                pixRGB = Spectrum.XYZToRGB(pixel.xyz, pixRGB);
+                rgb[3 * offset] = pixRGB[0];
+                rgb[3 * offset+1] = pixRGB[1];
+                rgb[3 * offset+2] = pixRGB[2];
+
+                // Normalize pixel with weight sum
+                float filterWeightSum = pixel.filterWeightSum;
+                if (filterWeightSum != 0) {
+                    float invWt = 1 / filterWeightSum;
+                    rgb[3 * offset] = Math.max(0, rgb[3 * offset] * invWt);
+                    rgb[3 * offset + 1] = Math.max(0, rgb[3 * offset + 1] * invWt);
+                    rgb[3 * offset + 2] = Math.max(0, rgb[3 * offset + 2] * invWt);
+                }
+
+                // Add splat value at pixel
+                float[] splatXYZ = {pixel.splatXYZ[0].get(), pixel.splatXYZ[1].get(), pixel.splatXYZ[2].get()};
+                splatRGB = Spectrum.XYZToRGB(splatXYZ, splatRGB);
+                rgb[3 * offset] += splatScale * splatRGB[0];
+                rgb[3 * offset + 1] += splatScale * splatRGB[1];
+                rgb[3 * offset + 2] += splatScale * splatRGB[2];
+
+                // Scale pixel value by _scale_
+                rgb[3 * offset] *= scale;
+                rgb[3 * offset + 1] *= scale;
+                rgb[3 * offset + 2] *= scale;
+                ++offset;
             }
-
-            // Add splat value at pixel
-            float[] splatRGB = new float[3];
-            float[] splatXYZ = {pixel.splatXYZ[0].get(), pixel.splatXYZ[1].get(), pixel.splatXYZ[2].get()};
-            XYZToRGB(splatXYZ, splatRGB);
-            rgb[3 * offset] += splatScale * splatRGB[0];
-            rgb[3 * offset + 1] += splatScale * splatRGB[1];
-            rgb[3 * offset + 2] += splatScale * splatRGB[2];
-
-            // Scale pixel value by _scale_
-            rgb[3 * offset] *= scale;
-            rgb[3 * offset + 1] *= scale;
-            rgb[3 * offset + 2] *= scale;
-            ++offset;
         }
 
         // Write RGB image
         //LOG(INFO) << "Writing image " << filename << " with bounds " << croppedPixelBounds;
         ImageIO.Write(filename, rgb, croppedPixelBounds, fullResolution);
-        */
     }
+
     public void Clear() {
-        /*
-        for (Point2i p : croppedPixelBounds) {
-            Pixel pixel = GetPixel(p);
-            for (int c = 0; c < 3; ++c) {
-                pixel.splatXYZ[c].set(0);
-                pixel.xyz[c] = 0;
+        for (int py = croppedPixelBounds.pMin.y; py < croppedPixelBounds.pMax.y; py++) {
+            for (int px = croppedPixelBounds.pMin.x; px < croppedPixelBounds.pMax.x; px++) {
+                Point2i p = new Point2i(px, py);
+                Pixel pixel = GetPixel(p);
+                for (int c = 0; c < 3; ++c) {
+                    pixel.splatXYZ[c].set(0);
+                    pixel.xyz[c] = 0;
+                }
+                pixel.filterWeightSum = 0;
             }
-            pixel.filterWeightSum = 0;
         }
-        */
     }
 
     // Film Public Data

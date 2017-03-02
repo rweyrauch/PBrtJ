@@ -49,21 +49,9 @@ public class ProgressReporter extends Thread {
         }
     }
 
-    protected void finalize() {
-        if (!Pbrt.options.Quiet) {
-            workDone.set(totalWork);
-            exitThread.set(true);
-            try {
-                this.join();
-            } catch (InterruptedException intr) {
-
-            }
-            System.out.println("");
-        }
-    }
     public void Update(long num) {
         if (num == 0 || Pbrt.options.Quiet) return;
-        workDone.getAndAdd(num);
+        workDone.set(workDone.get()+num);
     }
 
     public float ElapsedMS() {
@@ -90,6 +78,18 @@ public class ProgressReporter extends Thread {
         PrintBar();
     }
 
+    public void Exit() {
+        if (!Pbrt.options.Quiet) {
+            workDone.set(totalWork);
+            exitThread.set(true);
+            try {
+                this.join();
+            } catch (InterruptedException intr) {
+
+            }
+            System.out.println("");
+        }
+    }
     private void PrintBar() {
         int barLength = TerminalWidth() - 28;
         int totalPlusses = Math.max(2, barLength - title.length());
@@ -97,12 +97,22 @@ public class ProgressReporter extends Thread {
 
         // Initialize progress string
         final int bufLen = title.length() + totalPlusses + 64;
-        String buf = String.format("\r%s: [", title);
-        int curSpace = buf.length();
-        int s = curSpace;
-        for (int i = 0; i < totalPlusses; ++i) buf += ' ';
-        buf += ']';
-        buf += ' ';
+        char[] buf = new char[bufLen];
+        int s = 0;
+        buf[s++] = '\r';
+        for (int i = 0; i < title.length(); i++) {
+            buf[s++] = title.charAt(i);
+        }
+        buf[s++] = ':';
+        buf[s++] = ' ';
+        buf[s++] = '[';
+
+        int curSpace = s;
+
+        for (int i = 0; i < totalPlusses; ++i) buf[s+i] = ' ';
+        s += totalPlusses;
+        buf[s++] = ']';
+        buf[s++] = ' ';
         System.out.print(buf);
         System.out.flush();
 
@@ -131,10 +141,10 @@ public class ProgressReporter extends Thread {
             float percentDone = (float)(workDone.get()) / (float)(totalWork);
             int plussesNeeded = (int)Math.round(totalPlusses * percentDone);
             while (plussesPrinted < plussesNeeded) {
-            //    curSpace++ = '+';
+                buf[curSpace++] = '+';
                 ++plussesPrinted;
             }
-            //fputs(buf.get(), stdout);
+            System.out.print(buf);
 
             // Update elapsed time and estimated time to completion
             float seconds = ElapsedMS() / 1000.f;

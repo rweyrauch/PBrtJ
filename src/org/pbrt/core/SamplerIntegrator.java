@@ -127,6 +127,7 @@ public abstract class SamplerIntegrator extends Integrator {
             reporter.Done();
         }
         //LOG(INFO) << "Rendering finished";
+        reporter.Exit();
 
         // Save final image after rendering
         camera.film.WriteImage(1);

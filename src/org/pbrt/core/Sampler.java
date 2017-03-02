@@ -19,11 +19,12 @@ public abstract class Sampler {
     public int samplesPerPixel;
 
     // Sampler Protected Data
-    protected Point2i currentPixel;
+    protected Point2i currentPixel = new Point2i();
     protected int currentPixelSampleIndex;
-    protected ArrayList<Integer> samples1DArraySizes, samples2DArraySizes;
-    protected ArrayList<Float[]> sampleArray1D;
-    protected ArrayList<Point2f[]> sampleArray2D;
+    protected ArrayList<Integer> samples1DArraySizes = new ArrayList<>();
+    protected ArrayList<Integer> samples2DArraySizes = new ArrayList<>();
+    protected ArrayList<Float[]> sampleArray1D = new ArrayList<>();
+    protected ArrayList<Point2f[]> sampleArray2D = new ArrayList<>();
 
     // Sampler Private Data
     private int array1DOffset, array2DOffset;

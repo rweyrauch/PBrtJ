@@ -267,8 +267,9 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         return rgb;
     }
 
-    public void ToXYZ(float[] xyz) {
-        RGBToXYZ(c, xyz);
+    public float[] toXYZ() {
+        float[] xyz = new float[3];
+        return RGBToXYZ(c, xyz);
     }
 
     public static Spectrum FromXYZ(float[] xyz) {
@@ -360,16 +361,18 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         return sum / (lambdaEnd - lambdaStart);
     }
 
-    public static void XYZToRGB(float[] xyz, float[] rgb) {
+    public static float[] XYZToRGB(float[] xyz, float[] rgb) {
         rgb[0] = 3.240479f * xyz[0] - 1.537150f * xyz[1] - 0.498535f * xyz[2];
         rgb[1] = -0.969256f * xyz[0] + 1.875991f * xyz[1] + 0.041556f * xyz[2];
         rgb[2] = 0.055648f * xyz[0] - 0.204043f * xyz[1] + 1.057311f * xyz[2];
+        return rgb;
     }
 
-    public static void RGBToXYZ(float[] rgb, float[] xyz) {
+    public static float[] RGBToXYZ(float[] rgb, float[] xyz) {
         xyz[0] = 0.412453f * rgb[0] + 0.357580f * rgb[1] + 0.180423f * rgb[2];
         xyz[1] = 0.212671f * rgb[0] + 0.715160f * rgb[1] + 0.072169f * rgb[2];
         xyz[2] = 0.019334f * rgb[0] + 0.119193f * rgb[1] + 0.950227f * rgb[2];
+        return xyz;
     }
 
     public static float InterpolateSpectrumSamples(float[] lambda, float[] vals, float l) {
