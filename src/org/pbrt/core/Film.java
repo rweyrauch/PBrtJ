@@ -124,6 +124,7 @@ public class Film {
 
         // Allocate film image storage
         this.pixels = new Pixel[croppedPixelBounds.Area()];
+        for (int i = 0; i < this.pixels.length; i++) this.pixels[i] = new Pixel();
 
         // Precompute filter weight table
         int offset = 0;

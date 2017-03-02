@@ -2276,7 +2276,9 @@ public class LowDiscrepancy {
             case 2:
                 return ScrambledRadicalInverseSpecialized(5,perm, a);
             case 3:
+            default:
                 return ScrambledRadicalInverseSpecialized(7,perm, a);
+/*
             // Remainder of cases for _ScrambledRadicalInverse()_
             case 4:
                 return ScrambledRadicalInverseSpecialized(11,perm, a);
@@ -4321,6 +4323,7 @@ public class LowDiscrepancy {
             default:
                 Error.Error("Base %d is >= 1024, the limit of ScrambledRadicalInverse", baseIndex);
                 return 0;
+*/
         }
     }
 
