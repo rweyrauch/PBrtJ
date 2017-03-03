@@ -9,8 +9,6 @@
 
 package org.pbrt.core;
 
-import org.pbrt.textures.WindyTexture;
-
 public class Interpolation {
 
     // Spline Interpolation Declarations

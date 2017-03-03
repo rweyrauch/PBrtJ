@@ -10,7 +10,7 @@
 
 package org.pbrt.core;
 
-import static org.pbrt.core.Medium.PhaseHG;
+import java.util.Arrays;
 
 public abstract class BSSRDF {
 
@@ -94,7 +94,7 @@ public abstract class BSSRDF {
 
             // Add contribution of single scattering at depth $t$
             Ess += rho * (float)Math.exp(-sigma_t * (d + tCrit)) / (d * d) *
-                    PhaseHG(cosThetaO, g) * (1 - Reflection.FrDielectric(-cosThetaO, 1, eta)) *
+                    Medium.PhaseHG(cosThetaO, g) * (1 - Reflection.FrDielectric(-cosThetaO, 1, eta)) *
                     Math.abs(cosThetaO);
         }
         return Ess / nSamples;
@@ -153,7 +153,35 @@ public abstract class BSSRDF {
         }
         return Ed / nSamples;
     }
+
     public static BSSRDFTable ComputeBeamDiffusionBSSRDF(float g, float eta, BSSRDFTable t) {
+        // Choose radius values of the diffusion profile discretization
+        t.radiusSamples[0] = 0;
+        t.radiusSamples[1] = 2.5e-3f;
+        for (int i = 2; i < t.nRadiusSamples; ++i)
+            t.radiusSamples[i] = t.radiusSamples[i - 1] * 1.2f;
+
+        // Choose albedo values of the diffusion profile discretization
+        for (int i = 0; i < t.nRhoSamples; ++i)
+            t.rhoSamples[i] = (1 - (float)Math.exp(-8 * i / (float)(t.nRhoSamples - 1))) / (1 - (float)Math.exp(-8));
+
+        for (int i = 0; i < t.nRhoSamples; i++) {
+            // Compute the diffusion profile for the _i_th albedo sample
+
+            // Compute scattering profile for chosen albedo $\rho$
+            for (int j = 0; j < t.nRadiusSamples; ++j) {
+                float rho = t.rhoSamples[i], r = t.radiusSamples[j];
+                t.profile[i * t.nRadiusSamples + j] =
+                        2 * (float)Math.PI * r * (BeamDiffusionSS(rho, 1 - rho, g, eta, r) +
+                                BeamDiffusionMS(rho, 1 - rho, g, eta, r));
+            }
+
+            // Compute effective albedo $\rho_{\roman{eff}}$ and CDF for importance
+            // sampling
+            Interpolation.IntegCR icr = Interpolation.IntegrateCatmullRom(t.nRadiusSamples, t.radiusSamples, Arrays.copyOfRange(t.profile, i * t.nRadiusSamples, (i+1)*t.nRadiusSamples));
+            t.rhoEff[i] = icr.sum;
+            t.profileCDF = icr.cdf;
+        }
         return t;
     }
 
@@ -161,9 +189,17 @@ public abstract class BSSRDF {
         public Spectrum sigma_a;
         public Spectrum sigma_s;
     }
-    public static SubsurfaceSpectrum SubsurfaceFromDiffuse(BSSRDFTable table, Spectrum rhoEff,
-                            Spectrum mfp) {
-        return null;
+    public static SubsurfaceSpectrum SubsurfaceFromDiffuse(BSSRDFTable table, Spectrum rhoEff, Spectrum mfp) {
+        SubsurfaceSpectrum ss = new SubsurfaceSpectrum();
+        ss.sigma_a = new Spectrum(0);
+        ss.sigma_s = new Spectrum(0);
+        for (int c = 0; c < Spectrum.nSamples; ++c) {
+            float rho = Interpolation.InvertCatmullRom(table.nRhoSamples, table.rhoSamples,
+                    table.rhoEff, rhoEff.at(c));
+            ss.sigma_s.set(c, rho / mfp.at(c));
+            ss.sigma_a.set(c, (1 - rho) / mfp.at(c));
+        }
+        return ss;
     }
 
 }
