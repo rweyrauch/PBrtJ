@@ -9,6 +9,9 @@
 
 package org.pbrt.core;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public final class SobolMatrices {
 
     public static final int NumSobolDimensions = 1024;
@@ -16,6 +19,29 @@ public final class SobolMatrices {
 
     public static final int[] SobolMatrices32 = new int[NumSobolDimensions*SobolMatrixSize];
     public static final long[] SobolMatrices64 = new long[NumSobolDimensions*SobolMatrixSize];
+
+    static {
+        try {
+            FileInputStream fis = new FileInputStream("sobel32.dat");
+            byte[] buf = new byte[4];
+            for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
+                fis.read(buf);
+                SobolMatrices32[i] = (buf[3]) | (buf[2] << 8) | (buf[1] << 16) | (buf[0] << 24);
+            }
+            fis.close();
+
+            byte[] buf64 = new byte[8];
+            fis = new FileInputStream("sobel64.dat");
+            for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
+                fis.read(buf64);
+                SobolMatrices32[i] = (buf64[7]) | (buf64[6] << 8) | (buf64[5] << 16) | (buf64[4] << 24) |
+                        (buf64[3] << 32) | (buf64[2] << 40) | (buf64[1] << 48) | (buf64[0] << 54);
+            }
+            fis.close();
+        }
+        catch (IOException e) {
+        }
+    }
 
     public static final long[][] VdCSobolMatrices = {
             {// m = 1

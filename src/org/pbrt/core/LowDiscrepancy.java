@@ -27,20 +27,20 @@ public class LowDiscrepancy {
         return (n0 << 32) | n1;
     }
 
-    private static float ScrambledRadicalInverseSpecialized(int base, Short[] perm, long a) {
+    private static float ScrambledRadicalInverseSpecialized(int base, Short[] perm, long a, int pi) {
         float invBase = 1 / (float)base;
         long reversedDigits = 0;
         float invBaseN = 1;
         while (a != 0) {
             long next = a / base;
             long digit = a - next * base;
-            assert (perm[(int)digit] < base);
-            reversedDigits = reversedDigits * base + perm[(int)digit];
+            assert (perm[pi + (int)digit] < base);
+            reversedDigits = reversedDigits * base + perm[pi + (int)digit];
             invBaseN *= invBase;
             a = next;
         }
-        assert (invBaseN * (reversedDigits + invBase * perm[0] / (1 - invBase)) < 1.00001);
-        return Math.min(invBaseN * (reversedDigits + invBase * perm[0] / (1 - invBase)), Pbrt.OneMinusEpsilon);
+        assert (invBaseN * (reversedDigits + invBase * perm[pi] / (1 - invBase)) < 1.00001);
+        return Math.min(invBaseN * (reversedDigits + invBase * perm[pi] / (1 - invBase)), Pbrt.OneMinusEpsilon);
     }
 
     private static float RadicalInverseSpecialized(int base, long a) {
@@ -2267,2063 +2267,2060 @@ public class LowDiscrepancy {
         return samples;
     }
 
-    public static float ScrambledRadicalInverse(int baseIndex, long a, Short[] perm) {
+    public static float ScrambledRadicalInverse(int baseIndex, long a, Short[] perm, int pi) {
         switch (baseIndex) {
             case 0:
-                return ScrambledRadicalInverseSpecialized(2,perm, a);
+                return ScrambledRadicalInverseSpecialized(2,perm, a, pi);
             case 1:
-                return ScrambledRadicalInverseSpecialized(3,perm, a);
+                return ScrambledRadicalInverseSpecialized(3,perm, a, pi);
             case 2:
-                return ScrambledRadicalInverseSpecialized(5,perm, a);
+                return ScrambledRadicalInverseSpecialized(5,perm, a, pi);
             case 3:
-            default:
-                return ScrambledRadicalInverseSpecialized(7,perm, a);
-/*
+                return ScrambledRadicalInverseSpecialized(7,perm, a, pi);
             // Remainder of cases for _ScrambledRadicalInverse()_
             case 4:
-                return ScrambledRadicalInverseSpecialized(11,perm, a);
+                return ScrambledRadicalInverseSpecialized(11,perm, a, pi);
             case 5:
-                return ScrambledRadicalInverseSpecialized(13,perm, a);
+                return ScrambledRadicalInverseSpecialized(13,perm, a, pi);
             case 6:
-                return ScrambledRadicalInverseSpecialized(17,perm, a);
+                return ScrambledRadicalInverseSpecialized(17,perm, a, pi);
             case 7:
-                return ScrambledRadicalInverseSpecialized(19,perm, a);
+                return ScrambledRadicalInverseSpecialized(19,perm, a, pi);
             case 8:
-                return ScrambledRadicalInverseSpecialized(23,perm, a);
+                return ScrambledRadicalInverseSpecialized(23,perm, a, pi);
             case 9:
-                return ScrambledRadicalInverseSpecialized(29,perm, a);
+                return ScrambledRadicalInverseSpecialized(29,perm, a, pi);
             case 10:
-                return ScrambledRadicalInverseSpecialized(31,perm, a);
+                return ScrambledRadicalInverseSpecialized(31,perm, a, pi);
             case 11:
-                return ScrambledRadicalInverseSpecialized(37,perm, a);
+                return ScrambledRadicalInverseSpecialized(37,perm, a, pi);
             case 12:
-                return ScrambledRadicalInverseSpecialized(41,perm, a);
+                return ScrambledRadicalInverseSpecialized(41,perm, a, pi);
             case 13:
-                return ScrambledRadicalInverseSpecialized(43,perm, a);
+                return ScrambledRadicalInverseSpecialized(43,perm, a, pi);
             case 14:
-                return ScrambledRadicalInverseSpecialized(47,perm, a);
+                return ScrambledRadicalInverseSpecialized(47,perm, a, pi);
             case 15:
-                return ScrambledRadicalInverseSpecialized(53,perm, a);
+                return ScrambledRadicalInverseSpecialized(53,perm, a, pi);
             case 16:
-                return ScrambledRadicalInverseSpecialized(59,perm, a);
+                return ScrambledRadicalInverseSpecialized(59,perm, a, pi);
             case 17:
-                return ScrambledRadicalInverseSpecialized(61,perm, a);
+                return ScrambledRadicalInverseSpecialized(61,perm, a, pi);
             case 18:
-                return ScrambledRadicalInverseSpecialized(67,perm, a);
+                return ScrambledRadicalInverseSpecialized(67,perm, a, pi);
             case 19:
-                return ScrambledRadicalInverseSpecialized(71,perm, a);
+                return ScrambledRadicalInverseSpecialized(71,perm, a, pi);
             case 20:
-                return ScrambledRadicalInverseSpecialized(73,perm, a);
+                return ScrambledRadicalInverseSpecialized(73,perm, a, pi);
             case 21:
-                return ScrambledRadicalInverseSpecialized(79,perm, a);
+                return ScrambledRadicalInverseSpecialized(79,perm, a, pi);
             case 22:
-                return ScrambledRadicalInverseSpecialized(83,perm, a);
+                return ScrambledRadicalInverseSpecialized(83,perm, a, pi);
             case 23:
-                return ScrambledRadicalInverseSpecialized(89,perm, a);
+                return ScrambledRadicalInverseSpecialized(89,perm, a, pi);
             case 24:
-                return ScrambledRadicalInverseSpecialized(97,perm, a);
+                return ScrambledRadicalInverseSpecialized(97,perm, a, pi);
             case 25:
-                return ScrambledRadicalInverseSpecialized(101,perm, a);
+                return ScrambledRadicalInverseSpecialized(101,perm, a, pi);
             case 26:
-                return ScrambledRadicalInverseSpecialized(103,perm, a);
+                return ScrambledRadicalInverseSpecialized(103,perm, a, pi);
             case 27:
-                return ScrambledRadicalInverseSpecialized(107,perm, a);
+                return ScrambledRadicalInverseSpecialized(107,perm, a, pi);
             case 28:
-                return ScrambledRadicalInverseSpecialized(109,perm, a);
+                return ScrambledRadicalInverseSpecialized(109,perm, a, pi);
             case 29:
-                return ScrambledRadicalInverseSpecialized(113,perm, a);
+                return ScrambledRadicalInverseSpecialized(113,perm, a, pi);
             case 30:
-                return ScrambledRadicalInverseSpecialized(127,perm, a);
+                return ScrambledRadicalInverseSpecialized(127,perm, a, pi);
             case 31:
-                return ScrambledRadicalInverseSpecialized(131,perm, a);
+                return ScrambledRadicalInverseSpecialized(131,perm, a, pi);
             case 32:
-                return ScrambledRadicalInverseSpecialized(137,perm, a);
+                return ScrambledRadicalInverseSpecialized(137,perm, a, pi);
             case 33:
-                return ScrambledRadicalInverseSpecialized(139,perm, a);
+                return ScrambledRadicalInverseSpecialized(139,perm, a, pi);
             case 34:
-                return ScrambledRadicalInverseSpecialized(149,perm, a);
+                return ScrambledRadicalInverseSpecialized(149,perm, a, pi);
             case 35:
-                return ScrambledRadicalInverseSpecialized(151,perm, a);
+                return ScrambledRadicalInverseSpecialized(151,perm, a, pi);
             case 36:
-                return ScrambledRadicalInverseSpecialized(157,perm, a);
+                return ScrambledRadicalInverseSpecialized(157,perm, a, pi);
             case 37:
-                return ScrambledRadicalInverseSpecialized(163,perm, a);
+                return ScrambledRadicalInverseSpecialized(163,perm, a, pi);
             case 38:
-                return ScrambledRadicalInverseSpecialized(167,perm, a);
+                return ScrambledRadicalInverseSpecialized(167,perm, a, pi);
             case 39:
-                return ScrambledRadicalInverseSpecialized(173,perm, a);
+                return ScrambledRadicalInverseSpecialized(173,perm, a, pi);
             case 40:
-                return ScrambledRadicalInverseSpecialized(179,perm, a);
+                return ScrambledRadicalInverseSpecialized(179,perm, a, pi);
             case 41:
-                return ScrambledRadicalInverseSpecialized(181,perm, a);
+                return ScrambledRadicalInverseSpecialized(181,perm, a, pi);
             case 42:
-                return ScrambledRadicalInverseSpecialized(191,perm, a);
+                return ScrambledRadicalInverseSpecialized(191,perm, a, pi);
             case 43:
-                return ScrambledRadicalInverseSpecialized(193,perm, a);
+                return ScrambledRadicalInverseSpecialized(193,perm, a, pi);
             case 44:
-                return ScrambledRadicalInverseSpecialized(197,perm, a);
+                return ScrambledRadicalInverseSpecialized(197,perm, a, pi);
             case 45:
-                return ScrambledRadicalInverseSpecialized(199,perm, a);
+                return ScrambledRadicalInverseSpecialized(199,perm, a, pi);
             case 46:
-                return ScrambledRadicalInverseSpecialized(211,perm, a);
+                return ScrambledRadicalInverseSpecialized(211,perm, a, pi);
             case 47:
-                return ScrambledRadicalInverseSpecialized(223,perm, a);
+                return ScrambledRadicalInverseSpecialized(223,perm, a, pi);
             case 48:
-                return ScrambledRadicalInverseSpecialized(227,perm, a);
+                return ScrambledRadicalInverseSpecialized(227,perm, a, pi);
             case 49:
-                return ScrambledRadicalInverseSpecialized(229,perm, a);
+                return ScrambledRadicalInverseSpecialized(229,perm, a, pi);
             case 50:
-                return ScrambledRadicalInverseSpecialized(233,perm, a);
+                return ScrambledRadicalInverseSpecialized(233,perm, a, pi);
             case 51:
-                return ScrambledRadicalInverseSpecialized(239,perm, a);
+                return ScrambledRadicalInverseSpecialized(239,perm, a, pi);
             case 52:
-                return ScrambledRadicalInverseSpecialized(241,perm, a);
+                return ScrambledRadicalInverseSpecialized(241,perm, a, pi);
             case 53:
-                return ScrambledRadicalInverseSpecialized(251,perm, a);
+                return ScrambledRadicalInverseSpecialized(251,perm, a, pi);
             case 54:
-                return ScrambledRadicalInverseSpecialized(257,perm, a);
+                return ScrambledRadicalInverseSpecialized(257,perm, a, pi);
             case 55:
-                return ScrambledRadicalInverseSpecialized(263,perm, a);
+                return ScrambledRadicalInverseSpecialized(263,perm, a, pi);
             case 56:
-                return ScrambledRadicalInverseSpecialized(269,perm, a);
+                return ScrambledRadicalInverseSpecialized(269,perm, a, pi);
             case 57:
-                return ScrambledRadicalInverseSpecialized(271,perm, a);
+                return ScrambledRadicalInverseSpecialized(271,perm, a, pi);
             case 58:
-                return ScrambledRadicalInverseSpecialized(277,perm, a);
+                return ScrambledRadicalInverseSpecialized(277,perm, a, pi);
             case 59:
-                return ScrambledRadicalInverseSpecialized(281,perm, a);
+                return ScrambledRadicalInverseSpecialized(281,perm, a, pi);
             case 60:
-                return ScrambledRadicalInverseSpecialized(283,perm, a);
+                return ScrambledRadicalInverseSpecialized(283,perm, a, pi);
             case 61:
-                return ScrambledRadicalInverseSpecialized(293,perm, a);
+                return ScrambledRadicalInverseSpecialized(293,perm, a, pi);
             case 62:
-                return ScrambledRadicalInverseSpecialized(307,perm, a);
+                return ScrambledRadicalInverseSpecialized(307,perm, a, pi);
             case 63:
-                return ScrambledRadicalInverseSpecialized(311,perm, a);
+                return ScrambledRadicalInverseSpecialized(311,perm, a, pi);
             case 64:
-                return ScrambledRadicalInverseSpecialized(313,perm, a);
+                return ScrambledRadicalInverseSpecialized(313,perm, a, pi);
             case 65:
-                return ScrambledRadicalInverseSpecialized(317,perm, a);
+                return ScrambledRadicalInverseSpecialized(317,perm, a, pi);
             case 66:
-                return ScrambledRadicalInverseSpecialized(331,perm, a);
+                return ScrambledRadicalInverseSpecialized(331,perm, a, pi);
             case 67:
-                return ScrambledRadicalInverseSpecialized(337,perm, a);
+                return ScrambledRadicalInverseSpecialized(337,perm, a, pi);
             case 68:
-                return ScrambledRadicalInverseSpecialized(347,perm, a);
+                return ScrambledRadicalInverseSpecialized(347,perm, a, pi);
             case 69:
-                return ScrambledRadicalInverseSpecialized(349,perm, a);
+                return ScrambledRadicalInverseSpecialized(349,perm, a, pi);
             case 70:
-                return ScrambledRadicalInverseSpecialized(353,perm, a);
+                return ScrambledRadicalInverseSpecialized(353,perm, a, pi);
             case 71:
-                return ScrambledRadicalInverseSpecialized(359,perm, a);
+                return ScrambledRadicalInverseSpecialized(359,perm, a, pi);
             case 72:
-                return ScrambledRadicalInverseSpecialized(367,perm, a);
+                return ScrambledRadicalInverseSpecialized(367,perm, a, pi);
             case 73:
-                return ScrambledRadicalInverseSpecialized(373,perm, a);
+                return ScrambledRadicalInverseSpecialized(373,perm, a, pi);
             case 74:
-                return ScrambledRadicalInverseSpecialized(379,perm, a);
+                return ScrambledRadicalInverseSpecialized(379,perm, a, pi);
             case 75:
-                return ScrambledRadicalInverseSpecialized(383,perm, a);
+                return ScrambledRadicalInverseSpecialized(383,perm, a, pi);
             case 76:
-                return ScrambledRadicalInverseSpecialized(389,perm, a);
+                return ScrambledRadicalInverseSpecialized(389,perm, a, pi);
             case 77:
-                return ScrambledRadicalInverseSpecialized(397,perm, a);
+                return ScrambledRadicalInverseSpecialized(397,perm, a, pi);
             case 78:
-                return ScrambledRadicalInverseSpecialized(401,perm, a);
+                return ScrambledRadicalInverseSpecialized(401,perm, a, pi);
             case 79:
-                return ScrambledRadicalInverseSpecialized(409,perm, a);
+                return ScrambledRadicalInverseSpecialized(409,perm, a, pi);
             case 80:
-                return ScrambledRadicalInverseSpecialized(419,perm, a);
+                return ScrambledRadicalInverseSpecialized(419,perm, a, pi);
             case 81:
-                return ScrambledRadicalInverseSpecialized(421,perm, a);
+                return ScrambledRadicalInverseSpecialized(421,perm, a, pi);
             case 82:
-                return ScrambledRadicalInverseSpecialized(431,perm, a);
+                return ScrambledRadicalInverseSpecialized(431,perm, a, pi);
             case 83:
-                return ScrambledRadicalInverseSpecialized(433,perm, a);
+                return ScrambledRadicalInverseSpecialized(433,perm, a, pi);
             case 84:
-                return ScrambledRadicalInverseSpecialized(439,perm, a);
+                return ScrambledRadicalInverseSpecialized(439,perm, a, pi);
             case 85:
-                return ScrambledRadicalInverseSpecialized(443,perm, a);
+                return ScrambledRadicalInverseSpecialized(443,perm, a, pi);
             case 86:
-                return ScrambledRadicalInverseSpecialized(449,perm, a);
+                return ScrambledRadicalInverseSpecialized(449,perm, a, pi);
             case 87:
-                return ScrambledRadicalInverseSpecialized(457,perm, a);
+                return ScrambledRadicalInverseSpecialized(457,perm, a, pi);
             case 88:
-                return ScrambledRadicalInverseSpecialized(461,perm, a);
+                return ScrambledRadicalInverseSpecialized(461,perm, a, pi);
             case 89:
-                return ScrambledRadicalInverseSpecialized(463,perm, a);
+                return ScrambledRadicalInverseSpecialized(463,perm, a, pi);
             case 90:
-                return ScrambledRadicalInverseSpecialized(467,perm, a);
+                return ScrambledRadicalInverseSpecialized(467,perm, a, pi);
             case 91:
-                return ScrambledRadicalInverseSpecialized(479,perm, a);
+                return ScrambledRadicalInverseSpecialized(479,perm, a, pi);
             case 92:
-                return ScrambledRadicalInverseSpecialized(487,perm, a);
+                return ScrambledRadicalInverseSpecialized(487,perm, a, pi);
             case 93:
-                return ScrambledRadicalInverseSpecialized(491,perm, a);
+                return ScrambledRadicalInverseSpecialized(491,perm, a, pi);
             case 94:
-                return ScrambledRadicalInverseSpecialized(499,perm, a);
+                return ScrambledRadicalInverseSpecialized(499,perm, a, pi);
             case 95:
-                return ScrambledRadicalInverseSpecialized(503,perm, a);
+                return ScrambledRadicalInverseSpecialized(503,perm, a, pi);
             case 96:
-                return ScrambledRadicalInverseSpecialized(509,perm, a);
+                return ScrambledRadicalInverseSpecialized(509,perm, a, pi);
             case 97:
-                return ScrambledRadicalInverseSpecialized(521,perm, a);
+                return ScrambledRadicalInverseSpecialized(521,perm, a, pi);
             case 98:
-                return ScrambledRadicalInverseSpecialized(523,perm, a);
+                return ScrambledRadicalInverseSpecialized(523,perm, a, pi);
             case 99:
-                return ScrambledRadicalInverseSpecialized(541,perm, a);
+                return ScrambledRadicalInverseSpecialized(541,perm, a, pi);
             case 100:
-                return ScrambledRadicalInverseSpecialized(547,perm, a);
+                return ScrambledRadicalInverseSpecialized(547,perm, a, pi);
             case 101:
-                return ScrambledRadicalInverseSpecialized(557,perm, a);
+                return ScrambledRadicalInverseSpecialized(557,perm, a, pi);
             case 102:
-                return ScrambledRadicalInverseSpecialized(563,perm, a);
+                return ScrambledRadicalInverseSpecialized(563,perm, a, pi);
             case 103:
-                return ScrambledRadicalInverseSpecialized(569,perm, a);
+                return ScrambledRadicalInverseSpecialized(569,perm, a, pi);
             case 104:
-                return ScrambledRadicalInverseSpecialized(571,perm, a);
+                return ScrambledRadicalInverseSpecialized(571,perm, a, pi);
             case 105:
-                return ScrambledRadicalInverseSpecialized(577,perm, a);
+                return ScrambledRadicalInverseSpecialized(577,perm, a, pi);
             case 106:
-                return ScrambledRadicalInverseSpecialized(587,perm, a);
+                return ScrambledRadicalInverseSpecialized(587,perm, a, pi);
             case 107:
-                return ScrambledRadicalInverseSpecialized(593,perm, a);
+                return ScrambledRadicalInverseSpecialized(593,perm, a, pi);
             case 108:
-                return ScrambledRadicalInverseSpecialized(599,perm, a);
+                return ScrambledRadicalInverseSpecialized(599,perm, a, pi);
             case 109:
-                return ScrambledRadicalInverseSpecialized(601,perm, a);
+                return ScrambledRadicalInverseSpecialized(601,perm, a, pi);
             case 110:
-                return ScrambledRadicalInverseSpecialized(607,perm, a);
+                return ScrambledRadicalInverseSpecialized(607,perm, a, pi);
             case 111:
-                return ScrambledRadicalInverseSpecialized(613,perm, a);
+                return ScrambledRadicalInverseSpecialized(613,perm, a, pi);
             case 112:
-                return ScrambledRadicalInverseSpecialized(617,perm, a);
+                return ScrambledRadicalInverseSpecialized(617,perm, a, pi);
             case 113:
-                return ScrambledRadicalInverseSpecialized(619,perm, a);
+                return ScrambledRadicalInverseSpecialized(619,perm, a, pi);
             case 114:
-                return ScrambledRadicalInverseSpecialized(631,perm, a);
+                return ScrambledRadicalInverseSpecialized(631,perm, a, pi);
             case 115:
-                return ScrambledRadicalInverseSpecialized(641,perm, a);
+                return ScrambledRadicalInverseSpecialized(641,perm, a, pi);
             case 116:
-                return ScrambledRadicalInverseSpecialized(643,perm, a);
+                return ScrambledRadicalInverseSpecialized(643,perm, a, pi);
             case 117:
-                return ScrambledRadicalInverseSpecialized(647,perm, a);
+                return ScrambledRadicalInverseSpecialized(647,perm, a, pi);
             case 118:
-                return ScrambledRadicalInverseSpecialized(653,perm, a);
+                return ScrambledRadicalInverseSpecialized(653,perm, a, pi);
             case 119:
-                return ScrambledRadicalInverseSpecialized(659,perm, a);
+                return ScrambledRadicalInverseSpecialized(659,perm, a, pi);
             case 120:
-                return ScrambledRadicalInverseSpecialized(661,perm, a);
+                return ScrambledRadicalInverseSpecialized(661,perm, a, pi);
             case 121:
-                return ScrambledRadicalInverseSpecialized(673,perm, a);
+                return ScrambledRadicalInverseSpecialized(673,perm, a, pi);
             case 122:
-                return ScrambledRadicalInverseSpecialized(677,perm, a);
+                return ScrambledRadicalInverseSpecialized(677,perm, a, pi);
             case 123:
-                return ScrambledRadicalInverseSpecialized(683,perm, a);
+                return ScrambledRadicalInverseSpecialized(683,perm, a, pi);
             case 124:
-                return ScrambledRadicalInverseSpecialized(691,perm, a);
+                return ScrambledRadicalInverseSpecialized(691,perm, a, pi);
             case 125:
-                return ScrambledRadicalInverseSpecialized(701,perm, a);
+                return ScrambledRadicalInverseSpecialized(701,perm, a, pi);
             case 126:
-                return ScrambledRadicalInverseSpecialized(709,perm, a);
+                return ScrambledRadicalInverseSpecialized(709,perm, a, pi);
             case 127:
-                return ScrambledRadicalInverseSpecialized(719,perm, a);
+                return ScrambledRadicalInverseSpecialized(719,perm, a, pi);
             case 128:
-                return ScrambledRadicalInverseSpecialized(727,perm, a);
+                return ScrambledRadicalInverseSpecialized(727,perm, a, pi);
             case 129:
-                return ScrambledRadicalInverseSpecialized(733,perm, a);
+                return ScrambledRadicalInverseSpecialized(733,perm, a, pi);
             case 130:
-                return ScrambledRadicalInverseSpecialized(739,perm, a);
+                return ScrambledRadicalInverseSpecialized(739,perm, a, pi);
             case 131:
-                return ScrambledRadicalInverseSpecialized(743,perm, a);
+                return ScrambledRadicalInverseSpecialized(743,perm, a, pi);
             case 132:
-                return ScrambledRadicalInverseSpecialized(751,perm, a);
+                return ScrambledRadicalInverseSpecialized(751,perm, a, pi);
             case 133:
-                return ScrambledRadicalInverseSpecialized(757,perm, a);
+                return ScrambledRadicalInverseSpecialized(757,perm, a, pi);
             case 134:
-                return ScrambledRadicalInverseSpecialized(761,perm, a);
+                return ScrambledRadicalInverseSpecialized(761,perm, a, pi);
             case 135:
-                return ScrambledRadicalInverseSpecialized(769,perm, a);
+                return ScrambledRadicalInverseSpecialized(769,perm, a, pi);
             case 136:
-                return ScrambledRadicalInverseSpecialized(773,perm, a);
+                return ScrambledRadicalInverseSpecialized(773,perm, a, pi);
             case 137:
-                return ScrambledRadicalInverseSpecialized(787,perm, a);
+                return ScrambledRadicalInverseSpecialized(787,perm, a, pi);
             case 138:
-                return ScrambledRadicalInverseSpecialized(797,perm, a);
+                return ScrambledRadicalInverseSpecialized(797,perm, a, pi);
             case 139:
-                return ScrambledRadicalInverseSpecialized(809,perm, a);
+                return ScrambledRadicalInverseSpecialized(809,perm, a, pi);
             case 140:
-                return ScrambledRadicalInverseSpecialized(811,perm, a);
+                return ScrambledRadicalInverseSpecialized(811,perm, a, pi);
             case 141:
-                return ScrambledRadicalInverseSpecialized(821,perm, a);
+                return ScrambledRadicalInverseSpecialized(821,perm, a, pi);
             case 142:
-                return ScrambledRadicalInverseSpecialized(823,perm, a);
+                return ScrambledRadicalInverseSpecialized(823,perm, a, pi);
             case 143:
-                return ScrambledRadicalInverseSpecialized(827,perm, a);
+                return ScrambledRadicalInverseSpecialized(827,perm, a, pi);
             case 144:
-                return ScrambledRadicalInverseSpecialized(829,perm, a);
+                return ScrambledRadicalInverseSpecialized(829,perm, a, pi);
             case 145:
-                return ScrambledRadicalInverseSpecialized(839,perm, a);
+                return ScrambledRadicalInverseSpecialized(839,perm, a, pi);
             case 146:
-                return ScrambledRadicalInverseSpecialized(853,perm, a);
+                return ScrambledRadicalInverseSpecialized(853,perm, a, pi);
             case 147:
-                return ScrambledRadicalInverseSpecialized(857,perm, a);
+                return ScrambledRadicalInverseSpecialized(857,perm, a, pi);
             case 148:
-                return ScrambledRadicalInverseSpecialized(859,perm, a);
+                return ScrambledRadicalInverseSpecialized(859,perm, a, pi);
             case 149:
-                return ScrambledRadicalInverseSpecialized(863,perm, a);
+                return ScrambledRadicalInverseSpecialized(863,perm, a, pi);
             case 150:
-                return ScrambledRadicalInverseSpecialized(877,perm, a);
+                return ScrambledRadicalInverseSpecialized(877,perm, a, pi);
             case 151:
-                return ScrambledRadicalInverseSpecialized(881,perm, a);
+                return ScrambledRadicalInverseSpecialized(881,perm, a, pi);
             case 152:
-                return ScrambledRadicalInverseSpecialized(883,perm, a);
+                return ScrambledRadicalInverseSpecialized(883,perm, a, pi);
             case 153:
-                return ScrambledRadicalInverseSpecialized(887,perm, a);
+                return ScrambledRadicalInverseSpecialized(887,perm, a, pi);
             case 154:
-                return ScrambledRadicalInverseSpecialized(907,perm, a);
+                return ScrambledRadicalInverseSpecialized(907,perm, a, pi);
             case 155:
-                return ScrambledRadicalInverseSpecialized(911,perm, a);
+                return ScrambledRadicalInverseSpecialized(911,perm, a, pi);
             case 156:
-                return ScrambledRadicalInverseSpecialized(919,perm, a);
+                return ScrambledRadicalInverseSpecialized(919,perm, a, pi);
             case 157:
-                return ScrambledRadicalInverseSpecialized(929,perm, a);
+                return ScrambledRadicalInverseSpecialized(929,perm, a, pi);
             case 158:
-                return ScrambledRadicalInverseSpecialized(937,perm, a);
+                return ScrambledRadicalInverseSpecialized(937,perm, a, pi);
             case 159:
-                return ScrambledRadicalInverseSpecialized(941,perm, a);
+                return ScrambledRadicalInverseSpecialized(941,perm, a, pi);
             case 160:
-                return ScrambledRadicalInverseSpecialized(947,perm, a);
+                return ScrambledRadicalInverseSpecialized(947,perm, a, pi);
             case 161:
-                return ScrambledRadicalInverseSpecialized(953,perm, a);
+                return ScrambledRadicalInverseSpecialized(953,perm, a, pi);
             case 162:
-                return ScrambledRadicalInverseSpecialized(967,perm, a);
+                return ScrambledRadicalInverseSpecialized(967,perm, a, pi);
             case 163:
-                return ScrambledRadicalInverseSpecialized(971,perm, a);
+                return ScrambledRadicalInverseSpecialized(971,perm, a, pi);
             case 164:
-                return ScrambledRadicalInverseSpecialized(977,perm, a);
+                return ScrambledRadicalInverseSpecialized(977,perm, a, pi);
             case 165:
-                return ScrambledRadicalInverseSpecialized(983,perm, a);
+                return ScrambledRadicalInverseSpecialized(983,perm, a, pi);
             case 166:
-                return ScrambledRadicalInverseSpecialized(991,perm, a);
+                return ScrambledRadicalInverseSpecialized(991,perm, a, pi);
             case 167:
-                return ScrambledRadicalInverseSpecialized(997,perm, a);
+                return ScrambledRadicalInverseSpecialized(997,perm, a, pi);
             case 168:
-                return ScrambledRadicalInverseSpecialized(1009,perm, a);
+                return ScrambledRadicalInverseSpecialized(1009,perm, a, pi);
             case 169:
-                return ScrambledRadicalInverseSpecialized(1013,perm, a);
+                return ScrambledRadicalInverseSpecialized(1013,perm, a, pi);
             case 170:
-                return ScrambledRadicalInverseSpecialized(1019,perm, a);
+                return ScrambledRadicalInverseSpecialized(1019,perm, a, pi);
             case 171:
-                return ScrambledRadicalInverseSpecialized(1021,perm, a);
+                return ScrambledRadicalInverseSpecialized(1021,perm, a, pi);
             case 172:
-                return ScrambledRadicalInverseSpecialized(1031,perm, a);
+                return ScrambledRadicalInverseSpecialized(1031,perm, a, pi);
             case 173:
-                return ScrambledRadicalInverseSpecialized(1033,perm, a);
+                return ScrambledRadicalInverseSpecialized(1033,perm, a, pi);
             case 174:
-                return ScrambledRadicalInverseSpecialized(1039,perm, a);
+                return ScrambledRadicalInverseSpecialized(1039,perm, a, pi);
             case 175:
-                return ScrambledRadicalInverseSpecialized(1049,perm, a);
+                return ScrambledRadicalInverseSpecialized(1049,perm, a, pi);
             case 176:
-                return ScrambledRadicalInverseSpecialized(1051,perm, a);
+                return ScrambledRadicalInverseSpecialized(1051,perm, a, pi);
             case 177:
-                return ScrambledRadicalInverseSpecialized(1061,perm, a);
+                return ScrambledRadicalInverseSpecialized(1061,perm, a, pi);
             case 178:
-                return ScrambledRadicalInverseSpecialized(1063,perm, a);
+                return ScrambledRadicalInverseSpecialized(1063,perm, a, pi);
             case 179:
-                return ScrambledRadicalInverseSpecialized(1069,perm, a);
+                return ScrambledRadicalInverseSpecialized(1069,perm, a, pi);
             case 180:
-                return ScrambledRadicalInverseSpecialized(1087,perm, a);
+                return ScrambledRadicalInverseSpecialized(1087,perm, a, pi);
             case 181:
-                return ScrambledRadicalInverseSpecialized(1091,perm, a);
+                return ScrambledRadicalInverseSpecialized(1091,perm, a, pi);
             case 182:
-                return ScrambledRadicalInverseSpecialized(1093,perm, a);
+                return ScrambledRadicalInverseSpecialized(1093,perm, a, pi);
             case 183:
-                return ScrambledRadicalInverseSpecialized(1097,perm, a);
+                return ScrambledRadicalInverseSpecialized(1097,perm, a, pi);
             case 184:
-                return ScrambledRadicalInverseSpecialized(1103,perm, a);
+                return ScrambledRadicalInverseSpecialized(1103,perm, a, pi);
             case 185:
-                return ScrambledRadicalInverseSpecialized(1109,perm, a);
+                return ScrambledRadicalInverseSpecialized(1109,perm, a, pi);
             case 186:
-                return ScrambledRadicalInverseSpecialized(1117,perm, a);
+                return ScrambledRadicalInverseSpecialized(1117,perm, a, pi);
             case 187:
-                return ScrambledRadicalInverseSpecialized(1123,perm, a);
+                return ScrambledRadicalInverseSpecialized(1123,perm, a, pi);
             case 188:
-                return ScrambledRadicalInverseSpecialized(1129,perm, a);
+                return ScrambledRadicalInverseSpecialized(1129,perm, a, pi);
             case 189:
-                return ScrambledRadicalInverseSpecialized(1151,perm, a);
+                return ScrambledRadicalInverseSpecialized(1151,perm, a, pi);
             case 190:
-                return ScrambledRadicalInverseSpecialized(1153,perm, a);
+                return ScrambledRadicalInverseSpecialized(1153,perm, a, pi);
             case 191:
-                return ScrambledRadicalInverseSpecialized(1163,perm, a);
+                return ScrambledRadicalInverseSpecialized(1163,perm, a, pi);
             case 192:
-                return ScrambledRadicalInverseSpecialized(1171,perm, a);
+                return ScrambledRadicalInverseSpecialized(1171,perm, a, pi);
             case 193:
-                return ScrambledRadicalInverseSpecialized(1181,perm, a);
+                return ScrambledRadicalInverseSpecialized(1181,perm, a, pi);
             case 194:
-                return ScrambledRadicalInverseSpecialized(1187,perm, a);
+                return ScrambledRadicalInverseSpecialized(1187,perm, a, pi);
             case 195:
-                return ScrambledRadicalInverseSpecialized(1193,perm, a);
+                return ScrambledRadicalInverseSpecialized(1193,perm, a, pi);
             case 196:
-                return ScrambledRadicalInverseSpecialized(1201,perm, a);
+                return ScrambledRadicalInverseSpecialized(1201,perm, a, pi);
             case 197:
-                return ScrambledRadicalInverseSpecialized(1213,perm, a);
+                return ScrambledRadicalInverseSpecialized(1213,perm, a, pi);
             case 198:
-                return ScrambledRadicalInverseSpecialized(1217,perm, a);
+                return ScrambledRadicalInverseSpecialized(1217,perm, a, pi);
             case 199:
-                return ScrambledRadicalInverseSpecialized(1223,perm, a);
+                return ScrambledRadicalInverseSpecialized(1223,perm, a, pi);
             case 200:
-                return ScrambledRadicalInverseSpecialized(1229,perm, a);
+                return ScrambledRadicalInverseSpecialized(1229,perm, a, pi);
             case 201:
-                return ScrambledRadicalInverseSpecialized(1231,perm, a);
+                return ScrambledRadicalInverseSpecialized(1231,perm, a, pi);
             case 202:
-                return ScrambledRadicalInverseSpecialized(1237,perm, a);
+                return ScrambledRadicalInverseSpecialized(1237,perm, a, pi);
             case 203:
-                return ScrambledRadicalInverseSpecialized(1249,perm, a);
+                return ScrambledRadicalInverseSpecialized(1249,perm, a, pi);
             case 204:
-                return ScrambledRadicalInverseSpecialized(1259,perm, a);
+                return ScrambledRadicalInverseSpecialized(1259,perm, a, pi);
             case 205:
-                return ScrambledRadicalInverseSpecialized(1277,perm, a);
+                return ScrambledRadicalInverseSpecialized(1277,perm, a, pi);
             case 206:
-                return ScrambledRadicalInverseSpecialized(1279,perm, a);
+                return ScrambledRadicalInverseSpecialized(1279,perm, a, pi);
             case 207:
-                return ScrambledRadicalInverseSpecialized(1283,perm, a);
+                return ScrambledRadicalInverseSpecialized(1283,perm, a, pi);
             case 208:
-                return ScrambledRadicalInverseSpecialized(1289,perm, a);
+                return ScrambledRadicalInverseSpecialized(1289,perm, a, pi);
             case 209:
-                return ScrambledRadicalInverseSpecialized(1291,perm, a);
+                return ScrambledRadicalInverseSpecialized(1291,perm, a, pi);
             case 210:
-                return ScrambledRadicalInverseSpecialized(1297,perm, a);
+                return ScrambledRadicalInverseSpecialized(1297,perm, a, pi);
             case 211:
-                return ScrambledRadicalInverseSpecialized(1301,perm, a);
+                return ScrambledRadicalInverseSpecialized(1301,perm, a, pi);
             case 212:
-                return ScrambledRadicalInverseSpecialized(1303,perm, a);
+                return ScrambledRadicalInverseSpecialized(1303,perm, a, pi);
             case 213:
-                return ScrambledRadicalInverseSpecialized(1307,perm, a);
+                return ScrambledRadicalInverseSpecialized(1307,perm, a, pi);
             case 214:
-                return ScrambledRadicalInverseSpecialized(1319,perm, a);
+                return ScrambledRadicalInverseSpecialized(1319,perm, a, pi);
             case 215:
-                return ScrambledRadicalInverseSpecialized(1321,perm, a);
+                return ScrambledRadicalInverseSpecialized(1321,perm, a, pi);
             case 216:
-                return ScrambledRadicalInverseSpecialized(1327,perm, a);
+                return ScrambledRadicalInverseSpecialized(1327,perm, a, pi);
             case 217:
-                return ScrambledRadicalInverseSpecialized(1361,perm, a);
+                return ScrambledRadicalInverseSpecialized(1361,perm, a, pi);
             case 218:
-                return ScrambledRadicalInverseSpecialized(1367,perm, a);
+                return ScrambledRadicalInverseSpecialized(1367,perm, a, pi);
             case 219:
-                return ScrambledRadicalInverseSpecialized(1373,perm, a);
+                return ScrambledRadicalInverseSpecialized(1373,perm, a, pi);
             case 220:
-                return ScrambledRadicalInverseSpecialized(1381,perm, a);
+                return ScrambledRadicalInverseSpecialized(1381,perm, a, pi);
             case 221:
-                return ScrambledRadicalInverseSpecialized(1399,perm, a);
+                return ScrambledRadicalInverseSpecialized(1399,perm, a, pi);
             case 222:
-                return ScrambledRadicalInverseSpecialized(1409,perm, a);
+                return ScrambledRadicalInverseSpecialized(1409,perm, a, pi);
             case 223:
-                return ScrambledRadicalInverseSpecialized(1423,perm, a);
+                return ScrambledRadicalInverseSpecialized(1423,perm, a, pi);
             case 224:
-                return ScrambledRadicalInverseSpecialized(1427,perm, a);
+                return ScrambledRadicalInverseSpecialized(1427,perm, a, pi);
             case 225:
-                return ScrambledRadicalInverseSpecialized(1429,perm, a);
+                return ScrambledRadicalInverseSpecialized(1429,perm, a, pi);
             case 226:
-                return ScrambledRadicalInverseSpecialized(1433,perm, a);
+                return ScrambledRadicalInverseSpecialized(1433,perm, a, pi);
             case 227:
-                return ScrambledRadicalInverseSpecialized(1439,perm, a);
+                return ScrambledRadicalInverseSpecialized(1439,perm, a, pi);
             case 228:
-                return ScrambledRadicalInverseSpecialized(1447,perm, a);
+                return ScrambledRadicalInverseSpecialized(1447,perm, a, pi);
             case 229:
-                return ScrambledRadicalInverseSpecialized(1451,perm, a);
+                return ScrambledRadicalInverseSpecialized(1451,perm, a, pi);
             case 230:
-                return ScrambledRadicalInverseSpecialized(1453,perm, a);
+                return ScrambledRadicalInverseSpecialized(1453,perm, a, pi);
             case 231:
-                return ScrambledRadicalInverseSpecialized(1459,perm, a);
+                return ScrambledRadicalInverseSpecialized(1459,perm, a, pi);
             case 232:
-                return ScrambledRadicalInverseSpecialized(1471,perm, a);
+                return ScrambledRadicalInverseSpecialized(1471,perm, a, pi);
             case 233:
-                return ScrambledRadicalInverseSpecialized(1481,perm, a);
+                return ScrambledRadicalInverseSpecialized(1481,perm, a, pi);
             case 234:
-                return ScrambledRadicalInverseSpecialized(1483,perm, a);
+                return ScrambledRadicalInverseSpecialized(1483,perm, a, pi);
             case 235:
-                return ScrambledRadicalInverseSpecialized(1487,perm, a);
+                return ScrambledRadicalInverseSpecialized(1487,perm, a, pi);
             case 236:
-                return ScrambledRadicalInverseSpecialized(1489,perm, a);
+                return ScrambledRadicalInverseSpecialized(1489,perm, a, pi);
             case 237:
-                return ScrambledRadicalInverseSpecialized(1493,perm, a);
+                return ScrambledRadicalInverseSpecialized(1493,perm, a, pi);
             case 238:
-                return ScrambledRadicalInverseSpecialized(1499,perm, a);
+                return ScrambledRadicalInverseSpecialized(1499,perm, a, pi);
             case 239:
-                return ScrambledRadicalInverseSpecialized(1511,perm, a);
+                return ScrambledRadicalInverseSpecialized(1511,perm, a, pi);
             case 240:
-                return ScrambledRadicalInverseSpecialized(1523,perm, a);
+                return ScrambledRadicalInverseSpecialized(1523,perm, a, pi);
             case 241:
-                return ScrambledRadicalInverseSpecialized(1531,perm, a);
+                return ScrambledRadicalInverseSpecialized(1531,perm, a, pi);
             case 242:
-                return ScrambledRadicalInverseSpecialized(1543,perm, a);
+                return ScrambledRadicalInverseSpecialized(1543,perm, a, pi);
             case 243:
-                return ScrambledRadicalInverseSpecialized(1549,perm, a);
+                return ScrambledRadicalInverseSpecialized(1549,perm, a, pi);
             case 244:
-                return ScrambledRadicalInverseSpecialized(1553,perm, a);
+                return ScrambledRadicalInverseSpecialized(1553,perm, a, pi);
             case 245:
-                return ScrambledRadicalInverseSpecialized(1559,perm, a);
+                return ScrambledRadicalInverseSpecialized(1559,perm, a, pi);
             case 246:
-                return ScrambledRadicalInverseSpecialized(1567,perm, a);
+                return ScrambledRadicalInverseSpecialized(1567,perm, a, pi);
             case 247:
-                return ScrambledRadicalInverseSpecialized(1571,perm, a);
+                return ScrambledRadicalInverseSpecialized(1571,perm, a, pi);
             case 248:
-                return ScrambledRadicalInverseSpecialized(1579,perm, a);
+                return ScrambledRadicalInverseSpecialized(1579,perm, a, pi);
             case 249:
-                return ScrambledRadicalInverseSpecialized(1583,perm, a);
+                return ScrambledRadicalInverseSpecialized(1583,perm, a, pi);
             case 250:
-                return ScrambledRadicalInverseSpecialized(1597,perm, a);
+                return ScrambledRadicalInverseSpecialized(1597,perm, a, pi);
             case 251:
-                return ScrambledRadicalInverseSpecialized(1601,perm, a);
+                return ScrambledRadicalInverseSpecialized(1601,perm, a, pi);
             case 252:
-                return ScrambledRadicalInverseSpecialized(1607,perm, a);
+                return ScrambledRadicalInverseSpecialized(1607,perm, a, pi);
             case 253:
-                return ScrambledRadicalInverseSpecialized(1609,perm, a);
+                return ScrambledRadicalInverseSpecialized(1609,perm, a, pi);
             case 254:
-                return ScrambledRadicalInverseSpecialized(1613,perm, a);
+                return ScrambledRadicalInverseSpecialized(1613,perm, a, pi);
             case 255:
-                return ScrambledRadicalInverseSpecialized(1619,perm, a);
+                return ScrambledRadicalInverseSpecialized(1619,perm, a, pi);
             case 256:
-                return ScrambledRadicalInverseSpecialized(1621,perm, a);
+                return ScrambledRadicalInverseSpecialized(1621,perm, a, pi);
             case 257:
-                return ScrambledRadicalInverseSpecialized(1627,perm, a);
+                return ScrambledRadicalInverseSpecialized(1627,perm, a, pi);
             case 258:
-                return ScrambledRadicalInverseSpecialized(1637,perm, a);
+                return ScrambledRadicalInverseSpecialized(1637,perm, a, pi);
             case 259:
-                return ScrambledRadicalInverseSpecialized(1657,perm, a);
+                return ScrambledRadicalInverseSpecialized(1657,perm, a, pi);
             case 260:
-                return ScrambledRadicalInverseSpecialized(1663,perm, a);
+                return ScrambledRadicalInverseSpecialized(1663,perm, a, pi);
             case 261:
-                return ScrambledRadicalInverseSpecialized(1667,perm, a);
+                return ScrambledRadicalInverseSpecialized(1667,perm, a, pi);
             case 262:
-                return ScrambledRadicalInverseSpecialized(1669,perm, a);
+                return ScrambledRadicalInverseSpecialized(1669,perm, a, pi);
             case 263:
-                return ScrambledRadicalInverseSpecialized(1693,perm, a);
+                return ScrambledRadicalInverseSpecialized(1693,perm, a, pi);
             case 264:
-                return ScrambledRadicalInverseSpecialized(1697,perm, a);
+                return ScrambledRadicalInverseSpecialized(1697,perm, a, pi);
             case 265:
-                return ScrambledRadicalInverseSpecialized(1699,perm, a);
+                return ScrambledRadicalInverseSpecialized(1699,perm, a, pi);
             case 266:
-                return ScrambledRadicalInverseSpecialized(1709,perm, a);
+                return ScrambledRadicalInverseSpecialized(1709,perm, a, pi);
             case 267:
-                return ScrambledRadicalInverseSpecialized(1721,perm, a);
+                return ScrambledRadicalInverseSpecialized(1721,perm, a, pi);
             case 268:
-                return ScrambledRadicalInverseSpecialized(1723,perm, a);
+                return ScrambledRadicalInverseSpecialized(1723,perm, a, pi);
             case 269:
-                return ScrambledRadicalInverseSpecialized(1733,perm, a);
+                return ScrambledRadicalInverseSpecialized(1733,perm, a, pi);
             case 270:
-                return ScrambledRadicalInverseSpecialized(1741,perm, a);
+                return ScrambledRadicalInverseSpecialized(1741,perm, a, pi);
             case 271:
-                return ScrambledRadicalInverseSpecialized(1747,perm, a);
+                return ScrambledRadicalInverseSpecialized(1747,perm, a, pi);
             case 272:
-                return ScrambledRadicalInverseSpecialized(1753,perm, a);
+                return ScrambledRadicalInverseSpecialized(1753,perm, a, pi);
             case 273:
-                return ScrambledRadicalInverseSpecialized(1759,perm, a);
+                return ScrambledRadicalInverseSpecialized(1759,perm, a, pi);
             case 274:
-                return ScrambledRadicalInverseSpecialized(1777,perm, a);
+                return ScrambledRadicalInverseSpecialized(1777,perm, a, pi);
             case 275:
-                return ScrambledRadicalInverseSpecialized(1783,perm, a);
+                return ScrambledRadicalInverseSpecialized(1783,perm, a, pi);
             case 276:
-                return ScrambledRadicalInverseSpecialized(1787,perm, a);
+                return ScrambledRadicalInverseSpecialized(1787,perm, a, pi);
             case 277:
-                return ScrambledRadicalInverseSpecialized(1789,perm, a);
+                return ScrambledRadicalInverseSpecialized(1789,perm, a, pi);
             case 278:
-                return ScrambledRadicalInverseSpecialized(1801,perm, a);
+                return ScrambledRadicalInverseSpecialized(1801,perm, a, pi);
             case 279:
-                return ScrambledRadicalInverseSpecialized(1811,perm, a);
+                return ScrambledRadicalInverseSpecialized(1811,perm, a, pi);
             case 280:
-                return ScrambledRadicalInverseSpecialized(1823,perm, a);
+                return ScrambledRadicalInverseSpecialized(1823,perm, a, pi);
             case 281:
-                return ScrambledRadicalInverseSpecialized(1831,perm, a);
+                return ScrambledRadicalInverseSpecialized(1831,perm, a, pi);
             case 282:
-                return ScrambledRadicalInverseSpecialized(1847,perm, a);
+                return ScrambledRadicalInverseSpecialized(1847,perm, a, pi);
             case 283:
-                return ScrambledRadicalInverseSpecialized(1861,perm, a);
+                return ScrambledRadicalInverseSpecialized(1861,perm, a, pi);
             case 284:
-                return ScrambledRadicalInverseSpecialized(1867,perm, a);
+                return ScrambledRadicalInverseSpecialized(1867,perm, a, pi);
             case 285:
-                return ScrambledRadicalInverseSpecialized(1871,perm, a);
+                return ScrambledRadicalInverseSpecialized(1871,perm, a, pi);
             case 286:
-                return ScrambledRadicalInverseSpecialized(1873,perm, a);
+                return ScrambledRadicalInverseSpecialized(1873,perm, a, pi);
             case 287:
-                return ScrambledRadicalInverseSpecialized(1877,perm, a);
+                return ScrambledRadicalInverseSpecialized(1877,perm, a, pi);
             case 288:
-                return ScrambledRadicalInverseSpecialized(1879,perm, a);
+                return ScrambledRadicalInverseSpecialized(1879,perm, a, pi);
             case 289:
-                return ScrambledRadicalInverseSpecialized(1889,perm, a);
+                return ScrambledRadicalInverseSpecialized(1889,perm, a, pi);
             case 290:
-                return ScrambledRadicalInverseSpecialized(1901,perm, a);
+                return ScrambledRadicalInverseSpecialized(1901,perm, a, pi);
             case 291:
-                return ScrambledRadicalInverseSpecialized(1907,perm, a);
+                return ScrambledRadicalInverseSpecialized(1907,perm, a, pi);
             case 292:
-                return ScrambledRadicalInverseSpecialized(1913,perm, a);
+                return ScrambledRadicalInverseSpecialized(1913,perm, a, pi);
             case 293:
-                return ScrambledRadicalInverseSpecialized(1931,perm, a);
+                return ScrambledRadicalInverseSpecialized(1931,perm, a, pi);
             case 294:
-                return ScrambledRadicalInverseSpecialized(1933,perm, a);
+                return ScrambledRadicalInverseSpecialized(1933,perm, a, pi);
             case 295:
-                return ScrambledRadicalInverseSpecialized(1949,perm, a);
+                return ScrambledRadicalInverseSpecialized(1949,perm, a, pi);
             case 296:
-                return ScrambledRadicalInverseSpecialized(1951,perm, a);
+                return ScrambledRadicalInverseSpecialized(1951,perm, a, pi);
             case 297:
-                return ScrambledRadicalInverseSpecialized(1973,perm, a);
+                return ScrambledRadicalInverseSpecialized(1973,perm, a, pi);
             case 298:
-                return ScrambledRadicalInverseSpecialized(1979,perm, a);
+                return ScrambledRadicalInverseSpecialized(1979,perm, a, pi);
             case 299:
-                return ScrambledRadicalInverseSpecialized(1987,perm, a);
+                return ScrambledRadicalInverseSpecialized(1987,perm, a, pi);
             case 300:
-                return ScrambledRadicalInverseSpecialized(1993,perm, a);
+                return ScrambledRadicalInverseSpecialized(1993,perm, a, pi);
             case 301:
-                return ScrambledRadicalInverseSpecialized(1997,perm, a);
+                return ScrambledRadicalInverseSpecialized(1997,perm, a, pi);
             case 302:
-                return ScrambledRadicalInverseSpecialized(1999,perm, a);
+                return ScrambledRadicalInverseSpecialized(1999,perm, a, pi);
             case 303:
-                return ScrambledRadicalInverseSpecialized(2003,perm, a);
+                return ScrambledRadicalInverseSpecialized(2003,perm, a, pi);
             case 304:
-                return ScrambledRadicalInverseSpecialized(2011,perm, a);
+                return ScrambledRadicalInverseSpecialized(2011,perm, a, pi);
             case 305:
-                return ScrambledRadicalInverseSpecialized(2017,perm, a);
+                return ScrambledRadicalInverseSpecialized(2017,perm, a, pi);
             case 306:
-                return ScrambledRadicalInverseSpecialized(2027,perm, a);
+                return ScrambledRadicalInverseSpecialized(2027,perm, a, pi);
             case 307:
-                return ScrambledRadicalInverseSpecialized(2029,perm, a);
+                return ScrambledRadicalInverseSpecialized(2029,perm, a, pi);
             case 308:
-                return ScrambledRadicalInverseSpecialized(2039,perm, a);
+                return ScrambledRadicalInverseSpecialized(2039,perm, a, pi);
             case 309:
-                return ScrambledRadicalInverseSpecialized(2053,perm, a);
+                return ScrambledRadicalInverseSpecialized(2053,perm, a, pi);
             case 310:
-                return ScrambledRadicalInverseSpecialized(2063,perm, a);
+                return ScrambledRadicalInverseSpecialized(2063,perm, a, pi);
             case 311:
-                return ScrambledRadicalInverseSpecialized(2069,perm, a);
+                return ScrambledRadicalInverseSpecialized(2069,perm, a, pi);
             case 312:
-                return ScrambledRadicalInverseSpecialized(2081,perm, a);
+                return ScrambledRadicalInverseSpecialized(2081,perm, a, pi);
             case 313:
-                return ScrambledRadicalInverseSpecialized(2083,perm, a);
+                return ScrambledRadicalInverseSpecialized(2083,perm, a, pi);
             case 314:
-                return ScrambledRadicalInverseSpecialized(2087,perm, a);
+                return ScrambledRadicalInverseSpecialized(2087,perm, a, pi);
             case 315:
-                return ScrambledRadicalInverseSpecialized(2089,perm, a);
+                return ScrambledRadicalInverseSpecialized(2089,perm, a, pi);
             case 316:
-                return ScrambledRadicalInverseSpecialized(2099,perm, a);
+                return ScrambledRadicalInverseSpecialized(2099,perm, a, pi);
             case 317:
-                return ScrambledRadicalInverseSpecialized(2111,perm, a);
+                return ScrambledRadicalInverseSpecialized(2111,perm, a, pi);
             case 318:
-                return ScrambledRadicalInverseSpecialized(2113,perm, a);
+                return ScrambledRadicalInverseSpecialized(2113,perm, a, pi);
             case 319:
-                return ScrambledRadicalInverseSpecialized(2129,perm, a);
+                return ScrambledRadicalInverseSpecialized(2129,perm, a, pi);
             case 320:
-                return ScrambledRadicalInverseSpecialized(2131,perm, a);
+                return ScrambledRadicalInverseSpecialized(2131,perm, a, pi);
             case 321:
-                return ScrambledRadicalInverseSpecialized(2137,perm, a);
+                return ScrambledRadicalInverseSpecialized(2137,perm, a, pi);
             case 322:
-                return ScrambledRadicalInverseSpecialized(2141,perm, a);
+                return ScrambledRadicalInverseSpecialized(2141,perm, a, pi);
             case 323:
-                return ScrambledRadicalInverseSpecialized(2143,perm, a);
+                return ScrambledRadicalInverseSpecialized(2143,perm, a, pi);
             case 324:
-                return ScrambledRadicalInverseSpecialized(2153,perm, a);
+                return ScrambledRadicalInverseSpecialized(2153,perm, a, pi);
             case 325:
-                return ScrambledRadicalInverseSpecialized(2161,perm, a);
+                return ScrambledRadicalInverseSpecialized(2161,perm, a, pi);
             case 326:
-                return ScrambledRadicalInverseSpecialized(2179,perm, a);
+                return ScrambledRadicalInverseSpecialized(2179,perm, a, pi);
             case 327:
-                return ScrambledRadicalInverseSpecialized(2203,perm, a);
+                return ScrambledRadicalInverseSpecialized(2203,perm, a, pi);
             case 328:
-                return ScrambledRadicalInverseSpecialized(2207,perm, a);
+                return ScrambledRadicalInverseSpecialized(2207,perm, a, pi);
             case 329:
-                return ScrambledRadicalInverseSpecialized(2213,perm, a);
+                return ScrambledRadicalInverseSpecialized(2213,perm, a, pi);
             case 330:
-                return ScrambledRadicalInverseSpecialized(2221,perm, a);
+                return ScrambledRadicalInverseSpecialized(2221,perm, a, pi);
             case 331:
-                return ScrambledRadicalInverseSpecialized(2237,perm, a);
+                return ScrambledRadicalInverseSpecialized(2237,perm, a, pi);
             case 332:
-                return ScrambledRadicalInverseSpecialized(2239,perm, a);
+                return ScrambledRadicalInverseSpecialized(2239,perm, a, pi);
             case 333:
-                return ScrambledRadicalInverseSpecialized(2243,perm, a);
+                return ScrambledRadicalInverseSpecialized(2243,perm, a, pi);
             case 334:
-                return ScrambledRadicalInverseSpecialized(2251,perm, a);
+                return ScrambledRadicalInverseSpecialized(2251,perm, a, pi);
             case 335:
-                return ScrambledRadicalInverseSpecialized(2267,perm, a);
+                return ScrambledRadicalInverseSpecialized(2267,perm, a, pi);
             case 336:
-                return ScrambledRadicalInverseSpecialized(2269,perm, a);
+                return ScrambledRadicalInverseSpecialized(2269,perm, a, pi);
             case 337:
-                return ScrambledRadicalInverseSpecialized(2273,perm, a);
+                return ScrambledRadicalInverseSpecialized(2273,perm, a, pi);
             case 338:
-                return ScrambledRadicalInverseSpecialized(2281,perm, a);
+                return ScrambledRadicalInverseSpecialized(2281,perm, a, pi);
             case 339:
-                return ScrambledRadicalInverseSpecialized(2287,perm, a);
+                return ScrambledRadicalInverseSpecialized(2287,perm, a, pi);
             case 340:
-                return ScrambledRadicalInverseSpecialized(2293,perm, a);
+                return ScrambledRadicalInverseSpecialized(2293,perm, a, pi);
             case 341:
-                return ScrambledRadicalInverseSpecialized(2297,perm, a);
+                return ScrambledRadicalInverseSpecialized(2297,perm, a, pi);
             case 342:
-                return ScrambledRadicalInverseSpecialized(2309,perm, a);
+                return ScrambledRadicalInverseSpecialized(2309,perm, a, pi);
             case 343:
-                return ScrambledRadicalInverseSpecialized(2311,perm, a);
+                return ScrambledRadicalInverseSpecialized(2311,perm, a, pi);
             case 344:
-                return ScrambledRadicalInverseSpecialized(2333,perm, a);
+                return ScrambledRadicalInverseSpecialized(2333,perm, a, pi);
             case 345:
-                return ScrambledRadicalInverseSpecialized(2339,perm, a);
+                return ScrambledRadicalInverseSpecialized(2339,perm, a, pi);
             case 346:
-                return ScrambledRadicalInverseSpecialized(2341,perm, a);
+                return ScrambledRadicalInverseSpecialized(2341,perm, a, pi);
             case 347:
-                return ScrambledRadicalInverseSpecialized(2347,perm, a);
+                return ScrambledRadicalInverseSpecialized(2347,perm, a, pi);
             case 348:
-                return ScrambledRadicalInverseSpecialized(2351,perm, a);
+                return ScrambledRadicalInverseSpecialized(2351,perm, a, pi);
             case 349:
-                return ScrambledRadicalInverseSpecialized(2357,perm, a);
+                return ScrambledRadicalInverseSpecialized(2357,perm, a, pi);
             case 350:
-                return ScrambledRadicalInverseSpecialized(2371,perm, a);
+                return ScrambledRadicalInverseSpecialized(2371,perm, a, pi);
             case 351:
-                return ScrambledRadicalInverseSpecialized(2377,perm, a);
+                return ScrambledRadicalInverseSpecialized(2377,perm, a, pi);
             case 352:
-                return ScrambledRadicalInverseSpecialized(2381,perm, a);
+                return ScrambledRadicalInverseSpecialized(2381,perm, a, pi);
             case 353:
-                return ScrambledRadicalInverseSpecialized(2383,perm, a);
+                return ScrambledRadicalInverseSpecialized(2383,perm, a, pi);
             case 354:
-                return ScrambledRadicalInverseSpecialized(2389,perm, a);
+                return ScrambledRadicalInverseSpecialized(2389,perm, a, pi);
             case 355:
-                return ScrambledRadicalInverseSpecialized(2393,perm, a);
+                return ScrambledRadicalInverseSpecialized(2393,perm, a, pi);
             case 356:
-                return ScrambledRadicalInverseSpecialized(2399,perm, a);
+                return ScrambledRadicalInverseSpecialized(2399,perm, a, pi);
             case 357:
-                return ScrambledRadicalInverseSpecialized(2411,perm, a);
+                return ScrambledRadicalInverseSpecialized(2411,perm, a, pi);
             case 358:
-                return ScrambledRadicalInverseSpecialized(2417,perm, a);
+                return ScrambledRadicalInverseSpecialized(2417,perm, a, pi);
             case 359:
-                return ScrambledRadicalInverseSpecialized(2423,perm, a);
+                return ScrambledRadicalInverseSpecialized(2423,perm, a, pi);
             case 360:
-                return ScrambledRadicalInverseSpecialized(2437,perm, a);
+                return ScrambledRadicalInverseSpecialized(2437,perm, a, pi);
             case 361:
-                return ScrambledRadicalInverseSpecialized(2441,perm, a);
+                return ScrambledRadicalInverseSpecialized(2441,perm, a, pi);
             case 362:
-                return ScrambledRadicalInverseSpecialized(2447,perm, a);
+                return ScrambledRadicalInverseSpecialized(2447,perm, a, pi);
             case 363:
-                return ScrambledRadicalInverseSpecialized(2459,perm, a);
+                return ScrambledRadicalInverseSpecialized(2459,perm, a, pi);
             case 364:
-                return ScrambledRadicalInverseSpecialized(2467,perm, a);
+                return ScrambledRadicalInverseSpecialized(2467,perm, a, pi);
             case 365:
-                return ScrambledRadicalInverseSpecialized(2473,perm, a);
+                return ScrambledRadicalInverseSpecialized(2473,perm, a, pi);
             case 366:
-                return ScrambledRadicalInverseSpecialized(2477,perm, a);
+                return ScrambledRadicalInverseSpecialized(2477,perm, a, pi);
             case 367:
-                return ScrambledRadicalInverseSpecialized(2503,perm, a);
+                return ScrambledRadicalInverseSpecialized(2503,perm, a, pi);
             case 368:
-                return ScrambledRadicalInverseSpecialized(2521,perm, a);
+                return ScrambledRadicalInverseSpecialized(2521,perm, a, pi);
             case 369:
-                return ScrambledRadicalInverseSpecialized(2531,perm, a);
+                return ScrambledRadicalInverseSpecialized(2531,perm, a, pi);
             case 370:
-                return ScrambledRadicalInverseSpecialized(2539,perm, a);
+                return ScrambledRadicalInverseSpecialized(2539,perm, a, pi);
             case 371:
-                return ScrambledRadicalInverseSpecialized(2543,perm, a);
+                return ScrambledRadicalInverseSpecialized(2543,perm, a, pi);
             case 372:
-                return ScrambledRadicalInverseSpecialized(2549,perm, a);
+                return ScrambledRadicalInverseSpecialized(2549,perm, a, pi);
             case 373:
-                return ScrambledRadicalInverseSpecialized(2551,perm, a);
+                return ScrambledRadicalInverseSpecialized(2551,perm, a, pi);
             case 374:
-                return ScrambledRadicalInverseSpecialized(2557,perm, a);
+                return ScrambledRadicalInverseSpecialized(2557,perm, a, pi);
             case 375:
-                return ScrambledRadicalInverseSpecialized(2579,perm, a);
+                return ScrambledRadicalInverseSpecialized(2579,perm, a, pi);
             case 376:
-                return ScrambledRadicalInverseSpecialized(2591,perm, a);
+                return ScrambledRadicalInverseSpecialized(2591,perm, a, pi);
             case 377:
-                return ScrambledRadicalInverseSpecialized(2593,perm, a);
+                return ScrambledRadicalInverseSpecialized(2593,perm, a, pi);
             case 378:
-                return ScrambledRadicalInverseSpecialized(2609,perm, a);
+                return ScrambledRadicalInverseSpecialized(2609,perm, a, pi);
             case 379:
-                return ScrambledRadicalInverseSpecialized(2617,perm, a);
+                return ScrambledRadicalInverseSpecialized(2617,perm, a, pi);
             case 380:
-                return ScrambledRadicalInverseSpecialized(2621,perm, a);
+                return ScrambledRadicalInverseSpecialized(2621,perm, a, pi);
             case 381:
-                return ScrambledRadicalInverseSpecialized(2633,perm, a);
+                return ScrambledRadicalInverseSpecialized(2633,perm, a, pi);
             case 382:
-                return ScrambledRadicalInverseSpecialized(2647,perm, a);
+                return ScrambledRadicalInverseSpecialized(2647,perm, a, pi);
             case 383:
-                return ScrambledRadicalInverseSpecialized(2657,perm, a);
+                return ScrambledRadicalInverseSpecialized(2657,perm, a, pi);
             case 384:
-                return ScrambledRadicalInverseSpecialized(2659,perm, a);
+                return ScrambledRadicalInverseSpecialized(2659,perm, a, pi);
             case 385:
-                return ScrambledRadicalInverseSpecialized(2663,perm, a);
+                return ScrambledRadicalInverseSpecialized(2663,perm, a, pi);
             case 386:
-                return ScrambledRadicalInverseSpecialized(2671,perm, a);
+                return ScrambledRadicalInverseSpecialized(2671,perm, a, pi);
             case 387:
-                return ScrambledRadicalInverseSpecialized(2677,perm, a);
+                return ScrambledRadicalInverseSpecialized(2677,perm, a, pi);
             case 388:
-                return ScrambledRadicalInverseSpecialized(2683,perm, a);
+                return ScrambledRadicalInverseSpecialized(2683,perm, a, pi);
             case 389:
-                return ScrambledRadicalInverseSpecialized(2687,perm, a);
+                return ScrambledRadicalInverseSpecialized(2687,perm, a, pi);
             case 390:
-                return ScrambledRadicalInverseSpecialized(2689,perm, a);
+                return ScrambledRadicalInverseSpecialized(2689,perm, a, pi);
             case 391:
-                return ScrambledRadicalInverseSpecialized(2693,perm, a);
+                return ScrambledRadicalInverseSpecialized(2693,perm, a, pi);
             case 392:
-                return ScrambledRadicalInverseSpecialized(2699,perm, a);
+                return ScrambledRadicalInverseSpecialized(2699,perm, a, pi);
             case 393:
-                return ScrambledRadicalInverseSpecialized(2707,perm, a);
+                return ScrambledRadicalInverseSpecialized(2707,perm, a, pi);
             case 394:
-                return ScrambledRadicalInverseSpecialized(2711,perm, a);
+                return ScrambledRadicalInverseSpecialized(2711,perm, a, pi);
             case 395:
-                return ScrambledRadicalInverseSpecialized(2713,perm, a);
+                return ScrambledRadicalInverseSpecialized(2713,perm, a, pi);
             case 396:
-                return ScrambledRadicalInverseSpecialized(2719,perm, a);
+                return ScrambledRadicalInverseSpecialized(2719,perm, a, pi);
             case 397:
-                return ScrambledRadicalInverseSpecialized(2729,perm, a);
+                return ScrambledRadicalInverseSpecialized(2729,perm, a, pi);
             case 398:
-                return ScrambledRadicalInverseSpecialized(2731,perm, a);
+                return ScrambledRadicalInverseSpecialized(2731,perm, a, pi);
             case 399:
-                return ScrambledRadicalInverseSpecialized(2741,perm, a);
+                return ScrambledRadicalInverseSpecialized(2741,perm, a, pi);
             case 400:
-                return ScrambledRadicalInverseSpecialized(2749,perm, a);
+                return ScrambledRadicalInverseSpecialized(2749,perm, a, pi);
             case 401:
-                return ScrambledRadicalInverseSpecialized(2753,perm, a);
+                return ScrambledRadicalInverseSpecialized(2753,perm, a, pi);
             case 402:
-                return ScrambledRadicalInverseSpecialized(2767,perm, a);
+                return ScrambledRadicalInverseSpecialized(2767,perm, a, pi);
             case 403:
-                return ScrambledRadicalInverseSpecialized(2777,perm, a);
+                return ScrambledRadicalInverseSpecialized(2777,perm, a, pi);
             case 404:
-                return ScrambledRadicalInverseSpecialized(2789,perm, a);
+                return ScrambledRadicalInverseSpecialized(2789,perm, a, pi);
             case 405:
-                return ScrambledRadicalInverseSpecialized(2791,perm, a);
+                return ScrambledRadicalInverseSpecialized(2791,perm, a, pi);
             case 406:
-                return ScrambledRadicalInverseSpecialized(2797,perm, a);
+                return ScrambledRadicalInverseSpecialized(2797,perm, a, pi);
             case 407:
-                return ScrambledRadicalInverseSpecialized(2801,perm, a);
+                return ScrambledRadicalInverseSpecialized(2801,perm, a, pi);
             case 408:
-                return ScrambledRadicalInverseSpecialized(2803,perm, a);
+                return ScrambledRadicalInverseSpecialized(2803,perm, a, pi);
             case 409:
-                return ScrambledRadicalInverseSpecialized(2819,perm, a);
+                return ScrambledRadicalInverseSpecialized(2819,perm, a, pi);
             case 410:
-                return ScrambledRadicalInverseSpecialized(2833,perm, a);
+                return ScrambledRadicalInverseSpecialized(2833,perm, a, pi);
             case 411:
-                return ScrambledRadicalInverseSpecialized(2837,perm, a);
+                return ScrambledRadicalInverseSpecialized(2837,perm, a, pi);
             case 412:
-                return ScrambledRadicalInverseSpecialized(2843,perm, a);
+                return ScrambledRadicalInverseSpecialized(2843,perm, a, pi);
             case 413:
-                return ScrambledRadicalInverseSpecialized(2851,perm, a);
+                return ScrambledRadicalInverseSpecialized(2851,perm, a, pi);
             case 414:
-                return ScrambledRadicalInverseSpecialized(2857,perm, a);
+                return ScrambledRadicalInverseSpecialized(2857,perm, a, pi);
             case 415:
-                return ScrambledRadicalInverseSpecialized(2861,perm, a);
+                return ScrambledRadicalInverseSpecialized(2861,perm, a, pi);
             case 416:
-                return ScrambledRadicalInverseSpecialized(2879,perm, a);
+                return ScrambledRadicalInverseSpecialized(2879,perm, a, pi);
             case 417:
-                return ScrambledRadicalInverseSpecialized(2887,perm, a);
+                return ScrambledRadicalInverseSpecialized(2887,perm, a, pi);
             case 418:
-                return ScrambledRadicalInverseSpecialized(2897,perm, a);
+                return ScrambledRadicalInverseSpecialized(2897,perm, a, pi);
             case 419:
-                return ScrambledRadicalInverseSpecialized(2903,perm, a);
+                return ScrambledRadicalInverseSpecialized(2903,perm, a, pi);
             case 420:
-                return ScrambledRadicalInverseSpecialized(2909,perm, a);
+                return ScrambledRadicalInverseSpecialized(2909,perm, a, pi);
             case 421:
-                return ScrambledRadicalInverseSpecialized(2917,perm, a);
+                return ScrambledRadicalInverseSpecialized(2917,perm, a, pi);
             case 422:
-                return ScrambledRadicalInverseSpecialized(2927,perm, a);
+                return ScrambledRadicalInverseSpecialized(2927,perm, a, pi);
             case 423:
-                return ScrambledRadicalInverseSpecialized(2939,perm, a);
+                return ScrambledRadicalInverseSpecialized(2939,perm, a, pi);
             case 424:
-                return ScrambledRadicalInverseSpecialized(2953,perm, a);
+                return ScrambledRadicalInverseSpecialized(2953,perm, a, pi);
             case 425:
-                return ScrambledRadicalInverseSpecialized(2957,perm, a);
+                return ScrambledRadicalInverseSpecialized(2957,perm, a, pi);
             case 426:
-                return ScrambledRadicalInverseSpecialized(2963,perm, a);
+                return ScrambledRadicalInverseSpecialized(2963,perm, a, pi);
             case 427:
-                return ScrambledRadicalInverseSpecialized(2969,perm, a);
+                return ScrambledRadicalInverseSpecialized(2969,perm, a, pi);
             case 428:
-                return ScrambledRadicalInverseSpecialized(2971,perm, a);
+                return ScrambledRadicalInverseSpecialized(2971,perm, a, pi);
             case 429:
-                return ScrambledRadicalInverseSpecialized(2999,perm, a);
+                return ScrambledRadicalInverseSpecialized(2999,perm, a, pi);
             case 430:
-                return ScrambledRadicalInverseSpecialized(3001,perm, a);
+                return ScrambledRadicalInverseSpecialized(3001,perm, a, pi);
             case 431:
-                return ScrambledRadicalInverseSpecialized(3011,perm, a);
+                return ScrambledRadicalInverseSpecialized(3011,perm, a, pi);
             case 432:
-                return ScrambledRadicalInverseSpecialized(3019,perm, a);
+                return ScrambledRadicalInverseSpecialized(3019,perm, a, pi);
             case 433:
-                return ScrambledRadicalInverseSpecialized(3023,perm, a);
+                return ScrambledRadicalInverseSpecialized(3023,perm, a, pi);
             case 434:
-                return ScrambledRadicalInverseSpecialized(3037,perm, a);
+                return ScrambledRadicalInverseSpecialized(3037,perm, a, pi);
             case 435:
-                return ScrambledRadicalInverseSpecialized(3041,perm, a);
+                return ScrambledRadicalInverseSpecialized(3041,perm, a, pi);
             case 436:
-                return ScrambledRadicalInverseSpecialized(3049,perm, a);
+                return ScrambledRadicalInverseSpecialized(3049,perm, a, pi);
             case 437:
-                return ScrambledRadicalInverseSpecialized(3061,perm, a);
+                return ScrambledRadicalInverseSpecialized(3061,perm, a, pi);
             case 438:
-                return ScrambledRadicalInverseSpecialized(3067,perm, a);
+                return ScrambledRadicalInverseSpecialized(3067,perm, a, pi);
             case 439:
-                return ScrambledRadicalInverseSpecialized(3079,perm, a);
+                return ScrambledRadicalInverseSpecialized(3079,perm, a, pi);
             case 440:
-                return ScrambledRadicalInverseSpecialized(3083,perm, a);
+                return ScrambledRadicalInverseSpecialized(3083,perm, a, pi);
             case 441:
-                return ScrambledRadicalInverseSpecialized(3089,perm, a);
+                return ScrambledRadicalInverseSpecialized(3089,perm, a, pi);
             case 442:
-                return ScrambledRadicalInverseSpecialized(3109,perm, a);
+                return ScrambledRadicalInverseSpecialized(3109,perm, a, pi);
             case 443:
-                return ScrambledRadicalInverseSpecialized(3119,perm, a);
+                return ScrambledRadicalInverseSpecialized(3119,perm, a, pi);
             case 444:
-                return ScrambledRadicalInverseSpecialized(3121,perm, a);
+                return ScrambledRadicalInverseSpecialized(3121,perm, a, pi);
             case 445:
-                return ScrambledRadicalInverseSpecialized(3137,perm, a);
+                return ScrambledRadicalInverseSpecialized(3137,perm, a, pi);
             case 446:
-                return ScrambledRadicalInverseSpecialized(3163,perm, a);
+                return ScrambledRadicalInverseSpecialized(3163,perm, a, pi);
             case 447:
-                return ScrambledRadicalInverseSpecialized(3167,perm, a);
+                return ScrambledRadicalInverseSpecialized(3167,perm, a, pi);
             case 448:
-                return ScrambledRadicalInverseSpecialized(3169,perm, a);
+                return ScrambledRadicalInverseSpecialized(3169,perm, a, pi);
             case 449:
-                return ScrambledRadicalInverseSpecialized(3181,perm, a);
+                return ScrambledRadicalInverseSpecialized(3181,perm, a, pi);
             case 450:
-                return ScrambledRadicalInverseSpecialized(3187,perm, a);
+                return ScrambledRadicalInverseSpecialized(3187,perm, a, pi);
             case 451:
-                return ScrambledRadicalInverseSpecialized(3191,perm, a);
+                return ScrambledRadicalInverseSpecialized(3191,perm, a, pi);
             case 452:
-                return ScrambledRadicalInverseSpecialized(3203,perm, a);
+                return ScrambledRadicalInverseSpecialized(3203,perm, a, pi);
             case 453:
-                return ScrambledRadicalInverseSpecialized(3209,perm, a);
+                return ScrambledRadicalInverseSpecialized(3209,perm, a, pi);
             case 454:
-                return ScrambledRadicalInverseSpecialized(3217,perm, a);
+                return ScrambledRadicalInverseSpecialized(3217,perm, a, pi);
             case 455:
-                return ScrambledRadicalInverseSpecialized(3221,perm, a);
+                return ScrambledRadicalInverseSpecialized(3221,perm, a, pi);
             case 456:
-                return ScrambledRadicalInverseSpecialized(3229,perm, a);
+                return ScrambledRadicalInverseSpecialized(3229,perm, a, pi);
             case 457:
-                return ScrambledRadicalInverseSpecialized(3251,perm, a);
+                return ScrambledRadicalInverseSpecialized(3251,perm, a, pi);
             case 458:
-                return ScrambledRadicalInverseSpecialized(3253,perm, a);
+                return ScrambledRadicalInverseSpecialized(3253,perm, a, pi);
             case 459:
-                return ScrambledRadicalInverseSpecialized(3257,perm, a);
+                return ScrambledRadicalInverseSpecialized(3257,perm, a, pi);
             case 460:
-                return ScrambledRadicalInverseSpecialized(3259,perm, a);
+                return ScrambledRadicalInverseSpecialized(3259,perm, a, pi);
             case 461:
-                return ScrambledRadicalInverseSpecialized(3271,perm, a);
+                return ScrambledRadicalInverseSpecialized(3271,perm, a, pi);
             case 462:
-                return ScrambledRadicalInverseSpecialized(3299,perm, a);
+                return ScrambledRadicalInverseSpecialized(3299,perm, a, pi);
             case 463:
-                return ScrambledRadicalInverseSpecialized(3301,perm, a);
+                return ScrambledRadicalInverseSpecialized(3301,perm, a, pi);
             case 464:
-                return ScrambledRadicalInverseSpecialized(3307,perm, a);
+                return ScrambledRadicalInverseSpecialized(3307,perm, a, pi);
             case 465:
-                return ScrambledRadicalInverseSpecialized(3313,perm, a);
+                return ScrambledRadicalInverseSpecialized(3313,perm, a, pi);
             case 466:
-                return ScrambledRadicalInverseSpecialized(3319,perm, a);
+                return ScrambledRadicalInverseSpecialized(3319,perm, a, pi);
             case 467:
-                return ScrambledRadicalInverseSpecialized(3323,perm, a);
+                return ScrambledRadicalInverseSpecialized(3323,perm, a, pi);
             case 468:
-                return ScrambledRadicalInverseSpecialized(3329,perm, a);
+                return ScrambledRadicalInverseSpecialized(3329,perm, a, pi);
             case 469:
-                return ScrambledRadicalInverseSpecialized(3331,perm, a);
+                return ScrambledRadicalInverseSpecialized(3331,perm, a, pi);
             case 470:
-                return ScrambledRadicalInverseSpecialized(3343,perm, a);
+                return ScrambledRadicalInverseSpecialized(3343,perm, a, pi);
             case 471:
-                return ScrambledRadicalInverseSpecialized(3347,perm, a);
+                return ScrambledRadicalInverseSpecialized(3347,perm, a, pi);
             case 472:
-                return ScrambledRadicalInverseSpecialized(3359,perm, a);
+                return ScrambledRadicalInverseSpecialized(3359,perm, a, pi);
             case 473:
-                return ScrambledRadicalInverseSpecialized(3361,perm, a);
+                return ScrambledRadicalInverseSpecialized(3361,perm, a, pi);
             case 474:
-                return ScrambledRadicalInverseSpecialized(3371,perm, a);
+                return ScrambledRadicalInverseSpecialized(3371,perm, a, pi);
             case 475:
-                return ScrambledRadicalInverseSpecialized(3373,perm, a);
+                return ScrambledRadicalInverseSpecialized(3373,perm, a, pi);
             case 476:
-                return ScrambledRadicalInverseSpecialized(3389,perm, a);
+                return ScrambledRadicalInverseSpecialized(3389,perm, a, pi);
             case 477:
-                return ScrambledRadicalInverseSpecialized(3391,perm, a);
+                return ScrambledRadicalInverseSpecialized(3391,perm, a, pi);
             case 478:
-                return ScrambledRadicalInverseSpecialized(3407,perm, a);
+                return ScrambledRadicalInverseSpecialized(3407,perm, a, pi);
             case 479:
-                return ScrambledRadicalInverseSpecialized(3413,perm, a);
+                return ScrambledRadicalInverseSpecialized(3413,perm, a, pi);
             case 480:
-                return ScrambledRadicalInverseSpecialized(3433,perm, a);
+                return ScrambledRadicalInverseSpecialized(3433,perm, a, pi);
             case 481:
-                return ScrambledRadicalInverseSpecialized(3449,perm, a);
+                return ScrambledRadicalInverseSpecialized(3449,perm, a, pi);
             case 482:
-                return ScrambledRadicalInverseSpecialized(3457,perm, a);
+                return ScrambledRadicalInverseSpecialized(3457,perm, a, pi);
             case 483:
-                return ScrambledRadicalInverseSpecialized(3461,perm, a);
+                return ScrambledRadicalInverseSpecialized(3461,perm, a, pi);
             case 484:
-                return ScrambledRadicalInverseSpecialized(3463,perm, a);
+                return ScrambledRadicalInverseSpecialized(3463,perm, a, pi);
             case 485:
-                return ScrambledRadicalInverseSpecialized(3467,perm, a);
+                return ScrambledRadicalInverseSpecialized(3467,perm, a, pi);
             case 486:
-                return ScrambledRadicalInverseSpecialized(3469,perm, a);
+                return ScrambledRadicalInverseSpecialized(3469,perm, a, pi);
             case 487:
-                return ScrambledRadicalInverseSpecialized(3491,perm, a);
+                return ScrambledRadicalInverseSpecialized(3491,perm, a, pi);
             case 488:
-                return ScrambledRadicalInverseSpecialized(3499,perm, a);
+                return ScrambledRadicalInverseSpecialized(3499,perm, a, pi);
             case 489:
-                return ScrambledRadicalInverseSpecialized(3511,perm, a);
+                return ScrambledRadicalInverseSpecialized(3511,perm, a, pi);
             case 490:
-                return ScrambledRadicalInverseSpecialized(3517,perm, a);
+                return ScrambledRadicalInverseSpecialized(3517,perm, a, pi);
             case 491:
-                return ScrambledRadicalInverseSpecialized(3527,perm, a);
+                return ScrambledRadicalInverseSpecialized(3527,perm, a, pi);
             case 492:
-                return ScrambledRadicalInverseSpecialized(3529,perm, a);
+                return ScrambledRadicalInverseSpecialized(3529,perm, a, pi);
             case 493:
-                return ScrambledRadicalInverseSpecialized(3533,perm, a);
+                return ScrambledRadicalInverseSpecialized(3533,perm, a, pi);
             case 494:
-                return ScrambledRadicalInverseSpecialized(3539,perm, a);
+                return ScrambledRadicalInverseSpecialized(3539,perm, a, pi);
             case 495:
-                return ScrambledRadicalInverseSpecialized(3541,perm, a);
+                return ScrambledRadicalInverseSpecialized(3541,perm, a, pi);
             case 496:
-                return ScrambledRadicalInverseSpecialized(3547,perm, a);
+                return ScrambledRadicalInverseSpecialized(3547,perm, a, pi);
             case 497:
-                return ScrambledRadicalInverseSpecialized(3557,perm, a);
+                return ScrambledRadicalInverseSpecialized(3557,perm, a, pi);
             case 498:
-                return ScrambledRadicalInverseSpecialized(3559,perm, a);
+                return ScrambledRadicalInverseSpecialized(3559,perm, a, pi);
             case 499:
-                return ScrambledRadicalInverseSpecialized(3571,perm, a);
+                return ScrambledRadicalInverseSpecialized(3571,perm, a, pi);
             case 500:
-                return ScrambledRadicalInverseSpecialized(3581,perm, a);
+                return ScrambledRadicalInverseSpecialized(3581,perm, a, pi);
             case 501:
-                return ScrambledRadicalInverseSpecialized(3583,perm, a);
+                return ScrambledRadicalInverseSpecialized(3583,perm, a, pi);
             case 502:
-                return ScrambledRadicalInverseSpecialized(3593,perm, a);
+                return ScrambledRadicalInverseSpecialized(3593,perm, a, pi);
             case 503:
-                return ScrambledRadicalInverseSpecialized(3607,perm, a);
+                return ScrambledRadicalInverseSpecialized(3607,perm, a, pi);
             case 504:
-                return ScrambledRadicalInverseSpecialized(3613,perm, a);
+                return ScrambledRadicalInverseSpecialized(3613,perm, a, pi);
             case 505:
-                return ScrambledRadicalInverseSpecialized(3617,perm, a);
+                return ScrambledRadicalInverseSpecialized(3617,perm, a, pi);
             case 506:
-                return ScrambledRadicalInverseSpecialized(3623,perm, a);
+                return ScrambledRadicalInverseSpecialized(3623,perm, a, pi);
             case 507:
-                return ScrambledRadicalInverseSpecialized(3631,perm, a);
+                return ScrambledRadicalInverseSpecialized(3631,perm, a, pi);
             case 508:
-                return ScrambledRadicalInverseSpecialized(3637,perm, a);
+                return ScrambledRadicalInverseSpecialized(3637,perm, a, pi);
             case 509:
-                return ScrambledRadicalInverseSpecialized(3643,perm, a);
+                return ScrambledRadicalInverseSpecialized(3643,perm, a, pi);
             case 510:
-                return ScrambledRadicalInverseSpecialized(3659,perm, a);
+                return ScrambledRadicalInverseSpecialized(3659,perm, a, pi);
             case 511:
-                return ScrambledRadicalInverseSpecialized(3671,perm, a);
+                return ScrambledRadicalInverseSpecialized(3671,perm, a, pi);
             case 512:
-                return ScrambledRadicalInverseSpecialized(3673,perm, a);
+                return ScrambledRadicalInverseSpecialized(3673,perm, a, pi);
             case 513:
-                return ScrambledRadicalInverseSpecialized(3677,perm, a);
+                return ScrambledRadicalInverseSpecialized(3677,perm, a, pi);
             case 514:
-                return ScrambledRadicalInverseSpecialized(3691,perm, a);
+                return ScrambledRadicalInverseSpecialized(3691,perm, a, pi);
             case 515:
-                return ScrambledRadicalInverseSpecialized(3697,perm, a);
+                return ScrambledRadicalInverseSpecialized(3697,perm, a, pi);
             case 516:
-                return ScrambledRadicalInverseSpecialized(3701,perm, a);
+                return ScrambledRadicalInverseSpecialized(3701,perm, a, pi);
             case 517:
-                return ScrambledRadicalInverseSpecialized(3709,perm, a);
+                return ScrambledRadicalInverseSpecialized(3709,perm, a, pi);
             case 518:
-                return ScrambledRadicalInverseSpecialized(3719,perm, a);
+                return ScrambledRadicalInverseSpecialized(3719,perm, a, pi);
             case 519:
-                return ScrambledRadicalInverseSpecialized(3727,perm, a);
+                return ScrambledRadicalInverseSpecialized(3727,perm, a, pi);
             case 520:
-                return ScrambledRadicalInverseSpecialized(3733,perm, a);
+                return ScrambledRadicalInverseSpecialized(3733,perm, a, pi);
             case 521:
-                return ScrambledRadicalInverseSpecialized(3739,perm, a);
+                return ScrambledRadicalInverseSpecialized(3739,perm, a, pi);
             case 522:
-                return ScrambledRadicalInverseSpecialized(3761,perm, a);
+                return ScrambledRadicalInverseSpecialized(3761,perm, a, pi);
             case 523:
-                return ScrambledRadicalInverseSpecialized(3767,perm, a);
+                return ScrambledRadicalInverseSpecialized(3767,perm, a, pi);
             case 524:
-                return ScrambledRadicalInverseSpecialized(3769,perm, a);
+                return ScrambledRadicalInverseSpecialized(3769,perm, a, pi);
             case 525:
-                return ScrambledRadicalInverseSpecialized(3779,perm, a);
+                return ScrambledRadicalInverseSpecialized(3779,perm, a, pi);
             case 526:
-                return ScrambledRadicalInverseSpecialized(3793,perm, a);
+                return ScrambledRadicalInverseSpecialized(3793,perm, a, pi);
             case 527:
-                return ScrambledRadicalInverseSpecialized(3797,perm, a);
+                return ScrambledRadicalInverseSpecialized(3797,perm, a, pi);
             case 528:
-                return ScrambledRadicalInverseSpecialized(3803,perm, a);
+                return ScrambledRadicalInverseSpecialized(3803,perm, a, pi);
             case 529:
-                return ScrambledRadicalInverseSpecialized(3821,perm, a);
+                return ScrambledRadicalInverseSpecialized(3821,perm, a, pi);
             case 530:
-                return ScrambledRadicalInverseSpecialized(3823,perm, a);
+                return ScrambledRadicalInverseSpecialized(3823,perm, a, pi);
             case 531:
-                return ScrambledRadicalInverseSpecialized(3833,perm, a);
+                return ScrambledRadicalInverseSpecialized(3833,perm, a, pi);
             case 532:
-                return ScrambledRadicalInverseSpecialized(3847,perm, a);
+                return ScrambledRadicalInverseSpecialized(3847,perm, a, pi);
             case 533:
-                return ScrambledRadicalInverseSpecialized(3851,perm, a);
+                return ScrambledRadicalInverseSpecialized(3851,perm, a, pi);
             case 534:
-                return ScrambledRadicalInverseSpecialized(3853,perm, a);
+                return ScrambledRadicalInverseSpecialized(3853,perm, a, pi);
             case 535:
-                return ScrambledRadicalInverseSpecialized(3863,perm, a);
+                return ScrambledRadicalInverseSpecialized(3863,perm, a, pi);
             case 536:
-                return ScrambledRadicalInverseSpecialized(3877,perm, a);
+                return ScrambledRadicalInverseSpecialized(3877,perm, a, pi);
             case 537:
-                return ScrambledRadicalInverseSpecialized(3881,perm, a);
+                return ScrambledRadicalInverseSpecialized(3881,perm, a, pi);
             case 538:
-                return ScrambledRadicalInverseSpecialized(3889,perm, a);
+                return ScrambledRadicalInverseSpecialized(3889,perm, a, pi);
             case 539:
-                return ScrambledRadicalInverseSpecialized(3907,perm, a);
+                return ScrambledRadicalInverseSpecialized(3907,perm, a, pi);
             case 540:
-                return ScrambledRadicalInverseSpecialized(3911,perm, a);
+                return ScrambledRadicalInverseSpecialized(3911,perm, a, pi);
             case 541:
-                return ScrambledRadicalInverseSpecialized(3917,perm, a);
+                return ScrambledRadicalInverseSpecialized(3917,perm, a, pi);
             case 542:
-                return ScrambledRadicalInverseSpecialized(3919,perm, a);
+                return ScrambledRadicalInverseSpecialized(3919,perm, a, pi);
             case 543:
-                return ScrambledRadicalInverseSpecialized(3923,perm, a);
+                return ScrambledRadicalInverseSpecialized(3923,perm, a, pi);
             case 544:
-                return ScrambledRadicalInverseSpecialized(3929,perm, a);
+                return ScrambledRadicalInverseSpecialized(3929,perm, a, pi);
             case 545:
-                return ScrambledRadicalInverseSpecialized(3931,perm, a);
+                return ScrambledRadicalInverseSpecialized(3931,perm, a, pi);
             case 546:
-                return ScrambledRadicalInverseSpecialized(3943,perm, a);
+                return ScrambledRadicalInverseSpecialized(3943,perm, a, pi);
             case 547:
-                return ScrambledRadicalInverseSpecialized(3947,perm, a);
+                return ScrambledRadicalInverseSpecialized(3947,perm, a, pi);
             case 548:
-                return ScrambledRadicalInverseSpecialized(3967,perm, a);
+                return ScrambledRadicalInverseSpecialized(3967,perm, a, pi);
             case 549:
-                return ScrambledRadicalInverseSpecialized(3989,perm, a);
+                return ScrambledRadicalInverseSpecialized(3989,perm, a, pi);
             case 550:
-                return ScrambledRadicalInverseSpecialized(4001,perm, a);
+                return ScrambledRadicalInverseSpecialized(4001,perm, a, pi);
             case 551:
-                return ScrambledRadicalInverseSpecialized(4003,perm, a);
+                return ScrambledRadicalInverseSpecialized(4003,perm, a, pi);
             case 552:
-                return ScrambledRadicalInverseSpecialized(4007,perm, a);
+                return ScrambledRadicalInverseSpecialized(4007,perm, a, pi);
             case 553:
-                return ScrambledRadicalInverseSpecialized(4013,perm, a);
+                return ScrambledRadicalInverseSpecialized(4013,perm, a, pi);
             case 554:
-                return ScrambledRadicalInverseSpecialized(4019,perm, a);
+                return ScrambledRadicalInverseSpecialized(4019,perm, a, pi);
             case 555:
-                return ScrambledRadicalInverseSpecialized(4021,perm, a);
+                return ScrambledRadicalInverseSpecialized(4021,perm, a, pi);
             case 556:
-                return ScrambledRadicalInverseSpecialized(4027,perm, a);
+                return ScrambledRadicalInverseSpecialized(4027,perm, a, pi);
             case 557:
-                return ScrambledRadicalInverseSpecialized(4049,perm, a);
+                return ScrambledRadicalInverseSpecialized(4049,perm, a, pi);
             case 558:
-                return ScrambledRadicalInverseSpecialized(4051,perm, a);
+                return ScrambledRadicalInverseSpecialized(4051,perm, a, pi);
             case 559:
-                return ScrambledRadicalInverseSpecialized(4057,perm, a);
+                return ScrambledRadicalInverseSpecialized(4057,perm, a, pi);
             case 560:
-                return ScrambledRadicalInverseSpecialized(4073,perm, a);
+                return ScrambledRadicalInverseSpecialized(4073,perm, a, pi);
             case 561:
-                return ScrambledRadicalInverseSpecialized(4079,perm, a);
+                return ScrambledRadicalInverseSpecialized(4079,perm, a, pi);
             case 562:
-                return ScrambledRadicalInverseSpecialized(4091,perm, a);
+                return ScrambledRadicalInverseSpecialized(4091,perm, a, pi);
             case 563:
-                return ScrambledRadicalInverseSpecialized(4093,perm, a);
+                return ScrambledRadicalInverseSpecialized(4093,perm, a, pi);
             case 564:
-                return ScrambledRadicalInverseSpecialized(4099,perm, a);
+                return ScrambledRadicalInverseSpecialized(4099,perm, a, pi);
             case 565:
-                return ScrambledRadicalInverseSpecialized(4111,perm, a);
+                return ScrambledRadicalInverseSpecialized(4111,perm, a, pi);
             case 566:
-                return ScrambledRadicalInverseSpecialized(4127,perm, a);
+                return ScrambledRadicalInverseSpecialized(4127,perm, a, pi);
             case 567:
-                return ScrambledRadicalInverseSpecialized(4129,perm, a);
+                return ScrambledRadicalInverseSpecialized(4129,perm, a, pi);
             case 568:
-                return ScrambledRadicalInverseSpecialized(4133,perm, a);
+                return ScrambledRadicalInverseSpecialized(4133,perm, a, pi);
             case 569:
-                return ScrambledRadicalInverseSpecialized(4139,perm, a);
+                return ScrambledRadicalInverseSpecialized(4139,perm, a, pi);
             case 570:
-                return ScrambledRadicalInverseSpecialized(4153,perm, a);
+                return ScrambledRadicalInverseSpecialized(4153,perm, a, pi);
             case 571:
-                return ScrambledRadicalInverseSpecialized(4157,perm, a);
+                return ScrambledRadicalInverseSpecialized(4157,perm, a, pi);
             case 572:
-                return ScrambledRadicalInverseSpecialized(4159,perm, a);
+                return ScrambledRadicalInverseSpecialized(4159,perm, a, pi);
             case 573:
-                return ScrambledRadicalInverseSpecialized(4177,perm, a);
+                return ScrambledRadicalInverseSpecialized(4177,perm, a, pi);
             case 574:
-                return ScrambledRadicalInverseSpecialized(4201,perm, a);
+                return ScrambledRadicalInverseSpecialized(4201,perm, a, pi);
             case 575:
-                return ScrambledRadicalInverseSpecialized(4211,perm, a);
+                return ScrambledRadicalInverseSpecialized(4211,perm, a, pi);
             case 576:
-                return ScrambledRadicalInverseSpecialized(4217,perm, a);
+                return ScrambledRadicalInverseSpecialized(4217,perm, a, pi);
             case 577:
-                return ScrambledRadicalInverseSpecialized(4219,perm, a);
+                return ScrambledRadicalInverseSpecialized(4219,perm, a, pi);
             case 578:
-                return ScrambledRadicalInverseSpecialized(4229,perm, a);
+                return ScrambledRadicalInverseSpecialized(4229,perm, a, pi);
             case 579:
-                return ScrambledRadicalInverseSpecialized(4231,perm, a);
+                return ScrambledRadicalInverseSpecialized(4231,perm, a, pi);
             case 580:
-                return ScrambledRadicalInverseSpecialized(4241,perm, a);
+                return ScrambledRadicalInverseSpecialized(4241,perm, a, pi);
             case 581:
-                return ScrambledRadicalInverseSpecialized(4243,perm, a);
+                return ScrambledRadicalInverseSpecialized(4243,perm, a, pi);
             case 582:
-                return ScrambledRadicalInverseSpecialized(4253,perm, a);
+                return ScrambledRadicalInverseSpecialized(4253,perm, a, pi);
             case 583:
-                return ScrambledRadicalInverseSpecialized(4259,perm, a);
+                return ScrambledRadicalInverseSpecialized(4259,perm, a, pi);
             case 584:
-                return ScrambledRadicalInverseSpecialized(4261,perm, a);
+                return ScrambledRadicalInverseSpecialized(4261,perm, a, pi);
             case 585:
-                return ScrambledRadicalInverseSpecialized(4271,perm, a);
+                return ScrambledRadicalInverseSpecialized(4271,perm, a, pi);
             case 586:
-                return ScrambledRadicalInverseSpecialized(4273,perm, a);
+                return ScrambledRadicalInverseSpecialized(4273,perm, a, pi);
             case 587:
-                return ScrambledRadicalInverseSpecialized(4283,perm, a);
+                return ScrambledRadicalInverseSpecialized(4283,perm, a, pi);
             case 588:
-                return ScrambledRadicalInverseSpecialized(4289,perm, a);
+                return ScrambledRadicalInverseSpecialized(4289,perm, a, pi);
             case 589:
-                return ScrambledRadicalInverseSpecialized(4297,perm, a);
+                return ScrambledRadicalInverseSpecialized(4297,perm, a, pi);
             case 590:
-                return ScrambledRadicalInverseSpecialized(4327,perm, a);
+                return ScrambledRadicalInverseSpecialized(4327,perm, a, pi);
             case 591:
-                return ScrambledRadicalInverseSpecialized(4337,perm, a);
+                return ScrambledRadicalInverseSpecialized(4337,perm, a, pi);
             case 592:
-                return ScrambledRadicalInverseSpecialized(4339,perm, a);
+                return ScrambledRadicalInverseSpecialized(4339,perm, a, pi);
             case 593:
-                return ScrambledRadicalInverseSpecialized(4349,perm, a);
+                return ScrambledRadicalInverseSpecialized(4349,perm, a, pi);
             case 594:
-                return ScrambledRadicalInverseSpecialized(4357,perm, a);
+                return ScrambledRadicalInverseSpecialized(4357,perm, a, pi);
             case 595:
-                return ScrambledRadicalInverseSpecialized(4363,perm, a);
+                return ScrambledRadicalInverseSpecialized(4363,perm, a, pi);
             case 596:
-                return ScrambledRadicalInverseSpecialized(4373,perm, a);
+                return ScrambledRadicalInverseSpecialized(4373,perm, a, pi);
             case 597:
-                return ScrambledRadicalInverseSpecialized(4391,perm, a);
+                return ScrambledRadicalInverseSpecialized(4391,perm, a, pi);
             case 598:
-                return ScrambledRadicalInverseSpecialized(4397,perm, a);
+                return ScrambledRadicalInverseSpecialized(4397,perm, a, pi);
             case 599:
-                return ScrambledRadicalInverseSpecialized(4409,perm, a);
+                return ScrambledRadicalInverseSpecialized(4409,perm, a, pi);
             case 600:
-                return ScrambledRadicalInverseSpecialized(4421,perm, a);
+                return ScrambledRadicalInverseSpecialized(4421,perm, a, pi);
             case 601:
-                return ScrambledRadicalInverseSpecialized(4423,perm, a);
+                return ScrambledRadicalInverseSpecialized(4423,perm, a, pi);
             case 602:
-                return ScrambledRadicalInverseSpecialized(4441,perm, a);
+                return ScrambledRadicalInverseSpecialized(4441,perm, a, pi);
             case 603:
-                return ScrambledRadicalInverseSpecialized(4447,perm, a);
+                return ScrambledRadicalInverseSpecialized(4447,perm, a, pi);
             case 604:
-                return ScrambledRadicalInverseSpecialized(4451,perm, a);
+                return ScrambledRadicalInverseSpecialized(4451,perm, a, pi);
             case 605:
-                return ScrambledRadicalInverseSpecialized(4457,perm, a);
+                return ScrambledRadicalInverseSpecialized(4457,perm, a, pi);
             case 606:
-                return ScrambledRadicalInverseSpecialized(4463,perm, a);
+                return ScrambledRadicalInverseSpecialized(4463,perm, a, pi);
             case 607:
-                return ScrambledRadicalInverseSpecialized(4481,perm, a);
+                return ScrambledRadicalInverseSpecialized(4481,perm, a, pi);
             case 608:
-                return ScrambledRadicalInverseSpecialized(4483,perm, a);
+                return ScrambledRadicalInverseSpecialized(4483,perm, a, pi);
             case 609:
-                return ScrambledRadicalInverseSpecialized(4493,perm, a);
+                return ScrambledRadicalInverseSpecialized(4493,perm, a, pi);
             case 610:
-                return ScrambledRadicalInverseSpecialized(4507,perm, a);
+                return ScrambledRadicalInverseSpecialized(4507,perm, a, pi);
             case 611:
-                return ScrambledRadicalInverseSpecialized(4513,perm, a);
+                return ScrambledRadicalInverseSpecialized(4513,perm, a, pi);
             case 612:
-                return ScrambledRadicalInverseSpecialized(4517,perm, a);
+                return ScrambledRadicalInverseSpecialized(4517,perm, a, pi);
             case 613:
-                return ScrambledRadicalInverseSpecialized(4519,perm, a);
+                return ScrambledRadicalInverseSpecialized(4519,perm, a, pi);
             case 614:
-                return ScrambledRadicalInverseSpecialized(4523,perm, a);
+                return ScrambledRadicalInverseSpecialized(4523,perm, a, pi);
             case 615:
-                return ScrambledRadicalInverseSpecialized(4547,perm, a);
+                return ScrambledRadicalInverseSpecialized(4547,perm, a, pi);
             case 616:
-                return ScrambledRadicalInverseSpecialized(4549,perm, a);
+                return ScrambledRadicalInverseSpecialized(4549,perm, a, pi);
             case 617:
-                return ScrambledRadicalInverseSpecialized(4561,perm, a);
+                return ScrambledRadicalInverseSpecialized(4561,perm, a, pi);
             case 618:
-                return ScrambledRadicalInverseSpecialized(4567,perm, a);
+                return ScrambledRadicalInverseSpecialized(4567,perm, a, pi);
             case 619:
-                return ScrambledRadicalInverseSpecialized(4583,perm, a);
+                return ScrambledRadicalInverseSpecialized(4583,perm, a, pi);
             case 620:
-                return ScrambledRadicalInverseSpecialized(4591,perm, a);
+                return ScrambledRadicalInverseSpecialized(4591,perm, a, pi);
             case 621:
-                return ScrambledRadicalInverseSpecialized(4597,perm, a);
+                return ScrambledRadicalInverseSpecialized(4597,perm, a, pi);
             case 622:
-                return ScrambledRadicalInverseSpecialized(4603,perm, a);
+                return ScrambledRadicalInverseSpecialized(4603,perm, a, pi);
             case 623:
-                return ScrambledRadicalInverseSpecialized(4621,perm, a);
+                return ScrambledRadicalInverseSpecialized(4621,perm, a, pi);
             case 624:
-                return ScrambledRadicalInverseSpecialized(4637,perm, a);
+                return ScrambledRadicalInverseSpecialized(4637,perm, a, pi);
             case 625:
-                return ScrambledRadicalInverseSpecialized(4639,perm, a);
+                return ScrambledRadicalInverseSpecialized(4639,perm, a, pi);
             case 626:
-                return ScrambledRadicalInverseSpecialized(4643,perm, a);
+                return ScrambledRadicalInverseSpecialized(4643,perm, a, pi);
             case 627:
-                return ScrambledRadicalInverseSpecialized(4649,perm, a);
+                return ScrambledRadicalInverseSpecialized(4649,perm, a, pi);
             case 628:
-                return ScrambledRadicalInverseSpecialized(4651,perm, a);
+                return ScrambledRadicalInverseSpecialized(4651,perm, a, pi);
             case 629:
-                return ScrambledRadicalInverseSpecialized(4657,perm, a);
+                return ScrambledRadicalInverseSpecialized(4657,perm, a, pi);
             case 630:
-                return ScrambledRadicalInverseSpecialized(4663,perm, a);
+                return ScrambledRadicalInverseSpecialized(4663,perm, a, pi);
             case 631:
-                return ScrambledRadicalInverseSpecialized(4673,perm, a);
+                return ScrambledRadicalInverseSpecialized(4673,perm, a, pi);
             case 632:
-                return ScrambledRadicalInverseSpecialized(4679,perm, a);
+                return ScrambledRadicalInverseSpecialized(4679,perm, a, pi);
             case 633:
-                return ScrambledRadicalInverseSpecialized(4691,perm, a);
+                return ScrambledRadicalInverseSpecialized(4691,perm, a, pi);
             case 634:
-                return ScrambledRadicalInverseSpecialized(4703,perm, a);
+                return ScrambledRadicalInverseSpecialized(4703,perm, a, pi);
             case 635:
-                return ScrambledRadicalInverseSpecialized(4721,perm, a);
+                return ScrambledRadicalInverseSpecialized(4721,perm, a, pi);
             case 636:
-                return ScrambledRadicalInverseSpecialized(4723,perm, a);
+                return ScrambledRadicalInverseSpecialized(4723,perm, a, pi);
             case 637:
-                return ScrambledRadicalInverseSpecialized(4729,perm, a);
+                return ScrambledRadicalInverseSpecialized(4729,perm, a, pi);
             case 638:
-                return ScrambledRadicalInverseSpecialized(4733,perm, a);
+                return ScrambledRadicalInverseSpecialized(4733,perm, a, pi);
             case 639:
-                return ScrambledRadicalInverseSpecialized(4751,perm, a);
+                return ScrambledRadicalInverseSpecialized(4751,perm, a, pi);
             case 640:
-                return ScrambledRadicalInverseSpecialized(4759,perm, a);
+                return ScrambledRadicalInverseSpecialized(4759,perm, a, pi);
             case 641:
-                return ScrambledRadicalInverseSpecialized(4783,perm, a);
+                return ScrambledRadicalInverseSpecialized(4783,perm, a, pi);
             case 642:
-                return ScrambledRadicalInverseSpecialized(4787,perm, a);
+                return ScrambledRadicalInverseSpecialized(4787,perm, a, pi);
             case 643:
-                return ScrambledRadicalInverseSpecialized(4789,perm, a);
+                return ScrambledRadicalInverseSpecialized(4789,perm, a, pi);
             case 644:
-                return ScrambledRadicalInverseSpecialized(4793,perm, a);
+                return ScrambledRadicalInverseSpecialized(4793,perm, a, pi);
             case 645:
-                return ScrambledRadicalInverseSpecialized(4799,perm, a);
+                return ScrambledRadicalInverseSpecialized(4799,perm, a, pi);
             case 646:
-                return ScrambledRadicalInverseSpecialized(4801,perm, a);
+                return ScrambledRadicalInverseSpecialized(4801,perm, a, pi);
             case 647:
-                return ScrambledRadicalInverseSpecialized(4813,perm, a);
+                return ScrambledRadicalInverseSpecialized(4813,perm, a, pi);
             case 648:
-                return ScrambledRadicalInverseSpecialized(4817,perm, a);
+                return ScrambledRadicalInverseSpecialized(4817,perm, a, pi);
             case 649:
-                return ScrambledRadicalInverseSpecialized(4831,perm, a);
+                return ScrambledRadicalInverseSpecialized(4831,perm, a, pi);
             case 650:
-                return ScrambledRadicalInverseSpecialized(4861,perm, a);
+                return ScrambledRadicalInverseSpecialized(4861,perm, a, pi);
             case 651:
-                return ScrambledRadicalInverseSpecialized(4871,perm, a);
+                return ScrambledRadicalInverseSpecialized(4871,perm, a, pi);
             case 652:
-                return ScrambledRadicalInverseSpecialized(4877,perm, a);
+                return ScrambledRadicalInverseSpecialized(4877,perm, a, pi);
             case 653:
-                return ScrambledRadicalInverseSpecialized(4889,perm, a);
+                return ScrambledRadicalInverseSpecialized(4889,perm, a, pi);
             case 654:
-                return ScrambledRadicalInverseSpecialized(4903,perm, a);
+                return ScrambledRadicalInverseSpecialized(4903,perm, a, pi);
             case 655:
-                return ScrambledRadicalInverseSpecialized(4909,perm, a);
+                return ScrambledRadicalInverseSpecialized(4909,perm, a, pi);
             case 656:
-                return ScrambledRadicalInverseSpecialized(4919,perm, a);
+                return ScrambledRadicalInverseSpecialized(4919,perm, a, pi);
             case 657:
-                return ScrambledRadicalInverseSpecialized(4931,perm, a);
+                return ScrambledRadicalInverseSpecialized(4931,perm, a, pi);
             case 658:
-                return ScrambledRadicalInverseSpecialized(4933,perm, a);
+                return ScrambledRadicalInverseSpecialized(4933,perm, a, pi);
             case 659:
-                return ScrambledRadicalInverseSpecialized(4937,perm, a);
+                return ScrambledRadicalInverseSpecialized(4937,perm, a, pi);
             case 660:
-                return ScrambledRadicalInverseSpecialized(4943,perm, a);
+                return ScrambledRadicalInverseSpecialized(4943,perm, a, pi);
             case 661:
-                return ScrambledRadicalInverseSpecialized(4951,perm, a);
+                return ScrambledRadicalInverseSpecialized(4951,perm, a, pi);
             case 662:
-                return ScrambledRadicalInverseSpecialized(4957,perm, a);
+                return ScrambledRadicalInverseSpecialized(4957,perm, a, pi);
             case 663:
-                return ScrambledRadicalInverseSpecialized(4967,perm, a);
+                return ScrambledRadicalInverseSpecialized(4967,perm, a, pi);
             case 664:
-                return ScrambledRadicalInverseSpecialized(4969,perm, a);
+                return ScrambledRadicalInverseSpecialized(4969,perm, a, pi);
             case 665:
-                return ScrambledRadicalInverseSpecialized(4973,perm, a);
+                return ScrambledRadicalInverseSpecialized(4973,perm, a, pi);
             case 666:
-                return ScrambledRadicalInverseSpecialized(4987,perm, a);
+                return ScrambledRadicalInverseSpecialized(4987,perm, a, pi);
             case 667:
-                return ScrambledRadicalInverseSpecialized(4993,perm, a);
+                return ScrambledRadicalInverseSpecialized(4993,perm, a, pi);
             case 668:
-                return ScrambledRadicalInverseSpecialized(4999,perm, a);
+                return ScrambledRadicalInverseSpecialized(4999,perm, a, pi);
             case 669:
-                return ScrambledRadicalInverseSpecialized(5003,perm, a);
+                return ScrambledRadicalInverseSpecialized(5003,perm, a, pi);
             case 670:
-                return ScrambledRadicalInverseSpecialized(5009,perm, a);
+                return ScrambledRadicalInverseSpecialized(5009,perm, a, pi);
             case 671:
-                return ScrambledRadicalInverseSpecialized(5011,perm, a);
+                return ScrambledRadicalInverseSpecialized(5011,perm, a, pi);
             case 672:
-                return ScrambledRadicalInverseSpecialized(5021,perm, a);
+                return ScrambledRadicalInverseSpecialized(5021,perm, a, pi);
             case 673:
-                return ScrambledRadicalInverseSpecialized(5023,perm, a);
+                return ScrambledRadicalInverseSpecialized(5023,perm, a, pi);
             case 674:
-                return ScrambledRadicalInverseSpecialized(5039,perm, a);
+                return ScrambledRadicalInverseSpecialized(5039,perm, a, pi);
             case 675:
-                return ScrambledRadicalInverseSpecialized(5051,perm, a);
+                return ScrambledRadicalInverseSpecialized(5051,perm, a, pi);
             case 676:
-                return ScrambledRadicalInverseSpecialized(5059,perm, a);
+                return ScrambledRadicalInverseSpecialized(5059,perm, a, pi);
             case 677:
-                return ScrambledRadicalInverseSpecialized(5077,perm, a);
+                return ScrambledRadicalInverseSpecialized(5077,perm, a, pi);
             case 678:
-                return ScrambledRadicalInverseSpecialized(5081,perm, a);
+                return ScrambledRadicalInverseSpecialized(5081,perm, a, pi);
             case 679:
-                return ScrambledRadicalInverseSpecialized(5087,perm, a);
+                return ScrambledRadicalInverseSpecialized(5087,perm, a, pi);
             case 680:
-                return ScrambledRadicalInverseSpecialized(5099,perm, a);
+                return ScrambledRadicalInverseSpecialized(5099,perm, a, pi);
             case 681:
-                return ScrambledRadicalInverseSpecialized(5101,perm, a);
+                return ScrambledRadicalInverseSpecialized(5101,perm, a, pi);
             case 682:
-                return ScrambledRadicalInverseSpecialized(5107,perm, a);
+                return ScrambledRadicalInverseSpecialized(5107,perm, a, pi);
             case 683:
-                return ScrambledRadicalInverseSpecialized(5113,perm, a);
+                return ScrambledRadicalInverseSpecialized(5113,perm, a, pi);
             case 684:
-                return ScrambledRadicalInverseSpecialized(5119,perm, a);
+                return ScrambledRadicalInverseSpecialized(5119,perm, a, pi);
             case 685:
-                return ScrambledRadicalInverseSpecialized(5147,perm, a);
+                return ScrambledRadicalInverseSpecialized(5147,perm, a, pi);
             case 686:
-                return ScrambledRadicalInverseSpecialized(5153,perm, a);
+                return ScrambledRadicalInverseSpecialized(5153,perm, a, pi);
             case 687:
-                return ScrambledRadicalInverseSpecialized(5167,perm, a);
+                return ScrambledRadicalInverseSpecialized(5167,perm, a, pi);
             case 688:
-                return ScrambledRadicalInverseSpecialized(5171,perm, a);
+                return ScrambledRadicalInverseSpecialized(5171,perm, a, pi);
             case 689:
-                return ScrambledRadicalInverseSpecialized(5179,perm, a);
+                return ScrambledRadicalInverseSpecialized(5179,perm, a, pi);
             case 690:
-                return ScrambledRadicalInverseSpecialized(5189,perm, a);
+                return ScrambledRadicalInverseSpecialized(5189,perm, a, pi);
             case 691:
-                return ScrambledRadicalInverseSpecialized(5197,perm, a);
+                return ScrambledRadicalInverseSpecialized(5197,perm, a, pi);
             case 692:
-                return ScrambledRadicalInverseSpecialized(5209,perm, a);
+                return ScrambledRadicalInverseSpecialized(5209,perm, a, pi);
             case 693:
-                return ScrambledRadicalInverseSpecialized(5227,perm, a);
+                return ScrambledRadicalInverseSpecialized(5227,perm, a, pi);
             case 694:
-                return ScrambledRadicalInverseSpecialized(5231,perm, a);
+                return ScrambledRadicalInverseSpecialized(5231,perm, a, pi);
             case 695:
-                return ScrambledRadicalInverseSpecialized(5233,perm, a);
+                return ScrambledRadicalInverseSpecialized(5233,perm, a, pi);
             case 696:
-                return ScrambledRadicalInverseSpecialized(5237,perm, a);
+                return ScrambledRadicalInverseSpecialized(5237,perm, a, pi);
             case 697:
-                return ScrambledRadicalInverseSpecialized(5261,perm, a);
+                return ScrambledRadicalInverseSpecialized(5261,perm, a, pi);
             case 698:
-                return ScrambledRadicalInverseSpecialized(5273,perm, a);
+                return ScrambledRadicalInverseSpecialized(5273,perm, a, pi);
             case 699:
-                return ScrambledRadicalInverseSpecialized(5279,perm, a);
+                return ScrambledRadicalInverseSpecialized(5279,perm, a, pi);
             case 700:
-                return ScrambledRadicalInverseSpecialized(5281,perm, a);
+                return ScrambledRadicalInverseSpecialized(5281,perm, a, pi);
             case 701:
-                return ScrambledRadicalInverseSpecialized(5297,perm, a);
+                return ScrambledRadicalInverseSpecialized(5297,perm, a, pi);
             case 702:
-                return ScrambledRadicalInverseSpecialized(5303,perm, a);
+                return ScrambledRadicalInverseSpecialized(5303,perm, a, pi);
             case 703:
-                return ScrambledRadicalInverseSpecialized(5309,perm, a);
+                return ScrambledRadicalInverseSpecialized(5309,perm, a, pi);
             case 704:
-                return ScrambledRadicalInverseSpecialized(5323,perm, a);
+                return ScrambledRadicalInverseSpecialized(5323,perm, a, pi);
             case 705:
-                return ScrambledRadicalInverseSpecialized(5333,perm, a);
+                return ScrambledRadicalInverseSpecialized(5333,perm, a, pi);
             case 706:
-                return ScrambledRadicalInverseSpecialized(5347,perm, a);
+                return ScrambledRadicalInverseSpecialized(5347,perm, a, pi);
             case 707:
-                return ScrambledRadicalInverseSpecialized(5351,perm, a);
+                return ScrambledRadicalInverseSpecialized(5351,perm, a, pi);
             case 708:
-                return ScrambledRadicalInverseSpecialized(5381,perm, a);
+                return ScrambledRadicalInverseSpecialized(5381,perm, a, pi);
             case 709:
-                return ScrambledRadicalInverseSpecialized(5387,perm, a);
+                return ScrambledRadicalInverseSpecialized(5387,perm, a, pi);
             case 710:
-                return ScrambledRadicalInverseSpecialized(5393,perm, a);
+                return ScrambledRadicalInverseSpecialized(5393,perm, a, pi);
             case 711:
-                return ScrambledRadicalInverseSpecialized(5399,perm, a);
+                return ScrambledRadicalInverseSpecialized(5399,perm, a, pi);
             case 712:
-                return ScrambledRadicalInverseSpecialized(5407,perm, a);
+                return ScrambledRadicalInverseSpecialized(5407,perm, a, pi);
             case 713:
-                return ScrambledRadicalInverseSpecialized(5413,perm, a);
+                return ScrambledRadicalInverseSpecialized(5413,perm, a, pi);
             case 714:
-                return ScrambledRadicalInverseSpecialized(5417,perm, a);
+                return ScrambledRadicalInverseSpecialized(5417,perm, a, pi);
             case 715:
-                return ScrambledRadicalInverseSpecialized(5419,perm, a);
+                return ScrambledRadicalInverseSpecialized(5419,perm, a, pi);
             case 716:
-                return ScrambledRadicalInverseSpecialized(5431,perm, a);
+                return ScrambledRadicalInverseSpecialized(5431,perm, a, pi);
             case 717:
-                return ScrambledRadicalInverseSpecialized(5437,perm, a);
+                return ScrambledRadicalInverseSpecialized(5437,perm, a, pi);
             case 718:
-                return ScrambledRadicalInverseSpecialized(5441,perm, a);
+                return ScrambledRadicalInverseSpecialized(5441,perm, a, pi);
             case 719:
-                return ScrambledRadicalInverseSpecialized(5443,perm, a);
+                return ScrambledRadicalInverseSpecialized(5443,perm, a, pi);
             case 720:
-                return ScrambledRadicalInverseSpecialized(5449,perm, a);
+                return ScrambledRadicalInverseSpecialized(5449,perm, a, pi);
             case 721:
-                return ScrambledRadicalInverseSpecialized(5471,perm, a);
+                return ScrambledRadicalInverseSpecialized(5471,perm, a, pi);
             case 722:
-                return ScrambledRadicalInverseSpecialized(5477,perm, a);
+                return ScrambledRadicalInverseSpecialized(5477,perm, a, pi);
             case 723:
-                return ScrambledRadicalInverseSpecialized(5479,perm, a);
+                return ScrambledRadicalInverseSpecialized(5479,perm, a, pi);
             case 724:
-                return ScrambledRadicalInverseSpecialized(5483,perm, a);
+                return ScrambledRadicalInverseSpecialized(5483,perm, a, pi);
             case 725:
-                return ScrambledRadicalInverseSpecialized(5501,perm, a);
+                return ScrambledRadicalInverseSpecialized(5501,perm, a, pi);
             case 726:
-                return ScrambledRadicalInverseSpecialized(5503,perm, a);
+                return ScrambledRadicalInverseSpecialized(5503,perm, a, pi);
             case 727:
-                return ScrambledRadicalInverseSpecialized(5507,perm, a);
+                return ScrambledRadicalInverseSpecialized(5507,perm, a, pi);
             case 728:
-                return ScrambledRadicalInverseSpecialized(5519,perm, a);
+                return ScrambledRadicalInverseSpecialized(5519,perm, a, pi);
             case 729:
-                return ScrambledRadicalInverseSpecialized(5521,perm, a);
+                return ScrambledRadicalInverseSpecialized(5521,perm, a, pi);
             case 730:
-                return ScrambledRadicalInverseSpecialized(5527,perm, a);
+                return ScrambledRadicalInverseSpecialized(5527,perm, a, pi);
             case 731:
-                return ScrambledRadicalInverseSpecialized(5531,perm, a);
+                return ScrambledRadicalInverseSpecialized(5531,perm, a, pi);
             case 732:
-                return ScrambledRadicalInverseSpecialized(5557,perm, a);
+                return ScrambledRadicalInverseSpecialized(5557,perm, a, pi);
             case 733:
-                return ScrambledRadicalInverseSpecialized(5563,perm, a);
+                return ScrambledRadicalInverseSpecialized(5563,perm, a, pi);
             case 734:
-                return ScrambledRadicalInverseSpecialized(5569,perm, a);
+                return ScrambledRadicalInverseSpecialized(5569,perm, a, pi);
             case 735:
-                return ScrambledRadicalInverseSpecialized(5573,perm, a);
+                return ScrambledRadicalInverseSpecialized(5573,perm, a, pi);
             case 736:
-                return ScrambledRadicalInverseSpecialized(5581,perm, a);
+                return ScrambledRadicalInverseSpecialized(5581,perm, a, pi);
             case 737:
-                return ScrambledRadicalInverseSpecialized(5591,perm, a);
+                return ScrambledRadicalInverseSpecialized(5591,perm, a, pi);
             case 738:
-                return ScrambledRadicalInverseSpecialized(5623,perm, a);
+                return ScrambledRadicalInverseSpecialized(5623,perm, a, pi);
             case 739:
-                return ScrambledRadicalInverseSpecialized(5639,perm, a);
+                return ScrambledRadicalInverseSpecialized(5639,perm, a, pi);
             case 740:
-                return ScrambledRadicalInverseSpecialized(5641,perm, a);
+                return ScrambledRadicalInverseSpecialized(5641,perm, a, pi);
             case 741:
-                return ScrambledRadicalInverseSpecialized(5647,perm, a);
+                return ScrambledRadicalInverseSpecialized(5647,perm, a, pi);
             case 742:
-                return ScrambledRadicalInverseSpecialized(5651,perm, a);
+                return ScrambledRadicalInverseSpecialized(5651,perm, a, pi);
             case 743:
-                return ScrambledRadicalInverseSpecialized(5653,perm, a);
+                return ScrambledRadicalInverseSpecialized(5653,perm, a, pi);
             case 744:
-                return ScrambledRadicalInverseSpecialized(5657,perm, a);
+                return ScrambledRadicalInverseSpecialized(5657,perm, a, pi);
             case 745:
-                return ScrambledRadicalInverseSpecialized(5659,perm, a);
+                return ScrambledRadicalInverseSpecialized(5659,perm, a, pi);
             case 746:
-                return ScrambledRadicalInverseSpecialized(5669,perm, a);
+                return ScrambledRadicalInverseSpecialized(5669,perm, a, pi);
             case 747:
-                return ScrambledRadicalInverseSpecialized(5683,perm, a);
+                return ScrambledRadicalInverseSpecialized(5683,perm, a, pi);
             case 748:
-                return ScrambledRadicalInverseSpecialized(5689,perm, a);
+                return ScrambledRadicalInverseSpecialized(5689,perm, a, pi);
             case 749:
-                return ScrambledRadicalInverseSpecialized(5693,perm, a);
+                return ScrambledRadicalInverseSpecialized(5693,perm, a, pi);
             case 750:
-                return ScrambledRadicalInverseSpecialized(5701,perm, a);
+                return ScrambledRadicalInverseSpecialized(5701,perm, a, pi);
             case 751:
-                return ScrambledRadicalInverseSpecialized(5711,perm, a);
+                return ScrambledRadicalInverseSpecialized(5711,perm, a, pi);
             case 752:
-                return ScrambledRadicalInverseSpecialized(5717,perm, a);
+                return ScrambledRadicalInverseSpecialized(5717,perm, a, pi);
             case 753:
-                return ScrambledRadicalInverseSpecialized(5737,perm, a);
+                return ScrambledRadicalInverseSpecialized(5737,perm, a, pi);
             case 754:
-                return ScrambledRadicalInverseSpecialized(5741,perm, a);
+                return ScrambledRadicalInverseSpecialized(5741,perm, a, pi);
             case 755:
-                return ScrambledRadicalInverseSpecialized(5743,perm, a);
+                return ScrambledRadicalInverseSpecialized(5743,perm, a, pi);
             case 756:
-                return ScrambledRadicalInverseSpecialized(5749,perm, a);
+                return ScrambledRadicalInverseSpecialized(5749,perm, a, pi);
             case 757:
-                return ScrambledRadicalInverseSpecialized(5779,perm, a);
+                return ScrambledRadicalInverseSpecialized(5779,perm, a, pi);
             case 758:
-                return ScrambledRadicalInverseSpecialized(5783,perm, a);
+                return ScrambledRadicalInverseSpecialized(5783,perm, a, pi);
             case 759:
-                return ScrambledRadicalInverseSpecialized(5791,perm, a);
+                return ScrambledRadicalInverseSpecialized(5791,perm, a, pi);
             case 760:
-                return ScrambledRadicalInverseSpecialized(5801,perm, a);
+                return ScrambledRadicalInverseSpecialized(5801,perm, a, pi);
             case 761:
-                return ScrambledRadicalInverseSpecialized(5807,perm, a);
+                return ScrambledRadicalInverseSpecialized(5807,perm, a, pi);
             case 762:
-                return ScrambledRadicalInverseSpecialized(5813,perm, a);
+                return ScrambledRadicalInverseSpecialized(5813,perm, a, pi);
             case 763:
-                return ScrambledRadicalInverseSpecialized(5821,perm, a);
+                return ScrambledRadicalInverseSpecialized(5821,perm, a, pi);
             case 764:
-                return ScrambledRadicalInverseSpecialized(5827,perm, a);
+                return ScrambledRadicalInverseSpecialized(5827,perm, a, pi);
             case 765:
-                return ScrambledRadicalInverseSpecialized(5839,perm, a);
+                return ScrambledRadicalInverseSpecialized(5839,perm, a, pi);
             case 766:
-                return ScrambledRadicalInverseSpecialized(5843,perm, a);
+                return ScrambledRadicalInverseSpecialized(5843,perm, a, pi);
             case 767:
-                return ScrambledRadicalInverseSpecialized(5849,perm, a);
+                return ScrambledRadicalInverseSpecialized(5849,perm, a, pi);
             case 768:
-                return ScrambledRadicalInverseSpecialized(5851,perm, a);
+                return ScrambledRadicalInverseSpecialized(5851,perm, a, pi);
             case 769:
-                return ScrambledRadicalInverseSpecialized(5857,perm, a);
+                return ScrambledRadicalInverseSpecialized(5857,perm, a, pi);
             case 770:
-                return ScrambledRadicalInverseSpecialized(5861,perm, a);
+                return ScrambledRadicalInverseSpecialized(5861,perm, a, pi);
             case 771:
-                return ScrambledRadicalInverseSpecialized(5867,perm, a);
+                return ScrambledRadicalInverseSpecialized(5867,perm, a, pi);
             case 772:
-                return ScrambledRadicalInverseSpecialized(5869,perm, a);
+                return ScrambledRadicalInverseSpecialized(5869,perm, a, pi);
             case 773:
-                return ScrambledRadicalInverseSpecialized(5879,perm, a);
+                return ScrambledRadicalInverseSpecialized(5879,perm, a, pi);
             case 774:
-                return ScrambledRadicalInverseSpecialized(5881,perm, a);
+                return ScrambledRadicalInverseSpecialized(5881,perm, a, pi);
             case 775:
-                return ScrambledRadicalInverseSpecialized(5897,perm, a);
+                return ScrambledRadicalInverseSpecialized(5897,perm, a, pi);
             case 776:
-                return ScrambledRadicalInverseSpecialized(5903,perm, a);
+                return ScrambledRadicalInverseSpecialized(5903,perm, a, pi);
             case 777:
-                return ScrambledRadicalInverseSpecialized(5923,perm, a);
+                return ScrambledRadicalInverseSpecialized(5923,perm, a, pi);
             case 778:
-                return ScrambledRadicalInverseSpecialized(5927,perm, a);
+                return ScrambledRadicalInverseSpecialized(5927,perm, a, pi);
             case 779:
-                return ScrambledRadicalInverseSpecialized(5939,perm, a);
+                return ScrambledRadicalInverseSpecialized(5939,perm, a, pi);
             case 780:
-                return ScrambledRadicalInverseSpecialized(5953,perm, a);
+                return ScrambledRadicalInverseSpecialized(5953,perm, a, pi);
             case 781:
-                return ScrambledRadicalInverseSpecialized(5981,perm, a);
+                return ScrambledRadicalInverseSpecialized(5981,perm, a, pi);
             case 782:
-                return ScrambledRadicalInverseSpecialized(5987,perm, a);
+                return ScrambledRadicalInverseSpecialized(5987,perm, a, pi);
             case 783:
-                return ScrambledRadicalInverseSpecialized(6007,perm, a);
+                return ScrambledRadicalInverseSpecialized(6007,perm, a, pi);
             case 784:
-                return ScrambledRadicalInverseSpecialized(6011,perm, a);
+                return ScrambledRadicalInverseSpecialized(6011,perm, a, pi);
             case 785:
-                return ScrambledRadicalInverseSpecialized(6029,perm, a);
+                return ScrambledRadicalInverseSpecialized(6029,perm, a, pi);
             case 786:
-                return ScrambledRadicalInverseSpecialized(6037,perm, a);
+                return ScrambledRadicalInverseSpecialized(6037,perm, a, pi);
             case 787:
-                return ScrambledRadicalInverseSpecialized(6043,perm, a);
+                return ScrambledRadicalInverseSpecialized(6043,perm, a, pi);
             case 788:
-                return ScrambledRadicalInverseSpecialized(6047,perm, a);
+                return ScrambledRadicalInverseSpecialized(6047,perm, a, pi);
             case 789:
-                return ScrambledRadicalInverseSpecialized(6053,perm, a);
+                return ScrambledRadicalInverseSpecialized(6053,perm, a, pi);
             case 790:
-                return ScrambledRadicalInverseSpecialized(6067,perm, a);
+                return ScrambledRadicalInverseSpecialized(6067,perm, a, pi);
             case 791:
-                return ScrambledRadicalInverseSpecialized(6073,perm, a);
+                return ScrambledRadicalInverseSpecialized(6073,perm, a, pi);
             case 792:
-                return ScrambledRadicalInverseSpecialized(6079,perm, a);
+                return ScrambledRadicalInverseSpecialized(6079,perm, a, pi);
             case 793:
-                return ScrambledRadicalInverseSpecialized(6089,perm, a);
+                return ScrambledRadicalInverseSpecialized(6089,perm, a, pi);
             case 794:
-                return ScrambledRadicalInverseSpecialized(6091,perm, a);
+                return ScrambledRadicalInverseSpecialized(6091,perm, a, pi);
             case 795:
-                return ScrambledRadicalInverseSpecialized(6101,perm, a);
+                return ScrambledRadicalInverseSpecialized(6101,perm, a, pi);
             case 796:
-                return ScrambledRadicalInverseSpecialized(6113,perm, a);
+                return ScrambledRadicalInverseSpecialized(6113,perm, a, pi);
             case 797:
-                return ScrambledRadicalInverseSpecialized(6121,perm, a);
+                return ScrambledRadicalInverseSpecialized(6121,perm, a, pi);
             case 798:
-                return ScrambledRadicalInverseSpecialized(6131,perm, a);
+                return ScrambledRadicalInverseSpecialized(6131,perm, a, pi);
             case 799:
-                return ScrambledRadicalInverseSpecialized(6133,perm, a);
+                return ScrambledRadicalInverseSpecialized(6133,perm, a, pi);
             case 800:
-                return ScrambledRadicalInverseSpecialized(6143,perm, a);
+                return ScrambledRadicalInverseSpecialized(6143,perm, a, pi);
             case 801:
-                return ScrambledRadicalInverseSpecialized(6151,perm, a);
+                return ScrambledRadicalInverseSpecialized(6151,perm, a, pi);
             case 802:
-                return ScrambledRadicalInverseSpecialized(6163,perm, a);
+                return ScrambledRadicalInverseSpecialized(6163,perm, a, pi);
             case 803:
-                return ScrambledRadicalInverseSpecialized(6173,perm, a);
+                return ScrambledRadicalInverseSpecialized(6173,perm, a, pi);
             case 804:
-                return ScrambledRadicalInverseSpecialized(6197,perm, a);
+                return ScrambledRadicalInverseSpecialized(6197,perm, a, pi);
             case 805:
-                return ScrambledRadicalInverseSpecialized(6199,perm, a);
+                return ScrambledRadicalInverseSpecialized(6199,perm, a, pi);
             case 806:
-                return ScrambledRadicalInverseSpecialized(6203,perm, a);
+                return ScrambledRadicalInverseSpecialized(6203,perm, a, pi);
             case 807:
-                return ScrambledRadicalInverseSpecialized(6211,perm, a);
+                return ScrambledRadicalInverseSpecialized(6211,perm, a, pi);
             case 808:
-                return ScrambledRadicalInverseSpecialized(6217,perm, a);
+                return ScrambledRadicalInverseSpecialized(6217,perm, a, pi);
             case 809:
-                return ScrambledRadicalInverseSpecialized(6221,perm, a);
+                return ScrambledRadicalInverseSpecialized(6221,perm, a, pi);
             case 810:
-                return ScrambledRadicalInverseSpecialized(6229,perm, a);
+                return ScrambledRadicalInverseSpecialized(6229,perm, a, pi);
             case 811:
-                return ScrambledRadicalInverseSpecialized(6247,perm, a);
+                return ScrambledRadicalInverseSpecialized(6247,perm, a, pi);
             case 812:
-                return ScrambledRadicalInverseSpecialized(6257,perm, a);
+                return ScrambledRadicalInverseSpecialized(6257,perm, a, pi);
             case 813:
-                return ScrambledRadicalInverseSpecialized(6263,perm, a);
+                return ScrambledRadicalInverseSpecialized(6263,perm, a, pi);
             case 814:
-                return ScrambledRadicalInverseSpecialized(6269,perm, a);
+                return ScrambledRadicalInverseSpecialized(6269,perm, a, pi);
             case 815:
-                return ScrambledRadicalInverseSpecialized(6271,perm, a);
+                return ScrambledRadicalInverseSpecialized(6271,perm, a, pi);
             case 816:
-                return ScrambledRadicalInverseSpecialized(6277,perm, a);
+                return ScrambledRadicalInverseSpecialized(6277,perm, a, pi);
             case 817:
-                return ScrambledRadicalInverseSpecialized(6287,perm, a);
+                return ScrambledRadicalInverseSpecialized(6287,perm, a, pi);
             case 818:
-                return ScrambledRadicalInverseSpecialized(6299,perm, a);
+                return ScrambledRadicalInverseSpecialized(6299,perm, a, pi);
             case 819:
-                return ScrambledRadicalInverseSpecialized(6301,perm, a);
+                return ScrambledRadicalInverseSpecialized(6301,perm, a, pi);
             case 820:
-                return ScrambledRadicalInverseSpecialized(6311,perm, a);
+                return ScrambledRadicalInverseSpecialized(6311,perm, a, pi);
             case 821:
-                return ScrambledRadicalInverseSpecialized(6317,perm, a);
+                return ScrambledRadicalInverseSpecialized(6317,perm, a, pi);
             case 822:
-                return ScrambledRadicalInverseSpecialized(6323,perm, a);
+                return ScrambledRadicalInverseSpecialized(6323,perm, a, pi);
             case 823:
-                return ScrambledRadicalInverseSpecialized(6329,perm, a);
+                return ScrambledRadicalInverseSpecialized(6329,perm, a, pi);
             case 824:
-                return ScrambledRadicalInverseSpecialized(6337,perm, a);
+                return ScrambledRadicalInverseSpecialized(6337,perm, a, pi);
             case 825:
-                return ScrambledRadicalInverseSpecialized(6343,perm, a);
+                return ScrambledRadicalInverseSpecialized(6343,perm, a, pi);
             case 826:
-                return ScrambledRadicalInverseSpecialized(6353,perm, a);
+                return ScrambledRadicalInverseSpecialized(6353,perm, a, pi);
             case 827:
-                return ScrambledRadicalInverseSpecialized(6359,perm, a);
+                return ScrambledRadicalInverseSpecialized(6359,perm, a, pi);
             case 828:
-                return ScrambledRadicalInverseSpecialized(6361,perm, a);
+                return ScrambledRadicalInverseSpecialized(6361,perm, a, pi);
             case 829:
-                return ScrambledRadicalInverseSpecialized(6367,perm, a);
+                return ScrambledRadicalInverseSpecialized(6367,perm, a, pi);
             case 830:
-                return ScrambledRadicalInverseSpecialized(6373,perm, a);
+                return ScrambledRadicalInverseSpecialized(6373,perm, a, pi);
             case 831:
-                return ScrambledRadicalInverseSpecialized(6379,perm, a);
+                return ScrambledRadicalInverseSpecialized(6379,perm, a, pi);
             case 832:
-                return ScrambledRadicalInverseSpecialized(6389,perm, a);
+                return ScrambledRadicalInverseSpecialized(6389,perm, a, pi);
             case 833:
-                return ScrambledRadicalInverseSpecialized(6397,perm, a);
+                return ScrambledRadicalInverseSpecialized(6397,perm, a, pi);
             case 834:
-                return ScrambledRadicalInverseSpecialized(6421,perm, a);
+                return ScrambledRadicalInverseSpecialized(6421,perm, a, pi);
             case 835:
-                return ScrambledRadicalInverseSpecialized(6427,perm, a);
+                return ScrambledRadicalInverseSpecialized(6427,perm, a, pi);
             case 836:
-                return ScrambledRadicalInverseSpecialized(6449,perm, a);
+                return ScrambledRadicalInverseSpecialized(6449,perm, a, pi);
             case 837:
-                return ScrambledRadicalInverseSpecialized(6451,perm, a);
+                return ScrambledRadicalInverseSpecialized(6451,perm, a, pi);
             case 838:
-                return ScrambledRadicalInverseSpecialized(6469,perm, a);
+                return ScrambledRadicalInverseSpecialized(6469,perm, a, pi);
             case 839:
-                return ScrambledRadicalInverseSpecialized(6473,perm, a);
+                return ScrambledRadicalInverseSpecialized(6473,perm, a, pi);
             case 840:
-                return ScrambledRadicalInverseSpecialized(6481,perm, a);
+                return ScrambledRadicalInverseSpecialized(6481,perm, a, pi);
             case 841:
-                return ScrambledRadicalInverseSpecialized(6491,perm, a);
+                return ScrambledRadicalInverseSpecialized(6491,perm, a, pi);
             case 842:
-                return ScrambledRadicalInverseSpecialized(6521,perm, a);
+                return ScrambledRadicalInverseSpecialized(6521,perm, a, pi);
             case 843:
-                return ScrambledRadicalInverseSpecialized(6529,perm, a);
+                return ScrambledRadicalInverseSpecialized(6529,perm, a, pi);
             case 844:
-                return ScrambledRadicalInverseSpecialized(6547,perm, a);
+                return ScrambledRadicalInverseSpecialized(6547,perm, a, pi);
             case 845:
-                return ScrambledRadicalInverseSpecialized(6551,perm, a);
+                return ScrambledRadicalInverseSpecialized(6551,perm, a, pi);
             case 846:
-                return ScrambledRadicalInverseSpecialized(6553,perm, a);
+                return ScrambledRadicalInverseSpecialized(6553,perm, a, pi);
             case 847:
-                return ScrambledRadicalInverseSpecialized(6563,perm, a);
+                return ScrambledRadicalInverseSpecialized(6563,perm, a, pi);
             case 848:
-                return ScrambledRadicalInverseSpecialized(6569,perm, a);
+                return ScrambledRadicalInverseSpecialized(6569,perm, a, pi);
             case 849:
-                return ScrambledRadicalInverseSpecialized(6571,perm, a);
+                return ScrambledRadicalInverseSpecialized(6571,perm, a, pi);
             case 850:
-                return ScrambledRadicalInverseSpecialized(6577,perm, a);
+                return ScrambledRadicalInverseSpecialized(6577,perm, a, pi);
             case 851:
-                return ScrambledRadicalInverseSpecialized(6581,perm, a);
+                return ScrambledRadicalInverseSpecialized(6581,perm, a, pi);
             case 852:
-                return ScrambledRadicalInverseSpecialized(6599,perm, a);
+                return ScrambledRadicalInverseSpecialized(6599,perm, a, pi);
             case 853:
-                return ScrambledRadicalInverseSpecialized(6607,perm, a);
+                return ScrambledRadicalInverseSpecialized(6607,perm, a, pi);
             case 854:
-                return ScrambledRadicalInverseSpecialized(6619,perm, a);
+                return ScrambledRadicalInverseSpecialized(6619,perm, a, pi);
             case 855:
-                return ScrambledRadicalInverseSpecialized(6637,perm, a);
+                return ScrambledRadicalInverseSpecialized(6637,perm, a, pi);
             case 856:
-                return ScrambledRadicalInverseSpecialized(6653,perm, a);
+                return ScrambledRadicalInverseSpecialized(6653,perm, a, pi);
             case 857:
-                return ScrambledRadicalInverseSpecialized(6659,perm, a);
+                return ScrambledRadicalInverseSpecialized(6659,perm, a, pi);
             case 858:
-                return ScrambledRadicalInverseSpecialized(6661,perm, a);
+                return ScrambledRadicalInverseSpecialized(6661,perm, a, pi);
             case 859:
-                return ScrambledRadicalInverseSpecialized(6673,perm, a);
+                return ScrambledRadicalInverseSpecialized(6673,perm, a, pi);
             case 860:
-                return ScrambledRadicalInverseSpecialized(6679,perm, a);
+                return ScrambledRadicalInverseSpecialized(6679,perm, a, pi);
             case 861:
-                return ScrambledRadicalInverseSpecialized(6689,perm, a);
+                return ScrambledRadicalInverseSpecialized(6689,perm, a, pi);
             case 862:
-                return ScrambledRadicalInverseSpecialized(6691,perm, a);
+                return ScrambledRadicalInverseSpecialized(6691,perm, a, pi);
             case 863:
-                return ScrambledRadicalInverseSpecialized(6701,perm, a);
+                return ScrambledRadicalInverseSpecialized(6701,perm, a, pi);
             case 864:
-                return ScrambledRadicalInverseSpecialized(6703,perm, a);
+                return ScrambledRadicalInverseSpecialized(6703,perm, a, pi);
             case 865:
-                return ScrambledRadicalInverseSpecialized(6709,perm, a);
+                return ScrambledRadicalInverseSpecialized(6709,perm, a, pi);
             case 866:
-                return ScrambledRadicalInverseSpecialized(6719,perm, a);
+                return ScrambledRadicalInverseSpecialized(6719,perm, a, pi);
             case 867:
-                return ScrambledRadicalInverseSpecialized(6733,perm, a);
+                return ScrambledRadicalInverseSpecialized(6733,perm, a, pi);
             case 868:
-                return ScrambledRadicalInverseSpecialized(6737,perm, a);
+                return ScrambledRadicalInverseSpecialized(6737,perm, a, pi);
             case 869:
-                return ScrambledRadicalInverseSpecialized(6761,perm, a);
+                return ScrambledRadicalInverseSpecialized(6761,perm, a, pi);
             case 870:
-                return ScrambledRadicalInverseSpecialized(6763,perm, a);
+                return ScrambledRadicalInverseSpecialized(6763,perm, a, pi);
             case 871:
-                return ScrambledRadicalInverseSpecialized(6779,perm, a);
+                return ScrambledRadicalInverseSpecialized(6779,perm, a, pi);
             case 872:
-                return ScrambledRadicalInverseSpecialized(6781,perm, a);
+                return ScrambledRadicalInverseSpecialized(6781,perm, a, pi);
             case 873:
-                return ScrambledRadicalInverseSpecialized(6791,perm, a);
+                return ScrambledRadicalInverseSpecialized(6791,perm, a, pi);
             case 874:
-                return ScrambledRadicalInverseSpecialized(6793,perm, a);
+                return ScrambledRadicalInverseSpecialized(6793,perm, a, pi);
             case 875:
-                return ScrambledRadicalInverseSpecialized(6803,perm, a);
+                return ScrambledRadicalInverseSpecialized(6803,perm, a, pi);
             case 876:
-                return ScrambledRadicalInverseSpecialized(6823,perm, a);
+                return ScrambledRadicalInverseSpecialized(6823,perm, a, pi);
             case 877:
-                return ScrambledRadicalInverseSpecialized(6827,perm, a);
+                return ScrambledRadicalInverseSpecialized(6827,perm, a, pi);
             case 878:
-                return ScrambledRadicalInverseSpecialized(6829,perm, a);
+                return ScrambledRadicalInverseSpecialized(6829,perm, a, pi);
             case 879:
-                return ScrambledRadicalInverseSpecialized(6833,perm, a);
+                return ScrambledRadicalInverseSpecialized(6833,perm, a, pi);
             case 880:
-                return ScrambledRadicalInverseSpecialized(6841,perm, a);
+                return ScrambledRadicalInverseSpecialized(6841,perm, a, pi);
             case 881:
-                return ScrambledRadicalInverseSpecialized(6857,perm, a);
+                return ScrambledRadicalInverseSpecialized(6857,perm, a, pi);
             case 882:
-                return ScrambledRadicalInverseSpecialized(6863,perm, a);
+                return ScrambledRadicalInverseSpecialized(6863,perm, a, pi);
             case 883:
-                return ScrambledRadicalInverseSpecialized(6869,perm, a);
+                return ScrambledRadicalInverseSpecialized(6869,perm, a, pi);
             case 884:
-                return ScrambledRadicalInverseSpecialized(6871,perm, a);
+                return ScrambledRadicalInverseSpecialized(6871,perm, a, pi);
             case 885:
-                return ScrambledRadicalInverseSpecialized(6883,perm, a);
+                return ScrambledRadicalInverseSpecialized(6883,perm, a, pi);
             case 886:
-                return ScrambledRadicalInverseSpecialized(6899,perm, a);
+                return ScrambledRadicalInverseSpecialized(6899,perm, a, pi);
             case 887:
-                return ScrambledRadicalInverseSpecialized(6907,perm, a);
+                return ScrambledRadicalInverseSpecialized(6907,perm, a, pi);
             case 888:
-                return ScrambledRadicalInverseSpecialized(6911,perm, a);
+                return ScrambledRadicalInverseSpecialized(6911,perm, a, pi);
             case 889:
-                return ScrambledRadicalInverseSpecialized(6917,perm, a);
+                return ScrambledRadicalInverseSpecialized(6917,perm, a, pi);
             case 890:
-                return ScrambledRadicalInverseSpecialized(6947,perm, a);
+                return ScrambledRadicalInverseSpecialized(6947,perm, a, pi);
             case 891:
-                return ScrambledRadicalInverseSpecialized(6949,perm, a);
+                return ScrambledRadicalInverseSpecialized(6949,perm, a, pi);
             case 892:
-                return ScrambledRadicalInverseSpecialized(6959,perm, a);
+                return ScrambledRadicalInverseSpecialized(6959,perm, a, pi);
             case 893:
-                return ScrambledRadicalInverseSpecialized(6961,perm, a);
+                return ScrambledRadicalInverseSpecialized(6961,perm, a, pi);
             case 894:
-                return ScrambledRadicalInverseSpecialized(6967,perm, a);
+                return ScrambledRadicalInverseSpecialized(6967,perm, a, pi);
             case 895:
-                return ScrambledRadicalInverseSpecialized(6971,perm, a);
+                return ScrambledRadicalInverseSpecialized(6971,perm, a, pi);
             case 896:
-                return ScrambledRadicalInverseSpecialized(6977,perm, a);
+                return ScrambledRadicalInverseSpecialized(6977,perm, a, pi);
             case 897:
-                return ScrambledRadicalInverseSpecialized(6983,perm, a);
+                return ScrambledRadicalInverseSpecialized(6983,perm, a, pi);
             case 898:
-                return ScrambledRadicalInverseSpecialized(6991,perm, a);
+                return ScrambledRadicalInverseSpecialized(6991,perm, a, pi);
             case 899:
-                return ScrambledRadicalInverseSpecialized(6997,perm, a);
+                return ScrambledRadicalInverseSpecialized(6997,perm, a, pi);
             case 900:
-                return ScrambledRadicalInverseSpecialized(7001,perm, a);
+                return ScrambledRadicalInverseSpecialized(7001,perm, a, pi);
             case 901:
-                return ScrambledRadicalInverseSpecialized(7013,perm, a);
+                return ScrambledRadicalInverseSpecialized(7013,perm, a, pi);
             case 902:
-                return ScrambledRadicalInverseSpecialized(7019,perm, a);
+                return ScrambledRadicalInverseSpecialized(7019,perm, a, pi);
             case 903:
-                return ScrambledRadicalInverseSpecialized(7027,perm, a);
+                return ScrambledRadicalInverseSpecialized(7027,perm, a, pi);
             case 904:
-                return ScrambledRadicalInverseSpecialized(7039,perm, a);
+                return ScrambledRadicalInverseSpecialized(7039,perm, a, pi);
             case 905:
-                return ScrambledRadicalInverseSpecialized(7043,perm, a);
+                return ScrambledRadicalInverseSpecialized(7043,perm, a, pi);
             case 906:
-                return ScrambledRadicalInverseSpecialized(7057,perm, a);
+                return ScrambledRadicalInverseSpecialized(7057,perm, a, pi);
             case 907:
-                return ScrambledRadicalInverseSpecialized(7069,perm, a);
+                return ScrambledRadicalInverseSpecialized(7069,perm, a, pi);
             case 908:
-                return ScrambledRadicalInverseSpecialized(7079,perm, a);
+                return ScrambledRadicalInverseSpecialized(7079,perm, a, pi);
             case 909:
-                return ScrambledRadicalInverseSpecialized(7103,perm, a);
+                return ScrambledRadicalInverseSpecialized(7103,perm, a, pi);
             case 910:
-                return ScrambledRadicalInverseSpecialized(7109,perm, a);
+                return ScrambledRadicalInverseSpecialized(7109,perm, a, pi);
             case 911:
-                return ScrambledRadicalInverseSpecialized(7121,perm, a);
+                return ScrambledRadicalInverseSpecialized(7121,perm, a, pi);
             case 912:
-                return ScrambledRadicalInverseSpecialized(7127,perm, a);
+                return ScrambledRadicalInverseSpecialized(7127,perm, a, pi);
             case 913:
-                return ScrambledRadicalInverseSpecialized(7129,perm, a);
+                return ScrambledRadicalInverseSpecialized(7129,perm, a, pi);
             case 914:
-                return ScrambledRadicalInverseSpecialized(7151,perm, a);
+                return ScrambledRadicalInverseSpecialized(7151,perm, a, pi);
             case 915:
-                return ScrambledRadicalInverseSpecialized(7159,perm, a);
+                return ScrambledRadicalInverseSpecialized(7159,perm, a, pi);
             case 916:
-                return ScrambledRadicalInverseSpecialized(7177,perm, a);
+                return ScrambledRadicalInverseSpecialized(7177,perm, a, pi);
             case 917:
-                return ScrambledRadicalInverseSpecialized(7187,perm, a);
+                return ScrambledRadicalInverseSpecialized(7187,perm, a, pi);
             case 918:
-                return ScrambledRadicalInverseSpecialized(7193,perm, a);
+                return ScrambledRadicalInverseSpecialized(7193,perm, a, pi);
             case 919:
-                return ScrambledRadicalInverseSpecialized(7207,perm, a);
+                return ScrambledRadicalInverseSpecialized(7207,perm, a, pi);
             case 920:
-                return ScrambledRadicalInverseSpecialized(7211,perm, a);
+                return ScrambledRadicalInverseSpecialized(7211,perm, a, pi);
             case 921:
-                return ScrambledRadicalInverseSpecialized(7213,perm, a);
+                return ScrambledRadicalInverseSpecialized(7213,perm, a, pi);
             case 922:
-                return ScrambledRadicalInverseSpecialized(7219,perm, a);
+                return ScrambledRadicalInverseSpecialized(7219,perm, a, pi);
             case 923:
-                return ScrambledRadicalInverseSpecialized(7229,perm, a);
+                return ScrambledRadicalInverseSpecialized(7229,perm, a, pi);
             case 924:
-                return ScrambledRadicalInverseSpecialized(7237,perm, a);
+                return ScrambledRadicalInverseSpecialized(7237,perm, a, pi);
             case 925:
-                return ScrambledRadicalInverseSpecialized(7243,perm, a);
+                return ScrambledRadicalInverseSpecialized(7243,perm, a, pi);
             case 926:
-                return ScrambledRadicalInverseSpecialized(7247,perm, a);
+                return ScrambledRadicalInverseSpecialized(7247,perm, a, pi);
             case 927:
-                return ScrambledRadicalInverseSpecialized(7253,perm, a);
+                return ScrambledRadicalInverseSpecialized(7253,perm, a, pi);
             case 928:
-                return ScrambledRadicalInverseSpecialized(7283,perm, a);
+                return ScrambledRadicalInverseSpecialized(7283,perm, a, pi);
             case 929:
-                return ScrambledRadicalInverseSpecialized(7297,perm, a);
+                return ScrambledRadicalInverseSpecialized(7297,perm, a, pi);
             case 930:
-                return ScrambledRadicalInverseSpecialized(7307,perm, a);
+                return ScrambledRadicalInverseSpecialized(7307,perm, a, pi);
             case 931:
-                return ScrambledRadicalInverseSpecialized(7309,perm, a);
+                return ScrambledRadicalInverseSpecialized(7309,perm, a, pi);
             case 932:
-                return ScrambledRadicalInverseSpecialized(7321,perm, a);
+                return ScrambledRadicalInverseSpecialized(7321,perm, a, pi);
             case 933:
-                return ScrambledRadicalInverseSpecialized(7331,perm, a);
+                return ScrambledRadicalInverseSpecialized(7331,perm, a, pi);
             case 934:
-                return ScrambledRadicalInverseSpecialized(7333,perm, a);
+                return ScrambledRadicalInverseSpecialized(7333,perm, a, pi);
             case 935:
-                return ScrambledRadicalInverseSpecialized(7349,perm, a);
+                return ScrambledRadicalInverseSpecialized(7349,perm, a, pi);
             case 936:
-                return ScrambledRadicalInverseSpecialized(7351,perm, a);
+                return ScrambledRadicalInverseSpecialized(7351,perm, a, pi);
             case 937:
-                return ScrambledRadicalInverseSpecialized(7369,perm, a);
+                return ScrambledRadicalInverseSpecialized(7369,perm, a, pi);
             case 938:
-                return ScrambledRadicalInverseSpecialized(7393,perm, a);
+                return ScrambledRadicalInverseSpecialized(7393,perm, a, pi);
             case 939:
-                return ScrambledRadicalInverseSpecialized(7411,perm, a);
+                return ScrambledRadicalInverseSpecialized(7411,perm, a, pi);
             case 940:
-                return ScrambledRadicalInverseSpecialized(7417,perm, a);
+                return ScrambledRadicalInverseSpecialized(7417,perm, a, pi);
             case 941:
-                return ScrambledRadicalInverseSpecialized(7433,perm, a);
+                return ScrambledRadicalInverseSpecialized(7433,perm, a, pi);
             case 942:
-                return ScrambledRadicalInverseSpecialized(7451,perm, a);
+                return ScrambledRadicalInverseSpecialized(7451,perm, a, pi);
             case 943:
-                return ScrambledRadicalInverseSpecialized(7457,perm, a);
+                return ScrambledRadicalInverseSpecialized(7457,perm, a, pi);
             case 944:
-                return ScrambledRadicalInverseSpecialized(7459,perm, a);
+                return ScrambledRadicalInverseSpecialized(7459,perm, a, pi);
             case 945:
-                return ScrambledRadicalInverseSpecialized(7477,perm, a);
+                return ScrambledRadicalInverseSpecialized(7477,perm, a, pi);
             case 946:
-                return ScrambledRadicalInverseSpecialized(7481,perm, a);
+                return ScrambledRadicalInverseSpecialized(7481,perm, a, pi);
             case 947:
-                return ScrambledRadicalInverseSpecialized(7487,perm, a);
+                return ScrambledRadicalInverseSpecialized(7487,perm, a, pi);
             case 948:
-                return ScrambledRadicalInverseSpecialized(7489,perm, a);
+                return ScrambledRadicalInverseSpecialized(7489,perm, a, pi);
             case 949:
-                return ScrambledRadicalInverseSpecialized(7499,perm, a);
+                return ScrambledRadicalInverseSpecialized(7499,perm, a, pi);
             case 950:
-                return ScrambledRadicalInverseSpecialized(7507,perm, a);
+                return ScrambledRadicalInverseSpecialized(7507,perm, a, pi);
             case 951:
-                return ScrambledRadicalInverseSpecialized(7517,perm, a);
+                return ScrambledRadicalInverseSpecialized(7517,perm, a, pi);
             case 952:
-                return ScrambledRadicalInverseSpecialized(7523,perm, a);
+                return ScrambledRadicalInverseSpecialized(7523,perm, a, pi);
             case 953:
-                return ScrambledRadicalInverseSpecialized(7529,perm, a);
+                return ScrambledRadicalInverseSpecialized(7529,perm, a, pi);
             case 954:
-                return ScrambledRadicalInverseSpecialized(7537,perm, a);
+                return ScrambledRadicalInverseSpecialized(7537,perm, a, pi);
             case 955:
-                return ScrambledRadicalInverseSpecialized(7541,perm, a);
+                return ScrambledRadicalInverseSpecialized(7541,perm, a, pi);
             case 956:
-                return ScrambledRadicalInverseSpecialized(7547,perm, a);
+                return ScrambledRadicalInverseSpecialized(7547,perm, a, pi);
             case 957:
-                return ScrambledRadicalInverseSpecialized(7549,perm, a);
+                return ScrambledRadicalInverseSpecialized(7549,perm, a, pi);
             case 958:
-                return ScrambledRadicalInverseSpecialized(7559,perm, a);
+                return ScrambledRadicalInverseSpecialized(7559,perm, a, pi);
             case 959:
-                return ScrambledRadicalInverseSpecialized(7561,perm, a);
+                return ScrambledRadicalInverseSpecialized(7561,perm, a, pi);
             case 960:
-                return ScrambledRadicalInverseSpecialized(7573,perm, a);
+                return ScrambledRadicalInverseSpecialized(7573,perm, a, pi);
             case 961:
-                return ScrambledRadicalInverseSpecialized(7577,perm, a);
+                return ScrambledRadicalInverseSpecialized(7577,perm, a, pi);
             case 962:
-                return ScrambledRadicalInverseSpecialized(7583,perm, a);
+                return ScrambledRadicalInverseSpecialized(7583,perm, a, pi);
             case 963:
-                return ScrambledRadicalInverseSpecialized(7589,perm, a);
+                return ScrambledRadicalInverseSpecialized(7589,perm, a, pi);
             case 964:
-                return ScrambledRadicalInverseSpecialized(7591,perm, a);
+                return ScrambledRadicalInverseSpecialized(7591,perm, a, pi);
             case 965:
-                return ScrambledRadicalInverseSpecialized(7603,perm, a);
+                return ScrambledRadicalInverseSpecialized(7603,perm, a, pi);
             case 966:
-                return ScrambledRadicalInverseSpecialized(7607,perm, a);
+                return ScrambledRadicalInverseSpecialized(7607,perm, a, pi);
             case 967:
-                return ScrambledRadicalInverseSpecialized(7621,perm, a);
+                return ScrambledRadicalInverseSpecialized(7621,perm, a, pi);
             case 968:
-                return ScrambledRadicalInverseSpecialized(7639,perm, a);
+                return ScrambledRadicalInverseSpecialized(7639,perm, a, pi);
             case 969:
-                return ScrambledRadicalInverseSpecialized(7643,perm, a);
+                return ScrambledRadicalInverseSpecialized(7643,perm, a, pi);
             case 970:
-                return ScrambledRadicalInverseSpecialized(7649,perm, a);
+                return ScrambledRadicalInverseSpecialized(7649,perm, a, pi);
             case 971:
-                return ScrambledRadicalInverseSpecialized(7669,perm, a);
+                return ScrambledRadicalInverseSpecialized(7669,perm, a, pi);
             case 972:
-                return ScrambledRadicalInverseSpecialized(7673,perm, a);
+                return ScrambledRadicalInverseSpecialized(7673,perm, a, pi);
             case 973:
-                return ScrambledRadicalInverseSpecialized(7681,perm, a);
+                return ScrambledRadicalInverseSpecialized(7681,perm, a, pi);
             case 974:
-                return ScrambledRadicalInverseSpecialized(7687,perm, a);
+                return ScrambledRadicalInverseSpecialized(7687,perm, a, pi);
             case 975:
-                return ScrambledRadicalInverseSpecialized(7691,perm, a);
+                return ScrambledRadicalInverseSpecialized(7691,perm, a, pi);
             case 976:
-                return ScrambledRadicalInverseSpecialized(7699,perm, a);
+                return ScrambledRadicalInverseSpecialized(7699,perm, a, pi);
             case 977:
-                return ScrambledRadicalInverseSpecialized(7703,perm, a);
+                return ScrambledRadicalInverseSpecialized(7703,perm, a, pi);
             case 978:
-                return ScrambledRadicalInverseSpecialized(7717,perm, a);
+                return ScrambledRadicalInverseSpecialized(7717,perm, a, pi);
             case 979:
-                return ScrambledRadicalInverseSpecialized(7723,perm, a);
+                return ScrambledRadicalInverseSpecialized(7723,perm, a, pi);
             case 980:
-                return ScrambledRadicalInverseSpecialized(7727,perm, a);
+                return ScrambledRadicalInverseSpecialized(7727,perm, a, pi);
             case 981:
-                return ScrambledRadicalInverseSpecialized(7741,perm, a);
+                return ScrambledRadicalInverseSpecialized(7741,perm, a, pi);
             case 982:
-                return ScrambledRadicalInverseSpecialized(7753,perm, a);
+                return ScrambledRadicalInverseSpecialized(7753,perm, a, pi);
             case 983:
-                return ScrambledRadicalInverseSpecialized(7757,perm, a);
+                return ScrambledRadicalInverseSpecialized(7757,perm, a, pi);
             case 984:
-                return ScrambledRadicalInverseSpecialized(7759,perm, a);
+                return ScrambledRadicalInverseSpecialized(7759,perm, a, pi);
             case 985:
-                return ScrambledRadicalInverseSpecialized(7789,perm, a);
+                return ScrambledRadicalInverseSpecialized(7789,perm, a, pi);
             case 986:
-                return ScrambledRadicalInverseSpecialized(7793,perm, a);
+                return ScrambledRadicalInverseSpecialized(7793,perm, a, pi);
             case 987:
-                return ScrambledRadicalInverseSpecialized(7817,perm, a);
+                return ScrambledRadicalInverseSpecialized(7817,perm, a, pi);
             case 988:
-                return ScrambledRadicalInverseSpecialized(7823,perm, a);
+                return ScrambledRadicalInverseSpecialized(7823,perm, a, pi);
             case 989:
-                return ScrambledRadicalInverseSpecialized(7829,perm, a);
+                return ScrambledRadicalInverseSpecialized(7829,perm, a, pi);
             case 990:
-                return ScrambledRadicalInverseSpecialized(7841,perm, a);
+                return ScrambledRadicalInverseSpecialized(7841,perm, a, pi);
             case 991:
-                return ScrambledRadicalInverseSpecialized(7853,perm, a);
+                return ScrambledRadicalInverseSpecialized(7853,perm, a, pi);
             case 992:
-                return ScrambledRadicalInverseSpecialized(7867,perm, a);
+                return ScrambledRadicalInverseSpecialized(7867,perm, a, pi);
             case 993:
-                return ScrambledRadicalInverseSpecialized(7873,perm, a);
+                return ScrambledRadicalInverseSpecialized(7873,perm, a, pi);
             case 994:
-                return ScrambledRadicalInverseSpecialized(7877,perm, a);
+                return ScrambledRadicalInverseSpecialized(7877,perm, a, pi);
             case 995:
-                return ScrambledRadicalInverseSpecialized(7879,perm, a);
+                return ScrambledRadicalInverseSpecialized(7879,perm, a, pi);
             case 996:
-                return ScrambledRadicalInverseSpecialized(7883,perm, a);
+                return ScrambledRadicalInverseSpecialized(7883,perm, a, pi);
             case 997:
-                return ScrambledRadicalInverseSpecialized(7901,perm, a);
+                return ScrambledRadicalInverseSpecialized(7901,perm, a, pi);
             case 998:
-                return ScrambledRadicalInverseSpecialized(7907,perm, a);
+                return ScrambledRadicalInverseSpecialized(7907,perm, a, pi);
             case 999:
-                return ScrambledRadicalInverseSpecialized(7919,perm, a);
+                return ScrambledRadicalInverseSpecialized(7919,perm, a, pi);
             case 1000:
-                return ScrambledRadicalInverseSpecialized(7927,perm, a);
+                return ScrambledRadicalInverseSpecialized(7927,perm, a, pi);
             case 1001:
-                return ScrambledRadicalInverseSpecialized(7933,perm, a);
+                return ScrambledRadicalInverseSpecialized(7933,perm, a, pi);
             case 1002:
-                return ScrambledRadicalInverseSpecialized(7937,perm, a);
+                return ScrambledRadicalInverseSpecialized(7937,perm, a, pi);
             case 1003:
-                return ScrambledRadicalInverseSpecialized(7949,perm, a);
+                return ScrambledRadicalInverseSpecialized(7949,perm, a, pi);
             case 1004:
-                return ScrambledRadicalInverseSpecialized(7951,perm, a);
+                return ScrambledRadicalInverseSpecialized(7951,perm, a, pi);
             case 1005:
-                return ScrambledRadicalInverseSpecialized(7963,perm, a);
+                return ScrambledRadicalInverseSpecialized(7963,perm, a, pi);
             case 1006:
-                return ScrambledRadicalInverseSpecialized(7993,perm, a);
+                return ScrambledRadicalInverseSpecialized(7993,perm, a, pi);
             case 1007:
-                return ScrambledRadicalInverseSpecialized(8009,perm, a);
+                return ScrambledRadicalInverseSpecialized(8009,perm, a, pi);
             case 1008:
-                return ScrambledRadicalInverseSpecialized(8011,perm, a);
+                return ScrambledRadicalInverseSpecialized(8011,perm, a, pi);
             case 1009:
-                return ScrambledRadicalInverseSpecialized(8017,perm, a);
+                return ScrambledRadicalInverseSpecialized(8017,perm, a, pi);
             case 1010:
-                return ScrambledRadicalInverseSpecialized(8039,perm, a);
+                return ScrambledRadicalInverseSpecialized(8039,perm, a, pi);
             case 1011:
-                return ScrambledRadicalInverseSpecialized(8053,perm, a);
+                return ScrambledRadicalInverseSpecialized(8053,perm, a, pi);
             case 1012:
-                return ScrambledRadicalInverseSpecialized(8059,perm, a);
+                return ScrambledRadicalInverseSpecialized(8059,perm, a, pi);
             case 1013:
-                return ScrambledRadicalInverseSpecialized(8069,perm, a);
+                return ScrambledRadicalInverseSpecialized(8069,perm, a, pi);
             case 1014:
-                return ScrambledRadicalInverseSpecialized(8081,perm, a);
+                return ScrambledRadicalInverseSpecialized(8081,perm, a, pi);
             case 1015:
-                return ScrambledRadicalInverseSpecialized(8087,perm, a);
+                return ScrambledRadicalInverseSpecialized(8087,perm, a, pi);
             case 1016:
-                return ScrambledRadicalInverseSpecialized(8089,perm, a);
+                return ScrambledRadicalInverseSpecialized(8089,perm, a, pi);
             case 1017:
-                return ScrambledRadicalInverseSpecialized(8093,perm, a);
+                return ScrambledRadicalInverseSpecialized(8093,perm, a, pi);
             case 1018:
-                return ScrambledRadicalInverseSpecialized(8101,perm, a);
+                return ScrambledRadicalInverseSpecialized(8101,perm, a, pi);
             case 1019:
-                return ScrambledRadicalInverseSpecialized(8111,perm, a);
+                return ScrambledRadicalInverseSpecialized(8111,perm, a, pi);
             case 1020:
-                return ScrambledRadicalInverseSpecialized(8117,perm, a);
+                return ScrambledRadicalInverseSpecialized(8117,perm, a, pi);
             case 1021:
-                return ScrambledRadicalInverseSpecialized(8123,perm, a);
+                return ScrambledRadicalInverseSpecialized(8123,perm, a, pi);
             case 1022:
-                return ScrambledRadicalInverseSpecialized(8147,perm, a);
+                return ScrambledRadicalInverseSpecialized(8147,perm, a, pi);
             case 1023:
-                return ScrambledRadicalInverseSpecialized(8161,perm, a);
+                return ScrambledRadicalInverseSpecialized(8161,perm, a, pi);
             default:
                 Error.Error("Base %d is >= 1024, the limit of ScrambledRadicalInverse", baseIndex);
                 return 0;
-*/
         }
     }
 
