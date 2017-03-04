@@ -13,6 +13,8 @@ package org.pbrt.core;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import org.pbrt.openexr.*;
+import org.pbrt.openexr.exception.OpenExrException;
 
 public class ImageIO {
     public static void Write(String filename, float[] rgb, Bounds2i outputBounds, Point2i totalResolution) {
@@ -82,8 +84,20 @@ public class ImageIO {
     }
 
     private static SpectrumImage ReadEXR(String filename) {
-        Error.Warning("EXR image read not implemented.");
-        return null;
+        SpectrumImage image = null;
+        try {
+            OpenExr oexr = new OpenExr(new File(filename));
+            image = new SpectrumImage();
+            image.resolution = new Point2i(oexr.getWidth(), oexr.getHeight());
+            image.image = new Spectrum[oexr.getWidth()* oexr.getHeight()];
+            final float[] pixels = oexr.getPixels();
+            for (int pix = 0; pix < pixels.length / 3 ; pix++) {
+                image.image[pix] = Spectrum.FromRGB(pixels[pix*3+0], pixels[pix*3+1], pixels[pix*3+2]);
+            }
+        } catch (OpenExrException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
     private static SpectrumImage ReadPFM(String filename) {
         Error.Warning("PFM image read not implemented.");
@@ -93,7 +107,6 @@ public class ImageIO {
     private static void WritePFM(String filename, float[] rgb, int x, int y) {
     }
 
-    private static void WriteEXR(String filename, float[] rgb, int xRes, int yRes, int totalXRes, int totalYRes, int xOffset, int yOffset) {
-    }
+    private native static void WriteEXR(String filename, float[] rgb, int xRes, int yRes, int totalXRes, int totalYRes, int xOffset, int yOffset);
 
 }

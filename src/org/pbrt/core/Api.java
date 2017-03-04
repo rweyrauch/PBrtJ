@@ -645,7 +645,7 @@ public class Api {
         currentApiState = APIState.Uninitialized;
         //ParallelCleanup();
         renderOptions = null;
-        //CleanupProfiler();
+        Stats.CleanupProfiler();
     }
 
     private static char[] spaces = new char[]{' '};
@@ -1223,14 +1223,14 @@ public class Api {
             // issue is that all the rest of the profiling system assumes
             // hierarchical inheritance of profiling state; this is the only
             // place where that isn't the case.
-            //CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::SceneConstruction));
-            //ProfilerState = ProfToBits(Prof::IntegratorRender);
+            assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.SceneConstruction));
+            Stats.ProfilerState = Stats.ProfToBits(Stats.Prof.IntegratorRender);
 
             if ((scene != null) && (integrator != null)) {
                 integrator.Render(scene);
             }
 
-            //MergeWorkerThreadStats();
+            //Parallel.MergeWorkerThreadStats();
             Stats.ReportThreadStats();
             if (!Pbrt.options.Quiet) {
                 Stats.PrintStats(new OutputStreamWriter(System.out));
@@ -1239,8 +1239,8 @@ public class Api {
                 Stats.ClearProfiler();
             }
 
-            //CHECK_EQ(CurrentProfilerState(), ProfToBits(Prof::IntegratorRender));
-            //ProfilerState = ProfToBits(Prof::SceneConstruction);
+            assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.IntegratorRender));
+            Stats.ProfilerState = Stats.ProfToBits(Stats.Prof.SceneConstruction);
         }
 
         // Clean up after rendering
