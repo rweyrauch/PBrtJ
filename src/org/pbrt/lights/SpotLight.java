@@ -36,7 +36,7 @@ public class SpotLight extends Light {
     public SpotLight(Transform light2world, MediumInterface mi, Spectrum I, float totalWidth, float falloffStart) {
         super(FlagDeltaPosition, light2world, mi, 1);
         this.pLight = light2world.xform(new Point3f(0, 0, 0));
-        this.I = I;
+        this.I = new Spectrum(I);
         this.cosTotalWidth = (float)Math.cos(Math.toRadians(totalWidth));
         this.cosFalloffStart = (float)Math.cos(Math.toRadians(falloffStart));
     }

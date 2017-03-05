@@ -13,7 +13,7 @@ public class MicrofacetReflection extends BxDF {
 
     public MicrofacetReflection(Spectrum R, MicrofacetDistribution distribution, Fresnel fresnel) {
         super(BSDF_REFLECTION | BSDF_GLOSSY);
-        this.R = R;
+        this.R = new Spectrum(R);
         this.distribution = distribution;
         this.fresnel = fresnel;
     }

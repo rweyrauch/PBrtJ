@@ -27,6 +27,10 @@ public class Point2i {
         this.x = v.x;
         this.y = v.y;
     }
+    public Point2i(Point2i p) {
+        x = p.x;
+        y = p.y;
+    }
 
     public Point2i add(Vector2i v) {
         return new Point2i(x + v.x, y + v.y);

@@ -17,8 +17,8 @@ public class PlanarMapping2D extends TextureMapping2D {
     }
     public PlanarMapping2D(Vector3f vs, Vector3f vt, float ds, float dt) {
         super();
-        this.vs = vs;
-        this.vt = vt;
+        this.vs = new Vector3f(vs);
+        this.vt = new Vector3f(vt);
         this.ds = ds;
         this.dt = dt;
     }

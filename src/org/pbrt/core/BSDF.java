@@ -13,8 +13,8 @@ package org.pbrt.core;
 public class BSDF {
 
     // BSDF Private Data
-    private Normal3f ns, ng;
-    private Vector3f ss, ts;
+    private final Normal3f ns, ng;
+    private final Vector3f ss, ts;
     private int nBxDFs = 0;
     private static final int MaxBxDFs = 8;
     public BxDF[] bxdfs = new BxDF[MaxBxDFs];
@@ -22,8 +22,8 @@ public class BSDF {
     // BSDF Public Methods
     public BSDF(SurfaceInteraction si, float eta) {
         this.eta = eta;
-        this.ns = si.shading.n;
-        this.ng = si.n;
+        this.ns = new Normal3f(si.shading.n);
+        this.ng = new Normal3f(si.n);
         this.ss = Vector3f.Normalize(si.shading.dpdu);
         this.ts = Vector3f.Cross(ns, ss);
     }

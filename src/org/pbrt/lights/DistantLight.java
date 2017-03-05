@@ -25,7 +25,7 @@ public class DistantLight extends Light {
 
     public DistantLight(Transform light2world, Spectrum L, Vector3f wLight) {
         super(FlagDeltaDirection, light2world, new MediumInterface(), 1);
-        this.L = L;
+        this.L = new Spectrum(L);
         this.wLight = Vector3f.Normalize(light2world.xform(wLight));
     }
 

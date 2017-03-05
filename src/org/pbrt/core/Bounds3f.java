@@ -20,12 +20,16 @@ public class Bounds3f {
         pMax = new Point3f(minNum, minNum, minNum);
     }
     public Bounds3f(Point3f p) {
-        pMin = p;
-        pMax = p;
+        pMin = new Point3f(p);
+        pMax = new Point3f(p);
     }
     public Bounds3f(Point3f p1, Point3f p2) {
         pMin = new Point3f(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.min(p1.z, p2.z));
         pMax = new Point3f(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y), Math.max(p1.z, p2.z));
+    }
+
+    public Bounds3f(Bounds3f b) {
+        this(b.pMax, b.pMin);
     }
 
     public Point3f at(int i) {

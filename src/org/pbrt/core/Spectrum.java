@@ -29,6 +29,11 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
             c[i] = v;
         }
     }
+    public Spectrum(Spectrum s) {
+        for (int i = 0; i < this.c.length; i++) {
+            this.c[i] = s.c[i];
+        }
+    }
 
     public static int numSamples() {
         return nSamples;

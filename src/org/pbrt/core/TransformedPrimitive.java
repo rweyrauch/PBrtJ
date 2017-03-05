@@ -18,7 +18,7 @@ public class TransformedPrimitive extends Primitive {
 
     public TransformedPrimitive(Primitive primitive, AnimatedTransform PrimitiveToWorld) {
         this.primitive = primitive;
-        this.PrimitiveToWorld = PrimitiveToWorld;
+        this.PrimitiveToWorld = PrimitiveToWorld.clone();
     }
 
     @Override

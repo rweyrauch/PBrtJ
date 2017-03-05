@@ -14,7 +14,7 @@ public class SphericalMapping2D extends TextureMapping2D {
 
     public SphericalMapping2D(Transform worldToTexture) {
         super();
-        this.worldToTexture = worldToTexture;
+        this.worldToTexture = worldToTexture.clone();
     }
 
     public MapPoint Map(SurfaceInteraction si) {

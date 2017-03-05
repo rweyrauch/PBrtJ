@@ -26,10 +26,9 @@ public abstract class Shape {
     public boolean reverseOrientation;
     public boolean transformSwapsHandedness;
 
-    public Shape(Transform ObjectToWorld, Transform WorldToObject,
-          boolean reverseOrientation) {
-        this.ObjectToWorld = ObjectToWorld;
-        this.WorldToObject = WorldToObject;
+    public Shape(Transform ObjectToWorld, Transform WorldToObject, boolean reverseOrientation) {
+        this.ObjectToWorld = ObjectToWorld.clone();
+        this.WorldToObject = WorldToObject.clone();
         this.reverseOrientation = reverseOrientation;
         this.transformSwapsHandedness = ObjectToWorld.SwapsHandedness();
         nShapesCreated.increment();

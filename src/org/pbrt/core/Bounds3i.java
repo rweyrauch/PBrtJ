@@ -20,12 +20,16 @@ public class Bounds3i {
         pMax = new Point3i(minNum, minNum, minNum);
     }
     public Bounds3i(Point3i p) {
-        pMin = p;
-        pMax = p;
+        pMin = new Point3i(p);
+        pMax = new Point3i(p);
     }
     public Bounds3i(Point3i p1, Point3i p2) {
         pMin = new Point3i(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.min(p1.z, p2.z));
         pMax = new Point3i(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y), Math.max(p1.z, p2.z));
+    }
+
+    public Bounds3i(Bounds3i b) {
+        this(b.pMax, b.pMin);
     }
 
     public Point3i at(int i) {

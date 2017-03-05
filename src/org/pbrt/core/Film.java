@@ -19,17 +19,17 @@ public class Film {
         float filterWeightSum = 0;
         AtomicFloat splatXYZ[] = {new AtomicFloat(0), new AtomicFloat(0), new AtomicFloat(0)};
     }
-    Pixel[] pixels;
+    private Pixel[] pixels;
     private static final int filterTableWidth = 16;
     private float filterTable[] = new float[filterTableWidth * filterTableWidth];
-    private float scale;
-    private float maxSampleLuminance;
+    private final float scale;
+    private final float maxSampleLuminance;
 
     // FilmTilePixel Declarations
     public class FilmTilePixel {
         Spectrum contribSum = new Spectrum(0);
         float filterWeightSum = 0;
-    };
+    }
 
     public class FilmTile {
         // FilmTile Public Methods
@@ -101,7 +101,7 @@ public class Film {
         private int filterTableSize;
         private FilmTilePixel[] pixels;
         private float maxSampleLuminance;
-    };
+    }
 
     // Film Public Methods
     public Film(Point2i resolution, Bounds2f cropWindow, Filter filter, float diagonal, String filename, float scale, float maxSampleLuminance) {
@@ -136,8 +136,8 @@ public class Film {
                 filterTable[offset] = filter.Evaluate(p);
             }
         }
-
     }
+
     public Bounds2i GetSampleBounds() {
         Vector2f halfPixel = new Vector2f(0.5f, 0.5f);
         Bounds2f floatBounds = new Bounds2f(Point2f.Floor(new Point2f(croppedPixelBounds.pMin).add(halfPixel.subtract(filter.radius))),
@@ -161,9 +161,24 @@ public class Film {
         Bounds2i tilePixelBounds = Bounds2i.Intersect(new Bounds2i(p0, p1), croppedPixelBounds);
         return new FilmTile(tilePixelBounds, filter.radius, filterTable, filterTableWidth, maxSampleLuminance);
     }
-    public void MergeFilmTile(FilmTile tile) {
 
+    public void MergeFilmTile(FilmTile tile) {
+        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.MergeFilmTile);
+        //VLOG(1) << "Merging film tile " << tile.pixelBounds;
+        //std::lock_guard<std::mutex> lock(mutex);
+        for (int y = tile.GetPixelBounds().pMin.y; y < tile.GetPixelBounds().pMax.y; y++) {
+            for (int x = tile.GetPixelBounds().pMin.x; x < tile.GetPixelBounds().pMax.x; x++) {
+                Point2i pixel = new Point2i(x, y);
+                // Merge _pixel_ into _Film::pixels_
+                final FilmTilePixel tilePixel = tile.GetPixel(pixel);
+                Pixel mergePixel = GetPixel(pixel);
+                float[] xyz = tilePixel.contribSum.toXYZ();
+                for (int i = 0; i < 3; ++i) mergePixel.xyz[i] += xyz[i];
+                mergePixel.filterWeightSum += tilePixel.filterWeightSum;
+            }
+        }
     }
+
     public void SetImage(Spectrum[] img) {
         int nPixels = croppedPixelBounds.Area();
         for (int i = 0; i < nPixels; ++i) {
@@ -262,11 +277,11 @@ public class Film {
     }
 
     // Film Public Data
-    public Point2i fullResolution;
-    public float diagonal;
-    Filter filter;
-    String filename;
-    Bounds2i croppedPixelBounds;
+    public final Point2i fullResolution;
+    public final float diagonal;
+    public Filter filter;
+    public final String filename;
+    public Bounds2i croppedPixelBounds;
 
     public static Film Create(ParamSet paramSet, Filter filter) {
         // Intentionally use FindOneString() rather than FindOneFilename() here

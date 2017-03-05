@@ -27,11 +27,11 @@ public class Scene {
     public Scene(Primitive aggregate,
           ArrayList<Light> lights) {
         this.aggregate = aggregate;
-        this.lights = lights;
+        this.lights = (ArrayList<Light>)(lights.clone());
 
         // Scene Constructor Implementation
         worldBound = aggregate.WorldBound();
-        for (Light light : this.lights) {
+        for (Light light : lights) {
             light.Preprocess(this);
             if ((light.flags & Light.FlagInfinite) != 0)
                 infiniteLights.add(light);

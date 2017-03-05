@@ -12,11 +12,11 @@ package org.pbrt.core;
 
 import java.util.ArrayList;
 
-public class AnimatedTransform {
+public class AnimatedTransform implements Cloneable {
     // AnimatedTransform Private Data
-    private Transform startTransform, endTransform;
-    private float startTime, endTime;
-    private boolean actuallyAnimated;
+    private final Transform startTransform, endTransform;
+    private final float startTime, endTime;
+    private final boolean actuallyAnimated;
     private Vector3f T0, T1;
     private Quaternion R0, R1;
     private Matrix4x4 S0, S1;
@@ -135,6 +135,7 @@ public class AnimatedTransform {
         this.endTransform = endTransform;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.actuallyAnimated = this.startTransform.notEqual(this.endTransform);
 
         MatComponents sComp = Decompose(startTransform.GetMatrix());
         MatComponents eComp = Decompose(endTransform.GetMatrix());
@@ -841,7 +842,11 @@ public class AnimatedTransform {
         }
 
     }
-    
+
+    public AnimatedTransform clone() {
+        return new AnimatedTransform(this.startTransform.clone(), this.startTime, this.endTransform.clone(), this.endTime);
+    }
+
     public static class MatComponents {
         Vector3f T = new Vector3f();
         Quaternion R = new Quaternion();
@@ -890,6 +895,7 @@ public class AnimatedTransform {
         
         return comps;
     }
+
     public Transform Interpolate(float time) {
         // Handle boundary conditions for matrix interpolation
         if (!actuallyAnimated || time <= startTime) {

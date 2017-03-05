@@ -19,7 +19,7 @@ public abstract class Filter {
         this.invRadius = new Vector2f(0,0);
     }
     public Filter(Vector2f radius) {
-        this.radius = radius;
+        this.radius = new Vector2f(radius);
         this.invRadius = new Vector2f(1 / radius.x, 1 / radius.y); }
 
     public abstract float Evaluate(Point2f p);

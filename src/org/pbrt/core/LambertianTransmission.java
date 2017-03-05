@@ -14,7 +14,7 @@ public class LambertianTransmission extends BxDF {
 
     public LambertianTransmission(Spectrum T) {
         super(BSDF_TRANSMISSION | BSDF_DIFFUSE);
-        this.T = T;
+        this.T = new Spectrum(T);
     }
 
     @Override

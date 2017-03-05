@@ -33,6 +33,11 @@ public class Point2f {
         this.x = v.x;
         this.y = v.y;
     }
+    public Point2f(Point2f p) {
+        x = p.x;
+        y = p.y;
+    }
+
     public Point2f add(Vector2f v) {
         assert (!v.HasNaNs());
         return new Point2f(x + v.x, y + v.y);

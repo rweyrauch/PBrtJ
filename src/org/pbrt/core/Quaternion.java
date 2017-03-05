@@ -21,9 +21,14 @@ public class Quaternion {
         w = 1;
     }
     public Quaternion(Vector3f v, float w) {
-        this.v = v;
+        this.v = new Vector3f(v);
         this.w = w;
     }
+    public Quaternion(Quaternion q) {
+        this.v = new Vector3f(q.v);
+        this.w = q.w;
+    }
+
     public void increment(Quaternion q) {
         v.increment(q.v);
         w += q.w;

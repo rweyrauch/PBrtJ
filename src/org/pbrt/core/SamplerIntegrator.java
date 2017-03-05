@@ -17,7 +17,7 @@ public abstract class SamplerIntegrator extends Integrator {
     public SamplerIntegrator(Camera camera, Sampler sampler, Bounds2i pixelBounds) {
         this.camera = camera;
         this.sampler = sampler;
-        this.pixelBounds = pixelBounds;
+        this.pixelBounds = new Bounds2i(pixelBounds);
     }
 
     public void Preprocess(Scene scene, Sampler sampler) {}
@@ -395,7 +395,7 @@ public abstract class SamplerIntegrator extends Integrator {
     protected Camera camera;
 
     private Sampler sampler;
-    private Bounds2i pixelBounds;
+    private final Bounds2i pixelBounds;
 
     private static Stats.STAT_COUNTER nCameraRays = new Stats.STAT_COUNTER("Integrator/Camera rays traced");
 

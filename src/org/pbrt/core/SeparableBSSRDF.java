@@ -16,7 +16,7 @@ public abstract class SeparableBSSRDF extends BSSRDF {
 
     public SeparableBSSRDF(SurfaceInteraction po, float eta, Material material, Material.TransportMode mode) {
         super(po, eta);
-        this.ns = po.shading.n;
+        this.ns = new Normal3f(po.shading.n);
         this.ss = Vector3f.Normalize(po.shading.dpdu);
         this.ts = Vector3f.Cross(this.ns, this.ss);
         this.material = material;

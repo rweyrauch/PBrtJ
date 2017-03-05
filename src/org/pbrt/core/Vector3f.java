@@ -41,6 +41,13 @@ public class Vector3f {
         z = n.z;
     }
 
+    public Vector3f(Vector3f v) {
+        x = v.x;
+        y = v.y;
+        z = v.z;
+        assert !HasNaNs();
+    }
+
     public Vector3f add(Vector3f v) {
         assert !v.HasNaNs();
         return new Vector3f(x + v.x, y + v.y, z + v.z);

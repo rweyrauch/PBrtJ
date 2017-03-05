@@ -20,7 +20,7 @@ public class HairBSDF extends BxDF {
         this.h = h;
         this.gammaO = SafeASin(h);
         this.eta = eta;
-        this.sigma_a = sigma_a;
+        this.sigma_a = new Spectrum(sigma_a);
         this.beta_m = beta_m;
         this.beta_n = beta_n;
 

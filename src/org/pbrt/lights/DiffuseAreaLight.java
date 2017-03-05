@@ -28,7 +28,7 @@ public class DiffuseAreaLight extends AreaLight {
     public DiffuseAreaLight(Transform LightToWorld, MediumInterface medium, Spectrum Le, int nSamples, Shape shape, boolean twoSided) {
         super(LightToWorld, medium, nSamples);
         assert shape != null;
-        this.Lemit = Le;
+        this.Lemit = new Spectrum(Le);
         this.shape = shape;
         this.twoSided = twoSided;
         this.area = shape.Area();

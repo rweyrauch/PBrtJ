@@ -298,8 +298,9 @@ public class Parser {
                     }
                     pset.AddSampledSpectrum(param.name, sarray);
                 }
-                else if (param.value instanceof String[]) {
-                    pset.AddSampledSpectrumFiles(param.name, (String[])param.value);
+                else if (param.value instanceof String) {
+                    String[] strings = { (String)param.value };
+                    pset.AddSampledSpectrumFiles(param.name, strings, 1);
                 }
                 else {
                     Error.Error("Unexpected value array type for 'spectrum' parameter. Got %s.\n", param.value.getClass().toString());

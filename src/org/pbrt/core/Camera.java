@@ -13,9 +13,9 @@ package org.pbrt.core;
 public abstract class Camera {
     // Camera Public Data
     public AnimatedTransform CameraToWorld;
-    public float shutterOpen, shutterClose;
+    public final float shutterOpen, shutterClose;
     public Film film;
-    public Medium medium;
+    public final Medium medium;
 
     public static class CameraSample {
         public Point2f pFilm;
@@ -25,7 +25,7 @@ public abstract class Camera {
 
     // Camera Interface
     public Camera(AnimatedTransform CameraToWorld, float shutterOpen, float shutterClose, Film film, Medium medium) {
-        this.CameraToWorld = CameraToWorld;
+        this.CameraToWorld = CameraToWorld.clone();
         this.shutterOpen = shutterOpen;
         this.shutterClose = shutterClose;
         this.film = film;

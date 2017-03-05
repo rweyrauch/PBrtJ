@@ -14,7 +14,7 @@ public class LambertianReflection extends BxDF {
 
     public LambertianReflection(Spectrum R) {
         super(BSDF_REFLECTION | BSDF_DIFFUSE);
-        this.R = R;
+        this.R = new Spectrum(R);
     }
 
     @Override

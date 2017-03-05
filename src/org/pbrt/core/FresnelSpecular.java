@@ -15,8 +15,8 @@ public class FresnelSpecular extends BxDF {
 
     public FresnelSpecular(Spectrum R, Spectrum T, float etaA, float etaB, Material.TransportMode mode) {
         super(BSDF_REFLECTION | BSDF_TRANSMISSION | BSDF_SPECULAR);
-        this.R = R;
-        this.T = T;
+        this.R = new Spectrum(R);
+        this.T = new Spectrum(T);
         this.etaA = etaA;
         this.etaB = etaB;
         this.mode = mode;

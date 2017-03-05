@@ -14,7 +14,7 @@ public class CylindricalMapping2D extends TextureMapping2D {
 
     public CylindricalMapping2D(Transform worldToTexture) {
         super();
-        this.worldToTexture = worldToTexture;
+        this.worldToTexture = worldToTexture.clone();
     }
 
     public MapPoint Map(SurfaceInteraction si) {

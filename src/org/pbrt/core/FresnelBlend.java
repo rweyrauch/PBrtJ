@@ -13,8 +13,8 @@ public class FresnelBlend extends BxDF {
 
     public FresnelBlend(Spectrum Rd, Spectrum Rs, MicrofacetDistribution distrib) {
         super(BSDF_REFLECTION | BSDF_GLOSSY);
-        this.Rd = Rd;
-        this.Rs = Rs;
+        this.Rd = new Spectrum(Rd);
+        this.Rs = new Spectrum(Rs);
         this.distribution = distrib;
     }
 

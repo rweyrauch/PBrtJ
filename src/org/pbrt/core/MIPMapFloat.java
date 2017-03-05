@@ -17,7 +17,7 @@ public class MIPMapFloat {
         this.doTrilinear = doTri;
         this.maxAnisotropy = maxAniso;
         this.wrapMode = wrapMode;
-        this.resolution = resolution;
+        this.resolution = new Point2i(resolution);
         this.black = black;
 
         Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MIPMapCreation);

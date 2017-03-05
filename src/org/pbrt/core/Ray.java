@@ -16,29 +16,33 @@ public class Ray {
     public Vector3f d;
     public float tMax = Pbrt.Infinity;
     public float time = 0.0f;
-    public Medium medium = null;
+    public Medium medium;
 
     // Ray Public Methods
     public Ray() {
+        this.o = new Point3f();
+        this.d = new Vector3f();
+        this.medium = null;
     }
 
     public Ray(Point3f o, Vector3f d) {
-        this.o = o;
-        this.d = d;
+        this.o = new Point3f(o);
+        this.d = new Vector3f(d);
+        this.medium = null;
     }
 
     public Ray(Point3f o, Vector3f d, float tMax,
                float time, Medium medium) {
-        this.o = o;
-        this.d = d;
+        this.o = new Point3f(o);
+        this.d = new Vector3f(d);
         this.tMax = tMax;
         this.time = time;
         this.medium = medium;
     }
 
     public Ray(Ray r) {
-        this.o = r.o;
-        this.d = r.d;
+        this.o = new Point3f(r.o);
+        this.d = new Vector3f(r.d);
         this.tMax = r.tMax;
         this.time = r.time;
         this.medium = r.medium;

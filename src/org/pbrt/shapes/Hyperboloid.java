@@ -24,8 +24,8 @@ public class Hyperboloid extends Shape {
 
     public Hyperboloid(Transform ObjectToWorld, Transform WorldToObject, boolean reverseOrientation, Point3f p1, Point3f p2, float phiMax) {
         super(ObjectToWorld, WorldToObject, reverseOrientation);
-        this.p1 = p1;
-        this.p2 = p2;
+        this.p1 = new Point3f(p1);
+        this.p2 = new Point3f(p2);
         this.phiMax = (float)Math.toRadians(Pbrt.Clamp(phiMax, 0, 360));
         float radius1 = (float)Math.sqrt(p1.x * p1.x + p1.y * p1.y);
         float radius2 = (float)Math.sqrt(p2.x * p2.x + p2.y * p2.y);

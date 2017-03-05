@@ -13,7 +13,7 @@ package org.pbrt.core;
 public class IdentityMapping3D extends TextureMapping3D {
 
     public IdentityMapping3D(Transform worldToTexture) {
-        this.worldToTexture = worldToTexture;
+        this.worldToTexture = worldToTexture.clone();
     }
 
     public MapPoint Map(SurfaceInteraction si){

@@ -20,8 +20,8 @@ public class Bounds2i {
         pMax = new Point2i(minNum, minNum);
     }
     public Bounds2i(Point2i p) {
-        pMin = p;
-        pMax = p;
+        pMin = new Point2i(p);
+        pMax = new Point2i(p);
     }
     public Bounds2i(Point2i p1, Point2i p2) {
         pMin = new Point2i(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y));
@@ -31,6 +31,10 @@ public class Bounds2i {
     public Bounds2i(Bounds2f b) {
         pMin = new Point2i((int)b.pMin.x, (int)b.pMin.y);
         pMax = new Point2i((int)b.pMax.x, (int)b.pMax.y);
+    }
+
+    public Bounds2i(Bounds2i b) {
+        this(b.pMax, b.pMin);
     }
 
     public Point2i at(int i) {

@@ -25,7 +25,7 @@ public class GonioPhotometricLight extends Light {
     public GonioPhotometricLight(Transform light2world, MediumInterface medium, Spectrum I, String texname) {
         super(FlagDeltaPosition, light2world, medium, 1);
         this.pLight = light2world.xform(new Point3f(0, 0, 0));
-        this.I = I;
+        this.I = new Spectrum(I);
 
         // Create _mipmap_ for _GonioPhotometricLight_
         ImageIO.SpectrumImage texels = ImageIO.Read(texname);

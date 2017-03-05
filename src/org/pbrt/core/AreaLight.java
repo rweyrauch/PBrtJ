@@ -12,8 +12,7 @@ package org.pbrt.core;
 
 public abstract class AreaLight extends Light {
     // AreaLight Interface
-    public AreaLight(Transform LightToWorld, MediumInterface medium,
-              int nSamples) {
+    public AreaLight(Transform LightToWorld, MediumInterface medium, int nSamples) {
         super(Light.FlagArea, LightToWorld, medium, nSamples);
         numAreaLights.increment();
     }

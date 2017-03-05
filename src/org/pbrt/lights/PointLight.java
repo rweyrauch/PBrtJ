@@ -25,7 +25,7 @@ public class PointLight extends Light {
     public PointLight(Transform light2world, MediumInterface mediumInterface, Spectrum I) {
         super(FlagDeltaPosition, light2world, mediumInterface, 1);
         this.pLight = light2world.xform(new Point3f(0, 0, 0));
-        this.I = I;
+        this.I = new Spectrum(I);
     }
 
     @Override

@@ -31,6 +31,12 @@ public class Normal3f {
         z = v.z;
     }
 
+    public Normal3f(Normal3f n) {
+        x = n.x;
+        y = n.y;
+        z = n.z;
+    }
+
     public void flip() {
         x = -x;
         y = -y;

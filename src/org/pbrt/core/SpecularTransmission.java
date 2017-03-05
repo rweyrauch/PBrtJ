@@ -13,7 +13,7 @@ public class SpecularTransmission extends BxDF {
 
     public SpecularTransmission(Spectrum T, float etaA, float etaB, Material.TransportMode mode) {
         super(BSDF_TRANSMISSION | BSDF_SPECULAR);
-        this.T = T;
+        this.T = new Spectrum(T);
         this.etaA = etaA;
         this.etaB = etaB;
         this.fresnel = new FresnelDielectric(etaA, etaB);

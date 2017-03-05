@@ -13,7 +13,7 @@ public class MicrofacetTransmission extends BxDF {
 
     public MicrofacetTransmission(Spectrum T, MicrofacetDistribution distribution, float etaA, float etaB, Material.TransportMode mode) {
         super(BSDF_TRANSMISSION | BSDF_GLOSSY);
-        this.T = T;
+        this.T = new Spectrum(T);
         this.distribution = distribution;
         this.etaA = etaA;
         this.etaB = etaB;

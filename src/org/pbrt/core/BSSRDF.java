@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public abstract class BSSRDF {
 
-    protected SurfaceInteraction po;
+    protected final SurfaceInteraction po;
     protected float eta;
 
     public BSSRDF(SurfaceInteraction po, float eta) {
@@ -32,7 +32,7 @@ public abstract class BSSRDF {
 
     public static class BSSRDFTable {
         // BSSRDFTable Public Data
-        public int nRhoSamples, nRadiusSamples;
+        public final int nRhoSamples, nRadiusSamples;
         public float[] rhoSamples, radiusSamples;
         public float[] profile;
         public float[] rhoEff;

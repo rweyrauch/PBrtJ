@@ -39,19 +39,19 @@ public class SurfaceInteraction extends Interaction {
                         Normal3f dndu,  Normal3f dndv, float time,
                         Shape sh) {
         super(p, new Normal3f(Vector3f.Normalize(Vector3f.Cross(dpdu, dpdv))), pError, wo, time, null);
-        this.uv = uv;
-        this.dpdu = dpdu;
-        this.dpdv = dpdv;
-        this.dndu = dndu;
-        this.dndv = dndv;
+        this.uv = new Point2f(uv);
+        this.dpdu = new Vector3f(dpdu);
+        this.dpdv = new Vector3f(dpdv);
+        this.dndu = new Normal3f(dndu);
+        this.dndv = new Normal3f(dndv);
         this.shape = sh;
 
         // Initialize shading geometry from true geometry
-        shading.n = n;
-        shading.dpdu = dpdu;
-        shading.dpdv = dpdv;
-        shading.dndu = dndu;
-        shading.dndv = dndv;
+        shading.n = new Normal3f(n);
+        shading.dpdu = new Vector3f(dpdu);
+        shading.dpdv = new Vector3f(dpdv);
+        shading.dndu = new Normal3f(dndu);
+        shading.dndv = new Normal3f(dndv);
 
         // Adjust normal based on orientation and handedness
         if (shape != null && (shape.reverseOrientation ^ shape.transformSwapsHandedness)) {

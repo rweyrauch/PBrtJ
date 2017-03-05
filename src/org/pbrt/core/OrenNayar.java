@@ -14,7 +14,7 @@ public class OrenNayar extends BxDF {
 
     public OrenNayar(Spectrum R, float sigma) {
         super(BSDF_REFLECTION | BSDF_DIFFUSE);
-        this.R = R;
+        this.R = new Spectrum(R);
         sigma = (float)Math.toRadians(sigma);
         float sigma2 = sigma * sigma;
         this.A = 1 - (sigma2 / (2 * (sigma2 + 0.33f)));

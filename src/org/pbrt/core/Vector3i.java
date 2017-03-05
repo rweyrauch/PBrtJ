@@ -30,6 +30,12 @@ public class Vector3i {
         z = p.z;
     }
 
+    public Vector3i(Vector3i v) {
+        x = v.x;
+        y = v.y;
+        z = v.z;
+    }
+
     public Vector3i add(Vector3i v) {
          return new Vector3i(x + v.x, y + v.y, z + v.z);
     }

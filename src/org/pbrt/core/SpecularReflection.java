@@ -13,7 +13,7 @@ public class SpecularReflection extends BxDF {
 
     public SpecularReflection(Spectrum R, Fresnel fresnel) {
         super(BSDF_REFLECTION | BSDF_SPECULAR);
-        this.R = R;
+        this.R = new Spectrum(R);
         this.fresnel = fresnel;
     }
 

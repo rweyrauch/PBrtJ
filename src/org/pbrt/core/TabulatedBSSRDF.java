@@ -11,7 +11,7 @@ package org.pbrt.core;
 
 public class TabulatedBSSRDF extends SeparableBSSRDF {
 
-    private BSSRDFTable table;
+    private final BSSRDFTable table;
     private Spectrum sigma_t, rho;
 
     public TabulatedBSSRDF(SurfaceInteraction po, Material material,

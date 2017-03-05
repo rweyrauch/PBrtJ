@@ -14,7 +14,7 @@ public class ScaledBxDF extends BxDF {
     public ScaledBxDF(BxDF bxdf, Spectrum scale) {
         super(bxdf.type);
         this.bxdf = bxdf;
-        this.scale = scale;
+        this.scale = new Spectrum(scale);
     }
 
     @Override

@@ -11,6 +11,7 @@ package org.pbrt.core;
 
 import org.apache.commons.lang.NotImplementedException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class ParamSet {
@@ -113,9 +114,37 @@ public class ParamSet {
         spectra.add(new ParamSetItem<>(name, s));
     }
 
-    public void AddSampledSpectrumFiles(String name, String[] filenames) {
+    public void AddSampledSpectrumFiles(String name, String[] filenames, int nValues) {
         EraseSpectrum(name);
-        throw new NotImplementedException("TODO");
+        Spectrum[] s = new Spectrum[nValues];
+        for (int i = 0; i < nValues; ++i) {
+            String fn = FileUtil.AbsolutePath(FileUtil.ResolveFilename(filenames[i]));
+            if (cachedSpectra.containsKey(fn)) {
+                s[i] = cachedSpectra.get(fn);
+                continue;
+            }
+
+            float[] vals = FloatFile.Read(fn);
+            if (vals == null) {
+                Error.Warning("Unable to read SPD file \"%s\".  Using black distribution.", fn);
+                s[i] = new Spectrum(0);
+            }
+            else {
+                if (vals.length % 2 != 0) {
+                    Error.Warning("Extra value found in spectrum file \"%s\". Ignoring it.", fn);
+                }
+                float[] wls = new float[vals.length/2], v = new float[vals.length/2];
+                for (int j = 0; j < vals.length / 2; ++j) {
+                    wls[j] = vals[2 * j];
+                    v[j] = vals[2 * j + 1];
+                }
+                s[i] = Spectrum.FromSampled(wls, v);
+            }
+            cachedSpectra.put(fn, s[i]);
+        }
+
+        ParamSetItem<Spectrum> psi = new ParamSetItem<>(name, s);
+        spectra.add(psi);
     }
 
     public void AddSampledSpectrum(String name, Float[] values) {
@@ -551,4 +580,6 @@ public class ParamSet {
     private ArrayList<ParamSetItem<Spectrum>> spectra = new ArrayList<>(1);
     private ArrayList<ParamSetItem<String>> strings = new ArrayList<>(1);
     private ArrayList<ParamSetItem<String>> textures = new ArrayList<>(1);
+
+    private static HashMap<String, Spectrum> cachedSpectra = new HashMap<>();
 }

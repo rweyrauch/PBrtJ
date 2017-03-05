@@ -93,7 +93,10 @@ public class PathIntegrator extends SamplerIntegrator{
 
             //VLOG(2) << "Sampled BSDF, f = " << f << ", pdf = " << pdf;
             if (f.isBlack() || pdf == 0) break;
-            beta = beta.multiply(f.scale(Normal3f.AbsDot(wi, isect.shading.n) / pdf));
+            beta = beta.multiply(f
+
+
+                    .scale(Normal3f.AbsDot(wi, isect.shading.n) / pdf));
             //VLOG(2) << "Updated beta = " << beta;
             assert (beta.y() >= 0);
             assert (!Float.isInfinite(beta.y()));
