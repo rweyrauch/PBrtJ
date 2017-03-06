@@ -110,8 +110,7 @@ public class BSDF {
             break;
         }
         assert (bxdf != null);
-        //VLOG(2) << "BSDF::Sample_f chose comp = " << comp << " / matching = " <<
-        //        matchingComps << ", bxdf: " << bxdf->ToString();
+        Api.logger.trace("BSDF::Sample_f chose comp = %d / matching = %d, bxdf: %s", comp, matchingComps, bxdf.toString());
 
         // Remap _BxDF_ sample _u_ to $[0,1)^2$
         Point2f uRemapped = new Point2f(Math.min(u.at(0) * matchingComps - comp, Pbrt.OneMinusEpsilon), u.at(1));
@@ -126,9 +125,8 @@ public class BSDF {
         sample.f = bsample.f;
         wi = bsample.wiWorld;
         sample.pdf = bsample.pdf;
-        //VLOG(2) << "For wo = " << wo << ", sampled f = " << f << ", pdf = "
-        //        << *pdf << ", ratio = " << ((*pdf > 0) ? (f / *pdf) : Spectrum(0.))
-        //    << ", wi = " << wi;
+        Api.logger.trace("For wo = %s, sampled f = %s, pdf = %f, ratio = %f, wi = %s", wo.toString(), sample.f,
+                sample.pdf, (sample.pdf > 0) ? sample.f.scale(1/sample.pdf).toString() : new Spectrum(0).toString(), wi);
         if (sample.pdf == 0) {
             sample.sampledType = BxDF.BSDF_NONE;
             return sample;
@@ -152,8 +150,7 @@ public class BSDF {
                     (!reflect && ((bxdfs[i].type & BxDF.BSDF_TRANSMISSION) != 0))))
             sample.f = Spectrum.Add(sample.f, bxdfs[i].f(wo, wi));
         }
-        //VLOG(2) << "Overall f = " << f << ", pdf = " << *pdf << ", ratio = "
-         //       << ((*pdf > 0) ? (f / *pdf) : Spectrum(0.));
+        Api.logger.trace("Overall f = %s, pdf = %f, ratio = %f", sample.f, sample.pdf, (sample.pdf > 0) ? sample.f.scale(1/ sample.pdf) : new Spectrum(0));
         return sample;
     }
     public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u) {
@@ -178,8 +175,13 @@ public class BSDF {
     public float Pdf(Vector3f wo, Vector3f wi) {
         return Pdf(wo, wi, BxDF.BSDF_ALL);
     }
-    public String ToString() {
-        return "";
+
+    @Override
+    public String toString() {
+        String s = String.format("[ BSDF eta: %f nBxDFs: %d", eta, nBxDFs);
+        for (int i = 0; i < nBxDFs; ++i)
+            s += String.format("\n  bxdfs[%d]: ", i) + bxdfs[i].toString();
+        return s + " ]";
     }
 
     // BSDF Public Data

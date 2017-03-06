@@ -12,5 +12,7 @@
     <orderEntry type="library" name="jflex-1.7.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="jply-0.2.0" level="project" />
     <orderEntry type="library" name="commons-lang3-3.5" level="project" />
+    <orderEntry type="library" name="log4j-core-2.8.1" level="project" />
+    <orderEntry type="library" name="log4j-api-2.8.1" level="project" />
   </component>
 </module>

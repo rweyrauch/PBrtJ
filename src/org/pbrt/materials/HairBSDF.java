@@ -260,8 +260,9 @@ public class HairBSDF extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return String.format("[ Hair h: %f gammaO: %f eta: %f beta_m: %f beta_n: %f v[0]: %f s: %f sigma_a: ", h, gammaO, eta, beta_m, beta_n,
+                v[0], s) + sigma_a.toString() + "  ]";
     }
 
     public static Spectrum SigmaAFromConcentration(float ce, float cp) {

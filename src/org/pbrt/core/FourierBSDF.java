@@ -198,8 +198,10 @@ public class FourierBSDF extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return String.format("[ FourierBSDF eta: %f mMax: %d nChannels: %d nMu: %d ",
+                bsdfTable.eta, bsdfTable.mMax, bsdfTable.nChannels, bsdfTable.nMu) +
+                " mode : " + mode.toString() + " ]";
     }
 
     private FourierBSDFTable bsdfTable;

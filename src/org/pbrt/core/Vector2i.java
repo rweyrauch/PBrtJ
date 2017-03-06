@@ -62,4 +62,9 @@ public class Vector2i {
         if (i == 0) return x;
         return y;
     }
+
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + " ]";
+    }
 }

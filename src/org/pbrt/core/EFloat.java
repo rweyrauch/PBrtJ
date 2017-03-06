@@ -145,6 +145,11 @@ public final class EFloat {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("v=%f (%a) - [%f, %f]", this.v, this.v, this.low, this.high);
+    }
+
     public static class QuadRes {
         public EFloat t0, t1;
     }

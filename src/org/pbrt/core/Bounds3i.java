@@ -46,7 +46,12 @@ public class Bounds3i {
         assert (corner >= 0 && corner < 8);
         return new Point3i(at(corner & 1).x, at((corner & 2) != 0 ? 1 : 0).y, at((corner & 4) != 0 ? 1 : 0).z);
     }
-     public static Bounds3i Union(Bounds3i b, Point3i p) {
+
+    public String toString() {
+        return "[ " + this.pMin.toString() + " - " + this.pMax.toString() + " ]";
+    }
+
+    public static Bounds3i Union(Bounds3i b, Point3i p) {
         return new Bounds3i(new Point3i(Math.min(b.pMin.x, p.x), Math.min(b.pMin.y, p.y), Math.min(b.pMin.z, p.z)),
             new Point3i(Math.max(b.pMax.x, p.x), Math.max(b.pMax.y, p.y), Math.max(b.pMax.z, p.z)));
     }

@@ -331,8 +331,7 @@ public class Stats {
                     if ((ps.profilerState.get() & (1L << b)) != 0) eventCount[b] += ps.count.get();
             }
         }
-        //LOG(INFO) << "Used " << used << " / " << profileHashSize
-        //        << " entries in profiler hash table";
+        Api.logger.info("Used %d / %d  entries in profiler hash table", used, profileHashSize);
 
         HashMap<String, Long> flatResults = new HashMap<>();
         HashMap<String, Long> hierarchicalResults = new HashMap<>();

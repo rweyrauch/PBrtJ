@@ -56,4 +56,8 @@ public class Ray {
         return (o.HasNaNs() || d.HasNaNs() || Float.isNaN(tMax));
     }
 
+    @Override
+    public String toString() {
+        return "[o=" + this.o.toString() + ", d=" + this.d.toString() + ", tMax=" + this.tMax + ", time=" + this.time + "]";
+    }
 }

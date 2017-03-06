@@ -21,6 +21,12 @@ public abstract class Camera {
         public Point2f pFilm;
         public Point2f pLens;
         public float time;
+
+        @Override
+        public String toString() {
+            return "[ pFilm: " + this.pFilm.toString() + " , pLens: " + this.pLens.toString() +
+                    String.format(", time %f ]", this.time);
+        }
     }
 
     // Camera Interface

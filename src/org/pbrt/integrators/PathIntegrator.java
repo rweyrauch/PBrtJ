@@ -40,7 +40,7 @@ public class PathIntegrator extends SamplerIntegrator{
 
         for (bounces = 0;; ++bounces) {
             // Find next path vertex and accumulate contribution
-            //VLOG(2) << "Path tracer bounce " << bounces << ", current L = " << L << ", beta = " << beta;
+            Api.logger.trace("Path tracer bounce %d, current L = %s, beta = %s", bounces, L.toString(), beta.toString());
 
             // Intersect _ray_ with scene and store intersection in _isect_
             SurfaceInteraction isect = scene.Intersect(ray);
@@ -50,11 +50,11 @@ public class PathIntegrator extends SamplerIntegrator{
                 // Add emitted light at path vertex or from the environment
                 if (isect != null) {
                     L = L.add(beta.multiply(isect.Le(ray.d.negate())));
-                    //VLOG(2) << "Added Le -> L = " << L;
+                    Api.logger.trace("Added Le -> L = %s", L.toString());
                 } else {
                     for (Light light : scene.infiniteLights)
                     L = L.add(beta.multiply(light.Le(ray)));
-                    //VLOG(2) << "Added infinite area lights -> L = " << L;
+                    Api.logger.trace("Added infinite area lights -> L = %s", L.toString());
                 }
             }
 
@@ -64,7 +64,7 @@ public class PathIntegrator extends SamplerIntegrator{
             // Compute scattering functions and skip over medium boundaries
             isect.ComputeScatteringFunctions(ray, true, null);
             if (isect.bsdf == null) {
-                //VLOG(2) << "Skipping intersection due to null bsdf";
+                Api.logger.trace("Skipping intersection due to null bsdf");
                 ray = new RayDifferential(isect.SpawnRay(ray.d));
                 bounces--;
                 continue;
@@ -77,7 +77,7 @@ public class PathIntegrator extends SamplerIntegrator{
             if (isect.bsdf.NumComponents(BxDF.BSDF_ALL & ~BxDF.BSDF_SPECULAR) > 0) {
                 pathStats.incrementDenom(1); // totalPaths
                 Spectrum Ld = beta.multiply(UniformSampleOneLight(isect, scene, sampler, false, distrib));
-                //VLOG(2) << "Sampled direct lighting Ld = " << Ld;
+                Api.logger.trace("Sampled direct lighting Ld = %s", Ld.toString());
                 if (Ld.isBlack()) pathStats.incrementNumer(1); // zeroRadiancePaths
                 assert (Ld.y() >= 0);
                 L = L.add(Ld);
@@ -91,13 +91,11 @@ public class PathIntegrator extends SamplerIntegrator{
             Spectrum f = bxDFSample.f;
             wi = bxDFSample.wiWorld;
 
-            //VLOG(2) << "Sampled BSDF, f = " << f << ", pdf = " << pdf;
+            Api.logger.trace("Sampled BSDF, f = %s, pdf = %f", f.toString(), pdf);
             if (f.isBlack() || pdf == 0) break;
-            beta = beta.multiply(f
+            beta = beta.multiply(f.scale(Normal3f.AbsDot(wi, isect.shading.n) / pdf));
 
-
-                    .scale(Normal3f.AbsDot(wi, isect.shading.n) / pdf));
-            //VLOG(2) << "Updated beta = " << beta;
+            Api.logger.trace("Updated beta = %s", beta.toString());
             assert (beta.y() >= 0);
             assert (!Float.isInfinite(beta.y()));
             specularBounce = (flags & BxDF.BSDF_SPECULAR) != 0;

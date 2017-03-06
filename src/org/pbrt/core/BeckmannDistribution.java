@@ -81,8 +81,8 @@ public class BeckmannDistribution extends MicrofacetDistribution {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return String.format("[ BeckmannDistribution alphax: %f alphay: %f ]", alphax, alphay);
     }
 
     public static float RoughnessToAlpha(float roughness) {

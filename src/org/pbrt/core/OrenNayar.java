@@ -47,8 +47,8 @@ public class OrenNayar extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ OrenNayar R: " + R.toString() + String.format(" A: %f B: %f ]", A, B);
     }
 
     private Spectrum R;

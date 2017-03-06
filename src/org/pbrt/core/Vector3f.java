@@ -91,6 +91,11 @@ public class Vector3f {
         return new Vector3f(-x, -y, -z);
     }
 
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + ", " + this.z + " ]";
+    }
+
     public float LengthSquared() {
         return x * x + y * y + z * z;
     }

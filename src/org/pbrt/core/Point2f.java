@@ -74,6 +74,11 @@ public class Point2f {
     public boolean notEqual(Point2f p) { return x != p.x || y != p.y; }
     public boolean HasNaNs() { return Float.isNaN(x) || Float.isNaN(y); }
 
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + " ]";
+    }
+
     public static Point2f Floor(Point2f p) {
         return new Point2f((float) Math.floor(p.x), (float) Math.floor(p.y));
     }

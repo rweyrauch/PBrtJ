@@ -29,8 +29,8 @@ public class LambertianReflection extends BxDF {
     public Spectrum rho(int nSamples, Point2f[] u1, Point2f[] u2) { return R; }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ LambertianReflection R: " + R.toString() + " ]";
     }
 
     private Spectrum R;

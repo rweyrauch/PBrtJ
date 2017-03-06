@@ -45,8 +45,8 @@ public class ScaledBxDF extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ ScaledBxDF bxdf: " + bxdf.toString() + " scale: " + scale.toString() + " ]";
     }
 
     private BxDF bxdf;

@@ -59,6 +59,11 @@ public class Point2i {
     public boolean equal(Point2i p) { return x == p.x && y == p.y; }
     public boolean notEqual(Point2i p) { return x != p.x || y != p.y; }
 
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + " ]";
+    }
+
     public static Point2i Max(Point2i p1, Point2i p2) {
         return new Point2i(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
     }

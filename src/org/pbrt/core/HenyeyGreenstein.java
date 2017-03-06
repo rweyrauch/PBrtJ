@@ -44,4 +44,9 @@ public class HenyeyGreenstein extends PhaseFunction {
         ps.phase = Medium.PhaseHG(-cosTheta, g);
         return ps;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[ HenyeyGreenstein g: %f ]", g);
+    }
 }

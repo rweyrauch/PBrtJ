@@ -44,8 +44,8 @@ public class LambertianTransmission extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ LambertianTransmission T: " + T.toString() + " ]";
     }
 
     private Spectrum T;

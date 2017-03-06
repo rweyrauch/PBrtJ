@@ -28,8 +28,8 @@ public class SeparableBSSRDFAdapter extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ SeparableBSSRDFAdapter ]";
     }
 
     private final SeparableBSSRDF bssrdf;

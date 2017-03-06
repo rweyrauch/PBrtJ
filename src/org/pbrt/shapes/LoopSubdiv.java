@@ -348,7 +348,7 @@ public class LoopSubdiv {
         int vnum(SDVertex vert) {
             for (int i = 0; i < 3; ++i)
                 if (v[i] == vert) return i;
-            //LOG(FATAL) << "Basic logic error in SDFace::vnum()";
+            Api.logger.fatal("Basic logic error in SDFace::vnum()");
             return -1;
         }
 
@@ -359,7 +359,7 @@ public class LoopSubdiv {
         SDVertex otherVert(SDVertex v0, SDVertex v1) {
         for (int i = 0; i < 3; ++i)
             if (v[i] != v0 && v[i] != v1) return v[i];
-            //LOG(FATAL) << "Basic logic error in SDVertex::otherVert()";
+            Api.logger.fatal("Basic logic error in SDVertex::otherVert()");
             return null;
         }
         SDVertex[] v = { null, null, null };

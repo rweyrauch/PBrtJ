@@ -24,8 +24,9 @@ public class MicrofacetReflection extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ MicrofacetReflection R: " + R.toString() + " distribution: " + distribution.toString() +
+                " fresnel: " + fresnel.toString() + " ]";
     }
 
     private final Spectrum R;

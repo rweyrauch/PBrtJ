@@ -45,7 +45,7 @@ public class SpatialLightDistribution extends LightDistribution {
             hashTable[i].distribution = null;
         }
 
-        //LOG(INFO) << "SpatialLightDistribution: scene bounds " << b << ", voxel res (" << nVoxels[0] << ", " << nVoxels[1] << ", " << nVoxels[2] << ")";
+        Api.logger.info("SpatialLightDistribution: scene bounds %s, voxel res (%d, %d, %d)", b.toString(), nVoxels[0], nVoxels[1], nVoxels[2]);
     }
 
     @Override
@@ -106,10 +106,10 @@ public class SpatialLightDistribution extends LightDistribution {
         float avgContrib = sumContrib / (nSamples * lightContrib.length);
         float minContrib = (avgContrib > 0) ? .001f * avgContrib : 1;
         for (int i = 0; i < lightContrib.length; ++i) {
-            //VLOG(2) << "Voxel pi = " << pi << ", light " << i << " contrib = " << lightContrib[i];
+            Api.logger.trace("Voxel pi = %s, light %d contrib = %f", pi.toString(), i, lightContrib[i]);
             lightContrib[i] = Math.max(lightContrib[i], minContrib);
         }
-        //LOG(INFO) << "Initialized light distribution in voxel pi= " <<  pi << ", avgContrib = " << avgContrib;
+        Api.logger.info("Initialized light distribution in voxel pi= %s, avgContrib = %f", pi.toString(), avgContrib);
 
         // Compute a sampling distribution from the accumulated contributions.
         return new Distribution1D(lightContrib);

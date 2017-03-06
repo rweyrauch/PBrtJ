@@ -63,6 +63,12 @@ public class Matrix4x4 implements Cloneable {
         return false;
     }
 
+    public String toString() {
+        return String.format("[ [ %f, %f, %f, %f ] [ %f, %f, %f, %f ] [ %f, %f, %f, %f ] [ %f, %f, %f, %f ] ]",
+                this.m[0][0], this.m[0][1], this.m[0][2], this.m[0][3], this.m[1][0], this.m[1][1], this.m[1][2], this.m[1][3],
+                this.m[2][0], this.m[2][1], this.m[2][2], this.m[2][3], this.m[3][0], this.m[3][1], this.m[3][2], this.m[3][3]);
+    }
+
     public static Matrix4x4 Transpose(Matrix4x4 m) {
         return new Matrix4x4(m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0], m.m[0][1],
                 m.m[1][1], m.m[2][1], m.m[3][1], m.m[0][2], m.m[1][2],

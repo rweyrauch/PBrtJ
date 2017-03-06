@@ -58,7 +58,7 @@ public class BVHAccel extends Aggregate {
         for (int i = 0; i < orderedPrims.size(); i++) {
             primitives[i] = orderedPrims.get(i);
         }
-        Error.Warning("BVH created with %d nodes for %d primitives.\n", totalNodes[0], primitives.length);
+        Api.logger.info("BVH created with %d nodes for %d primitives.\n", totalNodes[0], primitives.length);
 
         // Compute representation of depth-first traversal of BVH tree
         //treeBytes += totalNodes * sizeof(LinearBVHNode) + sizeof(*this) +
@@ -288,7 +288,7 @@ public class BVHAccel extends Aggregate {
         for (int i = start; i < end; ++i)
             bounds = Bounds3f.Union(bounds, primitiveInfo.get(i).bounds);
         int nPrimitives = end - start;
-        Error.Warning("Number of primitives: %d\n", nPrimitives);
+        Api.logger.info("Number of primitives: %d\n", nPrimitives);
         if (nPrimitives == 1) {
             // Create leaf _BVHBuildNode_
             int firstPrimOffset = orderedPrims.size();
@@ -406,7 +406,7 @@ public class BVHAccel extends Aggregate {
                         break;
                     }
                 }
-                Error.Warning("Split: Start: %d  Mid: %d  End: %d\n", start, mid, end);
+                Api.logger.info("Split: Start: %d  Mid: %d  End: %d\n", start, mid, end);
                 node.InitInterior(dim, recursiveBuild(primitiveInfo, start, mid, totalNodes, orderedPrims),
                         recursiveBuild(primitiveInfo, mid, end, totalNodes, orderedPrims));
             }

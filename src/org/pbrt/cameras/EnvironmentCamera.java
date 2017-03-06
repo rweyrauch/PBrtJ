@@ -7,6 +7,7 @@
  * Matt Pharr, Greg Humphreys, and Wenzel Jakob.
  *
  */
+
 package org.pbrt.cameras;
 
 import org.pbrt.core.*;

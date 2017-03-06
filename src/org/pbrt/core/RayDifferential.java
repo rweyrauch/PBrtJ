@@ -49,4 +49,9 @@ public class RayDifferential extends Ray {
         ryDirection = d.add((ryDirection.subtract(d)).scale(s));
     }
 
+    public String toString() {
+        return  "[ " + super.toString() + " has differentials: " + (this.hasDifferentials ? "true" : "false") +
+                ", xo = " + this.rxOrigin.toString() + ", xd = " + this.rxDirection.toString() + ", yo = " +
+                this.ryOrigin.toString() + ", yd = " + this.ryDirection.toString();
+    }
 }

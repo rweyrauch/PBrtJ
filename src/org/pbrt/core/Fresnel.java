@@ -11,5 +11,4 @@ package org.pbrt.core;
 
 public abstract class Fresnel {
     public abstract Spectrum Evaluate(float cosI);
-    public abstract String ToString();
 }

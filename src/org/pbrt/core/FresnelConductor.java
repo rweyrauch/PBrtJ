@@ -17,11 +17,14 @@ public class FresnelConductor extends Fresnel {
         this.k = k;
     }
 
+    @Override
     public Spectrum Evaluate(float cosI) {
         return FrConductor(Math.abs(cosI), etaI, etaT, k);
     }
-    public String ToString() {
-        return "";
+
+    @Override
+    public String toString() {
+        return "[ FresnelConductor etaI: " + etaI.toString() + " etaT: " + etaT.toString() + " k: " + k.toString() + " ]";
     }
 
     private Spectrum etaI, etaT, k;

@@ -277,6 +277,11 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         return RGBToXYZ(c, xyz);
     }
 
+    @Override
+    public String toString() {
+        return String.format("[ %f, %f, %f ]", this.c[0], this.c[1], this.c[2]);
+    }
+
     public static Spectrum FromXYZ(float[] xyz) {
         Spectrum r = new Spectrum(0.0f);
         XYZToRGB(xyz, r.c);

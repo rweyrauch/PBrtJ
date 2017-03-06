@@ -74,6 +74,10 @@ public class Bounds2f {
         return o;
     }
 
+    public String toString() {
+        return "[ " + this.pMin.toString() + " - " + this.pMax.toString() + " ]";
+    }
+
     public static Bounds2f Union(Bounds2f b, Point2f p) {
         Bounds2f ret = new Bounds2f(
                 new Point2f(Math.min(b.pMin.x, p.x), Math.min(b.pMin.y, p.y)),

@@ -561,8 +561,169 @@ public class ParamSet {
         textures.clear();
     }
 
-    public String ToString() {
-        throw new NotImplementedException("TODO");
+    @Override
+    public String toString() {
+        String ret = "";
+        int i;
+        int j;
+        String typeString;
+        for (i = 0; i < ints.size(); ++i) {
+            ParamSetItem<Integer> item = ints.get(i);
+            typeString = "integer ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("%d ", item.Values[j]);
+            ret += "] ";
+        }
+        for (i = 0; i < bools.size(); ++i) {
+            ParamSetItem<Boolean> item = bools.get(i);
+            typeString = "bool ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("\"%s\" ", item.Values[j] ? "true" : "false");
+            ret += "] ";
+        }
+        for (i = 0; i < floats.size(); ++i) {
+            ParamSetItem<Float> item = floats.get(i);
+            typeString = "float ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("%.8g ", item.Values[j]);
+            ret += "] ";
+        }
+        for (i = 0; i < point2fs.size(); ++i) {
+            ParamSetItem<Point2f> item = point2fs.get(i);
+            typeString = "point2 ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("%.8g %.8g ", item.Values[j].x, item.Values[j].y);
+            ret += "] ";
+        }
+        for (i = 0; i < vector2fs.size(); ++i) {
+            ParamSetItem<Vector2f> item = vector2fs.get(i);
+            typeString = "vector2 ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("%.8g %.8g ", item.Values[j].x, item.Values[j].y);
+            ret += "] ";
+        }
+        for (i = 0; i < point3fs.size(); ++i) {
+            ParamSetItem<Point3f> item = point3fs.get(i);
+            typeString = "point3 ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("%.8g %.8g %.8g ", item.Values[j].x, item.Values[j].y, item.Values[j].z);
+            ret += "] ";
+        }
+        for (i = 0; i < vector3fs.size(); ++i) {
+            ParamSetItem<Vector3f> item = vector3fs.get(i);
+            typeString = "vector3 ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("%.8g %.8g %.8g ", item.Values[j].x, item.Values[j].y, item.Values[j].z);
+            ret += "] ";
+        }
+        for (i = 0; i < normals.size(); ++i) {
+            ParamSetItem<Normal3f> item = normals.get(i);
+            typeString = "normal ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("%.8g %.8g %.8g ", item.Values[j].x, item.Values[j].y, item.Values[j].z);
+            ret += "] ";
+        }
+        for (i = 0; i < strings.size(); ++i) {
+            ParamSetItem<String> item = strings.get(i);
+            typeString = "string ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("\"%s\" ", item.Values[j]);
+            ret += "] ";
+        }
+        for (i = 0; i < textures.size(); ++i) {
+            ParamSetItem<String> item = textures.get(i);
+            typeString = "texture ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j)
+                ret += String.format("\"%s\" ", item.Values[j]);
+            ret += "] ";
+        }
+        for (i = 0; i < spectra.size(); ++i) {
+            ParamSetItem<Spectrum> item = spectra.get(i);
+            typeString = "color ";
+            // Print _ParamSetItem_ declaration, determine how many to print
+            int nPrint = item.Values.length;
+            ret += "\"";
+            ret += typeString;
+            ret += item.Name;
+            ret += "\"";
+            ret += " [";
+            for (j = 0; j < nPrint; ++j) {
+                float[] rgb = item.Values[j].toRGB();
+                ret += String.format("%.8g %.8g %.8g ", rgb[0], rgb[1], rgb[2]);
+            }
+            ret += "] ";
+        }
+        return ret;
     }
 
     public void Print(int indent) {

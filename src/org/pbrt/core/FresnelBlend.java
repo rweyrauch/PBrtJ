@@ -62,8 +62,9 @@ public class FresnelBlend extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ FresnelBlend Rd: " + Rd.toString() + " Rs: " + Rs.toString() +
+                " distribution: " + distribution.toString() + " ]";
     }
 
     private static float pow5(float v) { return (v * v) * (v * v) * v; };

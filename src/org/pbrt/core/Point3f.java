@@ -107,6 +107,11 @@ public class Point3f {
         return new Point3f(-x, -y, -z);
     }
 
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + ", " + this.z + " ]";
+    }
+
     public static float Distance(Point3f p1, Point3f p2) {
         return (p1.subtract(p2)).Length();
     }

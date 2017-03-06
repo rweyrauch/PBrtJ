@@ -16,11 +16,14 @@ public class FresnelDielectric extends Fresnel {
         this.etaT = etaT;
     }
 
+    @Override
     public Spectrum Evaluate(float cosI) {
         return new Spectrum(FrDielectric(cosI, etaI, etaT));
     }
-    public String ToString() {
-        return "";
+
+    @Override
+    public String toString() {
+        return String.format("[ FrenselDielectric etaI: %f etaT: %f ]", etaI, etaT);
     }
 
     private float etaI, etaT;

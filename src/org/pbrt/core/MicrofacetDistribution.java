@@ -34,7 +34,5 @@ public abstract class MicrofacetDistribution {
             return D(wh) * Reflection.AbsCosTheta(wh);
     }
 
-    public abstract String ToString();
-
     protected final boolean sampleVisibleArea;
 }

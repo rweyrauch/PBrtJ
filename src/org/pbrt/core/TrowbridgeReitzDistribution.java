@@ -56,8 +56,8 @@ public class TrowbridgeReitzDistribution extends MicrofacetDistribution {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return String.format("[ TrowbridgeReitzDistribution alphax: %f alphay: %f ]", alphax, alphay);
     }
 
     public static float RoughnessToAlpha(float roughness) {

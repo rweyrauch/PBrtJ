@@ -72,6 +72,11 @@ public class Normal3f {
         return new Normal3f(x * inv, y * inv, z * inv);
     }
 
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + ", " + this.z + " ]";
+    }
+
     public float LengthSquared() {
         return x * x + y * y + z * z;
     }

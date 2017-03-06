@@ -115,6 +115,11 @@ public class Quaternion {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("[ %f, %f, %f, %f ]", this.v.x, this.v.y, this.v.z, this.w);
+    }
+
     public static Quaternion Slerp(float t, Quaternion q1, Quaternion q2) {
         float cosTheta = Quaternion.Dot(q1, q2);
         if (cosTheta > .9995f)

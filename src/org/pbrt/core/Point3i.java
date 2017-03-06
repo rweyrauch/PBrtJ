@@ -80,6 +80,11 @@ public class Point3i {
         return new Point3i(-x, -y, -z);
     }
 
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + ", " + this.z + " ]";
+    }
+
     public static Point3i Min(Point3i p1, Point3i p2) {
         return new Point3i(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.min(p1.z, p2.z));
     }

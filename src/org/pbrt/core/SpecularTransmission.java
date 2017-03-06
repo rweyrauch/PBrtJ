@@ -56,8 +56,9 @@ public class SpecularTransmission extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ SpecularTransmission: T: " + T.toString() + String.format(" etaA: %f etaB: %f ", etaA, etaB) +
+                " fresnel: " + fresnel.toString() + " mode : " + mode.toString() + " ]";
     }
 
     private final Spectrum T;

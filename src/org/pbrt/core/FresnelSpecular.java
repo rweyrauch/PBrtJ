@@ -73,8 +73,10 @@ public class FresnelSpecular extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ FresnelSpecular R: " + R.toString() + " T: " + T.toString() +
+                String.format(" etaA: %f etaB: %f ", etaA, etaB) +
+                " mode : " + mode.toString() + " ]";
     }
 
     private final Spectrum R, T;

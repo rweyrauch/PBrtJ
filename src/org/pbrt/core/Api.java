@@ -14,6 +14,8 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.util.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pbrt.shapes.*;
 import org.pbrt.textures.*;
 import org.pbrt.materials.*;
@@ -26,6 +28,8 @@ import org.pbrt.media.*;
 import org.pbrt.integrators.*;
 
 public class Api {
+
+    public static final Logger logger = LogManager.getFormatterLogger("Pbrt");
 
     private static final int MaxTransforms = 2;
     private static final int StartTransformBits = 1 << 0;

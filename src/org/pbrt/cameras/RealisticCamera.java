@@ -39,9 +39,10 @@ public class RealisticCamera extends Camera {
 
         // Compute lens--film distance for given focus distance
         float fb = FocusBinarySearch(focusDistance);
-        //LOG(INFO) << StringPrintf("Binary search focus: %f -> %f\n", fb, FocusDistance(fb));
+        Api.logger.info("Binary search focus: %f -> %f\n", fb, FocusDistance(fb));
         elementInterfaces.get(elementInterfaces.size()-1).thickness = FocusThickLens(focusDistance);
-        //LOG(INFO) << StringPrintf("Thick lens focus: %f -> %f\n", elementInterfaces.back().thickness, FocusDistance(elementInterfaces.back().thickness));
+        Api.logger.info("Thick lens focus: %f -> %f\n", elementInterfaces.get(elementInterfaces.size()-1).thickness,
+                FocusDistance(elementInterfaces.get(elementInterfaces.size()-1).thickness));
 
         // Compute exit pupil bounds at sampled points on the film
         int nSamples = 64;
@@ -508,8 +509,8 @@ public class RealisticCamera extends Camera {
 
     private float FocusThickLens(float focusDistance) {
         CardPnts[] cpnts = ComputeThickLensApproximation();
-        //LOG(INFO) << StringPrintf("Cardinal points: p' = %f f' = %f, p = %f f = %f.\n", cpnts[0].p, cpnts[0].f, cpnts[1].p, cpnts[1].f);
-        //LOG(INFO) << StringPrintf("Effective focal length %f\n", cpnts[0].f - cpnts[0].p);
+        Api.logger.info("Cardinal points: p' = %f f' = %f, p = %f f = %f.\n", cpnts[0].p, cpnts[0].f, cpnts[1].p, cpnts[1].f);
+        Api.logger.info("Effective focal length %f\n", cpnts[0].f - cpnts[0].p);
         // Compute translation of lens, _delta_, to focus at _focusDistance_
         float f = cpnts[0].f - cpnts[0].p;
         float z = -focusDistance;
@@ -582,7 +583,7 @@ public class RealisticCamera extends Camera {
 
         // Return entire element bounds if no rays made it through the lens system
         if (nExitingRays == 0) {
-            //LOG(INFO) << StringPrintf("Unable to find exit pupil in x = [%f,%f] on film.", pFilmX0, pFilmX1);
+            Api.logger.info("Unable to find exit pupil in x = [%f,%f] on film.", pFilmX0, pFilmX1);
             return projRearBounds;
         }
 

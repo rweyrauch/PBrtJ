@@ -77,6 +77,4 @@ public abstract class BxDF {
     public float Pdf(Vector3f wo, Vector3f wi) {
         return Reflection.SameHemisphere(wo, wi) ? Reflection.AbsCosTheta(wi) / (float)Math.PI : 0;
     }
-    public abstract String ToString();
-
 }

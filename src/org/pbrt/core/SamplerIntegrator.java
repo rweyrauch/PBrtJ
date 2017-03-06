@@ -10,6 +10,8 @@
 
 package org.pbrt.core;
 
+import org.apache.log4j.LogManager;
+
 import java.util.ArrayList;
 
 public abstract class SamplerIntegrator extends Integrator {
@@ -42,9 +44,6 @@ public abstract class SamplerIntegrator extends Integrator {
 
                     // Render section of image corresponding to _tile_
 
-                    // Allocate _MemoryArena_ for tile
-                    //MemoryArena arena;
-
                     // Get sampler instance for tile
                     int seed = tile.y * nTiles.x + tile.x;
                     Sampler tileSampler = sampler.Clone(seed);
@@ -55,7 +54,7 @@ public abstract class SamplerIntegrator extends Integrator {
                     int y0 = sampleBounds.pMin.y + tile.y * tileSize;
                     int y1 = Math.min(y0 + tileSize, sampleBounds.pMax.y);
                     Bounds2i tileBounds = new Bounds2i(new Point2i(x0, y0), new Point2i(x1, y1));
-                    //LOG(INFO) << "Starting image tile " << tileBounds;
+                    Api.logger.info("Starting image tile %s\n", tileBounds.toString());
 
                     // Get _FilmTile_ for tile
                     Film.FilmTile filmTile = camera.film.GetFilmTile(tileBounds);
@@ -94,16 +93,16 @@ public abstract class SamplerIntegrator extends Integrator {
 
                                 // Issue warning if unexpected radiance value returned
                                 if (L.hasNaNs()) {
-                                    //LOG(ERROR) << StringPrintf("Not-a-number radiance value returned for pixel (%d, %d), sample %d. Setting to black.",
-                                    //        pixel.x, pixel.y, (int) tileSampler.CurrentSampleNumber());
+                                    Api.logger.error("Not-a-number radiance value returned for pixel (%d, %d), sample %d. Setting to black.",
+                                            pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
                                     L = new Spectrum(0);
                                 } else if (L.y() < -1e-5f) {
-                                    //LOG(ERROR) << StringPrintf("Negative luminance value, %f, returned for pixel (%d, %d), sample %d. Setting to black.",
-                                    //        L.y(), pixel.x, pixel.y, (int) tileSampler.CurrentSampleNumber());
+                                    Api.logger.error("Negative luminance value, %f, returned for pixel (%d, %d), sample %d. Setting to black.",
+                                            L.y(), pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
                                     L = new Spectrum(0);
                                 } else if (Float.isInfinite(L.y())) {
-                                   // LOG(ERROR) << StringPrintf("Infinite luminance value returned for pixel (%d, %d), sample %d. Setting to black.",
-                                    //        pixel.x, pixel.y, (int) tileSampler.CurrentSampleNumber());
+                                    Api.logger.error("Infinite luminance value returned for pixel (%d, %d), sample %d. Setting to black.",
+                                            pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
                                     L = new Spectrum(0);
                                 }
                                 //System.out.format("Camera sample: (%f,%f) L: (%f,%f,%f)\n", cameraSample.pFilm.x, cameraSample.pFilm.y, L.at(0), L.at(1), L.at(2));
@@ -111,13 +110,10 @@ public abstract class SamplerIntegrator extends Integrator {
                                 // Add camera ray's contribution to image
                                 filmTile.AddSample(cameraSample.pFilm, L, rayWeight);
 
-                                // Free _MemoryArena_ memory from computing image sample
-                                // value
-                                //arena.Reset();
                             } while (tileSampler.StartNextSample());
                         }
                     }
-                    //LOG(INFO) << "Finished image tile " << tileBounds;
+                    Api.logger.info("Finished image tile, %s", tileBounds.toString());
 
                     // Merge image tile into _Film_
                     camera.film.MergeFilmTile(filmTile);
@@ -126,7 +122,7 @@ public abstract class SamplerIntegrator extends Integrator {
             }
             reporter.Done();
         }
-        //LOG(INFO) << "Rendering finished";
+        Api.logger.info("Rendering finished");
         reporter.Exit();
 
         // Save final image after rendering
@@ -277,7 +273,7 @@ public abstract class SamplerIntegrator extends Integrator {
         wi = lis.wi;
         lightPdf = lis.pdf;
 
-        //VLOG(2) << "EstimateDirect uLight:" << uLight << " -> Li: " << Li << ", wi: " << wi << ", pdf: " << lightPdf;
+        Api.logger.trace("EstimateDirect uLight: %s -> Li: %s, wi: %s, pdf: %f", uLight.toString(), Li.toString(), wi.toString(), lightPdf);
         if (lightPdf > 0 && !Li.isBlack()) {
             // Compute BSDF or phase function's value for light sample
             Spectrum f;
@@ -286,26 +282,26 @@ public abstract class SamplerIntegrator extends Integrator {
                 final SurfaceInteraction isect = (SurfaceInteraction)it;
                 f = isect.bsdf.f(isect.wo, wi, bsdfFlags).scale(Normal3f.AbsDot(wi, isect.shading.n));
                 scatteringPdf = isect.bsdf.Pdf(isect.wo, wi, bsdfFlags);
-                //VLOG(2) << "  surf f*dot :" << f << ", scatteringPdf: " << scatteringPdf;
+                Api.logger.trace("  surf f*dot: %s, scatteringPdf: %f", f, scatteringPdf);
             } else {
                 // Evaluate phase function for light sampling strategy
                 final MediumInteraction mi = (MediumInteraction)it;
                 float p = mi.phase.p(mi.wo, wi);
                 f = new Spectrum(p);
                 scatteringPdf = p;
-                //VLOG(2) << "  medium p: " << p;
+                Api.logger.trace("  medium p: %f", p);
             }
             if (!f.isBlack()) {
                 // Compute effect of visibility for light source sample
                 if (handleMedia) {
                     Li = Li.multiply(visibility.Tr(scene, sampler));
-                    //VLOG(2) << "  after Tr, Li: " << Li;
+                    Api.logger.trace("  after Tr, Li: %s", Li);
                 } else {
                     if (!visibility.Unoccluded(scene)) {
-                        //VLOG(2) << "  shadow ray blocked";
+                        Api.logger.trace("  shadow ray blocked");
                         Li = new Spectrum(0);
                     } else {
-                        //VLOG(2) << "  shadow ray unoccluded";
+                        Api.logger.trace("  shadow ray unoccluded");
                     }
                 }
 
@@ -344,7 +340,7 @@ public abstract class SamplerIntegrator extends Integrator {
                 f = new Spectrum(p);
                 scatteringPdf = p;
             }
-            //VLOG(2) << "  BSDF / phase sampling f: " << f << ", scatteringPdf: " << scatteringPdf;
+            Api.logger.trace("  BSDF / phase sampling f: %s, scatteringPdf: %f", f, scatteringPdf);
             if (!f.isBlack() && scatteringPdf > 0) {
                 // Account for light contributions along sampled direction _wi_
                 float weight = 1;

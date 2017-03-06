@@ -53,6 +53,7 @@ public class Main {
     private static Boolean toply = false;
 
     public static void main(String[] args) {
+
 	    final List<String> parse;
         try {
             parse = Args.parse(Main.class, args);

@@ -37,8 +37,8 @@ public class SpecularReflection extends BxDF {
     }
 
     @Override
-    public String ToString() {
-        return null;
+    public String toString() {
+        return "[ SpecularReflection R: " + R.toString() + " fresnel: " + fresnel.toString() + " ]";
     }
 
     private final Spectrum R;

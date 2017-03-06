@@ -118,9 +118,7 @@ public class Film {
                         (int)Math.ceil(fullResolution.y * cropWindow.pMin.y)),
                 new Point2i((int)Math.ceil(fullResolution.x * cropWindow.pMax.x),
                         (int)Math.ceil(fullResolution.y * cropWindow.pMax.y)));
-        //LOG(INFO) << "Created film with full resolution " << resolution <<
-        //        ". Crop window of " << cropWindow << " -> croppedPixelBounds " <<
-        //        croppedPixelBounds;
+        Api.logger.info("Created film with full resolution %s. Crop window of %s -> croppedPixelBounds %s", resolution.toString(), cropWindow, croppedPixelBounds);
 
         // Allocate film image storage
         this.pixels = new Pixel[croppedPixelBounds.Area()];
@@ -164,7 +162,7 @@ public class Film {
 
     public void MergeFilmTile(FilmTile tile) {
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.MergeFilmTile);
-        //VLOG(1) << "Merging film tile " << tile.pixelBounds;
+        Api.logger.trace("Merging film tile %s", tile.pixelBounds.toString());
         //std::lock_guard<std::mutex> lock(mutex);
         for (int y = tile.GetPixelBounds().pMin.y; y < tile.GetPixelBounds().pMax.y; y++) {
             for (int x = tile.GetPixelBounds().pMin.x; x < tile.GetPixelBounds().pMax.x; x++) {
@@ -196,13 +194,13 @@ public class Film {
         Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.SplatFilm);
 
         if (v.hasNaNs()) {
-            //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
+            Api.logger.error("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
             return;
         } else if (v.y() < 0) {
-            //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with negative luminance %f at (%f, %f)", v.y(), p.x, p.y);
+            Api.logger.error("Ignoring splatted spectrum with negative luminance %f at (%f, %f)", v.y(), p.x, p.y);
             return;
         } else if (Float.isInfinite(v.y())) {
-            //LOG(ERROR) << StringPrintf("Ignoring splatted spectrum with infinite luminance at (%f, %f)", p.x, p.y);
+            Api.logger.error("Ignoring splatted spectrum with infinite luminance at (%f, %f)", p.x, p.y);
             return;
         }
 
@@ -259,7 +257,7 @@ public class Film {
         }
 
         // Write RGB image
-        //LOG(INFO) << "Writing image " << filename << " with bounds " << croppedPixelBounds;
+        Api.logger.info("Writing image %s with bounds %s", filename, croppedPixelBounds.toString());
         ImageIO.Write(filename, rgb, croppedPixelBounds, fullResolution);
     }
 

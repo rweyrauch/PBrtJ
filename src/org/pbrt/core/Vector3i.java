@@ -67,6 +67,11 @@ public class Vector3i {
         return z;
     }
 
+    @Override
+    public String toString() {
+        return "[ " + this.x + ", " + this.y + ", " + this.z + " ]";
+    }
+
     public static Vector3i Min(Vector3i p1, Vector3i p2) {
         return new Vector3i(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y),
                 Math.min(p1.z, p2.z));

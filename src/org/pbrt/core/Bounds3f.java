@@ -77,6 +77,10 @@ public class Bounds3f {
         return o;
     }
 
+    public String toString() {
+        return "[ " + this.pMin.toString() + " - " + this.pMax.toString() + " ]";
+    }
+
     public class BoundSphere {
         public Point3f center;
         public float radius;

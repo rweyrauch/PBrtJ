@@ -3,68 +3,65 @@
   <component name="ChangeListManager">
     <list default="true" id="177b20f5-351c-44ab-a363-e5514252b93d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PBrtJ.iml" afterPath="$PROJECT_DIR$/PBrtJ.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/Main.java" afterPath="$PROJECT_DIR$/src/org/pbrt/Main.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/accelerators/BVHAccel.java" afterPath="$PROJECT_DIR$/src/org/pbrt/accelerators/BVHAccel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/accelerators/KdTreeAccel.java" afterPath="$PROJECT_DIR$/src/org/pbrt/accelerators/KdTreeAccel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/AnimatedTransform.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/AnimatedTransform.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/AreaLight.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/AreaLight.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/cameras/EnvironmentCamera.java" afterPath="$PROJECT_DIR$/src/org/pbrt/cameras/EnvironmentCamera.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/cameras/RealisticCamera.java" afterPath="$PROJECT_DIR$/src/org/pbrt/cameras/RealisticCamera.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Api.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Api.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/BSDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/BSDF.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/BSSRDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/BSSRDF.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/BeckmannDistribution.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/BeckmannDistribution.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Bounds2f.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Bounds2f.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Bounds2i.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Bounds2i.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Bounds3f.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Bounds3f.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Bounds3i.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Bounds3i.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/BxDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/BxDF.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Camera.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Camera.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/CylindricalMapping2D.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/CylindricalMapping2D.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/EFloat.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/EFloat.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Film.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Film.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Filter.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Filter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/FourierBSDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/FourierBSDF.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Fresnel.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Fresnel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/FresnelBlend.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/FresnelBlend.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/FresnelConductor.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/FresnelConductor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/FresnelDielectric.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/FresnelDielectric.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/FresnelNoOp.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/FresnelNoOp.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/FresnelSpecular.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/FresnelSpecular.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/GeometricPrimitive.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/GeometricPrimitive.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/IdentityMapping3D.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/IdentityMapping3D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Interaction.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Interaction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/HenyeyGreenstein.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/HenyeyGreenstein.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/LambertianReflection.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/LambertianReflection.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/LambertianTransmission.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/LambertianTransmission.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Light.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Light.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/MIPMapFloat.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/MIPMapFloat.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/MIPMapSpectrum.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/MIPMapSpectrum.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Matrix4x4.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Matrix4x4.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/MediumInterface.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/MediumInterface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetDistribution.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetDistribution.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetReflection.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetReflection.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetTransmission.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetTransmission.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Normal3f.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Normal3f.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/OrenNayar.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/OrenNayar.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/ParamSet.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/ParamSet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Parser.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Parser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/PlanarMapping2D.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/PlanarMapping2D.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Point2f.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Point2f.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Point2i.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Point2i.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/ProjectiveCamera.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/ProjectiveCamera.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Point3f.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Point3f.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Point3i.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Point3i.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Quaternion.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Quaternion.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Ray.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Ray.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/RayDifferential.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/RayDifferential.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SamplerIntegrator.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SamplerIntegrator.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/ScaledBxDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/ScaledBxDF.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Scene.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Scene.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SeparableBSSRDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SeparableBSSRDF.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Shape.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Shape.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SeparableBSSRDFAdapter.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SeparableBSSRDFAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SpatialLightDistribution.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SpatialLightDistribution.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Spectrum.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Spectrum.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SpecularReflection.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SpecularReflection.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SpecularTransmission.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SpecularTransmission.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SphericalMapping2D.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SphericalMapping2D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/SurfaceInteraction.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/SurfaceInteraction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/TabulatedBSSRDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/TabulatedBSSRDF.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Transform.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Transform.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/TransformedPrimitive.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/TransformedPrimitive.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Stats.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Stats.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/TrowbridgeReitzDistribution.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/TrowbridgeReitzDistribution.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Vector2f.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Vector2f.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Vector2i.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Vector2i.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Vector3f.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Vector3f.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Vector3i.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Vector3i.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/core/Yylex.java" afterPath="$PROJECT_DIR$/src/org/pbrt/core/Yylex.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/integrators/PathIntegrator.java" afterPath="$PROJECT_DIR$/src/org/pbrt/integrators/PathIntegrator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/lights/DiffuseAreaLight.java" afterPath="$PROJECT_DIR$/src/org/pbrt/lights/DiffuseAreaLight.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/lights/DistantLight.java" afterPath="$PROJECT_DIR$/src/org/pbrt/lights/DistantLight.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/lights/GonioPhotometricLight.java" afterPath="$PROJECT_DIR$/src/org/pbrt/lights/GonioPhotometricLight.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/lights/PointLight.java" afterPath="$PROJECT_DIR$/src/org/pbrt/lights/PointLight.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/lights/ProjectionLight.java" afterPath="$PROJECT_DIR$/src/org/pbrt/lights/ProjectionLight.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/lights/SpotLight.java" afterPath="$PROJECT_DIR$/src/org/pbrt/lights/SpotLight.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/materials/HairBSDF.java" afterPath="$PROJECT_DIR$/src/org/pbrt/materials/HairBSDF.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/shapes/Hyperboloid.java" afterPath="$PROJECT_DIR$/src/org/pbrt/shapes/Hyperboloid.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/pbrt/shapes/LoopSubdiv.java" afterPath="$PROJECT_DIR$/src/org/pbrt/shapes/LoopSubdiv.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -80,62 +77,76 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Aggregate.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Aggregate.java">
+      <file leaf-file-name="HenyeyGreenstein.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/HenyeyGreenstein.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-68">
-              <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AreaLight.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/AreaLight.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
+            <state relative-caret-position="144">
               <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+              <folding>
+                <element signature="e#1559#1560#0" expanded="true" />
+                <element signature="e#1628#1629#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Point2f.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Point2f.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="650">
+              <caret line="77" column="17" lean-forward="false" selection-start-line="77" selection-start-column="17" selection-end-line="77" selection-end-column="17" />
+              <folding>
+                <element signature="e#1915#1916#0" expanded="true" />
+                <element signature="e#1974#1975#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PhaseFunction.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/PhaseFunction.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="72">
+              <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BlockedArray.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BlockedArray.java">
+      <file leaf-file-name="Quaternion.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Quaternion.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-522">
-              <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-              <folding />
+            <state relative-caret-position="587">
+              <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+              <folding>
+                <element signature="e#3678#3679#0" expanded="true" />
+                <element signature="e#3774#3775#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BSDF.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BSDF.java">
+      <file leaf-file-name="Spectrum.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Spectrum.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-              <folding />
+            <state relative-caret-position="379">
+              <caret line="281" column="80" lean-forward="false" selection-start-line="281" selection-start-column="80" selection-end-line="281" selection-end-column="80" />
+              <folding>
+                <element signature="e#7403#7404#0" expanded="true" />
+                <element signature="e#7490#7491#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BSSRDF.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BSSRDF.java">
+      <file leaf-file-name="Matrix4x4.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Matrix4x4.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-36">
-              <caret line="14" column="22" lean-forward="false" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BxDF.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BxDF.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-450">
-              <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
-              <folding />
+            <state relative-caret-position="235">
+              <caret line="73" column="70" lean-forward="true" selection-start-line="73" selection-start-column="70" selection-end-line="73" selection-end-column="70" />
+              <folding>
+                <element signature="e#0#5644#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -150,34 +161,35 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SamplerIntegrator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/SamplerIntegrator.java">
+      <file leaf-file-name="ParamSet.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/ParamSet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="14" column="22" lean-forward="false" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+            <state relative-caret-position="291">
+              <caret line="575" column="30" lean-forward="true" selection-start-line="575" selection-start-column="30" selection-end-line="575" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BVHAccel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/accelerators/BVHAccel.java">
+      <file leaf-file-name="Camera.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Camera.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="310">
-              <caret line="43" column="76" lean-forward="false" selection-start-line="43" selection-start-column="76" selection-end-line="43" selection-end-column="76" />
+            <state relative-caret-position="353">
+              <caret line="27" column="53" lean-forward="false" selection-start-line="27" selection-start-column="53" selection-end-line="27" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EFloat.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/EFloat.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="151" column="0" lean-forward="false" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#4741#4742#0" expanded="true" />
+                <element signature="e#4838#4839#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RealisticCamera.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/pbrt/cameras/RealisticCamera.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="26" column="35" lean-forward="true" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -193,10 +205,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ARENA_ALLOC(arena,</find>
-      <find>-&gt;</find>
-      <find>ULL</find>
-      <find>[1]</find>
       <find>parseWorldEnd</find>
       <find>currentApiState</find>
       <find>FilterParams</find>
@@ -223,6 +231,10 @@
       <find>buildTree</find>
       <find>sort</find>
       <find>infiniteL</find>
+      <find>Warning</find>
+      <find>LOG</find>
+      <find>toString</find>
+      <find>toS</find>
     </findStrings>
     <replaceStrings>
       <replace>null</replace>
@@ -268,57 +280,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Bounds3i.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Normal3f.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Point2f.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Point2i.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Vector3f.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Vector3i.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Quaternion.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/MediumInterface.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Light.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/ProjectiveCamera.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/AnimatedTransform.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Camera.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/CylindricalMapping2D.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/IdentityMapping3D.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/SphericalMapping2D.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/BSDF.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/SeparableBSSRDF.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/TabulatedBSSRDF.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/BSSRDF.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Film.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Ray.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Filter.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/FresnelBlend.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Spectrum.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/FresnelSpecular.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/GeometricPrimitive.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/LambertianReflection.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/LambertianTransmission.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetReflection.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetTransmission.java" />
         <option value="$PROJECT_DIR$/src/org/pbrt/core/MIPMapFloat.java" />
         <option value="$PROJECT_DIR$/src/org/pbrt/core/MIPMapSpectrum.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/OrenNayar.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/PlanarMapping2D.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/SpatialLightDistribution.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Stats.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/integrators/PathIntegrator.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/shapes/LoopSubdiv.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Api.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Vector2f.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Vector2i.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Vector3f.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Vector3i.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Point2f.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Point2i.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Point3f.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Point3i.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Normal3f.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Bounds2f.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Bounds2i.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Bounds3f.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Bounds3i.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Ray.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/RayDifferential.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/BxDF.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/SeparableBSSRDFAdapter.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetDistribution.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/BeckmannDistribution.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/TrowbridgeReitzDistribution.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/BSDF.java" />
         <option value="$PROJECT_DIR$/src/org/pbrt/core/ScaledBxDF.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Shape.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Fresnel.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/FresnelConductor.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/FresnelDielectric.java" />
         <option value="$PROJECT_DIR$/src/org/pbrt/core/SpecularReflection.java" />
         <option value="$PROJECT_DIR$/src/org/pbrt/core/SpecularTransmission.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/SurfaceInteraction.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/TransformedPrimitive.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/Interaction.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/lights/DiffuseAreaLight.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/lights/DistantLight.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/lights/GonioPhotometricLight.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/lights/PointLight.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/lights/ProjectionLight.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/lights/SpotLight.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/LambertianReflection.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/LambertianTransmission.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/OrenNayar.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetReflection.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/MicrofacetTransmission.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/FresnelBlend.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/FourierBSDF.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/FresnelSpecular.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/FresnelNoOp.java" />
         <option value="$PROJECT_DIR$/src/org/pbrt/materials/HairBSDF.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/shapes/Hyperboloid.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/SamplerIntegrator.java" />
-        <option value="$PROJECT_DIR$/src/org/pbrt/core/AreaLight.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/HenyeyGreenstein.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Quaternion.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Spectrum.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Camera.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/EFloat.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/Matrix4x4.java" />
+        <option value="$PROJECT_DIR$/src/org/pbrt/core/ParamSet.java" />
       </list>
     </option>
   </component>
@@ -354,28 +366,6 @@
               <option name="myItemId" value="External Libraries" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; IntelliJ IDEA Community Edition IC-162.1121.32 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; IntelliJ IDEA Community Edition IC-162.1121.32 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="commons-codec-1.9.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -402,138 +392,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="pbrt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pbrt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="textures" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pbrt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="shapes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pbrt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="samplers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pbrt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pbrt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="materials" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PBrtJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pbrt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lights" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -793,10 +651,11 @@
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939324" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.43379977" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43379977" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297414" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1943557" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32831" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -809,7 +668,6 @@
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938644" sideWeight="0.4978701" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Dynamic Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32831" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -889,7 +747,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/org/pbrt/core/Stats.java</url>
-          <line>565</line>
+          <line>564</line>
           <properties />
           <option name="timeStamp" value="53" />
         </line-breakpoint>
@@ -949,24 +807,24 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/org/pbrt/integrators/PathIntegrator.java</url>
-          <line>125</line>
+          <line>123</line>
           <properties />
           <option name="timeStamp" value="94" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/org/pbrt/core/Scene.java</url>
-          <line>28</line>
+          <url>file://$PROJECT_DIR$/src/org/pbrt/core/Api.java</url>
+          <line>1239</line>
           <properties />
-          <option name="timeStamp" value="98" />
+          <option name="timeStamp" value="100" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/org/pbrt/integrators/PathIntegrator.java</url>
-          <line>82</line>
+          <url>file://$PROJECT_DIR$/src/org/pbrt/core/ImageIO.java</url>
+          <line>28</line>
           <properties />
-          <option name="timeStamp" value="99" />
+          <option name="timeStamp" value="103" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="100" />
+      <option name="time" value="105" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -975,331 +833,460 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/UVMapping2D.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/LoopSubdiv.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-14">
-          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Interaction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="47" column="32" lean-forward="true" selection-start-line="47" selection-start-column="32" selection-end-line="47" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/filters/BoxFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/filters/GaussianFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/filters/LanczosSincFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/filters/MitchellFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/filters/TriangleFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        <state relative-caret-position="318">
+          <caret line="363" column="9" lean-forward="true" selection-start-line="363" selection-start-column="9" selection-end-line="363" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/pbrt/integrators/PathIntegrator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="181" column="19" lean-forward="true" selection-start-line="181" selection-start-column="19" selection-end-line="181" selection-end-column="19" />
+        <state relative-caret-position="-792">
+          <caret line="97" column="66" lean-forward="false" selection-start-line="97" selection-start-column="66" selection-end-line="97" selection-end-column="66" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/lights/DiffuseAreaLight.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BlockedArray.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="32" column="33" lean-forward="true" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+        <state relative-caret-position="-437">
+          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/lights/DistantLight.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Api.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="27" column="32" lean-forward="false" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+        <state relative-caret-position="792">
+          <caret line="630" column="48" lean-forward="true" selection-start-line="630" selection-start-column="48" selection-end-line="630" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Vector2f.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+          <folding>
+            <element signature="e#1701#1702#0" expanded="true" />
+            <element signature="e#1760#1761#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Vector2i.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="68" column="5" lean-forward="false" selection-start-line="68" selection-start-column="5" selection-end-line="68" selection-end-column="5" />
+          <folding>
+            <element signature="e#1220#1221#0" expanded="true" />
+            <element signature="e#1279#1280#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Vector3f.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="97" column="0" lean-forward="false" selection-start-line="93" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+          <folding>
+            <element signature="e#1978#1979#0" expanded="true" />
+            <element signature="e#2053#2054#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Vector3i.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="73" column="0" lean-forward="true" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+          <folding>
+            <element signature="e#1384#1385#0" expanded="true" />
+            <element signature="e#1459#1460#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Point2i.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="63" column="46" lean-forward="false" selection-start-line="63" selection-start-column="46" selection-end-line="63" selection-end-column="46" />
+          <folding>
+            <element signature="e#1446#1447#0" expanded="true" />
+            <element signature="e#1505#1506#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Point3f.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="113" column="0" lean-forward="false" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+          <folding>
+            <element signature="e#2412#2413#0" expanded="true" />
+            <element signature="e#2487#2488#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Point3i.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="86" column="0" lean-forward="true" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+          <folding>
+            <element signature="e#1734#1735#0" expanded="true" />
+            <element signature="e#1809#1810#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Normal3f.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-324">
+          <caret line="78" column="0" lean-forward="true" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+          <folding>
+            <element signature="e#1592#1593#0" expanded="true" />
+            <element signature="e#1667#1668#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Bounds2f.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="79" column="0" lean-forward="false" selection-start-line="76" selection-start-column="1" selection-end-line="79" selection-end-column="0" />
+          <folding>
+            <element signature="e#2011#2012#0" expanded="true" />
+            <element signature="e#2099#2100#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Bounds2i.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+          <folding>
+            <element signature="e#1895#1896#0" expanded="true" />
+            <element signature="e#1983#1984#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Bounds3f.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="82" column="0" lean-forward="false" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding>
+            <element signature="e#2398#2399#0" expanded="true" />
+            <element signature="e#2486#2487#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Bounds3i.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding>
+            <element signature="e#1451#1452#0" expanded="true" />
+            <element signature="e#1539#1540#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Ray.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="58" column="13" lean-forward="false" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/lights/GonioPhotometricLight.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/RayDifferential.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
+        <state relative-caret-position="328">
+          <caret line="54" column="83" lean-forward="false" selection-start-line="54" selection-start-column="83" selection-end-line="54" selection-end-column="83" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BxDF.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="78" column="5" lean-forward="false" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/SeparableBSSRDFAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
           <caret line="28" column="0" lean-forward="true" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/lights/InfiniteAreaLight.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-522">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/lights/PointLight.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/AreaLight.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
-          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <caret line="17" column="5" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/lights/ProjectionLight.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/MicrofacetDistribution.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="27" column="33" lean-forward="true" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+        <state relative-caret-position="328">
+          <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/lights/SpotLight.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BeckmannDistribution.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="84" column="79" lean-forward="false" selection-start-line="84" selection-start-column="79" selection-end-line="84" selection-end-column="79" />
+          <folding>
+            <element signature="e#3456#3457#0" expanded="true" />
+            <element signature="e#3558#3559#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/TrowbridgeReitzDistribution.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="59" column="86" lean-forward="false" selection-start-line="59" selection-start-column="86" selection-end-line="59" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BSDF.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="183" column="24" lean-forward="false" selection-start-line="183" selection-start-column="24" selection-end-line="183" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/ScaledBxDF.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="51" column="22" lean-forward="true" selection-start-line="51" selection-start-column="22" selection-end-line="51" selection-end-column="22" />
+          <folding>
+            <element signature="e#1170#1171#0" expanded="true" />
+            <element signature="e#1271#1272#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Fresnel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/FresnelConductor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/FresnelDielectric.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-90">
+          <caret line="18" column="13" lean-forward="false" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding>
+            <element signature="e#539#540#0" expanded="true" />
+            <element signature="e#630#631#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/SpecularReflection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="40" column="100" lean-forward="false" selection-start-line="40" selection-start-column="100" selection-end-line="40" selection-end-column="100" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/SpecularTransmission.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="61" column="5" lean-forward="true" selection-start-line="61" selection-start-column="5" selection-end-line="61" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/LambertianReflection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="32" column="61" lean-forward="false" selection-start-line="32" selection-start-column="61" selection-end-line="32" selection-end-column="61" />
+          <folding>
+            <element signature="e#747#748#0" expanded="true" />
+            <element signature="e#820#821#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/LambertianTransmission.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="47" column="68" lean-forward="false" selection-start-line="47" selection-start-column="68" selection-end-line="47" selection-end-column="68" />
+          <folding>
+            <element signature="e#1234#1235#0" expanded="true" />
+            <element signature="e#1309#1310#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/OrenNayar.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
-          <caret line="35" column="17" lean-forward="false" selection-start-line="35" selection-start-column="17" selection-end-line="35" selection-end-column="17" />
+          <caret line="50" column="50" lean-forward="false" selection-start-line="50" selection-start-column="50" selection-end-line="50" selection-end-column="50" />
+          <folding>
+            <element signature="e#1677#1678#0" expanded="true" />
+            <element signature="e#1772#1773#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/MicrofacetReflection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="28" column="57" lean-forward="true" selection-start-line="28" selection-start-column="57" selection-end-line="28" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/FourierMaterial.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/MicrofacetTransmission.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-266">
-          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        <state relative-caret-position="292">
+          <caret line="76" column="66" lean-forward="false" selection-start-line="76" selection-start-column="66" selection-end-line="76" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/FresnelBlend.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="66" column="62" lean-forward="false" selection-start-line="66" selection-start-column="62" selection-end-line="66" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/FourierBSDF.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="203" column="47" lean-forward="false" selection-start-line="203" selection-start-column="47" selection-end-line="203" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/FresnelSpecular.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="78" column="52" lean-forward="false" selection-start-line="78" selection-start-column="52" selection-end-line="78" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/FresnelNoOp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="22" column="1" lean-forward="true" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/HairBSDF.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="268" column="36" lean-forward="true" selection-start-line="268" selection-start-column="36" selection-end-line="268" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/HenyeyGreenstein.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
-          <caret line="26" column="35" lean-forward="true" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
+          <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="e#1559#1560#0" expanded="true" />
+            <element signature="e#1628#1629#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Point2f.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="650">
+          <caret line="77" column="17" lean-forward="false" selection-start-line="77" selection-start-column="17" selection-end-line="77" selection-end-column="17" />
+          <folding>
+            <element signature="e#1915#1916#0" expanded="true" />
+            <element signature="e#1974#1975#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Quaternion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+          <folding>
+            <element signature="e#3678#3679#0" expanded="true" />
+            <element signature="e#3774#3775#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Spectrum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="281" column="80" lean-forward="false" selection-start-line="281" selection-start-column="80" selection-end-line="281" selection-end-column="80" />
+          <folding>
+            <element signature="e#7403#7404#0" expanded="true" />
+            <element signature="e#7490#7491#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Camera.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="27" column="53" lean-forward="false" selection-start-line="27" selection-start-column="53" selection-end-line="27" selection-end-column="53" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/GlassMaterial.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/EFloat.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-212">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="540">
+          <caret line="151" column="0" lean-forward="false" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
+          <folding>
+            <element signature="e#4741#4742#0" expanded="true" />
+            <element signature="e#4838#4839#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/HairMaterial.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Matrix4x4.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="55" column="10" lean-forward="true" selection-start-line="55" selection-start-column="10" selection-end-line="55" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/KdSubsurfaceMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-90">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/MatteMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/MetalMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-36">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/MirrorMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/MixMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/PlasticMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/SubstrateMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/SubsurfaceMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-468">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/TranslucentMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-36">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/materials/UberMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-90">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/samplers/ZeroTwoSequence.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Cone.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="21" column="16" lean-forward="true" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Curve.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="91" column="23" lean-forward="true" selection-start-line="91" selection-start-column="23" selection-end-line="91" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Cylinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Disk.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Hyperboloid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="30" column="26" lean-forward="true" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/NURBS.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Paraboloid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Sphere.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/shapes/Triangle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-144">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/textures/ConstantTexture.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="24" column="21" lean-forward="true" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/textures/DotsTextureFloat.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="235">
+          <caret line="73" column="70" lean-forward="true" selection-start-line="73" selection-start-column="70" selection-end-line="73" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#5644#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1311,76 +1298,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/SamplerIntegrator.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/ParamSet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="14" column="22" lean-forward="false" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+        <state relative-caret-position="291">
+          <caret line="575" column="30" lean-forward="true" selection-start-line="575" selection-start-column="30" selection-end-line="575" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/accelerators/BVHAccel.java">
+    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/PhaseFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="43" column="76" lean-forward="false" selection-start-line="43" selection-start-column="76" selection-end-line="43" selection-end-column="76" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/cameras/RealisticCamera.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="26" column="35" lean-forward="true" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/Aggregate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-68">
-          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/AreaLight.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BlockedArray.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-522">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BSDF.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BSSRDF.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-36">
-          <caret line="14" column="22" lean-forward="false" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/pbrt/core/BxDF.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-450">
-          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+        <state relative-caret-position="72">
+          <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
           <folding />
         </state>
       </provider>

@@ -17,7 +17,7 @@ public class FresnelNoOp extends Fresnel {
     }
 
     @Override
-    public String ToString() {
+    public String toString() {
         return "[ FresnelNoOp ]";
     }
 }
