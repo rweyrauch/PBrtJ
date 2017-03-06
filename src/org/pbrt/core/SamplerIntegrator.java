@@ -106,7 +106,7 @@ public abstract class SamplerIntegrator extends Integrator {
                                     //        pixel.x, pixel.y, (int) tileSampler.CurrentSampleNumber());
                                     L = new Spectrum(0);
                                 }
-                                //VLOG(1) << "Camera sample: " << cameraSample << " -> ray: " << ray << " -> L = " << L;
+                                //System.out.format("Camera sample: (%f,%f) L: (%f,%f,%f)\n", cameraSample.pFilm.x, cameraSample.pFilm.y, L.at(0), L.at(1), L.at(2));
 
                                 // Add camera ray's contribution to image
                                 filmTile.AddSample(cameraSample.pFilm, L, rayWeight);

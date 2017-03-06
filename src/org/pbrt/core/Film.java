@@ -175,6 +175,7 @@ public class Film {
                 float[] xyz = tilePixel.contribSum.toXYZ();
                 for (int i = 0; i < 3; ++i) mergePixel.xyz[i] += xyz[i];
                 mergePixel.filterWeightSum += tilePixel.filterWeightSum;
+                SetPixel(pixel, mergePixel);
             }
         }
     }
@@ -327,5 +328,10 @@ public class Film {
         int offset = (p.x - croppedPixelBounds.pMin.x) + (p.y - croppedPixelBounds.pMin.y) * width;
         return pixels[offset];
     }
-
+    private void SetPixel(Point2i p, Pixel pix) {
+        assert (Bounds2i.InsideExclusive(p, croppedPixelBounds));
+        int width = croppedPixelBounds.pMax.x - croppedPixelBounds.pMin.x;
+        int offset = (p.x - croppedPixelBounds.pMin.x) + (p.y - croppedPixelBounds.pMin.y) * width;
+        pixels[offset] = pix;
+    }
 }
