@@ -39,9 +39,11 @@ public class Scene {
     }
     public Bounds3f WorldBound() { return worldBound; }
     public SurfaceInteraction Intersect(Ray ray) {
+        nIntersectionTests.increment();
         return aggregate.Intersect(ray);
     }
     public boolean IntersectP(Ray ray) {
+        nShadowTests.increment();
         return aggregate.IntersectP(ray);
     }
 
@@ -65,4 +67,6 @@ public class Scene {
         }
     }
 
+    private static Stats.STAT_COUNTER nIntersectionTests = new Stats.STAT_COUNTER("Intersections/Regular ray intersection tests");
+    private static Stats.STAT_COUNTER nShadowTests = new Stats.STAT_COUNTER("Intersections/Shadow ray intersection tests");
 }

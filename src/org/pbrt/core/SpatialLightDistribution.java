@@ -11,6 +11,7 @@
 package org.pbrt.core;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SpatialLightDistribution extends LightDistribution {
 
@@ -50,7 +51,99 @@ public class SpatialLightDistribution extends LightDistribution {
 
     @Override
     public Distribution1D Lookup(Point3f p) {
-        return null;
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightDistribLookup);
+        looksPerDistrib.incrementDenom(1); // nLookups
+
+        // First, compute integer voxel coordinates for the given point |p|
+        // with respect to the overall voxel grid.
+        Vector3f offset = scene.WorldBound().Offset(p);  // offset in [0,1].
+        Point3i pi = new Point3i();
+        for (int i = 0; i < 3; ++i)
+            // The clamp should almost never be necessary, but is there to be
+            // robust to computed intersection points being slightly outside
+            // the scene bounds due to floating-point roundoff error.
+            pi.set(i, Pbrt.Clamp((int)(offset.at(i) * nVoxels[i]), 0, nVoxels[i] - 1));
+
+        // Pack the 3D integer voxel coordinates into a single 64-bit value.
+        long packedPos = ((long)(pi.x) << 40) | ((long)(pi.y) << 20) | pi.z;
+        assert (packedPos != invalidPackedPos);
+
+        // Compute a hash value from the packed voxel coordinates.  We could
+        // just take packedPos mod the hash table size, but since packedPos
+        // isn't necessarily well distributed on its own, it's worthwhile to do
+        // a little work to make sure that its bits values are individually
+        // fairly random. For details of and motivation for the following, see:
+        // http://zimbry.blogspot.ch/2011/09/better-bit-mixing-improving-on.html
+        long hash = packedPos;
+        hash ^= (hash >> 31);
+        hash *= 0x7fb5d329728ea185L;
+        hash ^= (hash >> 27);
+        hash *= 0x81dadef4bc2dd44dL;
+        hash ^= (hash >> 33);
+        hash %= hashTableSize;
+        assert (hash >= 0);
+
+        // Now, see if the hash table already has an entry for the voxel. We'll
+        // use quadratic probing when the hash table entry is already used for
+        // another value; step stores the square root of the probe step.
+        int step = 1;
+        int nProbes = 0;
+        while (true) {
+            ++nProbes;
+            HashEntry entry = hashTable[(int)hash];
+            // Does the hash table entry at offset |hash| match the current point?
+            long entryPackedPos = entry.packedPos.get();
+            if (entryPackedPos == packedPos) {
+                // Yes! Most of the time, there should already by a light
+                // sampling distribution available.
+                Distribution1D dist = entry.distribution.get();
+                if (dist == null) {
+                    // Rarely, another thread will have already done a lookup
+                    // at this point, found that there isn't a sampling
+                    // distribution, and will already be computing the
+                    // distribution for the point.  In this case, we spin until
+                    // the sampling distribution is ready.  We assume that this
+                    // is a rare case, so don't do anything more sophisticated
+                    // than spinning.
+                    Stats.ProfilePhase ppp = new Stats.ProfilePhase(Stats.Prof.LightDistribSpinWait);
+                    while ((dist = entry.distribution.get()) == null)
+                        // spin :-(. If we were fancy, we'd have any threads
+                        // that hit this instead help out with computing the
+                        // distribution for the voxel...
+                        ;
+                }
+                // We have a valid sampling distribution.
+                nProbesPerLookup.ReportValue(nProbes);
+                return dist;
+            } else if (entryPackedPos != invalidPackedPos) {
+                // The hash table entry we're checking has already been
+                // allocated for another voxel. Advance to the next entry with
+                // quadratic probing.
+                hash += step * step;
+                if (hash >= hashTableSize)
+                    hash %= hashTableSize;
+                ++step;
+            } else {
+                // We have found an invalid entry. (Though this may have
+                // changed since the load into entryPackedPos above.)  Use an
+                // atomic compare/exchange to try to claim this entry for the
+                // current position.
+                long invalid = invalidPackedPos;
+                if (entry.packedPos.weakCompareAndSet(invalid, packedPos)) {
+                    // Success; we've claimed this position for this voxel's
+                    // distribution. Now compute the sampling distribution and
+                    // add it to the hash table. As long as packedPos has been
+                    // set but the entry's distribution pointer is nullptr, any
+                    // other threads looking up the distribution for this voxel
+                    // will spin wait until the distribution pointer is
+                    // written.
+                    Distribution1D dist = ComputeDistribution(pi);
+                    entry.distribution.set(dist);
+                    nProbesPerLookup.ReportValue(nProbes);
+                    return dist;
+                }
+            }
+        }
     }
 
     private Distribution1D ComputeDistribution(Point3i pi) {
@@ -125,7 +218,7 @@ public class SpatialLightDistribution extends LightDistribution {
     // implementation for details.)
     private static class HashEntry {
         AtomicLong packedPos;
-        Distribution1D distribution;
+        AtomicReference<Distribution1D> distribution;
     }
     private HashEntry[] hashTable;
     private int hashTableSize;

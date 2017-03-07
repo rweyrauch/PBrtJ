@@ -142,7 +142,7 @@ public class Triangle extends Shape {
     @Override
     public HitResult Intersect(Ray ray, boolean testAlphaTexture) {
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersect);
-        //++nTests;
+        interPerRayTri.incrementDenom(1); //++nTests;
 
         // Get triangle vertices in _p0_, _p1_, and _p2_
         Point3f p0 = mesh.p[v[0]];
@@ -350,14 +350,15 @@ public class Triangle extends Shape {
             hr.isect.shading.n = hr.isect.n = hr.isect.n.negate();
         }
         hr.tHit = t;
-        //++nHits;
+        interPerRayTri.incrementNumer(1); //++nHits;
         return hr;
     }
 
     @Override
     public boolean IntersectP(Ray ray, boolean testAlphaTexture) {
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersectP);
-        //++nTests;
+        interPerRayTri.incrementDenom(1); //++nTests;
+
         // Get triangle vertices in _p0_, _p1_, and _p2_
         Point3f p0 = mesh.p[v[0]];
         Point3f p1 = mesh.p[v[1]];
@@ -488,7 +489,7 @@ public class Triangle extends Shape {
             if (mesh.shadowAlphaMask != null && mesh.shadowAlphaMask.Evaluate(isectLocal) == 0)
                 return false;
         }
-        //++nHits;
+        interPerRayTri.incrementNumer(1); //++nHits;
         return true;
     }
 
@@ -590,8 +591,10 @@ public class Triangle extends Shape {
             this.vertexIndices = vertexIndices;
             this.alphaMask = alphaMask;
             this.shadowAlphaMask = shadowAlphaMask;
-            //++nMeshes;
-            //nTris += nTriangles;
+
+            trisPerMesh.incrementDenom(1); // ++nMeshes;
+            trisPerMesh.incrementNumer(nTriangles); //nTris += nTriangles;
+
             // Transform mesh vertices to world space
             this.p = new Point3f[nVertices];
             for (int i = 0; i < nVertices; ++i) p[i] = ObjectToWorld.xform(P[i]);
@@ -621,4 +624,8 @@ public class Triangle extends Shape {
 
     private TriangleMesh mesh;
     private int[] v;
+
+    private static Stats.STAT_PERCENT interPerRayTri = new Stats.STAT_PERCENT("Intersections/Ray-triangle intersection tests"); // nHits per nTests
+    private static Stats.STAT_RATIO trisPerMesh = new Stats.STAT_RATIO("Scene/Triangles per triangle mesh"); // nTris per nMeshes
+
 }

@@ -153,6 +153,13 @@ public class Stats {
             maxVar.set(Long.MIN_VALUE);
         }
 
+        public void ReportValue(long value) {
+            sumVar.set(sumVar.get()+value);
+            countVar.set(countVar.get()+1);
+            minVar.set(Math.min(minVar.get(), value));
+            maxVar.set(Math.max(maxVar.get(), value));
+        }
+
         public StatRegisterer STATS_REG;
         private final String title;
         public ThreadLocal<Long> sumVar = new ThreadLocal<>();
@@ -182,6 +189,13 @@ public class Stats {
             countVar.set(0L);
             minVar.set(Double.MAX_VALUE);
             maxVar.set(Double.MIN_VALUE);
+        }
+
+        public void ReportValue(double value) {
+            sumVar.set(sumVar.get()+value);
+            countVar.set(countVar.get()+1);
+            minVar.set(Math.min(minVar.get(), value));
+            maxVar.set(Math.max(maxVar.get(), value));
         }
 
         public StatRegisterer STATS_REG;
@@ -255,7 +269,7 @@ public class Stats {
         statsAccumulator.Clear();
     }
     public static void ReportThreadStats() {
-
+        StatRegisterer.CallCallbacks(statsAccumulator);
     }
 
     public static long ProfToBits(Prof p) { return 1L << p.ordinal(); }
@@ -273,7 +287,7 @@ public class Stats {
     private static class ProfileSample {
         AtomicLong profilerState = new AtomicLong(0);
         AtomicLong count = new AtomicLong(0);
-    };
+    }
 
     // We use a hash table to keep track of the profiler state counts. Because
     // we can't do dynamic memory allocation in a signal handler (and because
@@ -508,12 +522,14 @@ public class Stats {
                     if (counter.getValue() == 0) continue;
                     String[] categoryTitle = {null, null};
                     categoryTitle = getCategoryAndTitle(counter.getKey(), categoryTitle);
-                    toPrint.get(categoryTitle[0]).add(String.format("%-42s               %12%d", categoryTitle[1], counter.getValue()));
+                    if (!toPrint.containsKey(categoryTitle[0])) toPrint.put(categoryTitle[0], new ArrayList<>(1));
+                    toPrint.get(categoryTitle[0]).add(String.format("%-42s               %12d", categoryTitle[1], counter.getValue()));
                 }
                 for (HashMap.Entry<String, Long> counter : memoryCounters.entrySet()){
                     if (counter.getValue() == 0) continue;
                     String[] categoryTitle = {null, null};
                     categoryTitle = getCategoryAndTitle(counter.getKey(), categoryTitle);
+                    if (!toPrint.containsKey(categoryTitle[0])) toPrint.put(categoryTitle[0], new ArrayList<>(1));
                     float kb = (float)counter.getValue() / 1024.0f;
                     if (kb < 1024.0f)
                         toPrint.get(categoryTitle[0]).add(String.format("%-42s                  %9.2f kB", categoryTitle[1], kb));
@@ -532,6 +548,7 @@ public class Stats {
                     if (intDistributionCounts.get(name) == 0) continue;
                     String[] categoryTitle = {null, null};
                     categoryTitle = getCategoryAndTitle(distributionSum.getKey(), categoryTitle);
+                    if (!toPrint.containsKey(categoryTitle[0])) toPrint.put(categoryTitle[0], new ArrayList<>(1));
                     double avg = (double) distributionSum.getValue() / (double)intDistributionCounts.get(name);
                     toPrint.get(categoryTitle[0]).add(
                             String.format("%-42s                      %.3f avg [range %d - %d]",
@@ -542,6 +559,7 @@ public class Stats {
                     if (floatDistributionCounts.get(name) == 0) continue;
                     String[] categoryTitle = {null, null};
                     categoryTitle = getCategoryAndTitle(distributionSum.getKey(), categoryTitle);
+                    if (!toPrint.containsKey(categoryTitle[0])) toPrint.put(categoryTitle[0], new ArrayList<>(1));
                     double avg = distributionSum.getValue() / (double)floatDistributionCounts.get(name);
                     toPrint.get(categoryTitle[0]).add(
                             String.format("%-42s                      %.3f avg [range %f - %f]",
@@ -553,6 +571,7 @@ public class Stats {
                     long denom = percentage.getValue().second;
                     String[] categoryTitle = {null, null};
                     categoryTitle = getCategoryAndTitle(percentage.getKey(), categoryTitle);
+                    if (!toPrint.containsKey(categoryTitle[0])) toPrint.put(categoryTitle[0], new ArrayList<>(1));
                     toPrint.get(categoryTitle[0]).add(
                             String.format("%-42s%12d / %12d (%.2f%%)",
                                     categoryTitle[1], num, denom, (100.f * num) / denom));
@@ -563,14 +582,15 @@ public class Stats {
                     long denom = ratio.getValue().second;
                     String[] categoryTitle = {null, null};
                     categoryTitle = getCategoryAndTitle(ratio.getKey(), categoryTitle);
+                    if (!toPrint.containsKey(categoryTitle[0])) toPrint.put(categoryTitle[0], new ArrayList<>(1));
                     toPrint.get(categoryTitle[0]).add(String.format(
                             "%-42s%12d / %12d (%.2fx)", categoryTitle[1], num, denom, (double) num / (double) denom));
                 }
 
                 for (HashMap.Entry<String, ArrayList<String>> categories : toPrint.entrySet()){
-                    file.write("  " + categories.getKey() + "/n");
+                    file.write("  " + categories.getKey() + "\n");
                     for (String item : categories.getValue())
-                    file.write("    " + item + "/n");
+                    file.write("    " + item + "\n");
                 }
             } catch (IOException e) {
 
@@ -619,7 +639,7 @@ public class Stats {
         if (slash < 0)
             categoryTitle[1] = str;
         else {
-            categoryTitle[0] = str.substring(0, slash-1);
+            categoryTitle[0] = str.substring(0, slash);
             categoryTitle[1] = str.substring(slash+1);
         }
         return categoryTitle;

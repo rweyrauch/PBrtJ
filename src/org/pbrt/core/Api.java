@@ -11,7 +11,9 @@
 package org.pbrt.core;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
@@ -1237,8 +1239,20 @@ public class Api {
             //Parallel.MergeWorkerThreadStats();
             Stats.ReportThreadStats();
             if (!Pbrt.options.Quiet) {
-                Stats.PrintStats(new OutputStreamWriter(System.out));
-                Stats.ReportProfilerResults(new OutputStreamWriter(System.out));
+                try {
+                    PrintWriter pw = new PrintWriter("renderStats.txt");
+                    Stats.PrintStats(pw);
+                    pw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    PrintWriter pw = new PrintWriter("renderProfile.txt");
+                    Stats.ReportProfilerResults(pw);
+                    pw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Stats.ClearStats();
                 Stats.ClearProfiler();
             }
