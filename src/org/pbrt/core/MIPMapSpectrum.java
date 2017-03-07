@@ -119,7 +119,7 @@ public class MIPMapSpectrum {
                 weightLut[i] = (float)(Math.exp(-alpha * r2) - Math.exp(-alpha));
             }
         }
-        mipMapMemory.increment(4 * resolution.x * resolution.y * (4*3) / 3); // todo: how to get useful size info from java?
+        mipMapMemory.increment((4 * resolution.x * resolution.y * 4*3) / 3);
     }
 
     public MIPMapSpectrum(Point2i resolution, Spectrum[] data, Spectrum black) {

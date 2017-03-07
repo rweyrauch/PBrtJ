@@ -595,6 +595,10 @@ public class Triangle extends Shape {
             trisPerMesh.incrementDenom(1); // ++nMeshes;
             trisPerMesh.incrementNumer(nTriangles); //nTris += nTriangles;
 
+            //triMeshBytes.increment(ObjectSizeCalculator.getObjectSize(this) + (3 * nTriangles * ObjectSizeCalculator.getObjectSize(new Integer(0))) +
+            //        nVertices * (ObjectSizeCalculator.getObjectSize(P) + ((N != null) ? ObjectSizeCalculator.getObjectSize(N) : 0) +
+            //        ((S != null) ? ObjectSizeCalculator.getObjectSize(S) : 0) + ((UV != null) ? ObjectSizeCalculator.getObjectSize(UV) : 0)));
+
             // Transform mesh vertices to world space
             this.p = new Point3f[nVertices];
             for (int i = 0; i < nVertices; ++i) p[i] = ObjectToWorld.xform(P[i]);
@@ -627,5 +631,5 @@ public class Triangle extends Shape {
 
     private static Stats.STAT_PERCENT interPerRayTri = new Stats.STAT_PERCENT("Intersections/Ray-triangle intersection tests"); // nHits per nTests
     private static Stats.STAT_RATIO trisPerMesh = new Stats.STAT_RATIO("Scene/Triangles per triangle mesh"); // nTris per nMeshes
-
+    private static Stats.STAT_MEMORY_COUNTER triMeshBytes = new Stats.STAT_MEMORY_COUNTER("Memory/Triangle meshes");
 }

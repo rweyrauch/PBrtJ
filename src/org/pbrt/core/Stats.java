@@ -66,7 +66,7 @@ public class Stats {
             STATS_FUNC(accum);
         }
 
-        public void increment(int value) {
+        public void increment(long value) {
             var.set(var.get()+value);
         }
     }

@@ -123,6 +123,7 @@ public class Film {
         // Allocate film image storage
         this.pixels = new Pixel[croppedPixelBounds.Area()];
         for (int i = 0; i < this.pixels.length; i++) this.pixels[i] = new Pixel();
+        filmPixelMemory.increment(croppedPixelBounds.Area() * 8*4);
 
         // Precompute filter weight table
         int offset = 0;
@@ -332,4 +333,7 @@ public class Film {
         int offset = (p.x - croppedPixelBounds.pMin.x) + (p.y - croppedPixelBounds.pMin.y) * width;
         pixels[offset] = pix;
     }
+
+    private static Stats.STAT_MEMORY_COUNTER filmPixelMemory = new Stats.STAT_MEMORY_COUNTER("Memory/Film pixels");
+
 }

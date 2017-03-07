@@ -61,8 +61,8 @@ public class BVHAccel extends Aggregate {
         Api.logger.info("BVH created with %d nodes for %d primitives.\n", totalNodes[0], primitives.length);
 
         // Compute representation of depth-first traversal of BVH tree
-        //treeBytes += totalNodes * sizeof(LinearBVHNode) + sizeof(*this) +
-         //       primitives.size() * sizeof(primitives[0]);
+        //treeBytes.increment(totalNodes[0] * ObjectSizeCalculator.getObjectSize(new LinearBVHNode()) + ObjectSizeCalculator.getObjectSize(this) + primitives.length * ObjectSizeCalculator.getObjectSize(primitives[0]));
+
         nodes = new LinearBVHNode[totalNodes[0]];
         for (int i = 0; i < nodes.length; i++)
             nodes[i] = new LinearBVHNode();
@@ -792,5 +792,5 @@ public class BVHAccel extends Aggregate {
     private static Stats.STAT_RATIO primsPerLeaf = new Stats.STAT_RATIO("BVH/Primitives per leaf node");
     private static Stats.STAT_COUNTER interiorNodes = new Stats.STAT_COUNTER("BVH/Interior nodes");
     private static Stats.STAT_COUNTER leafNodes = new Stats.STAT_COUNTER("BVH/Leaf nodes");
-
+    private static Stats.STAT_MEMORY_COUNTER treeBytes = new Stats.STAT_MEMORY_COUNTER("Memory/BVH tree");
 }
