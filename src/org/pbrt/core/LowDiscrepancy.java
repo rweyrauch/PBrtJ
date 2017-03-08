@@ -2175,7 +2175,7 @@ public class LowDiscrepancy {
                 delta ^= SobolMatrices.VdCSobolMatrices[m - 1][c];
 
         // flipped b
-        long b = (((long)((int)p.x) << m) | ((int)p.y)) ^ delta;
+        long b = (((long)((int)p.x) << m) | p.y) ^ delta;
 
         for (int c = 0; b != 0; b >>= 1, ++c)
             if ((b & 1) != 0)  // Add column 2 * m - c.
@@ -2210,7 +2210,7 @@ public class LowDiscrepancy {
     }
 
     public static Point2f[] GrayCodeSample(int[] C0, int[] C1, int n, Point2i scramble, Point2f[] p) {
-        int[] v = {(int)scramble.x, (int)scramble.y};
+        int[] v = {scramble.x, scramble.y};
         for (int i = 0; i < n; ++i) {
             p[i].x = Math.min(v[0] * 0x1p-32f, Pbrt.OneMinusEpsilon);
             p[i].y = Math.min(v[1] * 0x1p-32f, Pbrt.OneMinusEpsilon);

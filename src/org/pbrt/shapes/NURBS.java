@@ -11,7 +11,6 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
 
 import java.util.ArrayList;
 

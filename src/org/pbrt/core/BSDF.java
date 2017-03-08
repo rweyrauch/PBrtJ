@@ -135,14 +135,14 @@ public class BSDF {
         sample.wiWorld = LocalToWorld(wi);
 
         // Compute overall PDF with all matching _BxDF_s
-        if (!((bxdf.type & BxDF.BSDF_SPECULAR) != 0) && matchingComps > 1)
+        if ((bxdf.type & BxDF.BSDF_SPECULAR) == 0 && matchingComps > 1)
             for (int i = 0; i < nBxDFs; ++i)
                 if (bxdfs[i] != bxdf && bxdfs[i].MatchesFlags(type))
                     sample.pdf += bxdfs[i].Pdf(wo, wi);
         if (matchingComps > 1) sample.pdf /= matchingComps;
 
         // Compute value of BSDF for sampled direction
-        if (!((bxdf.type & BxDF.BSDF_SPECULAR) != 0) && matchingComps > 1) {
+        if ((bxdf.type & BxDF.BSDF_SPECULAR) == 0 && matchingComps > 1) {
             boolean reflect = Normal3f.Dot(sample.wiWorld, ng) * Normal3f.Dot(woWorld, ng) > 0;
             for (int i = 0; i < nBxDFs; ++i) {
                 if (bxdfs[i].MatchesFlags(type) &&
@@ -173,8 +173,7 @@ public class BSDF {
             ++matchingComps;
             pdf += bxdfs[i].Pdf(wo, wi);
         }
-        float v = matchingComps > 0 ? pdf / matchingComps : 0;
-        return v;
+        return matchingComps > 0 ? pdf / matchingComps : 0;
     }
     public float Pdf(Vector3f wo, Vector3f wi) {
         return Pdf(wo, wi, BxDF.BSDF_ALL);

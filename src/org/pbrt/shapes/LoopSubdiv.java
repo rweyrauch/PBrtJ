@@ -14,8 +14,6 @@ import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class LoopSubdiv {
 

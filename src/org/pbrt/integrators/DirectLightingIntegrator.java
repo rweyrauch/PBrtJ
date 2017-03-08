@@ -13,7 +13,6 @@ package org.pbrt.integrators;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class DirectLightingIntegrator extends SamplerIntegrator {

@@ -10,10 +10,6 @@
 
 package org.pbrt.core;
 
-import org.apache.log4j.LogManager;
-
-import java.util.ArrayList;
-
 public abstract class SamplerIntegrator extends Integrator {
 
     public SamplerIntegrator(Camera camera, Sampler sampler, Bounds2i pixelBounds) {
@@ -327,7 +323,7 @@ public abstract class SamplerIntegrator extends Integrator {
 
                 assert isect.wo != null;
                 assert uScattering != null;
-                
+
                 BxDF.BxDFSample bs = isect.bsdf.Sample_f(isect.wo, uScattering, bsdfFlags);
                 int sampledType = bs.sampledType;
                 f = bs.f;

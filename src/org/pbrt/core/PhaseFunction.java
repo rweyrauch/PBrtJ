@@ -18,5 +18,5 @@ public abstract class PhaseFunction {
     // PhaseFunction Interface
     public abstract float p(Vector3f wo, Vector3f wi);
     public abstract PhaseSample Sample_p(Vector3f wo, Point2f u);
-};
+}
 

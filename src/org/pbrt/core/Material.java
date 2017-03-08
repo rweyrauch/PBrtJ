@@ -21,7 +21,7 @@ public abstract class Material {
 
     public static void Bump(Texture<Float> d, SurfaceInteraction si) {
         // Compute offset positions and evaluate displacement texture
-        SurfaceInteraction siEval = si;
+        SurfaceInteraction siEval = si.clone();
 
         // Shift _siEval_ _du_ in the $u$ direction
         float du = .5f * (Math.abs(si.dudx) + Math.abs(si.dudy));

@@ -366,7 +366,7 @@ public class KdTreeAccel extends Aggregate {
 
         // Recursively initialize children nodes
         float tSplit = edges[bestAxis].get(bestOffset).t;
-        Bounds3f bounds0 = nodeBounds, bounds1 = nodeBounds;
+        Bounds3f bounds0 = new Bounds3f(nodeBounds), bounds1 = new Bounds3f(nodeBounds);
         bounds0.pMax.set(bestAxis, tSplit);
         bounds1.pMin.set(bestAxis, tSplit);
 /*

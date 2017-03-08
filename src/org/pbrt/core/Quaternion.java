@@ -34,33 +34,26 @@ public class Quaternion {
         w += q.w;
     }
     public Quaternion add(Quaternion q) {
-        Quaternion ret = new Quaternion(v.add(q.v), w+q.w);
-        return ret;
+        return new Quaternion(v.add(q.v), w+q.w);
     }
     public static Quaternion add(Quaternion q1, Quaternion q2) {
-        Quaternion ret = q1.add(q2);
-        return ret;
+        return q1.add(q2);
     }
     public Quaternion negate() {
-        Quaternion ret = new Quaternion(v.negate(), -w);
-        return ret;
+        return new Quaternion(v.negate(), -w);
     }
     public Quaternion subtract(Quaternion q) {
-        Quaternion ret = new Quaternion(v.subtract(q.v), w-q.w);
-        return ret;
+        return new Quaternion(v.subtract(q.v), w-q.w);
     }
     public static Quaternion subtract(Quaternion q1, Quaternion q2) {
-        Quaternion ret = q1.subtract(q2);
-        return ret;
+        return q1.subtract(q2);
     }
     public Quaternion scale(float f) {
-        Quaternion ret = new Quaternion(v.scale(f), w * f);
-        return ret;
+        return new Quaternion(v.scale(f), w * f);
     }
     public Quaternion invScale(float f) {
         float invf = 1 / f;
-        Quaternion ret = new Quaternion(v.scale(invf), w * invf);
-        return ret;
+        return new Quaternion(v.scale(invf), w * invf);
     }
     public Transform ToTransform() {
         float xx = v.x * v.x, yy = v.y * v.y, zz = v.z * v.z;

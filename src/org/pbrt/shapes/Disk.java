@@ -100,8 +100,7 @@ public class Disk extends Shape {
         // Test disk $\phi$ value against $\phimax$
         float phi = (float)Math.atan2(pHit.y, pHit.x);
         if (phi < 0) phi += 2 * (float)Math.PI;
-        if (phi > phiMax) return false;
-        return true;
+        return !(phi > phiMax);
     }
 
     @Override

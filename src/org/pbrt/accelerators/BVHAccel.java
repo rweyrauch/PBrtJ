@@ -10,11 +10,9 @@
 
 package org.pbrt.accelerators;
 
-import org.jetbrains.annotations.NotNull;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

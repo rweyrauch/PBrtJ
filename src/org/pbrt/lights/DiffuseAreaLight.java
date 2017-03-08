@@ -95,7 +95,7 @@ public class DiffuseAreaLight extends AreaLight {
         // Sample a cosine-weighted outgoing direction _w_ for area light
         Vector3f w;
         if (twoSided) {
-            Point2f u = u2;
+            Point2f u = new Point2f(u2);
             // Choose a side to sample and then remap u[0] to [0,1] before
             // applying cosine-weighted hemisphere sampling for the chosen side.
             if (u.x < .5) {

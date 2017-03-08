@@ -10,24 +10,30 @@
 
 package org.pbrt.core;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.*;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pbrt.accelerators.BVHAccel;
+import org.pbrt.accelerators.KdTreeAccel;
+import org.pbrt.cameras.EnvironmentCamera;
+import org.pbrt.cameras.OrthographicCamera;
+import org.pbrt.cameras.PerspectiveCamera;
+import org.pbrt.cameras.RealisticCamera;
+import org.pbrt.filters.*;
+import org.pbrt.integrators.*;
+import org.pbrt.lights.*;
+import org.pbrt.materials.*;
+import org.pbrt.media.GridDensityMedium;
+import org.pbrt.media.HomogeneousMedium;
+import org.pbrt.samplers.*;
 import org.pbrt.shapes.*;
 import org.pbrt.textures.*;
-import org.pbrt.materials.*;
-import org.pbrt.lights.*;
-import org.pbrt.cameras.*;
-import org.pbrt.filters.*;
-import org.pbrt.samplers.*;
-import org.pbrt.accelerators.*;
-import org.pbrt.media.*;
-import org.pbrt.integrators.*;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Stack;
 
 public class Api {
 

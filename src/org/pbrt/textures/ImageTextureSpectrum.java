@@ -66,8 +66,7 @@ public class ImageTextureSpectrum extends Texture<Spectrum> {
     @Override
     public Spectrum Evaluate(SurfaceInteraction si) {
         TextureMapping2D.MapPoint point = mapping.Map(si);
-        Spectrum ret = mipmap.Lookup(point.st, point.dstdx, point.dstdy);
-        return ret;
+        return mipmap.Lookup(point.st, point.dstdx, point.dstdy);
     }
 
     private TextureMapping2D mapping;

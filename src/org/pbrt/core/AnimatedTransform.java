@@ -861,7 +861,7 @@ public class AnimatedTransform implements Cloneable {
         comps.T.z = m.m[2][3];
 
         // Compute new transformation matrix _M_ without translation
-        Matrix4x4 M = m;
+        Matrix4x4 M = m.clone();
         for (int i = 0; i < 3; ++i) M.m[i][3] = M.m[3][i] = 0.f;
         M.m[3][3] = 1.f;
 
@@ -967,7 +967,7 @@ public class AnimatedTransform implements Cloneable {
     }
     public Bounds3f MotionBounds(Bounds3f b) {
         if (!actuallyAnimated) return startTransform.xform(b);
-        if (hasRotation == false)
+        if (!hasRotation)
             return Bounds3f.Union(startTransform.xform(b), endTransform.xform(b));
         // Return motion bounds accounting for animated rotation
         Bounds3f bounds = new Bounds3f();

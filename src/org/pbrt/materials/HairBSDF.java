@@ -438,8 +438,8 @@ public class HairBSDF extends BxDF {
 
     private static Point2f DemuxFloat(float f) {
         assert(f >= 0 && f < 1);
-        long v = (long)(f * (1 << 32));
-        assert (v < 0x100000000l);
+        long v = (long)(f * (1L << 32));
+        assert (v < 0x100000000L);
         int[] bits = {Compact1By1((int)(v)), Compact1By1((int)(v >> 1))};
         return new Point2f(bits[0] / (float)(1 << 16), bits[1] / (float)(1 << 16));
     }

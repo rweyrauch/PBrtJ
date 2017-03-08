@@ -79,24 +79,21 @@ public class Bounds2f {
     }
 
     public static Bounds2f Union(Bounds2f b, Point2f p) {
-        Bounds2f ret = new Bounds2f(
+        return new Bounds2f(
                 new Point2f(Math.min(b.pMin.x, p.x), Math.min(b.pMin.y, p.y)),
                 new Point2f(Math.max(b.pMax.x, p.x), Math.max(b.pMax.y, p.y)));
-        return ret;
     }
 
     public static Bounds2f Union(Bounds2f b, Bounds2f b2) {
-        Bounds2f ret = new Bounds2f(
+        return new Bounds2f(
                 new Point2f(Math.min(b.pMin.x, b2.pMin.x), Math.min(b.pMin.y, b2.pMin.y)),
                 new Point2f(Math.max(b.pMax.x, b2.pMax.x), Math.max(b.pMax.y, b2.pMax.y)));
-        return ret;
     }
 
     public static Bounds2f Intersect(Bounds2f b, Bounds2f b2) {
-        Bounds2f ret = new Bounds2f(
+        return new Bounds2f(
                 new Point2f(Math.max(b.pMin.x, b2.pMin.x), Math.max(b.pMin.y, b2.pMin.y)),
                 new Point2f(Math.min(b.pMax.x, b2.pMax.x), Math.min(b.pMax.y, b2.pMax.y)));
-        return ret;
     }
 
     public static boolean Overlaps(Bounds2f ba, Bounds2f bb) {

@@ -107,7 +107,7 @@ public class PlyMesh {
         // Look up an alpha texture, if applicable
         Texture<Float> alphaTex = null;
         String alphaTexName = paramSet.FindTexture("alpha");
-        if (alphaTexName != "") {
+        if (!alphaTexName.isEmpty()) {
             if (floatTextures.containsKey(alphaTexName)) {
                 alphaTex = floatTextures.get(alphaTexName);
             }

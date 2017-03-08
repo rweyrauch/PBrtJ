@@ -181,10 +181,10 @@ public class Interpolation {
         int idx = Pbrt.FindInterval(size2, i -> interpolate(cdf, i, weights.weights, weights.offset, size2) <= su);
 
         // Look up node positions and interpolated function values
-        Float f0 = interpolate(values, idx, weights.weights, weights.offset, size2), f1 = interpolate(values, idx + 1, weights.weights, weights.offset, size2);
-        Float x0 = nodes2[idx], x1 = nodes2[idx + 1];
-        Float width = x1 - x0;
-        Float d0, d1;
+        float f0 = interpolate(values, idx, weights.weights, weights.offset, size2), f1 = interpolate(values, idx + 1, weights.weights, weights.offset, size2);
+        float x0 = nodes2[idx], x1 = nodes2[idx + 1];
+        float width = x1 - x0;
+        float d0, d1;
 
         // Re-scale _u_ using the interpolated _cdf_
         u = (u - interpolate(cdf, idx, weights.weights, weights.offset, size2)) / width;

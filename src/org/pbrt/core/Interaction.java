@@ -17,7 +17,7 @@ public class Interaction implements Cloneable {
     public Vector3f pError = new Vector3f();
     public Vector3f wo = new Vector3f();
     public Normal3f n = new Normal3f();
-    public MediumInterface mediumInterface = null;
+    public MediumInterface mediumInterface = new MediumInterface();
 
     public Interaction() {
         time = 0.0f;
@@ -30,18 +30,18 @@ public class Interaction implements Cloneable {
         this.pError = new Vector3f(pError);
         this.wo = Vector3f.Normalize(wo);
         this.n = new Normal3f(n);
-        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : null;
+        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : new MediumInterface();
     }
     public Interaction(Point3f p, Vector3f wo, float time, MediumInterface mediumInterface) {
         this.p = new Point3f(p);
         this.time = time;
         this.wo = new Vector3f(wo);
-        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : null;
+        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : new MediumInterface();
     }
     public Interaction(Point3f p, float time, MediumInterface mediumInterface) {
         this.p = new Point3f(p);
         this.time = time;
-        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : null;
+        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : new MediumInterface();
     }
 
     @Override
@@ -69,6 +69,8 @@ public class Interaction implements Cloneable {
         return !IsSurfaceInteraction();
     }
     public Medium GetMedium(Vector3f w) {
+        assert mediumInterface != null;
+        assert w != null;
         return Normal3f.Dot(w, n) > 0 ? mediumInterface.outside : mediumInterface.inside;
     }
     public Medium GetMedium() {

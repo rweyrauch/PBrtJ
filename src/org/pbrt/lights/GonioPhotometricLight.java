@@ -11,7 +11,6 @@
 package org.pbrt.lights;
 
 import org.pbrt.core.*;
-import org.pbrt.samplers.StratifiedSampler;
 
 public class GonioPhotometricLight extends Light {
 

@@ -38,7 +38,7 @@ public class RNG {
     public int UniformInt32() {
         long oldstate = state;
         state = oldstate * PCG32_MULT + inc;
-        long xorshifted = (long)(((oldstate >> 18) ^ oldstate) >> 27);
+        long xorshifted = ((oldstate >> 18) ^ oldstate) >> 27;
         int rot = (int)(oldstate >> 59);
         return (int)(xorshifted >> rot) | (int)(xorshifted << ((~rot + 1) & 31));
     }

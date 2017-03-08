@@ -14,6 +14,7 @@ import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Curve extends Shape {
 
@@ -57,11 +58,11 @@ public class Curve extends Shape {
 
         CurveType type;
         String curveType = paramSet.FindOneString("type", "flat");
-        if (curveType == "flat")
+        if (Objects.equals(curveType, "flat"))
             type = CurveType.Flat;
-        else if (curveType == "ribbon")
+        else if (Objects.equals(curveType, "ribbon"))
             type = CurveType.Ribbon;
-        else if (curveType == "cylinder")
+        else if (Objects.equals(curveType, "cylinder"))
             type = CurveType.Cylinder;
         else {
             Error.Error("Unknown curve type \"%s\".  Using \"flat\".", curveType);

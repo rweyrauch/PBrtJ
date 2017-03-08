@@ -120,7 +120,7 @@ public class ProgressReporter extends Thread {
         int iterCount = 0;
         while (!exitThread.get()) {
             try {
-                this.sleep(sleepDuration);
+                sleep(sleepDuration);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -139,7 +139,7 @@ public class ProgressReporter extends Thread {
                 sleepDuration *= 5;
 
             float percentDone = (float)(workDone.get()) / (float)(totalWork);
-            int plussesNeeded = (int)Math.round(totalPlusses * percentDone);
+            int plussesNeeded = Math.round(totalPlusses * percentDone);
             while (plussesPrinted < plussesNeeded) {
                 buf[curSpace++] = '+';
                 ++plussesPrinted;

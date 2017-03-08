@@ -10,7 +10,6 @@
 
 package org.pbrt.samplers;
 
-import com.intellij.openapi.editor.RangeMarker;
 import org.pbrt.core.*;
 
 public class RandomSampler extends Sampler {

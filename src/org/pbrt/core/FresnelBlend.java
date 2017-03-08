@@ -31,7 +31,7 @@ public class FresnelBlend extends BxDF {
     @Override
     public BxDFSample Sample_f(Vector3f wo, Point2f uOrig) {
         BxDFSample bs = new BxDFSample();
-        Point2f u = uOrig;
+        Point2f u = new Point2f(uOrig);
         if (u.x < .5f) {
             u.x = Math.min(2 * u.x, Pbrt.OneMinusEpsilon);
             // Cosine-sample the hemisphere, flipping the direction if necessary
@@ -67,7 +67,7 @@ public class FresnelBlend extends BxDF {
                 " distribution: " + distribution.toString() + " ]";
     }
 
-    private static float pow5(float v) { return (v * v) * (v * v) * v; };
+    private static float pow5(float v) { return (v * v) * (v * v) * v; }
 
     public Spectrum SchlickFresnel(float cosTheta) {
         return Rs.add((new Spectrum(1).subtract(Rs)).scale(pow5(1 - cosTheta)));

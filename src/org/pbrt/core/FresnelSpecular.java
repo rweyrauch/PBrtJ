@@ -9,8 +9,6 @@
 
 package org.pbrt.core;
 
-import java.util.Arrays;
-
 public class FresnelSpecular extends BxDF {
 
     public FresnelSpecular(Spectrum R, Spectrum T, float etaA, float etaB, Material.TransportMode mode) {

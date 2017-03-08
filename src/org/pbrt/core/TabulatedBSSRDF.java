@@ -20,7 +20,7 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
         super(po, eta, material, mode);
         this.table = table;
         this.sigma_t = Spectrum.Add(sigma_a, sigma_s);
-        for (int c = 0; c < sigma_s.numSamples(); ++c) {
+        for (int c = 0; c < Spectrum.numSamples(); ++c) {
             if (this.sigma_t.at(c) != 0) {
                 this.rho.set(c, sigma_s.at(c) / this.sigma_t.at(c));
             }
@@ -33,7 +33,7 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
     @Override
     public Spectrum Sr(float r) {
         Spectrum Sr = new Spectrum(0);
-        for (int ch = 0; ch < Sr.numSamples(); ++ch) {
+        for (int ch = 0; ch < Spectrum.numSamples(); ++ch) {
             // Convert $r$ into unitless optical radius $r_{\roman{optical}}$
             float rOptical = r * sigma_t.at(ch);
 

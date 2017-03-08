@@ -10,11 +10,8 @@
 
 package org.pbrt.samplers;
 
-import com.intellij.ide.ui.AppearanceOptionsTopHitProvider;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
-
-import java.util.Arrays;
 
 public class HaltonSampler extends GlobalSampler {
 

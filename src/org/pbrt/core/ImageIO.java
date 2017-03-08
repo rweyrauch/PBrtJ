@@ -32,7 +32,7 @@ public class ImageIO {
                     int r = Pbrt.Clamp((int)(rgb[(y * totalResolution.x + x) * 3 + 0] * 255.0f), 0, 255);
                     int g = Pbrt.Clamp((int)(rgb[(y * totalResolution.x + x) * 3 + 1] * 255.0f), 0, 255);
                     int b = Pbrt.Clamp((int)(rgb[(y * totalResolution.x + x) * 3 + 2] * 255.0f), 0, 255);
-                    int bgra = (255 << 24) | (r << 16) | (g << 8) | b;
+                    int bgra = (int)(255 << 24) | (int)(r << 16) | (int)(g << 8) | b;
                     bimage.setRGB(x, y, bgra);
                 }
             }

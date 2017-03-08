@@ -30,7 +30,7 @@ public class MixMaterial extends Material {
         // Compute weights and original _BxDF_s for mix material
         Spectrum s1 = scale.Evaluate(si).clamp(0, Pbrt.Infinity);
         Spectrum s2 = (new Spectrum(1).subtract(s1)).clamp(0, Pbrt.Infinity);
-        SurfaceInteraction si2 = si;
+        SurfaceInteraction si2 = si.clone();
         m1.ComputeScatteringFunctions(si, mode, allowMultipleLobes);
         m2.ComputeScatteringFunctions(si2, mode, allowMultipleLobes);
 

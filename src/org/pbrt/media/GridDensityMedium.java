@@ -13,8 +13,6 @@ package org.pbrt.media;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
-import static org.pbrt.core.Pbrt.Lerp;
-
 public class GridDensityMedium extends Medium {
 
     // GridDensityMedium Private Data

@@ -123,7 +123,7 @@ public class InfiniteAreaLight extends Light {
         LeResult result = new LeResult();
         Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         // Compute direction for infinite light sample ray
-        Point2f u = u1;
+        Point2f u = new Point2f(u1);
 
         // Find $(u,v)$ sample coordinates in infinite light texture
         Distribution2D.ContSample samp = distribution.SampleContinuous(u);

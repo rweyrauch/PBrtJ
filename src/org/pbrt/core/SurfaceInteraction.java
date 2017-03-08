@@ -60,6 +60,12 @@ public class SurfaceInteraction extends Interaction {
             shading.n.flip();
         }
     }
+
+    @Override
+    public SurfaceInteraction clone() {
+        return new SurfaceInteraction(this.p, this.pError, this.uv, this.wo, this.dpdu, this.dpdv, this.dndu, this.dndv, this.time, this.shape);
+    }
+
     public void SetShadingGeometry(Vector3f dpdus, Vector3f dpdvs, Normal3f dndus, Normal3f dndvs, boolean orientationIsAuthoritative) {
         // Compute _shading.n_ for _SurfaceInteraction_
         shading.n = new Normal3f(Vector3f.Normalize(Vector3f.Cross(dpdus, dpdvs)));

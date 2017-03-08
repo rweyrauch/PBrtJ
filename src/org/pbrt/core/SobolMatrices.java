@@ -34,8 +34,8 @@ public final class SobolMatrices {
             fis = new FileInputStream("sobel64.dat");
             for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
                 fis.read(buf64);
-                SobolMatrices32[i] = (buf64[7]) | (buf64[6] << 8) | (buf64[5] << 16) | (buf64[4] << 24) |
-                        (buf64[3] << 32) | (buf64[2] << 40) | (buf64[1] << 48) | (buf64[0] << 54);
+                SobolMatrices64[i] = ((long)buf64[7]) | ((long)buf64[6] << 8) | ((long)buf64[5] << 16) | ((long)buf64[4] << 24) |
+                        ((long)buf64[3] << 32) | ((long)buf64[2] << 40) | ((long)buf64[1] << 48) | ((long)buf64[0] << 54);
             }
             fis.close();
         }
