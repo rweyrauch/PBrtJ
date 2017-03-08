@@ -66,8 +66,9 @@ public class BVHAccel extends Aggregate {
         nodes = new LinearBVHNode[totalNodes[0]];
         for (int i = 0; i < nodes.length; i++)
             nodes[i] = new LinearBVHNode();
-        int offset = flattenBVHTree(root, 0);
-        assert(totalNodes[0] == offset);
+        Integer[] offset = { 0 };
+        flattenBVHTree(root, offset);
+        assert(totalNodes[0] == offset[0]);
 
     }
     public BVHAccel(Primitive[] prims) {
@@ -633,10 +634,10 @@ public class BVHAccel extends Aggregate {
         return null;
     }
 
-    int flattenBVHTree(BVHBuildNode node, Integer offset) {
-        LinearBVHNode linearNode = nodes[offset];
+    int flattenBVHTree(BVHBuildNode node, Integer[] offset) {
+        LinearBVHNode linearNode = nodes[offset[0]];
         linearNode.bounds = node.bounds;
-        int myOffset = offset++;
+        int myOffset = offset[0]++;
         if (node.nPrimitives > 0) {
             assert ((node.children[0] == null) && (node.children[1] == null));
             assert (node.nPrimitives < 65536);
@@ -646,7 +647,7 @@ public class BVHAccel extends Aggregate {
             // Create interior flattened BVH node
             linearNode.axis = (char)node.splitAxis;
             linearNode.nPrimitives = 0;
-            offset = flattenBVHTree(node.children[0], offset);
+            flattenBVHTree(node.children[0], offset);
             linearNode.secondChildOffset = flattenBVHTree(node.children[1], offset);
         }
         return myOffset;

@@ -821,7 +821,7 @@ public class Parser {
 
     // WORLDEND
     private void parseWorldEnd(ArrayList<TokenValue> command) {
-        assert(command.size() == 1);
+        //assert(command.size() == 1);
         Api.pbrtWorldEnd();
     }
 

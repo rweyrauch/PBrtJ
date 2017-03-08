@@ -32,8 +32,8 @@ public class ImageIO {
                     int r = Pbrt.Clamp((int)(rgb[(y * totalResolution.x + x) * 3 + 0] * 255.0f), 0, 255);
                     int g = Pbrt.Clamp((int)(rgb[(y * totalResolution.x + x) * 3 + 1] * 255.0f), 0, 255);
                     int b = Pbrt.Clamp((int)(rgb[(y * totalResolution.x + x) * 3 + 2] * 255.0f), 0, 255);
-                    int rgba = (255 << 24) | (b << 16) | (g << 8) | r;
-                    bimage.setRGB(x, y, rgba);
+                    int bgra = (255 << 24) | (r << 16) | (g << 8) | b;
+                    bimage.setRGB(x, y, bgra);
                 }
             }
             boolean ok = javax.imageio.ImageIO.write(bimage, FileUtil.GetExtension(filename), new File(filename));

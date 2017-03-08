@@ -82,8 +82,10 @@ public class Vector3f {
     }
 
     public Vector3f invScale(float f) {
-        assert (f != 0.0f);
-        float inv = 1.0f / f;
+       // assert (f != 0.0f);
+        float inv = 0;
+        if (f != 0)
+            inv = 1.0f / f;
         return new Vector3f(x * inv, y * inv, z * inv);
     }
 

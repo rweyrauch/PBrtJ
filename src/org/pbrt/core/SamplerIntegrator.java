@@ -324,6 +324,10 @@ public abstract class SamplerIntegrator extends Integrator {
             if (it.IsSurfaceInteraction()) {
                 // Sample scattered direction for surface interactions
                 final SurfaceInteraction isect = (SurfaceInteraction)it;
+
+                assert isect.wo != null;
+                assert uScattering != null;
+                
                 BxDF.BxDFSample bs = isect.bsdf.Sample_f(isect.wo, uScattering, bsdfFlags);
                 int sampledType = bs.sampledType;
                 f = bs.f;

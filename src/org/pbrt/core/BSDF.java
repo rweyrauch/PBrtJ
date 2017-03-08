@@ -144,11 +144,15 @@ public class BSDF {
         // Compute value of BSDF for sampled direction
         if (!((bxdf.type & BxDF.BSDF_SPECULAR) != 0) && matchingComps > 1) {
             boolean reflect = Normal3f.Dot(sample.wiWorld, ng) * Normal3f.Dot(woWorld, ng) > 0;
-            for (int i = 0; i < nBxDFs; ++i)
+            for (int i = 0; i < nBxDFs; ++i) {
                 if (bxdfs[i].MatchesFlags(type) &&
-                    ((reflect && ((bxdfs[i].type & BxDF.BSDF_REFLECTION) != 0)) ||
-                    (!reflect && ((bxdfs[i].type & BxDF.BSDF_TRANSMISSION) != 0))))
-            sample.f = Spectrum.Add(sample.f, bxdfs[i].f(wo, wi));
+                        ((reflect && ((bxdfs[i].type & BxDF.BSDF_REFLECTION) != 0)) ||
+                                (!reflect && ((bxdfs[i].type & BxDF.BSDF_TRANSMISSION) != 0)))) {
+                    Spectrum bxf = bxdfs[i].f(wo, wi);
+                    assert bxf != null;
+                    sample.f = Spectrum.Add(sample.f, bxf);
+                }
+            }
         }
         Api.logger.trace("Overall f = %s, pdf = %f, ratio = %f", sample.f, sample.pdf, (sample.pdf > 0) ? sample.f.scale(1/ sample.pdf) : new Spectrum(0));
         return sample;

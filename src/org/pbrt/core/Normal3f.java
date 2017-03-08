@@ -68,6 +68,7 @@ public class Normal3f {
     }
 
     public Normal3f invScale(float f) {
+        assert (f != 0);
         float inv = 1.0f / f;
         return new Normal3f(x * inv, y * inv, z * inv);
     }

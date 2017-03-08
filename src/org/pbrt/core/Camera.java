@@ -18,6 +18,18 @@ public abstract class Camera {
     public final Medium medium;
 
     public static class CameraSample {
+
+        public CameraSample() {
+            this.pFilm = new Point2f();
+            this.pLens = new Point2f();
+            this.time = 0;
+        }
+        public CameraSample(CameraSample cs) {
+            this.pFilm = new Point2f(cs.pFilm);
+            this.pLens = new Point2f(cs.pLens);
+            this.time = cs.time;
+        }
+
         public Point2f pFilm;
         public Point2f pLens;
         public float time;
@@ -61,7 +73,7 @@ public abstract class Camera {
     public CameraRayDiff GenerateRayDifferential(CameraSample sample) {
         CameraRay cray = GenerateRay(sample);
         // Find camera ray after shifting one pixel in the $x$ direction
-        CameraSample sshift = sample;
+        CameraSample sshift = new CameraSample(sample);
         sshift.pFilm.x++;
         CameraRay rx = GenerateRay(sshift);
         if (rx.weight == 0) return null;

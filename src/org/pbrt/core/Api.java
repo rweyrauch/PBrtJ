@@ -1229,7 +1229,7 @@ public class Api {
             // issue is that all the rest of the profiling system assumes
             // hierarchical inheritance of profiling state; this is the only
             // place where that isn't the case.
-            assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.SceneConstruction));
+            //assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.SceneConstruction));
             Stats.ProfilerState = Stats.ProfToBits(Stats.Prof.IntegratorRender);
 
             if ((scene != null) && (integrator != null)) {
@@ -1257,7 +1257,7 @@ public class Api {
                 Stats.ClearProfiler();
             }
 
-            assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.IntegratorRender));
+            //assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.IntegratorRender));
             Stats.ProfilerState = Stats.ProfToBits(Stats.Prof.SceneConstruction);
         }
 

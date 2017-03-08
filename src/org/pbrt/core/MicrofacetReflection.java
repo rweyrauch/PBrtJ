@@ -20,7 +20,14 @@ public class MicrofacetReflection extends BxDF {
 
     @Override
     public Spectrum f(Vector3f wo, Vector3f wi) {
-        return null;
+        float cosThetaO = Reflection.AbsCosTheta(wo), cosThetaI = Reflection.AbsCosTheta(wi);
+        Vector3f wh = wi.add(wo);
+        // Handle degenerate cases for microfacet reflection
+        if (cosThetaI == 0 || cosThetaO == 0) return new Spectrum(0);
+        if (wh.x == 0 && wh.y == 0 && wh.z == 0) return new Spectrum(0);
+        wh = Vector3f.Normalize(wh);
+        Spectrum F = fresnel.Evaluate(Vector3f.Dot(wi, wh));
+        return R.scale(distribution.D(wh) * distribution.G(wo, wi)).multiply(F.scale(1 / (4 * cosThetaI * cosThetaO)));
     }
 
     @Override

@@ -31,8 +31,7 @@ public class Ray {
         this.medium = null;
     }
 
-    public Ray(Point3f o, Vector3f d, float tMax,
-               float time, Medium medium) {
+    public Ray(Point3f o, Vector3f d, float tMax, float time, Medium medium) {
         this.o = new Point3f(o);
         this.d = new Vector3f(d);
         this.tMax = tMax;

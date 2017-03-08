@@ -26,8 +26,7 @@ public class RayDifferential extends Ray {
         this.hasDifferentials = false;
     }
 
-    public RayDifferential(Point3f o, Vector3f d, Float tMax,
-               float time, Medium medium) {
+    public RayDifferential(Point3f o, Vector3f d, Float tMax, float time, Medium medium) {
         super(o, d, tMax, time, medium);
         this.hasDifferentials = false;
     }
@@ -50,8 +49,13 @@ public class RayDifferential extends Ray {
     }
 
     public String toString() {
-        return  "[ " + super.toString() + " has differentials: " + (this.hasDifferentials ? "true" : "false") +
-                ", xo = " + this.rxOrigin.toString() + ", xd = " + this.rxDirection.toString() + ", yo = " +
-                this.ryOrigin.toString() + ", yd = " + this.ryDirection.toString();
+        if (hasDifferentials) {
+            return "[ " + super.toString() + " has differentials: " + (this.hasDifferentials ? "true" : "false") +
+                    ", xo = " + this.rxOrigin.toString() + ", xd = " + this.rxDirection.toString() + ", yo = " +
+                    this.ryOrigin.toString() + ", yd = " + this.ryDirection.toString();
+        }
+        else {
+            return "[ " + super.toString() + " has differentials: " + (this.hasDifferentials ? "true" : "false");
+        }
     }
 }

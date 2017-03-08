@@ -12,21 +12,22 @@ package org.pbrt.core;
 public class SurfaceInteraction extends Interaction {
 
     // SurfaceInteraction Public Data
-    public Point2f uv;
-    public Vector3f dpdu, dpdv;
-    public Normal3f dndu, dndv;
+    public Point2f uv = new Point2f();
+    public Vector3f dpdu = new Vector3f(), dpdv = new Vector3f();
+    public Normal3f dndu = new Normal3f(), dndv = new Normal3f();
     public Shape shape = null;
 
     public class Shading {
-        public Normal3f n;
-        public Vector3f dpdu, dpdv;
-        public Normal3f dndu, dndv;
+        public Normal3f n = new Normal3f();
+        public Vector3f dpdu = new Vector3f(), dpdv = new Vector3f();
+        public Normal3f dndu = new Normal3f(), dndv = new Normal3f();
     }
+
     public Shading shading = new Shading();
     public Primitive primitive = null;
     public BSDF bsdf = null;
     public BSSRDF bssrdf = null;
-    public Vector3f dpdx, dpdy;
+    public Vector3f dpdx = new Vector3f(), dpdy = new Vector3f();
     public float dudx = 0, dvdx = 0, dudy = 0, dvdy = 0;
 
     // SurfaceInteraction Public Methods

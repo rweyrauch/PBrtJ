@@ -21,7 +21,7 @@ public abstract class BxDF {
     public static final int BSDF_ALL = (BSDF_REFLECTION | BSDF_TRANSMISSION | BSDF_DIFFUSE | BSDF_GLOSSY | BSDF_SPECULAR);
     
     // BxDF Public Data
-    public int type;
+    public int type = BSDF_NONE;
 
     // BxDF Interface
     public BxDF(int type) {
@@ -31,10 +31,10 @@ public abstract class BxDF {
     public abstract Spectrum f(Vector3f wo, Vector3f wi);
 
     public static class BxDFSample {
-        public Spectrum f;
-        public Vector3f wiWorld;
-        public float pdf;
-        public int sampledType;
+        public Spectrum f = new Spectrum(0);
+        public Vector3f wiWorld = new Vector3f();
+        public float pdf = 0;
+        public int sampledType = BSDF_NONE;
     }
 
     public BxDFSample Sample_f(Vector3f wo, Point2f u) {
