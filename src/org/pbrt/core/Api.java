@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pbrt.accelerators.BVHAccel;
 import org.pbrt.accelerators.KdTreeAccel;
+import org.pbrt.accelerators.NoAccel;
 import org.pbrt.cameras.EnvironmentCamera;
 import org.pbrt.cameras.OrthographicCamera;
 import org.pbrt.cameras.PerspectiveCamera;
@@ -553,6 +554,8 @@ public class Api {
             accel = BVHAccel.Create(prims, paramSet);
         else if (Objects.equals(name, "kdtree"))
             accel = KdTreeAccel.Create(prims, paramSet);
+        else if (Objects.equals(name, "none"))
+            accel = NoAccel.Create(prims, paramSet);
         else
             Error.Warning("Accelerator \"%s\" unknown.", name);
         paramSet.ReportUnused();

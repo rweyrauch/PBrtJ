@@ -40,8 +40,7 @@ public class Sphere extends Shape {
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersect);
-        Float phi;
-        Point3f pHit;
+
         // Transform _Ray_ to object space
         Vector3f oErr = WorldToObject.absError(r.o);
         Vector3f dErr = WorldToObject.absError(r.d);
@@ -49,12 +48,18 @@ public class Sphere extends Shape {
 
         // Compute quadratic sphere coefficients
 
+        //float fox = ray.o.x, foy = ray.o.y, foz = ray.o.z;
+        //float fdx = ray.d.x, fdy = ray.d.y, fdz = ray.d.z;
+        //float fa = fdx*fdx + fdy*fdy + fdz*fdz;
+        //float fb = 2 * (fdx*fox + fdy * foy + fdz*foz);
+        //float fc = fox *fox + foy*foy + foz*foz - radius * radius;
+
         // Initialize _EFloat_ ray coordinate values
         EFloat ox = new EFloat(ray.o.x, oErr.x), oy = new EFloat(ray.o.y, oErr.y), oz = new EFloat(ray.o.z, oErr.z);
         EFloat dx = new EFloat(ray.d.x, dErr.x), dy = new EFloat(ray.d.y, dErr.y), dz = new EFloat(ray.d.z, dErr.z);
         EFloat a = dx.multiply(dx).add(dy.multiply(dy)).add(dz.multiply(dz));
-        EFloat b = (dx.multiply(ox).add(dy.multiply(oy)).add(dz.multiply(dz))).multiply(2);
-        EFloat c = ox.multiply(ox).add(oy.multiply(oy)).add(oz.multiply(oz)).subtract(new EFloat(radius).multiply(new EFloat(radius)));
+        EFloat b = (new EFloat(2)).multiply(dx.multiply(ox).add(dy.multiply(oy).add(dz.multiply(oz))));
+        EFloat c = (ox.multiply(ox)).add(oy.multiply(oy)).add(oz.multiply(oz)).subtract(new EFloat(radius).multiply(new EFloat(radius)));
 
         // Solve quadratic equation for _t_ values
         EFloat.QuadRes qr = EFloat.Quadratic(a, b, c);
@@ -69,12 +74,12 @@ public class Sphere extends Shape {
         }
 
         // Compute sphere hit position and $\phi$
-        pHit = ray.at(tShapeHit.asFloat());
+        Point3f pHit = ray.at(tShapeHit.asFloat());
 
         // Refine sphere intersection point
         pHit = pHit.scale(radius / Point3f.Distance(pHit, new Point3f(0, 0, 0)));
         if (pHit.x == 0 && pHit.y == 0) pHit.x = 1e-5f * radius;
-        phi = (float)Math.atan2(pHit.y, pHit.x);
+        float phi = (float)Math.atan2(pHit.y, pHit.x);
         if (phi < 0) phi += 2 * (float)Math.PI;
 
         // Test sphere intersection against clipping parameters
@@ -142,8 +147,7 @@ public class Sphere extends Shape {
     @Override
     public boolean IntersectP(Ray r, boolean testAlphaTexture) {
         Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersectP);
-        Float phi;
-        Point3f pHit;
+
         // Transform _Ray_ to object space
         Vector3f oErr = WorldToObject.absError(r.o);
         Vector3f dErr = WorldToObject.absError(r.d);
@@ -151,12 +155,18 @@ public class Sphere extends Shape {
 
         // Compute quadratic sphere coefficients
 
+        //float fox = ray.o.x, foy = ray.o.y, foz = ray.o.z;
+        //float fdx = ray.d.x, fdy = ray.d.y, fdz = ray.d.z;
+        //float fa = fdx*fdx + fdy*fdy + fdz*fdz;
+        //float fb = 2 * (fdx*fox + fdy * foy + fdz*foz);
+        //float fc = fox *fox + foy*foy + foz*foz - radius * radius;
+
         // Initialize _EFloat_ ray coordinate values
         EFloat ox = new EFloat(ray.o.x, oErr.x), oy = new EFloat(ray.o.y, oErr.y), oz = new EFloat(ray.o.z, oErr.z);
         EFloat dx = new EFloat(ray.d.x, dErr.x), dy = new EFloat(ray.d.y, dErr.y), dz = new EFloat(ray.d.z, dErr.z);
         EFloat a = dx.multiply(dx).add(dy.multiply(dy)).add(dz.multiply(dz));
-        EFloat b = (dx.multiply(ox).add(dy.multiply(oy)).add(dz.multiply(dz))).multiply(2);
-        EFloat c = ox.multiply(ox).add(oy.multiply(oy)).add(oz.multiply(oz)).subtract(new EFloat(radius).multiply(new EFloat(radius)));
+        EFloat b = (new EFloat(2)).multiply(dx.multiply(ox).add(dy.multiply(oy).add(dz.multiply(oz))));
+        EFloat c = (ox.multiply(ox)).add(oy.multiply(oy)).add(oz.multiply(oz)).subtract(new EFloat(radius).multiply(new EFloat(radius)));
 
         // Solve quadratic equation for _t_ values
         EFloat.QuadRes qr = EFloat.Quadratic(a, b, c);
@@ -171,12 +181,12 @@ public class Sphere extends Shape {
         }
 
         // Compute sphere hit position and $\phi$
-        pHit = ray.at(tShapeHit.asFloat());
+        Point3f pHit = ray.at(tShapeHit.asFloat());
 
         // Refine sphere intersection point
         pHit = pHit.scale(radius / Point3f.Distance(pHit, new Point3f(0, 0, 0)));
         if (pHit.x == 0 && pHit.y == 0) pHit.x = 1e-5f * radius;
-        phi = (float)Math.atan2(pHit.y, pHit.x);
+        float phi = (float)Math.atan2(pHit.y, pHit.x);
         if (phi < 0) phi += 2 * (float)Math.PI;
 
         // Test sphere intersection against clipping parameters

@@ -92,7 +92,7 @@ public class BSDF {
         // Choose which _BxDF_ to sample
         BxDF.BxDFSample sample = new BxDF.BxDFSample();
         sample.pdf = 0;
-        sample.wiWorld = null;
+        sample.wiWorld = new Vector3f();
         sample.sampledType = BxDF.BSDF_NONE;
         sample.f = new Spectrum(0);
         int matchingComps = NumComponents(type);

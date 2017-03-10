@@ -14,7 +14,7 @@ import org.apache.commons.lang.NotImplementedException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-public final class Spectrum implements ArithmeticOps<Spectrum> {
+public final class Spectrum {
 
     public static final int nSamples = 3;
     private final float[] c = { 0, 0, 0 };
@@ -48,7 +48,6 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         ps.print("]");
     }
 
-    @Override
     public Spectrum lerp(float t, Spectrum v1) {
         assert (!v1.hasNaNs());
         Spectrum rs = new Spectrum(0);
@@ -57,7 +56,7 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         }
         return rs;
     }
-    @Override
+
     public Spectrum add(Spectrum addend) {
         assert (!addend.hasNaNs());
         Spectrum rs = new Spectrum(0);
@@ -67,14 +66,12 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         return rs;
     }
 
-    @Override
     public void accum(Spectrum addend) {
         assert (!addend.hasNaNs());
         for (int i = 0; i < c.length; ++i) {
             this.c[i] += addend.c[i];
         }
     }
-    @Override
     public Spectrum subtract(Spectrum subtrahend) {
         assert !subtrahend.hasNaNs();
         Spectrum rs = new Spectrum(0);
@@ -83,7 +80,6 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         }
         return rs;
     }
-    @Override
     public Spectrum multiply(Spectrum multiplicand) {
         assert !multiplicand.hasNaNs();
         Spectrum rs = new Spectrum(0);
@@ -92,7 +88,6 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         }
         return rs;
     }
-    @Override
     public Spectrum scale(float scalar) {
         Spectrum rs = new Spectrum(0);
         for (int i = 0; i < c.length; ++i) {
@@ -102,7 +97,6 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         return rs;
     }
 
-    @Override
     public Spectrum divide(Spectrum divisor) {
         assert (!divisor.hasNaNs());
         Spectrum rs = new Spectrum(0.0f);
@@ -113,7 +107,6 @@ public final class Spectrum implements ArithmeticOps<Spectrum> {
         return rs;
     }
 
-    @Override
     public Spectrum clamp(float low, float high) {
         Spectrum rs = new Spectrum(0.0f);
         for (int i = 0; i < c.length; ++i) {
