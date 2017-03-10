@@ -47,8 +47,8 @@ public final class EFloat {
     public EFloat subtract(EFloat ef) {
         EFloat r = new EFloat();
         r.v = v - ef.v;
-        r.low = Pbrt.NextFloatDown(lowerBound() - ef.lowerBound());
-        r.high = Pbrt.NextFloatUp(upperBound() - ef.upperBound());
+        r.low = Pbrt.NextFloatDown(lowerBound() - ef.upperBound());
+        r.high = Pbrt.NextFloatUp(upperBound() - ef.lowerBound());
         r.check();
         return r;
     }
