@@ -572,6 +572,16 @@ public class Parser {
 
     // CONCATTRANSFORM number_array
     private void parseConcatTransform(ArrayList<TokenValue> command) {
+        if (command.size() == 17) {
+            float[] matrix = new float[16];
+            for (int i = 1; i < command.size(); i++) {
+                matrix[i] = Float.parseFloat(command.get(i).value);
+            }
+            Api.pbrtConcatTransform(matrix);
+        } else {
+            // TODO: error - require 16 values
+            Error.Error("Array argument to ConcatTransform requires 16 values.\n");
+        }
     }
 
     // COORDINATESYSTEM STRING
@@ -800,7 +810,16 @@ public class Parser {
 
     // TRANSFORM number_array
     private void parserTransform(ArrayList<TokenValue> command) {
-
+        if (command.size() == 17) {
+            float[] matrix = new float[16];
+            for (int i = 1; i < command.size(); i++) {
+                matrix[i] = Float.parseFloat(command.get(i).value);
+            }
+            Api.pbrtTransform(matrix);
+        } else {
+            // TODO: error - require 16 values
+            Error.Error("Array argument to Transform requires 16 values.\n");
+        }
     }
 
     // TRANSLATE NUMBER NUMBER NUMBER
