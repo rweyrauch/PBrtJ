@@ -20,7 +20,11 @@ public class Matrix4x4 implements Cloneable {
     public Matrix4x4(float mat[][]) {
         assert mat.length == 4;
         assert mat[0].length == 4;
-        m = mat.clone();
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < 4; i++) {
+                m[j][i] = mat[j][i];
+            }
+        }
     }
 
     public Matrix4x4(float t00, float t01, float t02, float t03, float t10, float t11,
@@ -89,7 +93,13 @@ public class Matrix4x4 implements Cloneable {
         int indxc[] = {0, 0, 0, 0};
         int indxr[] = {0, 0, 0, 0};
         int ipiv[] = {0, 0, 0, 0};
-        float minv[][] = m.m.clone();
+        float minv[][] = new float[4][4];
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < 4; i++) {
+                minv[j][i] = m.m[j][i];
+            }
+        }
+
         for (int i = 0; i < 4; i++) {
             int irow = 0, icol = 0;
             float big = 0.0f;
