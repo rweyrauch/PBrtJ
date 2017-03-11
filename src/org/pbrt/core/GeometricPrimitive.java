@@ -23,7 +23,7 @@ public class GeometricPrimitive extends Primitive {
         this.shape = shape;
         this.material = material;
         this.areaLight = areaLight;
-        this.mediumInterface = mediumInterface.clone();
+        this.mediumInterface = new MediumInterface(mediumInterface);
     }
 
     @Override

@@ -12,7 +12,7 @@ package org.pbrt.core;
 
 import java.util.ArrayList;
 
-public class AnimatedTransform implements Cloneable {
+public class AnimatedTransform {
     // AnimatedTransform Private Data
     private final Transform startTransform, endTransform;
     private final float startTime, endTime;
@@ -843,8 +843,8 @@ public class AnimatedTransform implements Cloneable {
 
     }
 
-    public AnimatedTransform clone() {
-        return new AnimatedTransform(this.startTransform.clone(), this.startTime, this.endTransform.clone(), this.endTime);
+    public AnimatedTransform(AnimatedTransform xform) {
+        this(xform.startTransform, xform.startTime, xform.endTransform, xform.endTime);
     }
 
     public static class MatComponents {
@@ -861,7 +861,7 @@ public class AnimatedTransform implements Cloneable {
         comps.T.z = m.m[2][3];
 
         // Compute new transformation matrix _M_ without translation
-        Matrix4x4 M = m.clone();
+        Matrix4x4 M = new Matrix4x4(m);
         for (int i = 0; i < 3; ++i) M.m[i][3] = M.m[3][i] = 0.f;
         M.m[3][3] = 1.f;
 

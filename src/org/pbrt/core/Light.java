@@ -31,8 +31,8 @@ public abstract class Light {
         }
         // VisibilityTester Public Methods
         public VisibilityTester(Interaction p0, Interaction p1) {
-            this.p0 = p0.clone();
-            this.p1 = p1.clone();
+            this.p0 = new Interaction(p0);
+            this.p1 = new Interaction(p1);
         }
         public Interaction P0() { return p0; }
         public Interaction P1() { return p1; }
@@ -84,8 +84,8 @@ public abstract class Light {
            MediumInterface mediumInterface, int nSamples) {
         this.flags = flags;
         this.nSamples = Math.max(1, nSamples);
-        this.mediumInterface = mediumInterface.clone();
-        this.LightToWorld = LightToWorld.clone();
+        this.mediumInterface = new MediumInterface(mediumInterface);
+        this.LightToWorld = new Transform(LightToWorld);
         this.WorldToLight = Transform.Inverse(LightToWorld);
 
         numLights.increment();

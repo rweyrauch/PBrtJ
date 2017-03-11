@@ -43,7 +43,7 @@ public abstract class Camera {
 
     // Camera Interface
     public Camera(AnimatedTransform CameraToWorld, float shutterOpen, float shutterClose, Film film, Medium medium) {
-        this.CameraToWorld = CameraToWorld.clone();
+        this.CameraToWorld = new AnimatedTransform(CameraToWorld);
         this.shutterOpen = shutterOpen;
         this.shutterClose = shutterClose;
         this.film = film;

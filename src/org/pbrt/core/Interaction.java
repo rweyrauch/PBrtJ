@@ -9,7 +9,9 @@
 
 package org.pbrt.core;
 
-public class Interaction implements Cloneable {
+import org.pbrt.openexr.types.Int;
+
+public class Interaction {
 
     // Interaction Public Data
     public Point3f p = new Point3f();
@@ -30,23 +32,22 @@ public class Interaction implements Cloneable {
         this.pError = new Vector3f(pError);
         this.wo = Vector3f.Normalize(wo);
         this.n = new Normal3f(n);
-        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : new MediumInterface();
+        this.mediumInterface = (mediumInterface != null) ? new MediumInterface(mediumInterface) : new MediumInterface();
     }
     public Interaction(Point3f p, Vector3f wo, float time, MediumInterface mediumInterface) {
         this.p = new Point3f(p);
         this.time = time;
         this.wo = new Vector3f(wo);
-        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : new MediumInterface();
+        this.mediumInterface = (mediumInterface != null) ? new MediumInterface(mediumInterface) : new MediumInterface();
     }
     public Interaction(Point3f p, float time, MediumInterface mediumInterface) {
         this.p = new Point3f(p);
         this.time = time;
-        this.mediumInterface = (mediumInterface != null) ? mediumInterface.clone() : new MediumInterface();
+        this.mediumInterface = (mediumInterface != null) ? new MediumInterface(mediumInterface) : new MediumInterface();
     }
 
-    @Override
-    public Interaction clone() {
-        return new Interaction(this.p, this.n, this.pError, this.wo, this.time, this.mediumInterface);
+    public Interaction(Interaction it) {
+        this(it.p, it.n, it.pError, it.wo, it.time, it.mediumInterface);
     }
 
     public boolean IsSurfaceInteraction() { return n.x != 0.0f || n.y != 0.0f || n.z != 0.0f; }

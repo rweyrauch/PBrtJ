@@ -10,7 +10,7 @@
 
 package org.pbrt.core;
 
-public class Transform implements Cloneable {
+public class Transform {
 
     // Transform Private Data
     private Matrix4x4 m, mInv;
@@ -29,17 +29,15 @@ public class Transform implements Cloneable {
         mInv = Matrix4x4.Inverse(m);
     }
     public Transform(Matrix4x4 m) {
-        this.m = m.clone();
+        this.m = new Matrix4x4(m);
         this.mInv = Matrix4x4.Inverse(m);
     }
     public Transform(Matrix4x4 m, Matrix4x4 mInv) {
         this.m = m;
         this.mInv = mInv;
     }
-
-    @Override
-    public Transform clone() {
-        return new Transform(m.clone(), mInv.clone());
+    public Transform(Transform xform) {
+        this(xform.m, xform.mInv);
     }
 
     public static Transform Inverse(Transform t) {

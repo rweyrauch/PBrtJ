@@ -10,7 +10,7 @@
 
 package org.pbrt.core;
 
-public class MediumInterface implements Cloneable {
+public class MediumInterface {
 
     public Medium inside = null, outside = null;
 
@@ -26,9 +26,8 @@ public class MediumInterface implements Cloneable {
         this.outside = outside;
     }
 
-    @Override
-    public MediumInterface clone() {
-        return new MediumInterface(this.inside, this.outside);
+    public MediumInterface(MediumInterface mi) {
+        this(mi.inside, mi.outside);
     }
 
     public boolean IsMediumTransition() { return inside != outside; }

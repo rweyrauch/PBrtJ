@@ -18,7 +18,7 @@ public abstract class ProjectiveCamera extends Camera {
 
     public ProjectiveCamera(AnimatedTransform CameraToWorld, Transform CameraToScreen, Bounds2f screenWindow, float shutterOpen, float shutterClose, float lensr, float focald, Film film, Medium medium) {
         super(CameraToWorld, shutterOpen, shutterClose, film, medium);
-        this.CameraToScreen = CameraToScreen.clone();
+        this.CameraToScreen = new Transform(CameraToScreen);
         // Initialize depth of field parameters
         this.lensRadius = lensr;
         this.focalDistance = focald;

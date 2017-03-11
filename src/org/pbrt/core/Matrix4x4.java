@@ -9,7 +9,7 @@
 
 package org.pbrt.core;
 
-public class Matrix4x4 implements Cloneable {
+public class Matrix4x4 {
     public float m[][] = new float[4][4];
 
     public Matrix4x4() {
@@ -48,9 +48,9 @@ public class Matrix4x4 implements Cloneable {
         m[3][3] = t33;
     }
 
-    @Override
-    public Matrix4x4 clone() {
-        return new Matrix4x4(this.m);
+    public Matrix4x4(Matrix4x4 mat)
+    {
+        this(mat.m);
     }
 
     public boolean equal(Matrix4x4 m2) {
