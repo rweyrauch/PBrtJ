@@ -23,8 +23,8 @@ public class EnvironmentCamera extends Camera {
     public CameraRay GenerateRay(CameraSample sample) {
         Stats.ProfilePhase prof = new Stats.ProfilePhase(Stats.Prof.GenerateCameraRay);
         // Compute environment camera ray direction
-        float theta = (float)Math.PI * sample.pFilm.y / film.fullResolution.y;
-        float phi = 2 * (float)Math.PI * sample.pFilm.x / film.fullResolution.x;
+        float theta = Pbrt.Pi * sample.pFilm.y / film.fullResolution.y;
+        float phi = 2 * Pbrt.Pi * sample.pFilm.x / film.fullResolution.x;
         Vector3f dir = new Vector3f((float)Math.sin(theta) * (float)Math.cos(phi), (float)Math.cos(theta), (float)Math.sin(theta) * (float)Math.sin(phi));
         CameraRay cr = new CameraRay();
         cr.ray = new Ray(new Point3f(0, 0, 0), dir, Pbrt.Infinity, Pbrt.Lerp(sample.time, shutterOpen, shutterClose), medium);

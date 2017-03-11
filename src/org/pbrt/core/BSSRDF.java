@@ -102,7 +102,6 @@ public abstract class BSSRDF {
 
     public static float BeamDiffusionMS(float sigma_s, float sigma_a, float g, float eta, float r) {
         int nSamples = 100;
-        float Inv4Pi = (float)(1.0 / 4.0 * Math.PI);
         float Ed = 0;
         // Precompute information for dipole integrand
 
@@ -136,12 +135,12 @@ public abstract class BSSRDF {
             float dr = (float)Math.sqrt(r * r + zr * zr), dv = (float)Math.sqrt(r * r + zv * zv);
 
             // Compute dipole fluence rate $\dipole(r)$ using Equation (15.27)
-            float phiD = Inv4Pi / D_g * ((float)Math.exp(-sigma_tr * dr) / dr -
+            float phiD = Pbrt.Inv4Pi / D_g * ((float)Math.exp(-sigma_tr * dr) / dr -
                     (float)Math.exp(-sigma_tr * dv) / dv);
 
             // Compute dipole vector irradiance $-\N{}\cdot\dipoleE(r)$ using
             // Equation (15.27)
-            float EDn = Inv4Pi * (zr * (1 + sigma_tr * dr) *
+            float EDn = Pbrt.Inv4Pi * (zr * (1 + sigma_tr * dr) *
                     (float)Math.exp(-sigma_tr * dr) / (dr * dr * dr) -
                     zv * (1 + sigma_tr * dv) *
                             (float)Math.exp(-sigma_tr * dv) / (dv * dv * dv));
@@ -172,7 +171,7 @@ public abstract class BSSRDF {
             for (int j = 0; j < t.nRadiusSamples; ++j) {
                 float rho = t.rhoSamples[i], r = t.radiusSamples[j];
                 t.profile[i * t.nRadiusSamples + j] =
-                        2 * (float)Math.PI * r * (BeamDiffusionSS(rho, 1 - rho, g, eta, r) +
+                        2 * Pbrt.Pi * r * (BeamDiffusionSS(rho, 1 - rho, g, eta, r) +
                                 BeamDiffusionMS(rho, 1 - rho, g, eta, r));
             }
 

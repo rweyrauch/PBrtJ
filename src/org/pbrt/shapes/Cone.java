@@ -65,7 +65,7 @@ public class Cone extends Shape {
         // Compute cone inverse mapping
         pHit = ray.at(tShapeHit.asFloat());
         phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test cone intersection against clipping parameters
         if (pHit.z < 0 || pHit.z > height || phi > phiMax) {
@@ -75,7 +75,7 @@ public class Cone extends Shape {
             // Compute cone inverse mapping
             pHit = ray.at(tShapeHit.asFloat());
             phi = (float)Math.atan2(pHit.y, pHit.x);
-            if (phi < 0.) phi += 2 * (float)Math.PI;
+            if (phi < 0.) phi += 2 * Pbrt.Pi;
             if (pHit.z < 0 || pHit.z > height || phi > phiMax) return null;
         }
 
@@ -158,7 +158,7 @@ public class Cone extends Shape {
         // Compute cone inverse mapping
         pHit = ray.at(tShapeHit.asFloat());
         phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test cone intersection against clipping parameters
         if (pHit.z < 0 || pHit.z > height || phi > phiMax) {
@@ -168,7 +168,7 @@ public class Cone extends Shape {
             // Compute cone inverse mapping
             pHit = ray.at(tShapeHit.asFloat());
             phi = (float)Math.atan2(pHit.y, pHit.x);
-            if (phi < 0.) phi += 2 * (float)Math.PI;
+            if (phi < 0.) phi += 2 * Pbrt.Pi;
             if (pHit.z < 0 || pHit.z > height || phi > phiMax) return false;
         }
         return true;

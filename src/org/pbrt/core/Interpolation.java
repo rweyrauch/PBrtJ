@@ -415,7 +415,7 @@ public class Interpolation {
 
         SampleF result = new SampleF();
         result.sample = (float)f;
-        result.pdf = (float)((1 / 2 * Math.PI) * f / ak[0]);
+        result.pdf = (float)(Pbrt.Inv2Pi * f / ak[0]);
         result.phiPtr = (float)phi;
         return result;
     }

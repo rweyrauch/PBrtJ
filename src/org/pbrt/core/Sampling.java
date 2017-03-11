@@ -108,41 +108,41 @@ public class Sampling {
     public static Vector3f UniformSampleHemisphere(Point2f u) {
         float z = u.x;
         float r = (float)Math.sqrt(Math.max(0, 1 - z * z));
-        float phi = 2 * (float)Math.PI * u.y;
+        float phi = 2 * Pbrt.Pi * u.y;
         return new Vector3f(r * (float)Math.cos(phi), r * (float)Math.sin(phi), z);
     }
     public static float UniformHemispherePdf() {
-        return 1 / (float)Math.PI;
+        return Pbrt.Inv2Pi;
     }
 
     public static Vector3f UniformSampleSphere(Point2f u) {
         float z = 1 - 2 * u.x;
         float r = (float)Math.sqrt(Math.max(0, 1 - z * z));
-        float phi = 2 * (float)Math.PI * u.y;
+        float phi = 2 * Pbrt.Pi * u.y;
         return new Vector3f(r * (float)Math.cos(phi), r * (float)Math.sin(phi), z);
     }
     public static float UniformSpherePdf() {
-        return 1 / (4 * (float)Math.PI);
+        return Pbrt.Inv4Pi;
     }
     public static Vector3f UniformSampleCone(Point2f u, float cosThetaMax) {
         float cosTheta = (1 - u.x) + u.x * cosThetaMax;
         float sinTheta = (float)Math.sqrt(1 - cosTheta * cosTheta);
-        float phi = u.y * 2 * (float)Math.PI;
+        float phi = u.y * 2 * Pbrt.Pi;
         return new Vector3f((float)Math.cos(phi) * sinTheta, (float)Math.sin(phi) * sinTheta, cosTheta);
     }
     public static Vector3f UniformSampleCone(Point2f u, float cosThetaMax, Vector3f x, Vector3f y, Vector3f z) {
         float cosTheta = Pbrt.Lerp(u.x, cosThetaMax, 1.f);
         float sinTheta = (float)Math.sqrt(1 - cosTheta * cosTheta);
-        float phi = u.y * 2 * (float)Math.PI;
+        float phi = u.y * 2 * Pbrt.Pi;
         return x.scale((float)Math.cos(phi) * sinTheta).add(y.scale((float)Math.sin(phi) * sinTheta).add(z.scale(cosTheta)));
     }
     public static float UniformConePdf(float cosThetaMax) {
-        return 1 / (2 * (float)Math.PI * (1 - cosThetaMax));
+        return 1 / (2 * Pbrt.Pi * (1 - cosThetaMax));
     }
 
     public static Point2f UniformSampleDisk(Point2f u) {
         float r = (float)Math.sqrt(u.x);
-        float theta = 2 * (float)Math.PI * u.y;
+        float theta = 2 * Pbrt.Pi * u.y;
         return new Point2f(r * (float)Math.cos(theta), r * (float)Math.sin(theta));
     }
 
@@ -158,17 +158,14 @@ public class Sampling {
         // Handle degeneracy at the origin
         if (uOffset.x == 0 && uOffset.y == 0) return new Point2f(0, 0);
 
-        float PiOver4 = (float)Math.PI / 4;
-        float PiOver2 = (float)Math.PI / 2;
-
         // Apply concentric mapping to point
         float theta, r;
         if (Math.abs(uOffset.x) > Math.abs(uOffset.y)) {
             r = uOffset.x;
-            theta = PiOver4 * (uOffset.y / uOffset.x);
+            theta = Pbrt.PiOver4 * (uOffset.y / uOffset.x);
         } else {
             r = uOffset.y;
-            theta = PiOver2 - PiOver4 * (uOffset.x / uOffset.y);
+            theta = Pbrt.PiOver2 - Pbrt.PiOver4 * (uOffset.x / uOffset.y);
         }
         return new Point2f((float)Math.cos(theta), (float)Math.sin(theta)).scale(r);
     }
@@ -192,7 +189,7 @@ public class Sampling {
         return new Vector3f(d.x, d.y, z);
     }
 
-    public static float CosineHemispherePdf(float cosTheta) { return cosTheta / (float)Math.PI; }
+    public static float CosineHemispherePdf(float cosTheta) { return cosTheta * Pbrt.InvPi; }
 
     public static float PowerHeuristic(int nf, float fPdf, int ng, float gPdf) {
         float f = nf * fPdf, g = ng * gPdf;

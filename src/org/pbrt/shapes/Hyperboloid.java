@@ -93,7 +93,7 @@ public class Hyperboloid extends Shape {
         float v = (pHit.z - p1.z) / (p2.z - p1.z);
         Point3f pr = p1.scale(1-v).add(p2.scale(v));
         phi = (float)Math.atan2(pr.x * pHit.y - pHit.x * pr.y, pHit.x * pr.x + pHit.y * pr.y);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test hyperboloid intersection against clipping parameters
         if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) {
@@ -105,7 +105,7 @@ public class Hyperboloid extends Shape {
             v = (pHit.z - p1.z) / (p2.z - p1.z);
             pr = p1.scale(1-v).add(p2.scale(v));
             phi = (float)Math.atan2(pr.x * pHit.y - pHit.x * pr.y, pHit.x * pr.x + pHit.y * pr.y);
-            if (phi < 0) phi += 2 * (float)Math.PI;
+            if (phi < 0) phi += 2 * Pbrt.Pi;
             if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) return null;
         }
 
@@ -189,7 +189,7 @@ public class Hyperboloid extends Shape {
         float v = (pHit.z - p1.z) / (p2.z - p1.z);
         Point3f pr = p1.scale(1-v).add(p2.scale(v));
         phi = (float)Math.atan2(pr.x * pHit.y - pHit.x * pr.y, pHit.x * pr.x + pHit.y * pr.y);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test hyperboloid intersection against clipping parameters
         if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) {
@@ -201,7 +201,7 @@ public class Hyperboloid extends Shape {
             v = (pHit.z - p1.z) / (p2.z - p1.z);
             pr = p1.scale(1-v).add(p2.scale(v));
             phi = (float)Math.atan2(pr.x * pHit.y - pHit.x * pr.y, pHit.x * pr.x + pHit.y * pr.y);
-            if (phi < 0) phi += 2 * (float)Math.PI;
+            if (phi < 0) phi += 2 * Pbrt.Pi;
             if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) return false;
         }
         return true;

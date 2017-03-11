@@ -45,7 +45,7 @@ public abstract class SeparableBSSRDF extends BSSRDF {
 
     public Spectrum Sw(Vector3f w) {
         float c = 1 - 2 * FresnelMoment1(1 / eta);
-        return new Spectrum((1 - Reflection.FrDielectric(Reflection.CosTheta(w), 1, eta)) / (c * (float)Math.PI));
+        return new Spectrum((1 - Reflection.FrDielectric(Reflection.CosTheta(w), 1, eta)) / (c * Pbrt.Pi));
     }
 
     public Spectrum Sp(SurfaceInteraction pi) {
@@ -88,7 +88,7 @@ public abstract class SeparableBSSRDF extends BSSRDF {
         // Sample BSSRDF profile in polar coordinates
         float r = Sample_Sr(ch, u2.x);
         if (r < 0) return bs;
-        float phi = 2 * (float)Math.PI * u2.y;
+        float phi = 2 * Pbrt.Pi * u2.y;
 
         // Compute BSSRDF profile bounds and intersection height
         float rMax = Sample_Sr(ch, 0.999f);

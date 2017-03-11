@@ -19,7 +19,7 @@ public class LambertianReflection extends BxDF {
 
     @Override
     public Spectrum f(Vector3f wo, Vector3f wi) {
-        return Spectrum.Scale(R, (float)(1/Math.PI));
+        return Spectrum.Scale(R, Pbrt.InvPi);
     }
 
     @Override

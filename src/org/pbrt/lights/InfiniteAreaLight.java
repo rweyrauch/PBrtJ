@@ -78,13 +78,13 @@ public class InfiniteAreaLight extends Light {
         }
 
         // Convert infinite light sample point to direction
-        float theta = uv.y * (float)Math.PI, phi = uv.x * 2 * (float)Math.PI;
+        float theta = uv.y * Pbrt.Pi, phi = uv.x * 2 * Pbrt.Pi;
         float cosTheta = (float)Math.cos(theta), sinTheta = (float)Math.sin(theta);
         float sinPhi = (float)Math.sin(phi), cosPhi = (float)Math.cos(phi);
         result.wi = LightToWorld.xform(new Vector3f(sinTheta * cosPhi, sinTheta * sinPhi, cosTheta));
 
         // Compute PDF for sampled infinite light direction
-        result.pdf = mapPdf / (2 * (float)Math.PI * (float)Math.PI * sinTheta);
+        result.pdf = mapPdf / (2 * Pbrt.Pi * Pbrt.Pi * sinTheta);
         if (sinTheta == 0) result.pdf = 0;
 
         // Return radiance value for infinite light direction
@@ -97,14 +97,14 @@ public class InfiniteAreaLight extends Light {
     @Override
     public Spectrum Power() {
         Spectrum L = Lmap.Lookup(new Point2f(.5f, .5f), .5f);
-        L.scale((float)Math.PI * worldRadius * worldRadius);
+        L.scale(Pbrt.Pi * worldRadius * worldRadius);
         return L;
     }
 
     @Override
     public Spectrum Le(RayDifferential ray) {
         Vector3f w = Vector3f.Normalize(WorldToLight.xform(ray.d));
-        Point2f st = new Point2f(Vector3f.SphericalPhi(w) / (float)Math.PI, Vector3f.SphericalTheta(w) / (float)Math.PI);
+        Point2f st = new Point2f(Vector3f.SphericalPhi(w) * Pbrt.Inv2Pi, Vector3f.SphericalTheta(w) * Pbrt.InvPi);
         return Lmap.Lookup(st);
     }
 
@@ -115,7 +115,7 @@ public class InfiniteAreaLight extends Light {
         float theta = Vector3f.SphericalTheta(wi), phi = Vector3f.SphericalPhi(wi);
         float sinTheta = (float)Math.sin(theta);
         if (sinTheta == 0) return 0;
-        return distribution.Pdf(new Point2f(phi / (float)Math.PI, theta / (float)Math.PI)) / (2 * (float)Math.PI * (float)Math.PI * sinTheta);
+        return distribution.Pdf(new Point2f(phi * Pbrt.Inv2Pi, theta * Pbrt.InvPi)) / (2 * Pbrt.Pi * Pbrt.Pi * sinTheta);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class InfiniteAreaLight extends Light {
             result.spectrum = new Spectrum(0);
             return result;
         }
-        float theta = uv.y * (float)Math.PI, phi = uv.x * 2.f * (float)Math.PI;
+        float theta = uv.y * Pbrt.Pi, phi = uv.x * 2.f * Pbrt.Pi;
         float cosTheta = (float)Math.cos(theta), sinTheta = (float)Math.sin(theta);
         float sinPhi = (float)Math.sin(phi), cosPhi = (float)Math.cos(phi);
         Vector3f d = LightToWorld.xform(new Vector3f(sinTheta * cosPhi, sinTheta * sinPhi, cosTheta)).negate();
@@ -148,8 +148,8 @@ public class InfiniteAreaLight extends Light {
         result.ray = new Ray(pDisk.add(d.negate().scale(worldRadius)), d, Pbrt.Infinity, time, null);
 
         // Compute _InfiniteAreaLight_ ray PDFs
-        result.pdfDir = sinTheta == 0 ? 0 : mapPdf / (2 * (float)Math.PI * (float)Math.PI * sinTheta);
-        result.pdfPos = 1 / ((float)Math.PI * worldRadius * worldRadius);
+        result.pdfDir = sinTheta == 0 ? 0 : mapPdf / (2 * Pbrt.Pi * Pbrt.Pi * sinTheta);
+        result.pdfPos = 1 / (Pbrt.Pi * worldRadius * worldRadius);
         result.spectrum = Lmap.Lookup(uv);
         return result;
     }
@@ -159,11 +159,11 @@ public class InfiniteAreaLight extends Light {
         Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
         Vector3f d = WorldToLight.xform(ray.d).negate();
         float theta = Vector3f.SphericalTheta(d), phi = Vector3f.SphericalPhi(d);
-        Point2f uv = new Point2f(phi / (float)Math.PI, theta / (float)Math.PI);
+        Point2f uv = new Point2f(phi * Pbrt.Inv2Pi, theta * Pbrt.InvPi);
         float mapPdf = distribution.Pdf(uv);
         PdfResult result = new PdfResult();
-        result.pdfDir = mapPdf / (2 * (float)Math.PI * (float)Math.PI * (float)Math.sin(theta));
-        result.pdfPos = 1 / ((float)Math.PI * worldRadius * worldRadius);
+        result.pdfDir = mapPdf / (2 * Pbrt.Pi * Pbrt.Pi * (float)Math.sin(theta));
+        result.pdfPos = 1 / (Pbrt.Pi * worldRadius * worldRadius);
         return result;
     }
 

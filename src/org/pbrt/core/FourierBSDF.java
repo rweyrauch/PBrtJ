@@ -191,7 +191,7 @@ public class FourierBSDF extends BxDF {
         float rho = 0;
         for (int o = 0; o < 4; ++o) {
             if (weightsO.weights[o] == 0) continue;
-            rho += weightsO.weights[o] * bsdfTable.cdf[(weightsO.offset + o) * bsdfTable.nMu + bsdfTable.nMu - 1] * (2 * (float)Math.PI);
+            rho += weightsO.weights[o] * bsdfTable.cdf[(weightsO.offset + o) * bsdfTable.nMu + bsdfTable.nMu - 1] * (2 * Pbrt.Pi);
         }
         float Y = Interpolation.Fourier(ak, mMax, cosPhi);
         return (rho > 0 && Y > 0) ? (Y / rho) : 0;

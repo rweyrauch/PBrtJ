@@ -18,9 +18,18 @@ public class Pbrt
     public static float MachineEpsilon() {
         return Math.ulp(1.0f) * 0.5f;
     }
-    public static final float Infinity = Float.MAX_VALUE;
+    public static final float MaxFloat = Float.MAX_VALUE;
+    public static final float Infinity = Float.POSITIVE_INFINITY;
     public static final float ShadowEpsilon = 0.0001f;
     public static final float OneMinusEpsilon = 0x1.fffffep-1f;
+    public static final float Pi = (float)Math.PI;
+    public static final float InvPi = (float)(1/Math.PI);
+    public static final float Inv2Pi = (float)(1/(2*Math.PI));
+    public static final float Inv4Pi = (float)(1/(4*Math.PI));
+    public static final float PiOver2 = (float)(Math.PI/2);
+    public static final float PiOver4 = (float)(Math.PI/4);
+    public static final float Sqrt2 = (float)Math.sqrt(2);
+
     public static float gamma(int n) {
         return (n * MachineEpsilon()) / (1 - n * MachineEpsilon());
     }

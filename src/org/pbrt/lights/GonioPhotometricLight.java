@@ -39,7 +39,7 @@ public class GonioPhotometricLight extends Light {
         wp.z = temp;
         float theta = Vector3f.SphericalTheta(wp);
         float phi = Vector3f.SphericalPhi(wp);
-        Point2f st = new Point2f(phi / (2 * (float)Math.PI), theta / (float)Math.PI);
+        Point2f st = new Point2f(phi * Pbrt.Inv2Pi, theta * Pbrt.InvPi);
         return (mipmap == null) ? new Spectrum(1) : mipmap.Lookup(st);
     }
 
@@ -60,7 +60,7 @@ public class GonioPhotometricLight extends Light {
         if (mipmap != null) {
             s = mipmap.Lookup(new Point2f(0.5f, 0.5f), 0.5f);
         }
-        return I.multiply(s.scale(4 * (float)Math.PI ));
+        return I.multiply(s.scale(4 * Pbrt.Pi ));
     }
 
     @Override

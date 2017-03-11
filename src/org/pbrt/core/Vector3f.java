@@ -199,7 +199,7 @@ public class Vector3f {
 
     public static float SphericalPhi(Vector3f v) {
         float p = (float)Math.atan2(v.y, v.x);
-        return (p < 0) ? (p + 2 * (float)Math.PI) : p;
+        return (p < 0) ? (p + 2 * Pbrt.Pi) : p;
     }
 
 }

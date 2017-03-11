@@ -40,7 +40,7 @@ public class CylindricalMapping2D extends TextureMapping2D {
 
     private Point2f cylinder(Point3f p) {
         Vector3f vec = Vector3f.Normalize(worldToTexture.xform(p).subtract(new Point3f(0, 0, 0)));
-        return new Point2f(((float)Math.PI + (float)Math.atan2(vec.y, vec.x)) / (float)(Math.PI*2), vec.z);
+        return new Point2f((Pbrt.Pi + (float)Math.atan2(vec.y, vec.x)) * Pbrt.Inv2Pi, vec.z);
     }
 
     private final Transform worldToTexture;

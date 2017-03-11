@@ -136,7 +136,7 @@ public class PerspectiveCamera extends ProjectiveCamera {
             return cwe;
 
         // Compute lens area of perspective camera
-        float lensArea = lensRadius != 0 ? ((float)Math.PI * lensRadius * lensRadius) : 1;
+        float lensArea = lensRadius != 0 ? (Pbrt.Pi * lensRadius * lensRadius) : 1;
 
         // Return importance for point on image plane
         float cos2Theta = cosTheta * cosTheta;
@@ -170,7 +170,7 @@ public class PerspectiveCamera extends ProjectiveCamera {
         }
 
         // Compute lens area of perspective camera
-        float lensArea = lensRadius != 0 ? ((float)Math.PI * lensRadius * lensRadius) : 1;
+        float lensArea = lensRadius != 0 ? (Pbrt.Pi * lensRadius * lensRadius) : 1;
         cd.pdfPos = 1 / lensArea;
         cd.pdfDir = 1 / (A * cosTheta * cosTheta * cosTheta);
 
@@ -195,7 +195,7 @@ public class PerspectiveCamera extends ProjectiveCamera {
         // Compute PDF for importance arriving at _ref_
 
         // Compute lens area of perspective camera
-        float lensArea = lensRadius != 0 ? ((float)Math.PI * lensRadius * lensRadius) : 1;
+        float lensArea = lensRadius != 0 ? (Pbrt.Pi * lensRadius * lensRadius) : 1;
         cw.pdf = (dist * dist) / (Normal3f.AbsDot(lensIntr.n, cw.wi) * lensArea);
         CameraWe cwe = We(lensIntr.SpawnRay(cw.wi.negate()));
         cw.pRaster = cwe.pRaster2;

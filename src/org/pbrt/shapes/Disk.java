@@ -49,7 +49,7 @@ public class Disk extends Shape {
 
         // Test disk phi value against phimax
         float phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
         if (phi > phiMax) return null;
 
         // Find parametric representation of disk hit
@@ -99,7 +99,7 @@ public class Disk extends Shape {
 
         // Test disk $\phi$ value against $\phimax$
         float phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
         return !(phi > phiMax);
     }
 

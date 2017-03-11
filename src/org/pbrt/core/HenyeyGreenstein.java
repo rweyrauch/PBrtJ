@@ -37,7 +37,7 @@ public class HenyeyGreenstein extends PhaseFunction {
 
         // Compute direction _wi_ for Henyey--Greenstein sample
         float sinTheta = (float)Math.sqrt(Math.max(0, 1 - cosTheta * cosTheta));
-        float phi = 2 * (float)Math.PI * u.at(1);
+        float phi = 2 * Pbrt.Pi * u.at(1);
         Vector3f.CoordSystem cs = Vector3f.CoordinateSystem(wo);
         PhaseSample ps = new PhaseSample();
         ps.wi = Vector3f.SphericalDirection(sinTheta, cosTheta, phi, cs.v1, cs.v2, wo.negate());

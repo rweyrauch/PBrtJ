@@ -58,7 +58,7 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
             }
 
             // Cancel marginal PDF factor from tabulated BSSRDF profile
-            if (rOptical != 0) sr /= 2 * (float)Math.PI * rOptical;
+            if (rOptical != 0) sr /= 2 * Pbrt.Pi * rOptical;
             Sr.set(ch, sr);
         }
         // Transform BSSRDF value into world space units
@@ -105,7 +105,7 @@ public class TabulatedBSSRDF extends SeparableBSSRDF {
         }
 
         // Cancel marginal PDF factor from tabulated BSSRDF profile
-        if (rOptical != 0) sr /= 2 * (float)Math.PI * rOptical;
+        if (rOptical != 0) sr /= 2 * Pbrt.Pi * rOptical;
         return Math.max(0, sr * sigma_t.at(ch) * sigma_t.at(ch) / rhoEff);
     }
 }

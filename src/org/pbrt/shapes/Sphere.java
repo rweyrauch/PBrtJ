@@ -80,7 +80,7 @@ public class Sphere extends Shape {
         pHit = pHit.scale(radius / Point3f.Distance(pHit, new Point3f(0, 0, 0)));
         if (pHit.x == 0 && pHit.y == 0) pHit.x = 1e-5f * radius;
         float phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test sphere intersection against clipping parameters
         if ((zMin > -radius && pHit.z < zMin) || (zMax < radius && pHit.z > zMax) || phi > phiMax) {
@@ -94,7 +94,7 @@ public class Sphere extends Shape {
             pHit = pHit.scale(radius / Point3f.Distance(pHit, new Point3f(0, 0, 0)));
             if (pHit.x == 0 && pHit.y == 0) pHit.x = 1e-5f * radius;
             phi = (float)Math.atan2(pHit.y, pHit.x);
-            if (phi < 0) phi += 2 * (float)Math.PI;
+            if (phi < 0) phi += 2 * Pbrt.Pi;
             if ((zMin > -radius && pHit.z < zMin) || (zMax < radius && pHit.z > zMax) || phi > phiMax)
                 return null;
         }
@@ -187,7 +187,7 @@ public class Sphere extends Shape {
         pHit = pHit.scale(radius / Point3f.Distance(pHit, new Point3f(0, 0, 0)));
         if (pHit.x == 0 && pHit.y == 0) pHit.x = 1e-5f * radius;
         float phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test sphere intersection against clipping parameters
         if ((zMin > -radius && pHit.z < zMin) || (zMax < radius && pHit.z > zMax) || phi > phiMax) {
@@ -201,7 +201,7 @@ public class Sphere extends Shape {
             pHit = pHit.scale(radius / Point3f.Distance(pHit, new Point3f(0, 0, 0)));
             if (pHit.x == 0 && pHit.y == 0) pHit.x = 1e-5f * radius;
             phi = (float)Math.atan2(pHit.y, pHit.x);
-            if (phi < 0) phi += 2 * (float)Math.PI;
+            if (phi < 0) phi += 2 * Pbrt.Pi;
             if ((zMin > -radius && pHit.z < zMin) || (zMax < radius && pHit.z > zMax) || phi > phiMax)
                 return false;
         }
@@ -279,7 +279,7 @@ public class Sphere extends Shape {
         float cosThetaMax = (float)Math.sqrt(Math.max(0, 1 - sinThetaMax2));
         float cosTheta = (1 - u.x) + u.x * cosThetaMax;
         float sinTheta = (float)Math.sqrt(Math.max(0, 1 - cosTheta * cosTheta));
-        float phi = u.y * 2 * (float)Math.PI;
+        float phi = u.y * 2 * Pbrt.Pi;
 
         // Compute angle $\alpha$ from center of sphere to sampled point on surface
         float dc = Point3f.Distance(ref.p, pCenter);
@@ -300,7 +300,7 @@ public class Sphere extends Shape {
 
         // Uniform cone PDF.
         SampleResult sr = new SampleResult();
-        sr.pdf = 1 / (2 * (float)Math.PI * (1 - cosThetaMax));
+        sr.pdf = 1 / (2 * Pbrt.Pi * (1 - cosThetaMax));
         sr.isect = it;
         return sr;
     }
@@ -308,10 +308,10 @@ public class Sphere extends Shape {
     public float SolidAngle(Point3f p, int nSamples) {
         Point3f pCenter = ObjectToWorld.xform(new Point3f(0, 0, 0));
         if (Point3f.DistanceSquared(p, pCenter) <= radius * radius)
-            return 4 * (float)Math.PI;
+            return 4 * Pbrt.Pi;
         float sinTheta2 = radius * radius / Point3f.DistanceSquared(p, pCenter);
         float cosTheta = (float)Math.sqrt(Math.max(0, 1 - sinTheta2));
-        return (2 * (float)Math.PI * (1 - cosTheta));
+        return (2 * Pbrt.Pi * (1 - cosTheta));
     }
 
     private final float radius;

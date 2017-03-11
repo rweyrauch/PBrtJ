@@ -54,7 +54,7 @@ public class SpotLight extends Light {
 
     @Override
     public Spectrum Power() {
-        return I.scale(2 * (float)Math.PI * (1 - .5f * (cosFalloffStart + cosTotalWidth)));
+        return I.scale(2 * Pbrt.Pi * (1 - .5f * (cosFalloffStart + cosTotalWidth)));
     }
 
     @Override

@@ -105,7 +105,7 @@ public class HairBSDF extends BxDF {
         }
 
         // Compute contribution of remaining terms after _pMax_
-        fsum = fsum.add(ap[pMax].scale(Mp(cosThetaI, cosThetaO, sinThetaI, sinThetaO, v[pMax]) / (2.f * (float)Math.PI)));
+        fsum = fsum.add(ap[pMax].scale(Mp(cosThetaI, cosThetaO, sinThetaI, sinThetaO, v[pMax]) / (2.f * Pbrt.Pi)));
         if (Reflection.AbsCosTheta(wi) > 0) fsum.invScale(Reflection.AbsCosTheta(wi));
         assert (!Float.isInfinite(fsum.y()) && !Float.isNaN(fsum.y()));
         return fsum;
@@ -133,7 +133,7 @@ public class HairBSDF extends BxDF {
         u[1].x = Math.max(u[1].x, 1e-5f);
         float cosTheta = 1 + v[p] * (float)Math.log(u[1].x + (1 - u[1].x) * (float)Math.exp(-2 / v[p]));
         float sinTheta = SafeSqrt(1 - Sqr(cosTheta));
-        float cosPhi = (float)Math.cos(2 * (float)Math.PI * u[1].y);
+        float cosPhi = (float)Math.cos(2 * Pbrt.Pi * u[1].y);
         float sinThetaI = -cosTheta * sinThetaO + sinTheta * cosPhi * cosThetaO;
         float cosThetaI = SafeSqrt(1 - Sqr(sinThetaI));
 
@@ -161,9 +161,9 @@ public class HairBSDF extends BxDF {
         float gammaT = SafeASin(sinGammaT);
         float dphi;
         if (p < pMax)
-            dphi = Phi(p, gammaO, gammaT) + SampleTrimmedLogistic(u[0].y, s, -(float)Math.PI, (float)Math.PI);
+            dphi = Phi(p, gammaO, gammaT) + SampleTrimmedLogistic(u[0].y, s, -Pbrt.Pi, Pbrt.Pi);
         else
-            dphi = 2 * (float)Math.PI * u[0].y;
+            dphi = 2 * Pbrt.Pi * u[0].y;
 
         BxDFSample bs = new BxDFSample();
         // Compute _wi_ from sampled hair scattering angles
@@ -197,7 +197,7 @@ public class HairBSDF extends BxDF {
             cosThetaIp = Math.abs(cosThetaIp);
             bs.pdf += Mp(cosThetaIp, cosThetaO, sinThetaIp, sinThetaO, v[p]) * apPdf[p] * Np(dphi, p, s, gammaO, gammaT);
         }
-        bs.pdf += Mp(cosThetaI, cosThetaO, sinThetaI, sinThetaO, v[pMax]) * apPdf[pMax] * (1 / (2 * (float)Math.PI));
+        bs.pdf += Mp(cosThetaI, cosThetaO, sinThetaI, sinThetaO, v[pMax]) * apPdf[pMax] * (1 / (2 * Pbrt.Pi));
         // if (std::abs(wi->x) < .9999) CHECK_NEAR(*pdf, Pdf(wo, *wi), .01);
         bs.f = f(wo, bs.wiWorld);
         return bs;
@@ -255,7 +255,7 @@ public class HairBSDF extends BxDF {
             cosThetaIp = Math.abs(cosThetaIp);
             pdf += Mp(cosThetaIp, cosThetaO, sinThetaIp, sinThetaO, v[p]) * apPdf[p] * Np(phi, p, s, gammaO, gammaT);
         }
-        pdf += Mp(cosThetaI, cosThetaO, sinThetaI, sinThetaO, v[pMax]) * apPdf[pMax] * (1 / (2 * (float)Math.PI));
+        pdf += Mp(cosThetaI, cosThetaO, sinThetaI, sinThetaO, v[pMax]) * apPdf[pMax] * (1 / (2 * Pbrt.Pi));
         return pdf;
     }
 
@@ -352,7 +352,7 @@ public class HairBSDF extends BxDF {
 
     private static float LogI0(float x) {
         if (x > 12)
-            return x + 0.5f * (-(float)Math.log(2 * (float)Math.PI) + (float)Math.log(1 / x) + 1 / (8 * x));
+            return x + 0.5f * (-(float)Math.log(2 * Pbrt.Pi) + (float)Math.log(1 / x) + 1 / (8 * x));
         else
             return (float)Math.log(I0(x));
     }
@@ -386,7 +386,7 @@ public class HairBSDF extends BxDF {
     }
 
     private static float Phi(int p, float gammaO, float gammaT) {
-        return 2 * p * gammaT - 2 * gammaO + p * (float)Math.PI;
+        return 2 * p * gammaT - 2 * gammaO + p * Pbrt.Pi;
     }
 
     private static float Logistic(float x, float s) {
@@ -406,9 +406,9 @@ public class HairBSDF extends BxDF {
     private static float Np(float phi, int p, float s, float gammaO, float gammaT) {
         float dphi = phi - Phi(p, gammaO, gammaT);
         // Remap _dphi_ to $[-\pi,\pi]$
-        while (dphi > (float)Math.PI) dphi -= 2 * (float)Math.PI;
-        while (dphi < -(float)Math.PI) dphi += 2 * (float)Math.PI;
-        return TrimmedLogistic(dphi, s, -(float)Math.PI, (float)Math.PI);
+        while (dphi > Pbrt.Pi) dphi -= 2 * Pbrt.Pi;
+        while (dphi < -Pbrt.Pi) dphi += 2 * Pbrt.Pi;
+        return TrimmedLogistic(dphi, s, -Pbrt.Pi, Pbrt.Pi);
     }
 
     private static float SampleTrimmedLogistic(float u, float s, float a, float b) {

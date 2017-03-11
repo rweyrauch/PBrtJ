@@ -74,7 +74,7 @@ public class Cylinder extends Shape {
         pHit.x *= radius / hitRad;
         pHit.y *= radius / hitRad;
         phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test cylinder intersection against clipping parameters
         if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) {
@@ -89,7 +89,7 @@ public class Cylinder extends Shape {
             pHit.x *= radius / hitRad;
             pHit.y *= radius / hitRad;
             phi = (float)Math.atan2(pHit.y, pHit.x);
-            if (phi < 0) phi += 2 * (float)Math.PI;
+            if (phi < 0) phi += 2 * Pbrt.Pi;
             if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) return null;
         }
 
@@ -171,7 +171,7 @@ public class Cylinder extends Shape {
         pHit.x *= radius / hitRad;
         pHit.y *= radius / hitRad;
         phi = (float)Math.atan2(pHit.y, pHit.x);
-        if (phi < 0) phi += 2 * (float)Math.PI;
+        if (phi < 0) phi += 2 * Pbrt.Pi;
 
         // Test cylinder intersection against clipping parameters
         if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) {
@@ -186,7 +186,7 @@ public class Cylinder extends Shape {
             pHit.x *= radius / hitRad;
             pHit.y *= radius / hitRad;
             phi = (float)Math.atan2(pHit.y, pHit.x);
-            if (phi < 0) phi += 2 * (float)Math.PI;
+            if (phi < 0) phi += 2 * Pbrt.Pi;
             if (pHit.z < zMin || pHit.z > zMax || phi > phiMax) return false;
         }
         return true;

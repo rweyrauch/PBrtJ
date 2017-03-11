@@ -41,7 +41,7 @@ public class PointLight extends Light {
 
     @Override
     public Spectrum Power() {
-        return I.scale(4 * (float)Math.PI);
+        return I.scale(4 * Pbrt.Pi);
     }
 
     @Override

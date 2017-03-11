@@ -73,7 +73,7 @@ public class DiffuseAreaLight extends AreaLight {
 
     @Override
     public Spectrum Power() {
-        return Lemit.scale(area * (float)Math.PI * (twoSided ? 2 : 1));
+        return Lemit.scale(area * Pbrt.Pi * (twoSided ? 2 : 1));
     }
 
     @Override

@@ -31,13 +31,13 @@ public class TrowbridgeReitzDistribution extends MicrofacetDistribution {
     public Vector3f Sample_wh(Vector3f wo, Point2f u) {
         Vector3f wh;
         if (!sampleVisibleArea) {
-            float cosTheta, phi = (2 * (float)Math.PI) * u.y;
+            float cosTheta, phi = (2 * Pbrt.Pi) * u.y;
             if (alphax == alphay) {
                 float tanTheta2 = alphax * alphax * u.x / (1.0f - u.x);
                 cosTheta = 1 / (float)Math.sqrt(1 + tanTheta2);
             } else {
-                phi = (float)Math.atan(alphay / alphax * (float)Math.tan(2 * (float)Math.PI * u.y + .5f * (float)Math.PI));
-                if (u.y > .5f) phi += (float)Math.PI;
+                phi = (float)Math.atan(alphay / alphax * (float)Math.tan(2 * Pbrt.Pi * u.y + .5f * Pbrt.Pi));
+                if (u.y > .5f) phi += Pbrt.Pi;
                 float sinPhi = (float)Math.sin(phi), cosPhi = (float)Math.cos(phi);
                 final float alphax2 = alphax * alphax, alphay2 = alphay * alphay;
                 final float alpha2 = 1 / (cosPhi * cosPhi / alphax2 + sinPhi * sinPhi / alphay2);

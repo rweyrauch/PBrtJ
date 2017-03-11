@@ -287,8 +287,8 @@ public class RealisticCamera extends Camera {
                 float theta = Math.abs((float)Math.asin(element.apertureRadius / r));
                 if (r > 0) {
                     // convex as seen from front of lens
-                    float t0 = (float)Math.PI - theta;
-                    float t1 = (float)Math.PI + theta;
+                    float t0 = Pbrt.Pi - theta;
+                    float t1 = Pbrt.Pi + theta;
                     System.out.printf("Circle[{%f, 0}, %f, {%f, %f}], ", z + r, r, t0, t1);
                 } else {
                     // concave as seen from front of lens

@@ -113,8 +113,7 @@ public abstract class Medium {
     // Media Inline Functions
     public static float PhaseHG(float cosTheta, float g) {
         float denom = 1 + g * g + 2 * g * cosTheta;
-        float Inv4Pi = (float)(1.0 / 4.0 * Math.PI);
-        return Inv4Pi * (1 - g * g) / (denom * (float)Math.sqrt(denom));
+        return Pbrt.Inv4Pi * (1 - g * g) / (denom * (float)Math.sqrt(denom));
     }
 
 }

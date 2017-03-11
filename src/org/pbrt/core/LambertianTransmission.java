@@ -19,7 +19,7 @@ public class LambertianTransmission extends BxDF {
 
     @Override
     public Spectrum f(Vector3f wo, Vector3f wi) {
-        return Spectrum.Scale(T, (float)(1/Math.PI));
+        return Spectrum.Scale(T, Pbrt.InvPi);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LambertianTransmission extends BxDF {
 
     @Override
     public float Pdf(Vector3f wo, Vector3f wi) {
-        return !Reflection.SameHemisphere(wo, wi) ? Reflection.AbsCosTheta(wi) / (float)Math.PI : 0;
+        return !Reflection.SameHemisphere(wo, wi) ? Reflection.AbsCosTheta(wi) / Pbrt.Pi : 0;
     }
 
     @Override

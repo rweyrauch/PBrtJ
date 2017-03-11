@@ -232,8 +232,8 @@ public class LoopSubdiv {
             if (!vertex.boundary) {
                 // Compute tangents of interior face
                 for (int j = 0; j < valence; ++j) {
-                    S += (float)Math.cos(2 * (float)Math.PI * j / valence) * Vector3f(pRing[j]);
-                    T += (float)Math.sin(2 * (float)Math.PI * j / valence) * Vector3f(pRing[j]);
+                    S += (float)Math.cos(2 * Pbrt.Pi * j / valence) * Vector3f(pRing[j]);
+                    T += (float)Math.sin(2 * Pbrt.Pi * j / valence) * Vector3f(pRing[j]);
                 }
             } else {
                 // Compute tangents of boundary face
@@ -245,7 +245,7 @@ public class LoopSubdiv {
                 else if (valence == 4)  // regular
                     T = new Vector3f(((pRing.get(0)).scale(-1)).add((pRing.get(1)).scale(2)).add((pRing.get(2)).scale(2)).add((pRing.get(3)).scale(-1)).add(vertex.p.scale(-2)));
                 else {
-                    float theta = (float)Math.PI / (float)(valence - 1);
+                    float theta = Pbrt.Pi / (float)(valence - 1);
                     T = Vector3f((float)Math.sin(theta) * (pRing.get(0) + pRing.get(valence - 1)));
                     for (int k = 1; k < valence - 1; ++k) {
                         float wt = (2 * (float)Math.cos(theta) - 2) * (float)Math.sin((k)*theta);

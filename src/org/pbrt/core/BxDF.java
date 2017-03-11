@@ -70,11 +70,11 @@ public abstract class BxDF {
                 r = Spectrum.Add(r, Spectrum.Scale(sample.f, Reflection.AbsCosTheta(sample.wiWorld) * Reflection.AbsCosTheta(wo) / (pdfo * sample.pdf)));
             }
         }
-        r.invScale((float)Math.PI * nSamples);
+        r.invScale(Pbrt.Pi * nSamples);
         return r;
     }
 
     public float Pdf(Vector3f wo, Vector3f wi) {
-        return Reflection.SameHemisphere(wo, wi) ? Reflection.AbsCosTheta(wi) / (float)Math.PI : 0;
+        return Reflection.SameHemisphere(wo, wi) ? Reflection.AbsCosTheta(wi) * Pbrt.InvPi : 0;
     }
 }

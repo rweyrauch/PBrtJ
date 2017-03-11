@@ -49,7 +49,7 @@ public class DistantLight extends Light {
 
     @Override
     public Spectrum Power() {
-        return L.scale((float)Math.PI * worldRadius * worldRadius);
+        return L.scale(Pbrt.Pi * worldRadius * worldRadius);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DistantLight extends Light {
         // Set ray origin and direction for infinite light ray
         result.ray = new Ray(pDisk.add(wLight.scale(worldRadius)), wLight.negate(), Pbrt.Infinity, time, null);
         result.nLight = new Normal3f(result.ray.d);
-        result.pdfPos = 1 / ((float)Math.PI * worldRadius * worldRadius);
+        result.pdfPos = 1 / (Pbrt.Pi * worldRadius * worldRadius);
         result.pdfDir = 1;
         result.spectrum = L;
         return result;
@@ -78,7 +78,7 @@ public class DistantLight extends Light {
     @Override
     public PdfResult Pdf_Le(Ray ray, Normal3f nLight) {
         PdfResult result = new PdfResult();
-        result.pdfPos = 1 / ((float)Math.PI * worldRadius * worldRadius);
+        result.pdfPos = 1 / (Pbrt.Pi * worldRadius * worldRadius);
         result.pdfDir = 0;
         return result;
     }

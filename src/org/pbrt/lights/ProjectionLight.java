@@ -78,7 +78,7 @@ public class ProjectionLight extends Light {
         if (projectionMap != null) {
             s = projectionMap.Lookup(new Point2f(.5f, .5f), .5f);
         }
-        return s.multiply(I.scale(2 * (float)Math.PI * (1 - cosTotalWidth)));
+        return s.multiply(I.scale(2 * Pbrt.Pi * (1 - cosTotalWidth)));
     }
 
     @Override

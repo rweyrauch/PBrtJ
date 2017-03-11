@@ -11,7 +11,6 @@ package org.pbrt.shapes
 
 import org.pbrt.core.Point3f
 import org.pbrt.core.Ray
-import org.pbrt.core.Shape
 import org.pbrt.core.SurfaceInteraction
 import org.pbrt.core.Transform
 import org.pbrt.core.Vector3f
@@ -22,7 +21,6 @@ import org.pbrt.core.Vector3f
 class SphereTest extends GroovyTestCase {
     void setUp() {
         super.setUp()
-
     }
 
     void tearDown() {

@@ -20,7 +20,7 @@ public class FresnelBlend extends BxDF {
 
     @Override
     public Spectrum f(Vector3f wo, Vector3f wi) {
-        Spectrum diffuse = Rd.scale((28.f / (23.f * (float)Math.PI))).multiply(new Spectrum(1).subtract(Rs)).scale((1 - pow5(1 - .5f * Reflection.AbsCosTheta(wi))) * (1 - pow5(1 - .5f * Reflection.AbsCosTheta(wo))));
+        Spectrum diffuse = Rd.scale((28.f / (23.f * Pbrt.Pi))).multiply(new Spectrum(1).subtract(Rs)).scale((1 - pow5(1 - .5f * Reflection.AbsCosTheta(wi))) * (1 - pow5(1 - .5f * Reflection.AbsCosTheta(wo))));
         Vector3f wh = wi.add(wo);
         if (wh.x == 0 && wh.y == 0 && wh.z == 0) return new Spectrum(0);
         wh = Vector3f.Normalize(wh);
@@ -58,7 +58,7 @@ public class FresnelBlend extends BxDF {
         if (!Reflection.SameHemisphere(wo, wi)) return 0;
         Vector3f wh = Vector3f.Normalize(wo.add(wi));
         float pdf_wh = distribution.Pdf(wo, wh);
-        return .5f * (Reflection.AbsCosTheta(wi) / (float)Math.PI + pdf_wh / (4 * Vector3f.Dot(wo, wh)));
+        return .5f * (Reflection.AbsCosTheta(wi) * Pbrt.InvPi + pdf_wh / (4 * Vector3f.Dot(wo, wh)));
     }
 
     @Override

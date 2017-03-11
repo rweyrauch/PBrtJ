@@ -44,7 +44,7 @@ public class SphericalMapping2D extends TextureMapping2D {
     private Point2f sphere(Point3f p) {
         Vector3f vec = Vector3f.Normalize(worldToTexture.xform(p).subtract(new Point3f(0, 0, 0)));
         float theta = Vector3f.SphericalTheta(vec), phi = Vector3f.SphericalPhi(vec);
-        return new Point2f(theta / (float)(Math.PI * 2), phi / (float)(Math.PI * 2) );
+        return new Point2f(theta * Pbrt.InvPi, phi * Pbrt.Inv2Pi );
     }
     private final Transform worldToTexture;
 }
