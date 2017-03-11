@@ -31,6 +31,33 @@ public class MicrofacetReflection extends BxDF {
     }
 
     @Override
+    public BxDFSample Sample_f(Vector3f wo, Point2f u) {
+        BxDFSample bs = new BxDFSample();
+        bs.f = new Spectrum(0);
+        bs.pdf = 0.0f;
+        bs.wiWorld = new Vector3f();
+        bs.sampledType = BSDF_NONE;
+
+        // Sample microfacet orientation $\wh$ and reflected direction $\wi$
+        if (wo.z == 0) return bs;
+        Vector3f wh = distribution.Sample_wh(wo, u);
+        bs.wiWorld = Reflection.Reflect(wo, wh);
+        if (!Reflection.SameHemisphere(wo, bs.wiWorld)) return bs;
+
+        // Compute PDF of _wi_ for microfacet reflection
+        bs.pdf = distribution.Pdf(wo, wh) / (4 * Vector3f.Dot(wo, wh));
+        bs.f = f(wo, bs.wiWorld);
+        return bs;
+    }
+
+    @Override
+    public float Pdf(Vector3f wo, Vector3f wi) {
+        if (!Reflection.SameHemisphere(wo, wi)) return 0;
+        Vector3f wh = Vector3f.Normalize(wo.add(wi));
+        return distribution.Pdf(wo, wh) / (4 * Vector3f.Dot(wo, wh));
+    }
+
+    @Override
     public String toString() {
         return "[ MicrofacetReflection R: " + R.toString() + " distribution: " + distribution.toString() +
                 " fresnel: " + fresnel.toString() + " ]";
