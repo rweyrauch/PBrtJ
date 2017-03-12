@@ -51,6 +51,10 @@ public class Api {
             trans[0] = new Transform();
             trans[1] = new Transform();
         }
+        public TransformSet(TransformSet ts) {
+            this.trans[0] = new Transform(ts.trans[0]);
+            this.trans[1] = new Transform(ts.trans[1]);
+        }
         public static TransformSet Inverse(TransformSet ts) {
             TransformSet tInv = new TransformSet();
             for (int i = 0; i < MaxTransforms; ++i) tInv.trans[i] = Transform.Inverse(ts.trans[i]);
@@ -167,6 +171,22 @@ public class Api {
     }
 
     private static class GraphicsState {
+        public GraphicsState() {}
+
+        public GraphicsState(GraphicsState gs) {
+            this.currentInsideMedium = new String(gs.currentInsideMedium);
+            this.currentOutsideMedium = new String(gs.currentOutsideMedium);
+            this.floatTextures = new HashMap<>(gs.floatTextures);
+            this.spectrumTextures = new HashMap<>(gs.spectrumTextures);
+            this.materialParams = new ParamSet(gs.materialParams);
+            this.material = new String(gs.material);
+            this.namedMaterials = new HashMap<>(gs.namedMaterials);
+            this.currentNamedMaterial = new String(gs.currentNamedMaterial);
+            this.areaLightParams = new ParamSet(gs.areaLightParams);
+            this.areaLight = new String(gs.areaLight);
+            this.reverseOrientation = gs.reverseOrientation;
+        }
+
         // Graphics State Methods
         public Material CreateMaterial(ParamSet params) {
             TextureParams mp = new TextureParams(params, materialParams, floatTextures, spectrumTextures);
@@ -206,11 +226,11 @@ public class Api {
         public String currentInsideMedium = "", currentOutsideMedium = "";
         public HashMap<String, Texture<Float>> floatTextures = new HashMap<>();
         public HashMap<String, Texture<Spectrum>> spectrumTextures = new HashMap<>();
-        public ParamSet materialParams;
+        public ParamSet materialParams = new ParamSet();
         public String material = "matte";
         public HashMap<String, Material> namedMaterials = new HashMap<>();
         public String currentNamedMaterial = "";
-        public ParamSet areaLightParams;
+        public ParamSet areaLightParams = new ParamSet();
         public String areaLight = "";
         public boolean reverseOrientation = false;
     }
@@ -909,8 +929,8 @@ public class Api {
 
     public static void pbrtAttributeBegin() {
         VERIFY_WORLD("AttributeBegin");
-        pushedGraphicsStates.push(graphicsState);
-        pushedTransforms.push(curTransform);
+        pushedGraphicsStates.push(new GraphicsState(graphicsState));
+        pushedTransforms.push(new TransformSet(curTransform));
         pushedActiveTransformBits.push(activeTransformBits);
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
             System.out.format("\n%sAttributeBegin\n", new String(spaces, 0, catIndentCount));
@@ -925,7 +945,6 @@ public class Api {
             return;
         }
         graphicsState = pushedGraphicsStates.pop();
-        graphicsState.areaLight = ""; // WHY????
         curTransform = pushedTransforms.pop();
         activeTransformBits = pushedActiveTransformBits.pop();
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
@@ -936,7 +955,7 @@ public class Api {
 
     public static void pbrtTransformBegin() {
         VERIFY_WORLD("TransformBegin");
-        pushedTransforms.push(curTransform);
+        pushedTransforms.push(new TransformSet(curTransform));
         pushedActiveTransformBits.push(activeTransformBits);
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
             System.out.format("%sTransformBegin\n", new String(spaces, 0, catIndentCount));

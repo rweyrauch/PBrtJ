@@ -726,6 +726,22 @@ public class ParamSet {
         return ret;
     }
 
+    public ParamSet() {}
+
+    public ParamSet(ParamSet ps) {
+        this.bools = new ArrayList<>(ps.bools);
+        this.ints = new ArrayList<>(ps.ints);
+        this.floats = new ArrayList<>(ps.floats);
+        this.point2fs = new ArrayList<>(ps.point2fs);
+        this.vector2fs = new ArrayList<>(ps.vector2fs);
+        this.point3fs = new ArrayList<>(ps.point3fs);
+        this.vector3fs = new ArrayList<>(ps.vector3fs);
+        this.normals = new ArrayList<>(ps.normals);
+        this.spectra = new ArrayList<>(ps.spectra);
+        this.strings = new ArrayList<>(ps.strings);
+        this.textures = new ArrayList<>(ps.textures);
+    }
+
     public void Print(int indent) {
         throw new NotImplementedException("TODO");
     }
