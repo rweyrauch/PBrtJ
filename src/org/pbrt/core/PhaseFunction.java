@@ -11,8 +11,8 @@ package org.pbrt.core;
 
 public abstract class PhaseFunction {
     public class PhaseSample {
-        float phase;
-        Vector3f wi;
+        public float phase;
+        public Vector3f wi;
     }
 
     // PhaseFunction Interface

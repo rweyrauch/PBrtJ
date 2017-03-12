@@ -22,6 +22,6 @@ public class MediumInteraction extends Interaction {
         super(p, wo, time, new MediumInterface(medium));
         this.phase = phase;
     }
-    boolean IsValid() { return phase != null; }
+    public boolean IsValid() { return phase != null; }
 
 }
