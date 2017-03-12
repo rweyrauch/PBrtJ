@@ -781,7 +781,7 @@ public class Api {
 
     public static void pbrtCoordinateSystem(String name) {
         VERIFY_INITIALIZED("CoordinateSystem");
-        namedCoordinateSystems.put(name, curTransform);
+        namedCoordinateSystems.put(name, new TransformSet(curTransform));
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
             System.out.format("%sCoordinateSystem \"%s\"\n", new String(spaces, 0, catIndentCount), name);
     }
@@ -882,7 +882,7 @@ public class Api {
         renderOptions.CameraName = name;
         renderOptions.CameraParams = params;
         renderOptions.CameraToWorld = TransformSet.Inverse(curTransform);
-        namedCoordinateSystems.put("camera", renderOptions.CameraToWorld);
+        namedCoordinateSystems.put("camera", new TransformSet(renderOptions.CameraToWorld));
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
             System.out.format("%sCamera \"%s\" ", new String(spaces, 0, catIndentCount), name);
             params.Print(catIndentCount);
@@ -922,7 +922,7 @@ public class Api {
         currentApiState = APIState.WorldBlock;
         for (int i = 0; i < MaxTransforms; ++i) curTransform.trans[i] = new Transform();
         activeTransformBits = AllTransformsBits;
-        namedCoordinateSystems.put("world", curTransform);
+        namedCoordinateSystems.put("world", new TransformSet(curTransform));
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
             System.out.format("\n\nWorldBegin\n\n");
     }
