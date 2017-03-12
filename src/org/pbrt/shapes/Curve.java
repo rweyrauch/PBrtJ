@@ -43,6 +43,10 @@ public class Curve extends Shape {
         public float[] width = { 0, 0 };
         public Normal3f[] n = { null, null };
         public float normalAngle, invSinNormalAngle;
+
+        public static long sizeof() {
+            return 24 * 4;
+        }
     }
 
     public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
@@ -107,8 +111,8 @@ public class Curve extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        //ProfilePhase p(isect ? Prof::CurveIntersect : Prof::CurveIntersectP);
-        //++nTests;
+        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.CurveIntersect);
+        hitsPerTest.incrementDenom(1); // ++nTests
         // Transform _Ray_ to object space
          Ray ray = WorldToObject.xform(r);
 
@@ -172,7 +176,7 @@ public class Curve extends Shape {
         // Compute log base 4 by dividing log2 in half.
         int r0 = Log2(1.41421356237f * 6.f * L0 / (8.f * eps)) / 2;
         int maxDepth = Pbrt.Clamp(r0, 0, 10);
-        //ReportValue(refinementLevel, maxDepth);
+        refinementLevel.ReportValue(maxDepth);
 
         return recursiveIntersect(ray, cp, Transform.Inverse(objectToRay), uMin, uMax, maxDepth);
     }
@@ -199,7 +203,9 @@ public class Curve extends Shape {
     }
 
     private HitResult recursiveIntersect(Ray ray, Point3f[] cp, Transform rayToObject, float u0, float u1, int depth) {
-        /*
+
+        HitResult hr = new HitResult();
+/*
         float rayLength = ray.d.Length();
 
         if (depth > 0) {
@@ -211,7 +217,7 @@ public class Curve extends Shape {
             // overlaps the segment before recursively checking for
             // intersection with it.
             boolean hit = false;
-            float[] u = {u0, (u0 + u1) / 2.f, u1};
+            float[] u = {u0, (u0 + u1) / 2, u1};
             // Pointer to the 4 control points for the current segment.
             Point3f[] cps = cpSplit;
             for (int seg = 0; seg < 2; ++seg, cps += 3) {
@@ -313,11 +319,11 @@ public class Curve extends Shape {
             isect = ObjectToWorld.xform(new SurfaceInteraction(ray.at(pc.z), pError, new Point2f(u, v), ray.d.negate(), dpdu, dpdv,
                         new Normal3f(0, 0, 0), new Normal3f(0, 0, 0), ray.time, this));
             }
-            //++nHits;
+            hitsPerTest.incrementNumer(1); //++nHits;
             return true;
         }
         */
-        return null;
+        return hr;
     }
 
     // Curve Utility Functions
@@ -360,10 +366,14 @@ public class Curve extends Shape {
             float uMin = i / (float)nSegments;
             float uMax = (i + 1) / (float)nSegments;
             segments.add(new Curve(o2w, w2o, reverseOrientation, common, uMin, uMax));
-            //++nSplitCurves;
+            nSplitCurves.increment();
         }
-        //curveBytes += sizeof(CurveCommon) + nSegments * sizeof(Curve);
+        curveBytes.increment(CurveCommon.sizeof() + nSegments * Curve.sizeof());
         return segments;
+    }
+
+    private static int sizeof() {
+        return 1;
     }
 
     private int Log2(float v) {
@@ -377,4 +387,10 @@ public class Curve extends Shape {
 
     private final CurveCommon common;
     private final float uMin, uMax;
+
+    private static Stats.STAT_MEMORY_COUNTER curveBytes = new Stats.STAT_MEMORY_COUNTER("Memory/Curves");
+    private static Stats.STAT_PERCENT hitsPerTest = new Stats.STAT_PERCENT("Intersections/Ray-curve intersection tests"); // nHits, nTests
+    private static Stats.STAT_INT_DISTRIBUTION refinementLevel = new Stats.STAT_INT_DISTRIBUTION("Intersections/Curve refinement level");
+    private static Stats.STAT_COUNTER nCurves = new Stats.STAT_COUNTER("Scene/Curves");
+    private static Stats.STAT_COUNTER nSplitCurves = new Stats.STAT_COUNTER("Scene/Split curves");
 }

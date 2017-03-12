@@ -36,10 +36,11 @@ public class Distribution1D {
     public int Count() { return func.length; }
 
     public static class ContSample {
-        float sample;
-        float pdf;
-        int offset;
+        public float sample;
+        public float pdf;
+        public int offset;
     }
+
     public ContSample SampleContinuous(float u) {
         ContSample dsamp = new ContSample();
         dsamp.offset = Pbrt.FindInterval(cdf.length, index -> cdf[index] < u);
@@ -61,9 +62,9 @@ public class Distribution1D {
     }
 
     public static class DiscreteSample {
-        float pdf;
-        float uRemapped;
-        int offset;
+        public float pdf;
+        public float uRemapped;
+        public int offset;
     }
 
     public DiscreteSample SampleDiscrete(float u) {

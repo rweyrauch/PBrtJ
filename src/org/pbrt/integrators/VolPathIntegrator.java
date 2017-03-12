@@ -159,7 +159,7 @@ public class VolPathIntegrator extends SamplerIntegrator {
                 assert (!Float.isInfinite(beta.y()));
             }
         }
-        //ReportValue(pathLength, bounces);
+        pathLength.ReportValue(bounces);
         return L;
     }
 

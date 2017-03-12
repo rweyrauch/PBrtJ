@@ -155,8 +155,8 @@ public class Film {
         // Bound image pixels that samples in _sampleBounds_ contribute to
         Vector2f halfPixel = new Vector2f(0.5f, 0.5f);
         Bounds2f floatBounds = new Bounds2f(sampleBounds);
-        Point2i p0 = new Point2i(Point2f.Ceil(floatBounds.pMin.subtract(halfPixel.subtract(filter.radius))));
-        Point2i p1 = new Point2i(Point2f.Floor(floatBounds.pMax.subtract(halfPixel.add(filter.radius)))).add(new Point2i(1, 1));
+        Point2i p0 = new Point2i(Point2f.Ceil(floatBounds.pMin.subtract(halfPixel).subtract(filter.radius)));
+        Point2i p1 = new Point2i(Point2f.Floor(floatBounds.pMax.subtract(halfPixel).add(filter.radius))).add(new Point2i(1, 1));
         Bounds2i tilePixelBounds = Bounds2i.Intersect(new Bounds2i(p0, p1), croppedPixelBounds);
         return new FilmTile(tilePixelBounds, filter.radius, filterTable, filterTableWidth, maxSampleLuminance);
     }
@@ -189,8 +189,8 @@ public class Film {
             p.splatXYZ[1].set(0);
             p.splatXYZ[2].set(0);
         }
-
     }
+
     public void AddSplat(Point2f p, Spectrum v) {
         Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.SplatFilm);
 

@@ -43,7 +43,7 @@ public class SpatialLightDistribution extends LightDistribution {
             hashTable[i] = new HashEntry();
             hashTable[i].packedPos = new AtomicLong();
             hashTable[i].packedPos.set(invalidPackedPos);
-            hashTable[i].distribution = null;
+            hashTable[i].distribution = new AtomicReference(null);
         }
 
         Api.logger.info("SpatialLightDistribution: scene bounds %s, voxel res (%d, %d, %d)", b.toString(), nVoxels[0], nVoxels[1], nVoxels[2]);

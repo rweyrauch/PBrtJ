@@ -27,11 +27,38 @@ public class HomogeneousMedium extends Medium {
 
     @Override
     public Spectrum Tr(Ray ray, Sampler sampler) {
-        return null;
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumTr);
+        return Spectrum.Exp(sigma_t.negate().scale(Math.min(ray.tMax * ray.d.Length(), Pbrt.MaxFloat)));
     }
 
     @Override
     public MediumSample Sample(Ray ray, Sampler sampler) {
-        return null;
+        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumSample);
+        MediumSample ms = new MediumSample();
+        // Sample a channel and distance along the ray
+        int channel = Math.min((int)(sampler.Get1D() * Spectrum.nSamples), Spectrum.nSamples - 1);
+        float dist = -(float)Math.log(1 - sampler.Get1D()) / sigma_t.at(channel);
+        float t = Math.min(dist * ray.d.Length(), ray.tMax);
+        boolean sampledMedium = t < ray.tMax;
+        if (sampledMedium)
+            ms.mi = new MediumInteraction(ray.at(t), ray.d.negate(), ray.time, this, new HenyeyGreenstein(g));
+
+        // Compute the transmittance and sampling density
+        Spectrum Tr = Spectrum.Exp(sigma_t.negate().scale(Math.min(t, Pbrt.MaxFloat) * ray.d.Length()));
+
+        // Return weighting factor for scattering from homogeneous medium
+        Spectrum density = sampledMedium ? (sigma_t.multiply(Tr)) : Tr;
+        float pdf = 0;
+        for (int i = 0; i < Spectrum.nSamples; ++i) pdf += density.at(i);
+        pdf *= 1 / (float)Spectrum.nSamples;
+        if (pdf == 0) {
+            assert (Tr.isBlack());
+            pdf = 1;
+        }
+        if (sampledMedium)
+            ms.spectrum = Tr.multiply(sigma_s.scale(1 / pdf));
+        else
+            ms.spectrum = Tr.scale(1 / pdf);
+        return ms;
     }
 }

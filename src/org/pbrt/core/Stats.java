@@ -43,6 +43,9 @@ public class Stats {
         public void increment() {
             var.set(var.get()+1);
         }
+        public void increment(long val) {
+            var.set(var.get()+val);
+        }
     }
 
     public static class STAT_MEMORY_COUNTER implements Consumer<StatsAccumulator> {
