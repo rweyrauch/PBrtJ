@@ -51,7 +51,7 @@ public class BSDF {
                 ss.z * v.x + ts.z * v.y + ns.z * v.z);
     }
     public Spectrum f(Vector3f woW, Vector3f wiW, int flags) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFEvaluation);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFEvaluation);
         Vector3f wi = WorldToLocal(wiW), wo = WorldToLocal(woW);
         if (wo.z == 0) return new Spectrum(0);
         boolean reflect = Normal3f.Dot(wiW, ng) * Normal3f.Dot(woW, ng) > 0;
@@ -88,7 +88,7 @@ public class BSDF {
     }
 
     public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u, int type) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFSampling);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFSampling);
         // Choose which _BxDF_ to sample
         BxDF.BxDFSample sample = new BxDF.BxDFSample();
         sample.pdf = 0;
@@ -109,8 +109,8 @@ public class BSDF {
             bxdf = bxdfs[i];
             break;
         }
-        assert (bxdf != null);
-        Api.logger.trace("BSDF::Sample_f chose comp = %d / matching = %d, bxdf: %s", comp, matchingComps, bxdf.toString());
+
+        //Api.logger.trace("BSDF::Sample_f chose comp = %d / matching = %d, bxdf: %s", comp, matchingComps, bxdf.toString());
 
         // Remap _BxDF_ sample _u_ to $[0,1)^2$
         Point2f uRemapped = new Point2f(Math.min(u.at(0) * matchingComps - comp, Pbrt.OneMinusEpsilon), u.at(1));
@@ -125,8 +125,8 @@ public class BSDF {
         sample.f = bsample.f;
         wi = bsample.wiWorld;
         sample.pdf = bsample.pdf;
-        Api.logger.trace("For wo = %s, sampled f = %s, pdf = %f, ratio = %f, wi = %s", wo.toString(), sample.f,
-                sample.pdf, (sample.pdf > 0) ? sample.f.scale(1/sample.pdf).toString() : new Spectrum(0).toString(), wi);
+        //Api.logger.trace("For wo = %s, sampled f = %s, pdf = %f, ratio = %f, wi = %s", wo.toString(), sample.f,
+        //        sample.pdf, (sample.pdf > 0) ? sample.f.scale(1/sample.pdf).toString() : new Spectrum(0).toString(), wi);
         if (sample.pdf == 0) {
             sample.sampledType = BxDF.BSDF_NONE;
             return sample;
@@ -154,7 +154,7 @@ public class BSDF {
                 }
             }
         }
-        Api.logger.trace("Overall f = %s, pdf = %f, ratio = %f", sample.f, sample.pdf, (sample.pdf > 0) ? sample.f.scale(1/ sample.pdf) : new Spectrum(0));
+        //Api.logger.trace("Overall f = %s, pdf = %f, ratio = %f", sample.f, sample.pdf, (sample.pdf > 0) ? sample.f.scale(1/ sample.pdf) : new Spectrum(0));
         return sample;
     }
     public BxDF.BxDFSample Sample_f(Vector3f woWorld, Point2f u) {
@@ -162,7 +162,7 @@ public class BSDF {
     }
 
     public float Pdf(Vector3f woWorld, Vector3f wiWorld, int flags) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFPdf);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSDFPdf);
         if (nBxDFs == 0.f) return 0.f;
         Vector3f wo = WorldToLocal(woWorld), wi = WorldToLocal(wiWorld);
         if (wo.z == 0) return 0;

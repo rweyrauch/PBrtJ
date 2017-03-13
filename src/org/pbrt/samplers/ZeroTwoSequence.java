@@ -26,7 +26,7 @@ public class ZeroTwoSequence extends PixelSampler {
     }
 
     public void StartPixel(Point2i p) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.StartPixel);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.StartPixel);
         // Generate 1D and 2D pixel sample components using $(0,2)$-sequence
         for (int i = 0; i < samples1D.size(); ++i)
             samples1D.set(i, LowDiscrepancy.VanDerCorput(1, samplesPerPixel, samples1D.get(i), rng));

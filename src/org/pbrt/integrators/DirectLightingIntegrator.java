@@ -27,7 +27,7 @@ public class DirectLightingIntegrator extends SamplerIntegrator {
 
     @Override
     public Spectrum Li(RayDifferential ray, Scene scene, Sampler sampler, int depth) {
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.SamplerIntegratorLi);
+        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.SamplerIntegratorLi);
         Spectrum L = new Spectrum(0);
         // Find closest ray intersection or return background radiance
         SurfaceInteraction isect = scene.Intersect(ray);

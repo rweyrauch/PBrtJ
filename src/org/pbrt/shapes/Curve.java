@@ -111,7 +111,7 @@ public class Curve extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.CurveIntersect);
+        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.CurveIntersect);
         hitsPerTest.incrementDenom(1); // ++nTests
         // Transform _Ray_ to object space
          Ray ray = WorldToObject.xform(r);

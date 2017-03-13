@@ -45,7 +45,7 @@ public class GonioPhotometricLight extends Light {
 
     @Override
     public LiResult Sample_Li(Interaction ref, Point2f u) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         LiResult result = new LiResult();
         result.wi = Vector3f.Normalize(pLight.subtract(ref.p));
         result.pdf = 1;
@@ -70,7 +70,7 @@ public class GonioPhotometricLight extends Light {
 
     @Override
     public LeResult Sample_Le(Point2f u1, Point2f u2, float time) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         LeResult result = new LeResult();
         result.ray = new Ray(pLight, Sampling.UniformSampleSphere(u1), Pbrt.Infinity, time, mediumInterface.inside);
         result.nLight = new Normal3f(result.ray.d);
@@ -82,7 +82,7 @@ public class GonioPhotometricLight extends Light {
 
     @Override
     public PdfResult Pdf_Le(Ray ray, Normal3f nLight) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
         PdfResult result = new PdfResult();
         result.pdfPos = 0;
         result.pdfDir = Sampling.UniformSpherePdf();

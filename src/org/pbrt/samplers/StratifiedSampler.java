@@ -26,7 +26,7 @@ public class StratifiedSampler extends PixelSampler {
     }
 
     public void StartPixel(Point2i p) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.StartPixel);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.StartPixel);
         // Generate single stratified samples for the pixel
         for (int i = 0; i < samples1D.size(); ++i) {
             samples1D.set(i, Sampling.StratifiedSample1D(samples1D.get(i), xPixelSamples * yPixelSamples, rng, jitterSamples));

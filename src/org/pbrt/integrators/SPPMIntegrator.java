@@ -30,7 +30,7 @@ public class SPPMIntegrator extends Integrator {
 
     @Override
     public void Render(Scene scene) {
-        Stats.ProfilePhase p_ = new Stats.ProfilePhase(Stats.Prof.IntegratorRender);
+        //Stats.ProfilePhase p_ = new Stats.ProfilePhase(Stats.Prof.IntegratorRender);
         // Initialize _pixelBounds_ and _pixels_ array for SPPM
         Bounds2i pixelBounds = camera.film.croppedPixelBounds;
         int nPixels = pixelBounds.Area();
@@ -53,7 +53,7 @@ public class SPPMIntegrator extends Integrator {
             // Generate SPPM visible points
             //std::vector<MemoryArena> perThreadArenas(MaxThreadIndex());
             {
-                Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.SPPMCameraPass);
+                //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.SPPMCameraPass);
                 for (int y = 0; y < nTiles.y; y++) {
                     for (int x = 0; x < nTiles.x; x++) {
                         Point2i tile = new Point2i(x, y);
@@ -101,7 +101,7 @@ public class SPPMIntegrator extends Integrator {
                                     // Process SPPM camera ray intersection
 
                                     // Compute BSDF at SPPM camera ray intersection
-                                    isect.ComputeScatteringFunctions(ray, true, null);
+                                    isect.ComputeScatteringFunctions(ray, true, Material.TransportMode.Radiance);
                                     if (isect.bsdf == null) {
                                         ray = new RayDifferential(isect.SpawnRay(ray.d));
                                         --depth;
@@ -156,7 +156,7 @@ public class SPPMIntegrator extends Integrator {
             final int hashSize = nPixels;
             AtomicReference<SPPMPixelListNode>[] grid = new AtomicReference[hashSize];
             {
-                Stats.ProfilePhase pp_ = new Stats.ProfilePhase(Stats.Prof.SPPMGridConstruction);
+                //Stats.ProfilePhase pp_ = new Stats.ProfilePhase(Stats.Prof.SPPMGridConstruction);
 
                 // Compute grid bounds for SPPM visible points
                 float maxRadius = 0;
@@ -208,7 +208,7 @@ public class SPPMIntegrator extends Integrator {
 
             // Trace photons and accumulate contributions
             {
-                Stats.ProfilePhase pp_ = new Stats.ProfilePhase(Stats.Prof.SPPMPhotonPass);
+                //Stats.ProfilePhase pp_ = new Stats.ProfilePhase(Stats.Prof.SPPMPhotonPass);
                 //std::vector<MemoryArena> photonShootArenas(MaxThreadIndex());
                 for(int photonIndex = 0; photonIndex < photonsPerIteration; photonIndex += 8192) {
                     //MemoryArena &arena = photonShootArenas[ThreadIndex];
@@ -313,7 +313,7 @@ public class SPPMIntegrator extends Integrator {
 
             // Update pixel values from this pass's photons
             {
-                Stats.ProfilePhase pp_ = new Stats.ProfilePhase(Stats.Prof.SPPMStatsUpdate);
+                //Stats.ProfilePhase pp_ = new Stats.ProfilePhase(Stats.Prof.SPPMStatsUpdate);
                 for(int i = 0; i < nPixels; i += 4096) {
                     SPPMPixel p = pixels[i];
                     if (p.M.get() > 0) {

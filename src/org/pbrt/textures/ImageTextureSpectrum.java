@@ -86,7 +86,7 @@ public class ImageTextureSpectrum extends Texture<Spectrum> {
             return texturesSpectrum.get(texInfo);
 
         // Create _MIPMap_ for _filename_
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.TextureLoading);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.TextureLoading);
         ImageIO.SpectrumImage image = ImageIO.Read(filename);
         if (image == null) {
             Error.Warning("Creating a constant grey texture to replace \"%s\".", filename);

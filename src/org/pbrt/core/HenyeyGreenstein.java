@@ -19,13 +19,13 @@ public class HenyeyGreenstein extends PhaseFunction {
 
     @Override
     public float p(Vector3f wo, Vector3f wi) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.PhaseFuncEvaluation);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.PhaseFuncEvaluation);
         return Medium.PhaseHG(Vector3f.Dot(wo, wi), g);
     }
 
     @Override
     public PhaseSample Sample_p(Vector3f wo, Point2f u) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.PhaseFuncSampling);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.PhaseFuncSampling);
         // Compute $\cos \theta$ for Henyey--Greenstein sample
         float cosTheta;
         if (Math.abs(g) < 1e-3)

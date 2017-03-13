@@ -63,7 +63,7 @@ public class ProjectionLight extends Light {
 
     @Override
     public LiResult Sample_Li(Interaction ref, Point2f u) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         LiResult result = new LiResult();
         result.wi = Vector3f.Normalize(pLight.subtract(ref.p));
         result.pdf = 1;
@@ -88,7 +88,7 @@ public class ProjectionLight extends Light {
 
     @Override
     public LeResult Sample_Le(Point2f u1, Point2f u2, float time) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightSample);
         LeResult result = new LeResult();
         Vector3f v = Sampling.UniformSampleCone(u1, cosTotalWidth);
         result.ray = new Ray(pLight, LightToWorld.xform(v), Pbrt.Infinity, time, mediumInterface.inside);
@@ -101,7 +101,7 @@ public class ProjectionLight extends Light {
 
     @Override
     public PdfResult Pdf_Le(Ray ray, Normal3f nLight) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightPdf);
         PdfResult result = new PdfResult();
         result.pdfPos = 0;
         result.pdfDir = (Reflection.CosTheta(WorldToLight.xform(ray.d)) >= cosTotalWidth)

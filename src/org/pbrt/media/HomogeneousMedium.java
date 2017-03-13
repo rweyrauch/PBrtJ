@@ -27,13 +27,13 @@ public class HomogeneousMedium extends Medium {
 
     @Override
     public Spectrum Tr(Ray ray, Sampler sampler) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumTr);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumTr);
         return Spectrum.Exp(sigma_t.negate().scale(Math.min(ray.tMax * ray.d.Length(), Pbrt.MaxFloat)));
     }
 
     @Override
     public MediumSample Sample(Ray ray, Sampler sampler) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumSample);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MediumSample);
         MediumSample ms = new MediumSample();
         // Sample a channel and distance along the ray
         int channel = Math.min((int)(sampler.Get1D() * Spectrum.nSamples), Spectrum.nSamples - 1);

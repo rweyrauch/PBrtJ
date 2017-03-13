@@ -28,7 +28,7 @@ public class VolPathIntegrator extends SamplerIntegrator {
 
     @Override
     public Spectrum Li(RayDifferential r, Scene scene, Sampler sampler, int depth) {
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.SamplerIntegratorLi);
+        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.SamplerIntegratorLi);
         Spectrum L = new Spectrum(0), beta = new Spectrum(1);
         RayDifferential ray = new RayDifferential(r);
         boolean specularBounce = false;
@@ -86,7 +86,7 @@ public class VolPathIntegrator extends SamplerIntegrator {
                 if (isect == null || bounces >= maxDepth) break;
 
                 // Compute scattering functions and skip over medium boundaries
-                isect.ComputeScatteringFunctions(ray, true, null);
+                isect.ComputeScatteringFunctions(ray, true, Material.TransportMode.Radiance);
                 if (isect.bsdf != null) {
                     ray = new RayDifferential(isect.SpawnRay(ray.d));
                     bounces--;

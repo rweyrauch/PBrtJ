@@ -51,7 +51,7 @@ public class SpatialLightDistribution extends LightDistribution {
 
     @Override
     public Distribution1D Lookup(Point3f p) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightDistribLookup);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightDistribLookup);
         looksPerDistrib.incrementDenom(1); // nLookups
 
         // First, compute integer voxel coordinates for the given point |p|
@@ -105,7 +105,7 @@ public class SpatialLightDistribution extends LightDistribution {
                     // the sampling distribution is ready.  We assume that this
                     // is a rare case, so don't do anything more sophisticated
                     // than spinning.
-                    Stats.ProfilePhase ppp = new Stats.ProfilePhase(Stats.Prof.LightDistribSpinWait);
+                    //Stats.ProfilePhase ppp = new Stats.ProfilePhase(Stats.Prof.LightDistribSpinWait);
                     while ((dist = entry.distribution.get()) == null)
                         // spin :-(. If we were fancy, we'd have any threads
                         // that hit this instead help out with computing the
@@ -147,7 +147,7 @@ public class SpatialLightDistribution extends LightDistribution {
     }
 
     private Distribution1D ComputeDistribution(Point3i pi) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightDistribCreation);
+        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightDistribCreation);
         nCreated.increment();
         looksPerDistrib.incrementDenom(1); // nDistributions;
 
@@ -199,10 +199,10 @@ public class SpatialLightDistribution extends LightDistribution {
         float avgContrib = sumContrib / (nSamples * lightContrib.length);
         float minContrib = (avgContrib > 0) ? .001f * avgContrib : 1;
         for (int i = 0; i < lightContrib.length; ++i) {
-            Api.logger.trace("Voxel pi = %s, light %d contrib = %f", pi.toString(), i, lightContrib[i]);
+            //Api.logger.trace("Voxel pi = %s, light %d contrib = %f", pi.toString(), i, lightContrib[i]);
             lightContrib[i] = Math.max(lightContrib[i], minContrib);
         }
-        Api.logger.info("Initialized light distribution in voxel pi= %s, avgContrib = %f", pi.toString(), avgContrib);
+        //Api.logger.info("Initialized light distribution in voxel pi= %s, avgContrib = %f", pi.toString(), avgContrib);
 
         // Compute a sampling distribution from the accumulated contributions.
         return new Distribution1D(lightContrib);

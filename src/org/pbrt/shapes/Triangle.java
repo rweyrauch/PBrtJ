@@ -141,7 +141,7 @@ public class Triangle extends Shape {
 
     @Override
     public HitResult Intersect(Ray ray, boolean testAlphaTexture) {
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersect);
+        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersect);
         interPerRayTri.incrementDenom(1); //++nTests;
 
         // Get triangle vertices in _p0_, _p1_, and _p2_
@@ -356,7 +356,7 @@ public class Triangle extends Shape {
 
     @Override
     public boolean IntersectP(Ray ray, boolean testAlphaTexture) {
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersectP);
+        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersectP);
         interPerRayTri.incrementDenom(1); //++nTests;
 
         // Get triangle vertices in _p0_, _p1_, and _p2_

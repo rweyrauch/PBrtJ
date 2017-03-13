@@ -39,7 +39,7 @@ public class Sphere extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersect);
+        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersect);
 
         // Transform _Ray_ to object space
         Vector3f oErr = WorldToObject.absError(r.o);
@@ -146,7 +146,7 @@ public class Sphere extends Shape {
 
     @Override
     public boolean IntersectP(Ray r, boolean testAlphaTexture) {
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersectP);
+        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersectP);
 
         // Transform _Ray_ to object space
         Vector3f oErr = WorldToObject.absError(r.o);
