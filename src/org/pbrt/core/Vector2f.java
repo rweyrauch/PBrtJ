@@ -94,7 +94,9 @@ public class Vector2f {
     public float LengthSquared() {
         return x * x + y * y;
     }
-
+    public static Vector2f Abs(Vector2f v) {
+        return new Vector2f(Math.abs(v.x), Math.abs(v.y));
+    }
     public float Length() {
         return (float) Math.sqrt((double) LengthSquared());
     }

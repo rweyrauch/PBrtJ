@@ -60,6 +60,12 @@ public class Pbrt
         return (float)Math.log(x) * invLog2;
     }
 
+    public static boolean AlmostEqual(float v0, float v1, float tol) {
+        return (Math.abs(v0-v1) < tol);
+    }
+    public static boolean AlmostEqual(double v0, double v1, double tol) {
+        return (Math.abs(v0-v1) < tol);
+    }
 
     public static int Log2Int(int v) {
         return (Integer.SIZE - 1) - Integer.numberOfLeadingZeros(v);
@@ -84,6 +90,9 @@ public class Pbrt
     public static boolean IsPowerOf2(int v) {
         return (v > 0) && ((v & (v - 1)) == 0);
     }
+    public static boolean IsPowerOf2(long v) {
+        return (v > 0) && ((v & (v - 1)) == 0);
+    }
 
     public static int RoundUpPow2(int v) {
         v--;
@@ -92,6 +101,16 @@ public class Pbrt
         v |= v >> 4;
         v |= v >> 8;
         v |= v >> 16;
+        return v + 1;
+    }
+    public static long RoundUpPow2(long v) {
+        v--;
+        v |= v >> 1;
+        v |= v >> 2;
+        v |= v >> 4;
+        v |= v >> 8;
+        v |= v >> 16;
+        v |= v >> 32;
         return v + 1;
     }
 
@@ -162,6 +181,28 @@ public class Pbrt
         else
             ++ui;
         return Float.intBitsToFloat(ui);
+    }
+
+    public static double NextFloatUp(double v, int delta) {
+        if (Double.isInfinite(v) && v > 0.0) return v;
+        if (v == -0.0) v = 0.0;
+        long ui = Double.doubleToLongBits(v);
+        if (v >= 0.0)
+            ui += delta;
+        else
+            ui -= delta;
+        return Double.longBitsToDouble(ui);
+    }
+
+    public static double NextFloatDown(double v, int delta) {
+        if (Double.isInfinite(v) && v < 0.0) return v;
+        if (v == 0.0) v = -0.0;
+        long ui = Double.doubleToLongBits(v);
+        if (v > 0.0)
+            ui -= delta;
+        else
+            ui += delta;
+        return Double.longBitsToDouble(ui);
     }
 
     public static float ErfInv(float x) {
