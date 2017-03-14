@@ -19,25 +19,25 @@ import java.util.function.Consumer;
 
 public class Stats {
 
-    public static class STAT_COUNTER implements Consumer<StatsAccumulator> {
-        public STAT_COUNTER(String title) {
+    public static class Counter implements Consumer<StatsAccumulator> {
+        public Counter(String title) {
             this.title = title;
-            this.STATS_REG = new StatRegisterer(this);
+            this.statRegisterer = new StatRegisterer(this);
             this.var.set(0L);
         }
 
-        public void STATS_FUNC(StatsAccumulator accum) {
+        void report(StatsAccumulator accum) {
             accum.ReportCounter(title, var.get());
             var.set(0L);
         }
 
-        public StatRegisterer STATS_REG;
+        StatRegisterer statRegisterer;
         private final String title;
-        public ThreadLocal<Long> var = new ThreadLocal<>();
+        ThreadLocal<Long> var = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
-            STATS_FUNC(accum);
+            report(accum);
         }
 
         public void increment() {
@@ -48,25 +48,25 @@ public class Stats {
         }
     }
 
-    public static class STAT_MEMORY_COUNTER implements Consumer<StatsAccumulator> {
-        public STAT_MEMORY_COUNTER(String title) {
+    public static class MemoryCounter implements Consumer<StatsAccumulator> {
+        public MemoryCounter(String title) {
             this.title = title;
-            this.STATS_REG = new StatRegisterer(this);
+            this.statRegisterer = new StatRegisterer(this);
             var.set(0L);
         }
 
-        public void STATS_FUNC(StatsAccumulator accum) {
+        void report(StatsAccumulator accum) {
             accum.ReportMemoryCounter(title, var.get());
             var.set(0L);
         }
 
-        public StatRegisterer STATS_REG;
+        StatRegisterer statRegisterer;
         private final String title;
-        public ThreadLocal<Long> var = new ThreadLocal<>();
+        ThreadLocal<Long> var = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
-            STATS_FUNC(accum);
+            report(accum);
         }
 
         public void increment(long value) {
@@ -74,15 +74,15 @@ public class Stats {
         }
     }
 
-    public static class STAT_PERCENT implements Consumer<StatsAccumulator> {
-        public STAT_PERCENT(String title) {
+    public static class Percent implements Consumer<StatsAccumulator> {
+        public Percent(String title) {
             this.title = title;
-            this.STATS_REG = new StatRegisterer(this);
+            this.statRegisterer = new StatRegisterer(this);
             numVar.set(0L);
             denomVar.set(0L);
         }
 
-        public void STATS_FUNC(StatsAccumulator accum) {
+        void report(StatsAccumulator accum) {
             accum.ReportPercentage(title, numVar.get(), denomVar.get());
             numVar.set(0L);
             denomVar.set(0L);
@@ -95,26 +95,26 @@ public class Stats {
             denomVar.set(denomVar.get()+value);
         }
 
-        public StatRegisterer STATS_REG;
+        StatRegisterer statRegisterer;
         private final String title;
-        public ThreadLocal<Long> numVar = new ThreadLocal<>();
-        public ThreadLocal<Long> denomVar = new ThreadLocal<>();
+        ThreadLocal<Long> numVar = new ThreadLocal<>();
+        ThreadLocal<Long> denomVar = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
-            STATS_FUNC(accum);
+            report(accum);
         }
     }
 
-    public static class STAT_RATIO implements Consumer<StatsAccumulator> {
-        public STAT_RATIO(String title) {
+    public static class Ratio implements Consumer<StatsAccumulator> {
+        public Ratio(String title) {
             this.title = title;
-            this.STATS_REG = new StatRegisterer(this);
+            this.statRegisterer = new StatRegisterer(this);
             numVar.set(0L);
             denomVar.set(0L);
         }
 
-        public void STATS_FUNC(StatsAccumulator accum) {
+        void report(StatsAccumulator accum) {
             accum.ReportRatio(title, numVar.get(), denomVar.get());
             numVar.set(0L);
             denomVar.set(0L);
@@ -127,28 +127,28 @@ public class Stats {
             denomVar.set(denomVar.get()+value);
         }
 
-        public StatRegisterer STATS_REG;
+        StatRegisterer statRegisterer;
         private final String title;
-        public ThreadLocal<Long> numVar = new ThreadLocal<>();
-        public ThreadLocal<Long> denomVar = new ThreadLocal<>();
+        ThreadLocal<Long> numVar = new ThreadLocal<>();
+        ThreadLocal<Long> denomVar = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
-            STATS_FUNC(accum);
+            report(accum);
         }
     }
 
-    public static class STAT_INT_DISTRIBUTION implements Consumer<StatsAccumulator> {
-        public STAT_INT_DISTRIBUTION(String title) {
+    public static class IntegerDistribution implements Consumer<StatsAccumulator> {
+        public IntegerDistribution(String title) {
             this.title = title;
-            this.STATS_REG = new StatRegisterer(this);
+            this.statRegisterer = new StatRegisterer(this);
             sumVar.set(0L);
             countVar.set(0L);
             minVar.set(Long.MIN_VALUE);
             maxVar.set(Long.MAX_VALUE);
         }
 
-        public void STATS_FUNC(StatsAccumulator accum) {
+        void report(StatsAccumulator accum) {
             accum.ReportIntDistribution(title, sumVar.get(), countVar.get(), minVar.get(), maxVar.get());
             sumVar.set(0L);
             countVar.set(0L);
@@ -163,30 +163,30 @@ public class Stats {
             maxVar.set(Math.max(maxVar.get(), value));
         }
 
-        public StatRegisterer STATS_REG;
+        StatRegisterer statRegisterer;
         private final String title;
-        public ThreadLocal<Long> sumVar = new ThreadLocal<>();
-        public ThreadLocal<Long> countVar = new ThreadLocal<>();
-        public ThreadLocal<Long> minVar = new ThreadLocal<>();
-        public ThreadLocal<Long> maxVar = new ThreadLocal<>();
+        ThreadLocal<Long> sumVar = new ThreadLocal<>();
+        ThreadLocal<Long> countVar = new ThreadLocal<>();
+        ThreadLocal<Long> minVar = new ThreadLocal<>();
+        ThreadLocal<Long> maxVar = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
-            STATS_FUNC(accum);
+            report(accum);
         }
     }
 
-    public static class STAT_FLOAT_DISTRIBUTION implements Consumer<StatsAccumulator> {
-        public STAT_FLOAT_DISTRIBUTION(String title) {
+    public static class FloatDistribution implements Consumer<StatsAccumulator> {
+        public FloatDistribution(String title) {
             this.title = title;
-            this.STATS_REG = new StatRegisterer(this);
+            this.statRegisterer = new StatRegisterer(this);
             sumVar.set(0.0);
             countVar.set(0L);
             minVar.set(Double.MIN_VALUE);
             maxVar.set(Double.MAX_VALUE);
         }
 
-        public void STATS_FUNC(StatsAccumulator accum) {
+        void report(StatsAccumulator accum) {
             accum.ReportFloatDistribution(title, sumVar.get(), countVar.get(), minVar.get(), maxVar.get());
             sumVar.set(0.0);
             countVar.set(0L);
@@ -201,66 +201,17 @@ public class Stats {
             maxVar.set(Math.max(maxVar.get(), value));
         }
 
-        public StatRegisterer STATS_REG;
+        StatRegisterer statRegisterer;
         private final String title;
-        public ThreadLocal<Double> sumVar = new ThreadLocal<>();
-        public ThreadLocal<Long> countVar = new ThreadLocal<>();
-        public ThreadLocal<Double> minVar = new ThreadLocal<>();
-        public ThreadLocal<Double> maxVar = new ThreadLocal<>();
+        ThreadLocal<Double> sumVar = new ThreadLocal<>();
+        ThreadLocal<Long> countVar = new ThreadLocal<>();
+        ThreadLocal<Double> minVar = new ThreadLocal<>();
+        ThreadLocal<Double> maxVar = new ThreadLocal<>();
 
         @Override
         public void accept(StatsAccumulator accum) {
-            STATS_FUNC(accum);
+            report(accum);
         }
-    }
-
-    public enum Prof {
-        SceneConstruction,
-        AccelConstruction,
-        TextureLoading,
-        MIPMapCreation,
-
-        IntegratorRender,
-        SamplerIntegratorLi,
-        SPPMCameraPass,
-        SPPMGridConstruction,
-        SPPMPhotonPass,
-        SPPMStatsUpdate,
-        BDPTGenerateSubpath,
-        BDPTConnectSubpaths,
-        LightDistribLookup,
-        LightDistribSpinWait,
-        LightDistribCreation,
-        DirectLighting,
-        BSDFEvaluation,
-        BSDFSampling,
-        BSDFPdf,
-        BSSRDFEvaluation,
-        BSSRDFSampling,
-        PhaseFuncEvaluation,
-        PhaseFuncSampling,
-        AccelIntersect,
-        AccelIntersectP,
-        LightSample,
-        LightPdf,
-        MediumSample,
-        MediumTr,
-        TriIntersect,
-        TriIntersectP,
-        CurveIntersect,
-        CurveIntersectP,
-        ShapeIntersect,
-        ShapeIntersectP,
-        ComputeScatteringFuncs,
-        GenerateCameraRay,
-        MergeFilmTile,
-        SplatFilm,
-        AddFilmSample,
-        StartPixel,
-        GetSample,
-        TexFiltTrilerp,
-        TexFiltEWA,
-        NumProfCategories
     }
 
     private static StatsAccumulator statsAccumulator = new StatsAccumulator();
@@ -273,173 +224,6 @@ public class Stats {
     }
     public static void ReportThreadStats() {
         StatRegisterer.CallCallbacks(statsAccumulator);
-    }
-
-    public static long ProfToBits(Prof p) { return 1L << p.ordinal(); }
-
-    public static long ProfilerState;
-    public static long CurrentProfilerState() { return ProfilerState; }
-
-    private static AtomicBoolean profilerRunning = new AtomicBoolean(false);
-    private static long profileStartTime;
-
-    // For a given profiler state (i.e., a set of "on" bits corresponding to
-    // profiling categories that are active), ProfileSample stores a count of
-    // the number of times that state has been active when the timer interrupt
-    // to record a profiling sample has fired.
-    private static class ProfileSample {
-        AtomicLong profilerState = new AtomicLong(0);
-        AtomicLong count = new AtomicLong(0);
-    }
-
-    // We use a hash table to keep track of the profiler state counts. Because
-    // we can't do dynamic memory allocation in a signal handler (and because
-    // the counts are updated in a signal handler), we can't easily use
-    // std::unordered_map.  We therefore allocate a fixed size hash table and
-    // use linear probing if there's a conflict.
-    private static final int profileHashSize = 256;
-    private static ProfileSample[] profileSamples = new ProfileSample[profileHashSize];
-
-    public static void InitProfiler() {
-        assert (!profilerRunning.get());
-
-        // Access the per-thread ProfilerState variable now, so that there's no
-        // risk of its first access being in the signal handler (which in turn
-        // would cause dynamic memory allocation, which is illegal in a signal
-        // handler).
-        ProfilerState = ProfToBits(Prof.SceneConstruction);
-
-        for (int i = 0; i < profileSamples.length; i++)
-            profileSamples[i] = new ProfileSample();
-
-        ClearProfiler();
-
-        profileStartTime = System.currentTimeMillis();
-        profilerRunning.set(true);
-    }
-
-    private static AtomicInteger profilerSuspendCount = new AtomicInteger(0);
-
-    public static void SuspendProfiler() {
-        profilerSuspendCount.incrementAndGet();
-    }
-    public static void ResumeProfiler() {
-        profilerSuspendCount.decrementAndGet();
-    }
-
-    public static void ProfilerWorkerThreadInit() {
-
-    }
-
-    private static char[] spaces = new char[]{' '};
-
-    public static void ReportProfilerResults(java.io.Writer file) {
-        long now = System.currentTimeMillis();
-
-        int NumProfCategories = Prof.NumProfCategories.ordinal();
-        long overallCount = 0;
-        long[] eventCount = new long[NumProfCategories];
-        int used = 0;
-        for (ProfileSample ps : profileSamples) {
-            if (ps.count.get() > 0) {
-                overallCount += ps.count.get();
-                ++used;
-                for (int b = 0; b < NumProfCategories; ++b)
-                    if ((ps.profilerState.get() & (1L << b)) != 0) eventCount[b] += ps.count.get();
-            }
-        }
-        Api.logger.info("Used %d / %d  entries in profiler hash table", used, profileHashSize);
-
-        HashMap<String, Long> flatResults = new HashMap<>();
-        HashMap<String, Long> hierarchicalResults = new HashMap<>();
-        for (ProfileSample ps : profileSamples) {
-            if (ps.count.get() == 0) continue;
-
-            String s = new String();
-            for (Prof prof : Prof.values()) {
-                int b = prof.ordinal();
-                if ((ps.profilerState.get() & (1L << b)) != 0) {
-                    if (!s.isEmpty()) {
-                        // contribute to the parents...
-                        hierarchicalResults.put(s, hierarchicalResults.getOrDefault(s, 0L)+ ps.count.get());
-                        s += "/";
-                    }
-                    s += prof.toString();
-                }
-            }
-            hierarchicalResults.put(s, hierarchicalResults.getOrDefault(s, 0L) + ps.count.get());
-
-            int nameIndex = Pbrt.Log2Int((int)ps.profilerState.get());
-            assert (nameIndex < Prof.NumProfCategories.ordinal());
-            Prof prof = Prof.values()[nameIndex];
-            flatResults.put(prof.toString(), flatResults.getOrDefault(prof.toString(), 0L) + ps.count.get());
-        }
-
-        try {
-            file.write("  Profile\n");
-            for (HashMap.Entry<String, Long> r : hierarchicalResults.entrySet()) {
-                float pct = (100.f * r.getValue()) / overallCount;
-                int indent = 4;
-                int slashIndex = r.getKey().lastIndexOf("/");
-                if (slashIndex >= 0)
-                    indent += 2 * StringUtils.countMatches(r.getKey(), '/');
-                String toPrint = r.getKey().substring(slashIndex + 1);
-                file.write(String.format("%s%s%s %5.2f%% (%s)\n", new String(spaces, 0, indent), toPrint,
-                        new String(spaces, 0, Math.max(0, (67 - toPrint.length() - indent))), pct,
-                        timeString(pct, now)));
-            }
-
-            // Sort the flattened ones by time, longest to shortest.
-            ArrayList<ImmutablePair<String, Long>> flatVec = new ArrayList<>();
-            for (HashMap.Entry<String, Long> r : flatResults.entrySet())
-                flatVec.add(new ImmutablePair<>(r.getKey(), r.getValue()));
-
-            flatVec.sort((ImmutablePair<String, Long> a, ImmutablePair<String, Long> b) -> a.getRight().compareTo(b.getRight()) );
-
-            file.write("  Profile (flattened)\n");
-            for (ImmutablePair<String, Long> r : flatVec) {
-                float pct = (100.f * r.getRight()) / overallCount;
-                int indent = 4;
-                String toPrint = r.getLeft();
-                file.write(String.format("%s%s%s %5.2f%% (%s)\n", new String(spaces, 0, indent), toPrint,
-                        new String(spaces, 0, Math.max(0, (67 - toPrint.length() - indent))), pct,
-                        timeString(pct, now)));
-            }
-            file.write("\n");
-
-        } catch (IOException e) {
-
-        }
-    }
-
-    public static void ClearProfiler() {
-        for (ProfileSample ps : profileSamples) {
-            ps.profilerState.set(0);
-            ps.count.set(0);
-        }
-    }
-
-    public static void CleanupProfiler() {
-        assert (profilerRunning.get());
-        profilerRunning.set(false);
-    }
-
-    public static class ProfilePhase {
-
-        public ProfilePhase(Prof p) {
-            this.categoryBit = ProfToBits(p);
-            this.reset = (ProfilerState & this.categoryBit) == 0;
-            ProfilerState |= this.categoryBit;
-        }
-
-        @Override
-        protected void finalize() throws Throwable {
-            super.finalize();
-            if (reset) ProfilerState &= ~categoryBit;
-        }
-
-        private boolean reset;
-        private long categoryBit;
     }
 
     public static class StatRegisterer {
@@ -647,20 +431,4 @@ public class Stats {
         }
         return categoryTitle;
     }
-
-    private static String timeString(float pct, long now) {
-        pct /= 100.;  // remap passed value to to [0,1]
-        // milliseconds for this category
-        long ms = now - profileStartTime;
-        // Peel off hours, minutes, seconds, and remaining milliseconds.
-        long h = ms / (3600 * 1000);
-        ms -= h * 3600 * 1000;
-        long m = ms / (60 * 1000);
-        ms -= m * (60 * 1000);
-        long s = ms / 1000;
-        ms -= s * 1000;
-        ms /= 10;  // only printing 2 digits of fractional seconds
-        return String.format("%4d:%02d:%02d.%02d", h, m, s, ms);
-    }
-
 }

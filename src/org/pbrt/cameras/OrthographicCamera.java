@@ -27,7 +27,6 @@ public class OrthographicCamera extends ProjectiveCamera {
 
     @Override
     public CameraRay GenerateRay(CameraSample sample) {
-        //Stats.ProfilePhase prof = new Stats.ProfilePhase(Stats.Prof.GenerateCameraRay);
         // Compute raster and camera sample positions
         Point3f pFilm = new Point3f(sample.pFilm.x, sample.pFilm.y, 0);
         Point3f pCamera = RasterToCamera.xform(pFilm);
@@ -55,7 +54,6 @@ public class OrthographicCamera extends ProjectiveCamera {
 
     @Override
     public CameraRayDiff GenerateRayDifferential(CameraSample sample) {
-        //Stats.ProfilePhase prof = new Stats.ProfilePhase(Stats.Prof.GenerateCameraRay);
         // Compute main orthographic viewing ray
 
         // Compute raster and camera sample positions

@@ -24,15 +24,6 @@ public class ProgressReporter extends Thread {
         this.exitThread.set(false);
 
         if (!Pbrt.options.Quiet) {
-            // We need to temporarily disable the profiler before launching
-            // the update thread here, through the time the thread calls
-            // ProfilerWorkerThreadInit(). Otherwise, there's a potential
-            // deadlock if the profiler interrupt fires in the progress
-            // reporter's thread and we try to access the thread-local
-            // ProfilerState variable in the signal handler for the first
-            // time. (Which in turn calls malloc, which isn't allowed in a
-            // signal handler.)
-            Stats.SuspendProfiler();
             barrier = new CyclicBarrier(2);
             this.start();
 
@@ -45,7 +36,6 @@ public class ProgressReporter extends Thread {
             } catch (BrokenBarrierException e) {
                 e.printStackTrace();
             }
-            Stats.ResumeProfiler();
         }
     }
 
@@ -66,8 +56,6 @@ public class ProgressReporter extends Thread {
 
     @Override
     public void run() {
-        Stats.ProfilerWorkerThreadInit();
-        Stats.ProfilerState = 0;
         try {
             barrier.await();
         } catch (InterruptedException e) {

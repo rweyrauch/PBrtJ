@@ -87,7 +87,6 @@ public class ImageTextureFloat extends Texture<Float> {
             return texturesFloat.get(texInfo);
 
         // Create _MIPMap_ for _filename_
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.TextureLoading);
         ImageIO.SpectrumImage image = ImageIO.Read(filename);
         if (image == null) {
             Error.Warning("Creating a constant grey texture to replace \"%s\".", filename);

@@ -23,7 +23,6 @@ public class RandomSampler extends Sampler {
     }
 
     public void StartPixel(Point2i p) {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.StartPixel);
         for (int i = 0; i < sampleArray1D.size(); ++i)
             for (int j = 0; j < sampleArray1D.get(i).length; ++j)
                 sampleArray1D.get(i)[j] = rng.UniformFloat();
@@ -36,14 +35,12 @@ public class RandomSampler extends Sampler {
 
     @Override
     public float Get1D() {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.GetSample);
         assert (currentPixelSampleIndex < samplesPerPixel);
         return rng.UniformFloat();
     }
 
     @Override
     public Point2f Get2D() {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.GetSample);
         assert (currentPixelSampleIndex < samplesPerPixel);
         return new Point2f(rng.UniformFloat(), rng.UniformFloat());
     }

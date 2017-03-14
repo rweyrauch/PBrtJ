@@ -24,7 +24,6 @@ public class PathIntegrator extends SamplerIntegrator{
 
     @Override
     public Spectrum Li(RayDifferential r, Scene scene, Sampler sampler, int depth) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.SamplerIntegratorLi);
         Spectrum L = new Spectrum(0), beta = new Spectrum(1);
         RayDifferential ray = new RayDifferential(r);
         boolean specularBounce = false;
@@ -179,7 +178,7 @@ public class PathIntegrator extends SamplerIntegrator{
     private final String lightSampleStrategy;
     private LightDistribution lightDistribution;
 
-    private static Stats.STAT_PERCENT pathStats = new Stats.STAT_PERCENT("Integrator/Zero-radiance paths");
-    private static Stats.STAT_INT_DISTRIBUTION pathLength = new Stats.STAT_INT_DISTRIBUTION("Integrator/Path length");
+    private static Stats.Percent pathStats = new Stats.Percent("Integrator/Zero-radiance paths");
+    private static Stats.IntegerDistribution pathLength = new Stats.IntegerDistribution("Integrator/Path length");
 
 }

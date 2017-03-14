@@ -33,8 +33,6 @@ public class BVHAccel extends Aggregate {
         this.splitMethod = splitMethod;
         this.primitives = prims;
 
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.AccelConstruction);
-
         if (primitives.length == 0) return;
         // Build BVH from _primitives_
 
@@ -82,7 +80,6 @@ public class BVHAccel extends Aggregate {
     public SurfaceInteraction Intersect(Ray ray) {
         if (nodes == null) return null;
         SurfaceInteraction isect = null, hitIsect = null;
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.AccelIntersect);
         Vector3f invDir = new Vector3f(1 / ray.d.x, 1 / ray.d.y, 1 / ray.d.z);
         int[] dirIsNeg = {invDir.x < 0 ? 1 : 0, invDir.y < 0 ? 1 : 0, invDir.z < 0 ? 1 :0};
         // Follow ray through BVH nodes to find primitive intersections
@@ -125,7 +122,6 @@ public class BVHAccel extends Aggregate {
     @Override
     public boolean IntersectP(Ray ray) {
         if (nodes == null) return false;
-        Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.AccelIntersectP);
         Vector3f invDir = new Vector3f(1.f / ray.d.x, 1.f / ray.d.y, 1.f / ray.d.z);
         int[] dirIsNeg = {invDir.x < 0 ? 1 : 0, invDir.y < 0 ? 1 : 0, invDir.z < 0 ? 1 : 0};
         int[] nodesToVisit = new int[64];
@@ -223,6 +219,35 @@ public class BVHAccel extends Aggregate {
                 part++;
             } else if (comp.compare(infos.get(first), null) < 0) {
                 Collections.swap(infos, first, part);
+                part++;
+            }
+            first++;
+        }
+        return part;
+    }
+
+    private int partitionNodes(ArrayList<BVHBuildNode> nodes, int first, int last, BVHBuildNode node, int dim, Bounds3f centroidBounds, int nBuckets, int minCostSplitBucket) {
+        if (first == last) {
+            return first;
+        }
+        float centroid = (node.bounds.pMin.at(dim) + node.bounds.pMax.at(dim)) * 0.5f;
+        int b = nBuckets * (int)((centroid - centroidBounds.pMin.at(dim)) / (centroidBounds.pMax.at(dim) - centroidBounds.pMin.at(dim)));
+        if (b == nBuckets) b = nBuckets - 1;
+
+        first++;
+        int part = first;
+        if (first == last) {
+            if (b <= minCostSplitBucket) {
+                return first;
+            } else {
+                return part;
+            }
+        }
+        while (first != last) {
+            if (b <= minCostSplitBucket) {
+                part++;
+            } else if (b <= minCostSplitBucket) {
+                Collections.swap(nodes, first, part);
                 part++;
             }
             first++;
@@ -421,6 +446,7 @@ public class BVHAccel extends Aggregate {
 
         // Compute Morton indices of primitives
         MortonPrimitive[] mortonPrims = new MortonPrimitive[primitiveInfo.size()];
+        for (int i = 0; i < mortonPrims.length; i++) mortonPrims[i] = new MortonPrimitive();
         for (int i = 0; i < primitiveInfo.size(); i++) {
             // Initialize _mortonPrims[i]_ for _i_th primitive
             final int mortonBits = 10;
@@ -432,7 +458,7 @@ public class BVHAccel extends Aggregate {
 
         // Radix sort primitive Morton indices
         mortonPrims = RadixSort(mortonPrims);
-/*
+
         // Create LBVH treelets at bottom of BVH
 
         // Find intervals of primitives for each treelet
@@ -445,7 +471,7 @@ public class BVHAccel extends Aggregate {
                 // Add entry to _treeletsToBuild_ for this treelet
                 int nPrimitives = end - start;
                 int maxBVHNodes = 2 * nPrimitives;
-                BVHBuildNode nodes = new BVHBuildNode(maxBVHNodes, false);
+                BVHBuildNode[] nodes = new BVHBuildNode[maxBVHNodes];
                 treeletsToBuild.add(new LBVHTreelet(start, nPrimitives, nodes));
                 start = end;
             }
@@ -454,44 +480,44 @@ public class BVHAccel extends Aggregate {
         // Create LBVHs for treelets in parallel
         AtomicInteger atomicTotal = new AtomicInteger(0);
         AtomicInteger orderedPrimsOffset = new AtomicInteger(0);
-        orderedPrims.resize(primitives.size());
-        ParallelFor([&](int i) {
+        orderedPrims.ensureCapacity(primitives.length);
+        int nodeIndex = 0;
+        for (int i = 0; i < treeletsToBuild.size(); i++) {
             // Generate _i_th LBVH treelet
-            int nodesCreated = 0;
-        const int firstBitIndex = 29 - 12;
-            LBVHTreelet &tr = treeletsToBuild[i];
-            tr.buildNodes =
-                    emitLBVH(tr.buildNodes, primitiveInfo, &mortonPrims[tr.startIndex],
-                    tr.nPrimitives, &nodesCreated, orderedPrims,
-                     &orderedPrimsOffset, firstBitIndex);
-            atomicTotal.incrementAndGet(nodesCreated);
-        }, treeletsToBuild.size());
-        totalNodes = atomicTotal.get();
+            Integer[] nodesCreated = { 0 };
+            final int firstBitIndex = 29 - 12;
+            LBVHTreelet tr = treeletsToBuild.get(i);
+            tr.buildNodes[nodeIndex] =
+                    emitLBVH(tr.buildNodes, nodeIndex, primitiveInfo, mortonPrims, tr.startIndex,
+                    tr.nPrimitives, nodesCreated, orderedPrims,
+                     orderedPrimsOffset, firstBitIndex);
+            nodeIndex++;
+            atomicTotal.addAndGet(nodesCreated[0]);
+        }
+        totalNodes[0] = atomicTotal.get();
 
         // Create and return SAH BVH from LBVH treelets
         ArrayList<BVHBuildNode> finishedTreelets = new ArrayList<>(treeletsToBuild.size());
         for (LBVHTreelet treelet : treeletsToBuild)
-            finishedTreelets.add(treelet.buildNodes);
+            finishedTreelets.add(treelet.buildNodes[0]);
 
         return buildUpperSAH(finishedTreelets, 0, finishedTreelets.size(), totalNodes);
-        */
-        return null;
     }
 
     private BVHBuildNode emitLBVH(
             BVHBuildNode[] buildNodes, int nodeIndex,
             ArrayList<BVHPrimitiveInfo> primitiveInfo,
-            MortonPrimitive[] mortonPrims, int nPrimitives, Integer[] totalNodes,
+            MortonPrimitive[] mortonPrims, int startPrim, int nPrimitives, Integer[] totalNodes,
             ArrayList<Primitive> orderedPrims,
             AtomicInteger orderedPrimsOffset, int bitIndex) {
-        /*
+
         assert (nPrimitives > 0);
         if (bitIndex == -1 || nPrimitives < maxPrimsInNode) {
             // Create and return leaf node of LBVH treelet
-            totalNodes++;
+            totalNodes[0]++;
             BVHBuildNode node = buildNodes[nodeIndex++];
             Bounds3f bounds = new Bounds3f();
-            int firstPrimOffset = orderedPrimsOffset.fetch_add(nPrimitives);
+            int firstPrimOffset = orderedPrimsOffset.getAndAdd(nPrimitives);
             for (int i = 0; i < nPrimitives; ++i) {
                 int primitiveIndex = mortonPrims[i].primitiveIndex;
                 orderedPrims.set(firstPrimOffset + i, primitives[primitiveIndex]);
@@ -504,7 +530,7 @@ public class BVHAccel extends Aggregate {
             // Advance to next subtree level if there's no LBVH split for this bit
             if ((mortonPrims[0].mortonCode & mask) ==
                     (mortonPrims[nPrimitives - 1].mortonCode & mask))
-                return emitLBVH(buildNodes, nodeIndex, primitiveInfo, mortonPrims, nPrimitives,
+                return emitLBVH(buildNodes, nodeIndex, primitiveInfo, mortonPrims, startPrim, nPrimitives,
                         totalNodes, orderedPrims, orderedPrimsOffset,
                         bitIndex - 1);
 
@@ -517,7 +543,7 @@ public class BVHAccel extends Aggregate {
                         (mortonPrims[mid].mortonCode & mask))
                     searchStart = mid;
                 else {
-                    assert ((mortonPrims[mid].mortonCode & mask) == (mortonPrims[searchEnd].mortonCode & mask);
+                    assert ((mortonPrims[mid].mortonCode & mask) == (mortonPrims[searchEnd].mortonCode & mask));
                     searchEnd = mid;
                 }
             }
@@ -526,21 +552,19 @@ public class BVHAccel extends Aggregate {
             assert ((mortonPrims[splitOffset - 1].mortonCode & mask) != (mortonPrims[splitOffset].mortonCode & mask));
 
             // Create and return interior LBVH node
-            totalNodes++;
+            totalNodes[0]++;
             BVHBuildNode node = buildNodes[nodeIndex++];
             BVHBuildNode[] lbvh = {
-                    emitLBVH(buildNodes, nodeIndex, primitiveInfo, mortonPrims, splitOffset,
+                    emitLBVH(buildNodes, nodeIndex, primitiveInfo, mortonPrims, startPrim, splitOffset,
                             totalNodes, orderedPrims, orderedPrimsOffset,
                             bitIndex - 1),
-                    emitLBVH(buildNodes, nodeIndex, primitiveInfo, mortonPrims[splitOffset],
+                    emitLBVH(buildNodes, nodeIndex, primitiveInfo, mortonPrims, startPrim+splitOffset,
                     nPrimitives - splitOffset, totalNodes, orderedPrims,
                     orderedPrimsOffset, bitIndex - 1)};
             int axis = bitIndex % 3;
             node.InitInterior(axis, lbvh[0], lbvh[1]);
             return node;
         }
-        */
-        return null;
     }
 
     private BVHBuildNode buildUpperSAH(ArrayList<BVHBuildNode> treeletRoots, int start, int end, Integer[] totalNodes) {
@@ -606,30 +630,13 @@ public class BVHAccel extends Aggregate {
                 minCostSplitBucket = i;
             }
         }
-/*
-        // Split nodes and create interior HLBVH SAH node
-        BVHBuildNode **pmid = partition(
-                treeletRoots[start], treeletRoots[end - 1] + 1,
-        [=](const BVHBuildNode *node) {
-            Float centroid =
-                    (node->bounds.pMin[dim] + node->bounds.pMax[dim]) * 0.5f;
-            int b = nBuckets *
-                    ((centroid - centroidBounds.pMin[dim]) /
-                            (centroidBounds.pMax[dim] - centroidBounds.pMin[dim]));
-            if (b == nBuckets) b = nBuckets - 1;
-            CHECK_GE(b, 0);
-            CHECK_LT(b, nBuckets);
-            return b <= minCostSplitBucket;
-        });
-        int mid = pmid - treeletRoots[0];
+
+        int mid = partitionNodes(treeletRoots, start, end, node, dim, centroidBounds, nBuckets, minCostSplitBucket);
         assert (mid > start);
         assert (mid < end);
-        node.InitInterior(
-                dim, this.buildUpperSAH(treeletRoots, start, mid, totalNodes),
+        node.InitInterior(dim, this.buildUpperSAH(treeletRoots, start, mid, totalNodes),
                 this.buildUpperSAH(treeletRoots, mid, end, totalNodes));
         return node;
-*/
-        return null;
     }
 
     int flattenBVHTree(BVHBuildNode node, Integer[] offset) {
@@ -657,10 +664,9 @@ public class BVHAccel extends Aggregate {
     private LinearBVHNode[] nodes;
 
     private static class BVHPrimitiveInfo {
-        BVHPrimitiveInfo() {}
         BVHPrimitiveInfo(int primitiveNumber, Bounds3f bounds) {
             this.primitiveNumber = primitiveNumber;
-            this.bounds = bounds;
+            this.bounds = new Bounds3f(bounds);
             this.centroid = bounds.pMin.scale(0.5f).add(bounds.pMax.scale(0.5f));
         }
         int primitiveNumber;
@@ -698,6 +704,11 @@ public class BVHAccel extends Aggregate {
     }
 
     private static class LBVHTreelet {
+        public LBVHTreelet(int startIndex, int nPrimitives, BVHBuildNode[] nodes) {
+            this.startIndex = startIndex;
+            this.nPrimitives = nPrimitives;
+            this.buildNodes = nodes;
+        }
         int startIndex, nPrimitives;
         BVHBuildNode[] buildNodes;
     }
@@ -788,8 +799,8 @@ public class BVHAccel extends Aggregate {
         return v;
     }
 
-    private static Stats.STAT_RATIO primsPerLeaf = new Stats.STAT_RATIO("BVH/Primitives per leaf node");
-    private static Stats.STAT_COUNTER interiorNodes = new Stats.STAT_COUNTER("BVH/Interior nodes");
-    private static Stats.STAT_COUNTER leafNodes = new Stats.STAT_COUNTER("BVH/Leaf nodes");
-    private static Stats.STAT_MEMORY_COUNTER treeBytes = new Stats.STAT_MEMORY_COUNTER("Memory/BVH tree");
+    private static Stats.Ratio primsPerLeaf = new Stats.Ratio("BVH/Primitives per leaf node");
+    private static Stats.Counter interiorNodes = new Stats.Counter("BVH/Interior nodes");
+    private static Stats.Counter leafNodes = new Stats.Counter("BVH/Leaf nodes");
+    private static Stats.MemoryCounter treeBytes = new Stats.MemoryCounter("Memory/BVH tree");
 }

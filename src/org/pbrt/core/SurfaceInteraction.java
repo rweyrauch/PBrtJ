@@ -61,9 +61,8 @@ public class SurfaceInteraction extends Interaction {
         }
     }
 
-    @Override
-    public SurfaceInteraction clone() {
-        return new SurfaceInteraction(this.p, this.pError, this.uv, this.wo, this.dpdu, this.dpdv, this.dndu, this.dndv, this.time, this.shape);
+    public SurfaceInteraction(SurfaceInteraction si) {
+        this(si.p, si.pError, si.uv, si.wo, si.dpdu, si.dpdv, si.dndu, si.dndv, si.time, si.shape);
     }
 
     public void SetShadingGeometry(Vector3f dpdus, Vector3f dpdvs, Normal3f dndus, Normal3f dndvs, boolean orientationIsAuthoritative) {

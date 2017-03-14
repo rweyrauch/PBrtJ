@@ -59,10 +59,7 @@ public abstract class SamplerIntegrator extends Integrator {
                     for (int py = tileBounds.pMin.y; py < tileBounds.pMax.y; py++) {
                         for (int px = tileBounds.pMin.x; px < tileBounds.pMax.x; px++) {
                             Point2i pixel = new Point2i(px, py);
-                            {
-                                //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.StartPixel);
-                                tileSampler.StartPixel(pixel);
-                            }
+                            tileSampler.StartPixel(pixel);
 
                             // Do this check after the StartPixel() call; this keeps
                             // the usage of RNG values from (most) Samplers that use
@@ -206,7 +203,6 @@ public abstract class SamplerIntegrator extends Integrator {
     }
 
     public static Spectrum UniformSampleAllLights(Interaction it, Scene scene, Sampler sampler, int[] nLightSamples, boolean handleMedia) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.DirectLighting);
         Spectrum L = new Spectrum(0);
         for (int j = 0; j < scene.lights.size(); ++j) {
             // Accumulate contribution of _j_th light to _L_
@@ -231,7 +227,6 @@ public abstract class SamplerIntegrator extends Integrator {
     }
 
     public static Spectrum UniformSampleOneLight(Interaction it, Scene scene, Sampler sampler, boolean handleMedia, Distribution1D lightDistrib) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.DirectLighting);
         // Randomly choose a single light to sample, _light_
         int nLights = scene.lights.size();
         if (nLights == 0) return new Spectrum(0);
@@ -393,6 +388,6 @@ public abstract class SamplerIntegrator extends Integrator {
     private Sampler sampler;
     private final Bounds2i pixelBounds;
 
-    private static Stats.STAT_COUNTER nCameraRays = new Stats.STAT_COUNTER("Integrator/Camera rays traced");
+    private static Stats.Counter nCameraRays = new Stats.Counter("Integrator/Camera rays traced");
 
 }

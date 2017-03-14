@@ -25,14 +25,12 @@ public abstract class SeparableBSSRDF extends BSSRDF {
 
     @Override
     public Spectrum S(SurfaceInteraction pi, Vector3f wi) {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSSRDFEvaluation);
         float Ft = Reflection.FrDielectric(Reflection.CosTheta(po.wo), 1, eta);
         return (Sp(pi).multiply(Sw(wi))).scale(1 - Ft);
     }
 
     @Override
     public BSSRDFSample Sample_S(Scene scene, float u1, Point2f u2) {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSSRDFSampling);
         BSSRDFSample bs = Sample_Sp(scene, u1, u2);
         if (!bs.s.isBlack()) {
             // Initialize material model at sampled surface interaction
@@ -53,8 +51,6 @@ public abstract class SeparableBSSRDF extends BSSRDF {
     }
 
     public BSSRDFSample Sample_Sp(Scene scene, float u1, Point2f u2) {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.BSSRDFEvaluation);
-
         BSSRDFSample bs = new BSSRDFSample();
         bs.s = new Spectrum(0);
         bs.pdf = 0;

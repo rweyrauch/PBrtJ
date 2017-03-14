@@ -30,7 +30,6 @@ public class Disk extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersect);
         // Transform Ray to object space
         Ray ray = WorldToObject.xform(r);
 
@@ -80,7 +79,6 @@ public class Disk extends Shape {
 
     @Override
     public boolean IntersectP(Ray r, boolean testAlphaTexture) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersectP);
         // Transform _Ray_ to object space
         Ray ray = WorldToObject.xform(r);
 

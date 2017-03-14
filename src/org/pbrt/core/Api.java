@@ -370,7 +370,7 @@ public class Api {
         return shapes;
     }
 
-    private static Stats.STAT_COUNTER nMaterialsCreated = new Stats.STAT_COUNTER("Scene/Materials created");
+    private static Stats.Counter nMaterialsCreated = new Stats.Counter("Scene/Materials created");
 
     private static Material MakeMaterial(String name, TextureParams mp) {
         Material material = null;
@@ -668,7 +668,6 @@ public class Api {
         //SampledSpectrum.Init();
         //ParallelInit();  // Threads must be launched before the profiler is
         // initialized.
-        Stats.InitProfiler();
     }
 
     public static void pbrtCleanup() {
@@ -680,7 +679,6 @@ public class Api {
         currentApiState = APIState.Uninitialized;
         //ParallelCleanup();
         renderOptions = null;
-        Stats.CleanupProfiler();
     }
 
     private static char[] spaces = new char[]{' '};
@@ -1176,7 +1174,7 @@ public class Api {
         }
     }
 
-    private static Stats.STAT_COUNTER nObjectInstancesCreated = new Stats.STAT_COUNTER("Scene/Object instances created");
+    private static Stats.Counter nObjectInstancesCreated = new Stats.Counter("Scene/Object instances created");
 
     public static void pbrtObjectEnd() {
         VERIFY_WORLD("ObjectEnd");
@@ -1191,7 +1189,7 @@ public class Api {
         }
     }
 
-    private static Stats.STAT_COUNTER nObjectInstancesUsed = new Stats.STAT_COUNTER("Scene/Object instances used");
+    private static Stats.Counter nObjectInstancesUsed = new Stats.Counter("Scene/Object instances used");
 
     public static void pbrtObjectInstance(String name) {
         VERIFY_WORLD("ObjectInstance");
@@ -1251,15 +1249,6 @@ public class Api {
             Integrator integrator = renderOptions.MakeIntegrator();
             Scene scene = renderOptions.MakeScene();
 
-            // This is kind of ugly; we directly override the current profiler
-            // state to switch from parsing/scene construction related stuff to
-            // rendering stuff and then switch it back below. The underlying
-            // issue is that all the rest of the profiling system assumes
-            // hierarchical inheritance of profiling state; this is the only
-            // place where that isn't the case.
-            //assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.SceneConstruction));
-            Stats.ProfilerState = Stats.ProfToBits(Stats.Prof.IntegratorRender);
-
             if ((scene != null) && (integrator != null)) {
                 integrator.Render(scene);
             }
@@ -1274,19 +1263,8 @@ public class Api {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try {
-                    PrintWriter pw = new PrintWriter("renderProfile.txt");
-                    Stats.ReportProfilerResults(pw);
-                    pw.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 Stats.ClearStats();
-                Stats.ClearProfiler();
             }
-
-            //assert (Stats.CurrentProfilerState() == Stats.ProfToBits(Stats.Prof.IntegratorRender));
-            Stats.ProfilerState = Stats.ProfToBits(Stats.Prof.SceneConstruction);
         }
 
         // Clean up after rendering
@@ -1327,5 +1305,4 @@ public class Api {
                     "and using the start transform only", func);
         }
     }
-
 }

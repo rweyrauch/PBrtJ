@@ -31,7 +31,6 @@ public class Cone extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersect);
         Float phi;
         Point3f pHit;
         // Transform _Ray_ to object space
@@ -124,7 +123,6 @@ public class Cone extends Shape {
 
     @Override
     public boolean IntersectP(Ray r, boolean testAlphaTexture) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.ShapeIntersectP);
         float phi;
         Point3f pHit;
         // Transform _Ray_ to object space

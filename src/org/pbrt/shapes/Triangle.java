@@ -141,7 +141,6 @@ public class Triangle extends Shape {
 
     @Override
     public HitResult Intersect(Ray ray, boolean testAlphaTexture) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersect);
         interPerRayTri.incrementDenom(1); //++nTests;
 
         // Get triangle vertices in _p0_, _p1_, and _p2_
@@ -356,7 +355,6 @@ public class Triangle extends Shape {
 
     @Override
     public boolean IntersectP(Ray ray, boolean testAlphaTexture) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TriIntersectP);
         interPerRayTri.incrementDenom(1); //++nTests;
 
         // Get triangle vertices in _p0_, _p1_, and _p2_
@@ -629,7 +627,7 @@ public class Triangle extends Shape {
     private TriangleMesh mesh;
     private int[] v;
 
-    private static Stats.STAT_PERCENT interPerRayTri = new Stats.STAT_PERCENT("Intersections/Ray-triangle intersection tests"); // nHits per nTests
-    private static Stats.STAT_RATIO trisPerMesh = new Stats.STAT_RATIO("Scene/Triangles per triangle mesh"); // nTris per nMeshes
-    private static Stats.STAT_MEMORY_COUNTER triMeshBytes = new Stats.STAT_MEMORY_COUNTER("Memory/Triangle meshes");
+    private static Stats.Percent interPerRayTri = new Stats.Percent("Intersections/Ray-triangle intersection tests"); // nHits per nTests
+    private static Stats.Ratio trisPerMesh = new Stats.Ratio("Scene/Triangles per triangle mesh"); // nTris per nMeshes
+    private static Stats.MemoryCounter triMeshBytes = new Stats.MemoryCounter("Memory/Triangle meshes");
 }

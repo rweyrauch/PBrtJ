@@ -111,7 +111,6 @@ public class Curve extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.CurveIntersect);
         hitsPerTest.incrementDenom(1); // ++nTests
         // Transform _Ray_ to object space
          Ray ray = WorldToObject.xform(r);
@@ -388,9 +387,9 @@ public class Curve extends Shape {
     private final CurveCommon common;
     private final float uMin, uMax;
 
-    private static Stats.STAT_MEMORY_COUNTER curveBytes = new Stats.STAT_MEMORY_COUNTER("Memory/Curves");
-    private static Stats.STAT_PERCENT hitsPerTest = new Stats.STAT_PERCENT("Intersections/Ray-curve intersection tests"); // nHits, nTests
-    private static Stats.STAT_INT_DISTRIBUTION refinementLevel = new Stats.STAT_INT_DISTRIBUTION("Intersections/Curve refinement level");
-    private static Stats.STAT_COUNTER nCurves = new Stats.STAT_COUNTER("Scene/Curves");
-    private static Stats.STAT_COUNTER nSplitCurves = new Stats.STAT_COUNTER("Scene/Split curves");
+    private static Stats.MemoryCounter curveBytes = new Stats.MemoryCounter("Memory/Curves");
+    private static Stats.Percent hitsPerTest = new Stats.Percent("Intersections/Ray-curve intersection tests"); // nHits, nTests
+    private static Stats.IntegerDistribution refinementLevel = new Stats.IntegerDistribution("Intersections/Curve refinement level");
+    private static Stats.Counter nCurves = new Stats.Counter("Scene/Curves");
+    private static Stats.Counter nSplitCurves = new Stats.Counter("Scene/Split curves");
 }

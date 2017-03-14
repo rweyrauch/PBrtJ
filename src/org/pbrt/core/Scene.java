@@ -67,6 +67,6 @@ public class Scene {
         }
     }
 
-    private static Stats.STAT_COUNTER nIntersectionTests = new Stats.STAT_COUNTER("Intersections/Regular ray intersection tests");
-    private static Stats.STAT_COUNTER nShadowTests = new Stats.STAT_COUNTER("Intersections/Shadow ray intersection tests");
+    private static Stats.Counter nIntersectionTests = new Stats.Counter("Intersections/Regular ray intersection tests");
+    private static Stats.Counter nShadowTests = new Stats.Counter("Intersections/Shadow ray intersection tests");
 }

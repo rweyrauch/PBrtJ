@@ -47,7 +47,6 @@ public class Film {
             }
         }
         public void AddSample(Point2f pFilm, Spectrum L, float sampleWeight) {
-            //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.AddFilmSample);
             if (L.y() > maxSampleLuminance)
                 L.scale(maxSampleLuminance / L.y());
 
@@ -162,7 +161,6 @@ public class Film {
     }
 
     public void MergeFilmTile(FilmTile tile) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.MergeFilmTile);
         //Api.logger.trace("Merging film tile %s", tile.pixelBounds.toString());
         //std::lock_guard<std::mutex> lock(mutex);
         for (int y = tile.GetPixelBounds().pMin.y; y < tile.GetPixelBounds().pMax.y; y++) {
@@ -192,8 +190,6 @@ public class Film {
     }
 
     public void AddSplat(Point2f p, Spectrum v) {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.SplatFilm);
-
         if (v.hasNaNs()) {
             Api.logger.error("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
             return;
@@ -334,6 +330,6 @@ public class Film {
         pixels[offset] = pix;
     }
 
-    private static Stats.STAT_MEMORY_COUNTER filmPixelMemory = new Stats.STAT_MEMORY_COUNTER("Memory/Film pixels");
+    private static Stats.MemoryCounter filmPixelMemory = new Stats.MemoryCounter("Memory/Film pixels");
 
 }

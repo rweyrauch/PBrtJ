@@ -36,7 +36,6 @@ public class KdTreeAccel extends Aggregate {
         this.primitives = p;
 
         // Build kd-tree for accelerator
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.AccelConstruction);
 
         nextFreeNode = nAllocedNodes = 0;
         if (maxDepth <= 0)
@@ -79,10 +78,9 @@ public class KdTreeAccel extends Aggregate {
 
     @Override
     public SurfaceInteraction Intersect(Ray ray) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.AccelIntersect);
         // Compute initial parametric range of ray inside kd-tree extent
         Bounds3f.BoundIntersect bisect = bounds.IntersectP(ray);
-        if (bisect == null){
+        if (bisect == null) {
             return null;
         }
         float tMin = bisect.hit0;
@@ -168,7 +166,6 @@ public class KdTreeAccel extends Aggregate {
 
     @Override
     public boolean IntersectP(Ray ray) {
-        Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.AccelIntersectP);
         // Compute initial parametric range of ray inside kd-tree extent
         Bounds3f.BoundIntersect bisect = bounds.IntersectP(ray);
         if (bisect == null) {

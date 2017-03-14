@@ -28,7 +28,6 @@ public class VolPathIntegrator extends SamplerIntegrator {
 
     @Override
     public Spectrum Li(RayDifferential r, Scene scene, Sampler sampler, int depth) {
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.SamplerIntegratorLi);
         Spectrum L = new Spectrum(0), beta = new Spectrum(1);
         RayDifferential ray = new RayDifferential(r);
         boolean specularBounce = false;
@@ -187,8 +186,8 @@ public class VolPathIntegrator extends SamplerIntegrator {
     private final String lightSampleStrategy;
     private LightDistribution lightDistribution;
 
-    private static Stats.STAT_FLOAT_DISTRIBUTION pathLength = new Stats.STAT_FLOAT_DISTRIBUTION("Integrator/Path length");
-    private static Stats.STAT_COUNTER volumeInteractions = new Stats.STAT_COUNTER("Integrator/Volume interactions");
-    private static Stats.STAT_COUNTER surfaceInteractions = new Stats.STAT_COUNTER("Integrator/Surface interactions");
+    private static Stats.FloatDistribution pathLength = new Stats.FloatDistribution("Integrator/Path length");
+    private static Stats.Counter volumeInteractions = new Stats.Counter("Integrator/Volume interactions");
+    private static Stats.Counter surfaceInteractions = new Stats.Counter("Integrator/Surface interactions");
 
 }

@@ -18,6 +18,6 @@ public abstract class AreaLight extends Light {
     }
     public abstract Spectrum L(Interaction intr, Vector3f w);
 
-    protected static Stats.STAT_COUNTER numAreaLights = new Stats.STAT_COUNTER("Scene/AreaLights");
+    protected static Stats.Counter numAreaLights = new Stats.Counter("Scene/AreaLights");
 
 }

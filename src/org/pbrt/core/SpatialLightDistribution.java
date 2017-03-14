@@ -51,7 +51,6 @@ public class SpatialLightDistribution extends LightDistribution {
 
     @Override
     public Distribution1D Lookup(Point3f p) {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightDistribLookup);
         looksPerDistrib.incrementDenom(1); // nLookups
 
         // First, compute integer voxel coordinates for the given point |p|
@@ -105,7 +104,6 @@ public class SpatialLightDistribution extends LightDistribution {
                     // the sampling distribution is ready.  We assume that this
                     // is a rare case, so don't do anything more sophisticated
                     // than spinning.
-                    //Stats.ProfilePhase ppp = new Stats.ProfilePhase(Stats.Prof.LightDistribSpinWait);
                     while ((dist = entry.distribution.get()) == null)
                         // spin :-(. If we were fancy, we'd have any threads
                         // that hit this instead help out with computing the
@@ -147,7 +145,6 @@ public class SpatialLightDistribution extends LightDistribution {
     }
 
     private Distribution1D ComputeDistribution(Point3i pi) {
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.LightDistribCreation);
         nCreated.increment();
         looksPerDistrib.incrementDenom(1); // nDistributions;
 
@@ -223,8 +220,8 @@ public class SpatialLightDistribution extends LightDistribution {
     private HashEntry[] hashTable;
     private int hashTableSize;
 
-    private static Stats.STAT_COUNTER nCreated = new Stats.STAT_COUNTER("SpatialLightDistribution/Distributions created");
-    private static Stats.STAT_RATIO looksPerDistrib = new Stats.STAT_RATIO("SpatialLightDistribution/Lookups per distribution");
-    private static Stats.STAT_INT_DISTRIBUTION nProbesPerLookup = new Stats.STAT_INT_DISTRIBUTION("SpatialLightDistribution/Hash probes per lookup");
+    private static Stats.Counter nCreated = new Stats.Counter("SpatialLightDistribution/Distributions created");
+    private static Stats.Ratio looksPerDistrib = new Stats.Ratio("SpatialLightDistribution/Lookups per distribution");
+    private static Stats.IntegerDistribution nProbesPerLookup = new Stats.IntegerDistribution("SpatialLightDistribution/Hash probes per lookup");
 
 }

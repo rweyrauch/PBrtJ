@@ -25,8 +25,6 @@ public class MIPMapSpectrum {
         this.resolution = new Point2i(resolution);
         this.black = black;
 
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MIPMapCreation);
-
         Spectrum[] resampledImage = null;
         if (!Pbrt.IsPowerOf2(resolution.x) || !Pbrt.IsPowerOf2(resolution.y)) {
             // Resample image to power-of-two resolution
@@ -154,7 +152,6 @@ public class MIPMapSpectrum {
     public Spectrum Lookup(Point2f st, float width) {
 
         nTrilerpLookups.increment();
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltTrilerp);
         // Compute MIPMap level for trilinear filtering
         float level = Levels() - 1 + Pbrt.Log2((float)Math.max(width, 1e-8));
 
@@ -182,7 +179,6 @@ public class MIPMapSpectrum {
         }
 
         nEWALookups.increment();
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltEWA);
         // Compute ellipse minor and major axes
         if (dst0.LengthSquared() < dst1.LengthSquared()) {
             Vector2f temp = dst0;
@@ -296,7 +292,7 @@ public class MIPMapSpectrum {
     private static final int WeightLUTSize = 128;
     private static float[] weightLut = new float[WeightLUTSize];
 
-    public static Stats.STAT_COUNTER nEWALookups = new Stats.STAT_COUNTER("Texture/EWA lookups");
-    public static Stats.STAT_COUNTER nTrilerpLookups = new Stats.STAT_COUNTER("Texture/Trilinear lookups");
-    public static Stats.STAT_MEMORY_COUNTER mipMapMemory = new Stats.STAT_MEMORY_COUNTER("Memory/Texture MIP maps");
+    public static Stats.Counter nEWALookups = new Stats.Counter("Texture/EWA lookups");
+    public static Stats.Counter nTrilerpLookups = new Stats.Counter("Texture/Trilinear lookups");
+    public static Stats.MemoryCounter mipMapMemory = new Stats.MemoryCounter("Memory/Texture MIP maps");
 }

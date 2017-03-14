@@ -98,5 +98,5 @@ public abstract class Shape {
         return (float)solidAngle / nSamples;
     }
 
-    private static Stats.STAT_COUNTER nShapesCreated = new Stats.STAT_COUNTER("Scene/Shapes created");
+    private static Stats.Counter nShapesCreated = new Stats.Counter("Scene/Shapes created");
 }

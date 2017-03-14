@@ -20,8 +20,6 @@ public class MIPMapFloat {
         this.resolution = new Point2i(resolution);
         this.black = black;
 
-        //Stats.ProfilePhase pp = new Stats.ProfilePhase(Stats.Prof.MIPMapCreation);
-
         Float[] resampledImage = null;
         if (!Pbrt.IsPowerOf2(resolution.x) || !Pbrt.IsPowerOf2(resolution.y)) {
             // Resample image to power-of-two resolution
@@ -147,7 +145,6 @@ public class MIPMapFloat {
     public float Lookup(Point2f st, float width) {
 
         MIPMapSpectrum.nTrilerpLookups.increment();
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltTrilerp);
         // Compute MIPMap level for trilinear filtering
         float level = Levels() - 1 + Pbrt.Log2((float)Math.max(width, 1e-8));
 
@@ -175,8 +172,7 @@ public class MIPMapFloat {
         }
 
         MIPMapSpectrum.nEWALookups.increment();
-        //Stats.ProfilePhase p = new Stats.ProfilePhase(Stats.Prof.TexFiltEWA);
-        // Compute ellipse minor and major axes
+         // Compute ellipse minor and major axes
         if (dst0.LengthSquared() < dst1.LengthSquared()) {
             Vector2f temp = dst0;
             dst0 = dst1;

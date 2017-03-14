@@ -32,7 +32,6 @@ public abstract class Aggregate extends Primitive {
     @Override
     public void ComputeScatteringFunctions(SurfaceInteraction isect, Material.TransportMode mode, boolean allowMultipleLobes) {
         Error.Error("Aggregate::ComputeScatteringFunctions() method called; should have gone to GeometricPrimitive");
-
     }
 }
 
