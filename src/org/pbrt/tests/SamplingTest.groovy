@@ -9,8 +9,6 @@
 
 package org.pbrt.tests
 
-import com.intellij.codeInspection.bytecodeAnalysis.Direction
-import org.pbrt.core.ArithmeticOps
 import org.pbrt.core.Distribution1D
 import org.pbrt.core.LowDiscrepancy
 import org.pbrt.core.Pbrt
