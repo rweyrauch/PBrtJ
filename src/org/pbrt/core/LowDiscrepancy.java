@@ -2125,6 +2125,17 @@ public class LowDiscrepancy {
         return index;
     }
 
+    public static int MultiplyGenerator(int[] C, int a) {
+        int v = 0;
+        for (int i = 0; a != 0; ++i, a >>= 1)
+            if ((a & 1) != 0) v ^= C[i];
+        return v;
+    }
+
+    public static float SampleGeneratorMatrix(int[] C, int a, int scramble) {
+        return Math.min((MultiplyGenerator(C, a) ^ scramble) * 0x1p-32f, Pbrt.OneMinusEpsilon);
+    }
+
     public static Short[] ComputeRadicalInversePermutations(RNG rng) {
         // Allocate space in _perms_ for radical inverse permutations
         int permArraySize = 0;

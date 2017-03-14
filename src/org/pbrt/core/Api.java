@@ -607,7 +607,7 @@ public class Api {
         if (Objects.equals(name, "lowdiscrepancy") || Objects.equals(name, "02sequence"))
             sampler = ZeroTwoSequence.Create(paramSet);
         else if (Objects.equals(name, "maxmindist"))
-            sampler = MaxMinSampler.Create(paramSet);
+            sampler = MaxMinDistSampler.Create(paramSet);
         else if (Objects.equals(name, "halton"))
             sampler = HaltonSampler.Create(paramSet, film.GetSampleBounds());
         else if (Objects.equals(name, "sobol"))
