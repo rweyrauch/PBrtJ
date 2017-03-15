@@ -11,7 +11,6 @@ package org.pbrt.tests
 
 import org.pbrt.core.HenyeyGreenstein
 import org.pbrt.core.Pbrt
-import org.pbrt.core.PhaseFunction
 import org.pbrt.core.Point2f
 import org.pbrt.core.RNG
 import org.pbrt.core.Sampling

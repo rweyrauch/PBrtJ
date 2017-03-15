@@ -96,7 +96,7 @@ class EFloatTest extends GroovyTestCase {
             // If the error starts to get too big such that the interval is
             // relatively close to zero w.r.t. the center value, we can't
             // compute error bounds for sqrt; skip these.
-            if (ef.getAbsoluteError() > 0.25f * Math.abs(ef.lowerBound())) continue;
+            if (ef.getAbsoluteError() > 0.25f * Math.abs(ef.lowerBound())) continue
 
             EFloat efResult = EFloat.sqrt(EFloat.abs(ef))
             double preciseResult = Math.sqrt(Math.abs(precise))
