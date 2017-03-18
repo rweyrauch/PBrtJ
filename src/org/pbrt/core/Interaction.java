@@ -9,8 +9,6 @@
 
 package org.pbrt.core;
 
-import org.pbrt.openexr.types.Int;
-
 public class Interaction {
 
     // Interaction Public Data

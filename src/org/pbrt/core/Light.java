@@ -39,7 +39,7 @@ public abstract class Light {
         public boolean Unoccluded(Scene scene) {
             return !scene.IntersectP(p0.SpawnRayTo(p1));
         }
-        Spectrum Tr(Scene scene, Sampler sampler) {
+        public Spectrum Tr(Scene scene, Sampler sampler) {
             Ray ray = new Ray(p0.SpawnRayTo(p1));
             Spectrum Tr = new Spectrum(1.0f);
             while (true) {
