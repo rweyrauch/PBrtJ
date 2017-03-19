@@ -14,6 +14,8 @@ import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class LoopSubdiv {
 
@@ -38,7 +40,7 @@ public class LoopSubdiv {
 
     private static ArrayList<Shape> LoopSubdivide(Transform ObjectToWorld, Transform WorldToObject, boolean reverseOrientation,
                                                   int nLevels, int nIndices, Integer[] vertexIndices, int nVertices, Point3f[] p) {
-        /*
+
         ArrayList<SDVertex> vertices = new ArrayList<>();
         ArrayList<SDFace> faces = new ArrayList<>();
         // Allocate _LoopSubdiv_ vertices and faces
@@ -69,7 +71,7 @@ public class LoopSubdiv {
             for (int edgeNum = 0; edgeNum < 3; ++edgeNum) {
                 // Update neighbor pointer for _edgeNum_
                 int v0 = edgeNum, v1 = NEXT(edgeNum);
-                SDEdge e(f.v[v0], f.v[v1]);
+                SDEdge e = new SDEdge(f.v[v0], f.v[v1]);
                 if (!edges.contains(e)) {
                     // Handle new edge
                     e.f[0] = f;
@@ -77,7 +79,7 @@ public class LoopSubdiv {
                     edges.add(e);
                 } else {
                     // Handle previously seen edge
-                    e = edges.get(e);
+                    //e = edges.get(e);
                     e.f[0].f[e.f0edgeNum] = f;
                     f.f[edgeNum] = e.f[0];
                     edges.remove(e);
@@ -214,7 +216,7 @@ public class LoopSubdiv {
         // Push vertices to limit surface
         Point3f[] pLimit = new Point3f[v.size()];
         for (int i = 0; i < v.size(); ++i) {
-            if (v[i].boundary)
+            if (v.get(i).boundary)
             pLimit[i] = weightBoundary(v.get(i), 1.f / 5.f);
         else
             pLimit[i] = weightOneRing(v.get(i), loopGamma(v.get(i).valence()));
@@ -227,13 +229,13 @@ public class LoopSubdiv {
         for (SDVertex vertex : v) {
             Vector3f S = new Vector3f(0, 0, 0), T = new Vector3f(0, 0, 0);
             int valence = vertex.valence();
-            if (valence > pRing.size()) pRing.resize(valence);
-            vertex.oneRing(&pRing[0]);
+            while (valence > pRing.size()) pRing.add(new Point3f());
+            vertex.oneRing(pRing);
             if (!vertex.boundary) {
                 // Compute tangents of interior face
                 for (int j = 0; j < valence; ++j) {
-                    S += (float)Math.cos(2 * Pbrt.Pi * j / valence) * Vector3f(pRing[j]);
-                    T += (float)Math.sin(2 * Pbrt.Pi * j / valence) * Vector3f(pRing[j]);
+                    S = S.add((new Vector3f(pRing.get(j))).scale((float)Math.cos(2 * Pbrt.Pi * j / valence)));
+                    T = T.add((new Vector3f(pRing.get(j))).scale((float)Math.sin(2 * Pbrt.Pi * j / valence)));
                 }
             } else {
                 // Compute tangents of boundary face
@@ -246,7 +248,7 @@ public class LoopSubdiv {
                     T = new Vector3f(((pRing.get(0)).scale(-1)).add((pRing.get(1)).scale(2)).add((pRing.get(2)).scale(2)).add((pRing.get(3)).scale(-1)).add(vertex.p.scale(-2)));
                 else {
                     float theta = Pbrt.Pi / (float)(valence - 1);
-                    T = Vector3f((float)Math.sin(theta) * (pRing.get(0) + pRing.get(valence - 1)));
+                    T = new Vector3f((pRing.get(0).add(pRing.get(valence - 1))).scale((float)Math.sin(theta)));
                     for (int k = 1; k < valence - 1; ++k) {
                         float wt = (2 * (float)Math.cos(theta) - 2) * (float)Math.sin((k)*theta);
                         T = T.add(new Vector3f((pRing.get(k)).scale(wt)));
@@ -261,21 +263,20 @@ public class LoopSubdiv {
         {
             int ntris = f.size();
             int[] vertsmesh = new int[3 * ntris];
-            int vpi = 0;
+            vpi = 0;
             int totVerts = v.size();
             HashMap<SDVertex, Integer> usedVerts = new HashMap<>();
-            for (int i = 0; i < totVerts; ++i) usedVerts.put(v[i], i);
+            for (int i = 0; i < totVerts; ++i) usedVerts.put(v.get(i), i);
             for (int i = 0; i < ntris; ++i) {
                 for (int j = 0; j < 3; ++j) {
-                    vertsmesh[vpi] = usedVerts.get(f[i].v[j]);
+                    vertsmesh[vpi] = usedVerts.get(f.get(i).v[j]);
                     vpi++;
                 }
             }
+
             return Triangle.CreateTriangleMesh(ObjectToWorld, WorldToObject, reverseOrientation, ntris, vertsmesh,
-                    totVerts, pLimit, null, Ns,null, null, null);
+                    totVerts, pLimit, null, Ns.toArray(new Normal3f[Ns.size()]),null, null, null);
         }
-        */
-        return null;
     }
 
     private static class SDVertex {
@@ -283,8 +284,9 @@ public class LoopSubdiv {
         SDVertex() {
             this(new Point3f(0, 0, 0));
         }
-         SDVertex(Point3f p) {
-            this.p = p;
+        SDVertex(Point3f p) {
+            this.p = new Point3f(p);
+            this.instanceId = nextInstance++;
         }
 
         // SDVertex Methods
@@ -304,32 +306,40 @@ public class LoopSubdiv {
                 return nf + 1;
             }
         }
-        void oneRing(Point3f[] p) {
-            /*
+        void oneRing(ArrayList<Point3f> p) {
+
+            int pi = 0;
             if (!boundary) {
                 // Get one-ring vertices for interior vertex
                 SDFace face = startFace;
                 do {
-                    *p++ = face.nextVert(this).p;
+                    p.set(pi++, face.nextVert(this).p);
                     face = face.nextFace(this);
                 } while (face != startFace);
             } else {
                 // Get one-ring vertices for boundary vertex
                 SDFace face = startFace, f2;
                 while ((f2 = face.nextFace(this)) != null) face = f2;
-                *p++ = face.nextVert(this).p;
+                p.set(pi++, face.nextVert(this).p);
                 do {
-                    *p++ = face.prevVert(this).p;
+                    p.set(pi++, face.prevVert(this).p);
                     face = face.prevFace(this);
                 } while (face != null);
             }
-            */
         }
+
+        public static SDVertex min(SDVertex v0, SDVertex v1) {
+            return v0.instanceId < v1.instanceId ? v0 : v1;
+        }
+        public static SDVertex max(SDVertex v0, SDVertex v1) { return v0.instanceId > v1.instanceId ? v0 : v1; }
 
         Point3f p;
         SDFace startFace = null;
         SDVertex child = null;
         boolean regular = false, boundary = false;
+        int instanceId = 0;
+
+        private static int nextInstance = 0;
     }
 
     private static class SDFace {
@@ -368,24 +378,16 @@ public class LoopSubdiv {
     private static class SDEdge {
         // SDEdge Constructor
         SDEdge(SDVertex v0, SDVertex v1) {
-            /*
-            v[0] = min(v0, v1);
-            v[1] = max(v0, v1);
+            v[0] = SDVertex.min(v0, v1);
+            v[1] = SDVertex.max(v0, v1);
             f[0] = f[1] = null;
             f0edgeNum = -1;
-            */
         }
 
-        SDEdge min(SDEdge v0, SDEdge v1) {
-            return v0;
-        }
         // SDEdge Comparison Function
         boolean less(SDEdge e2) {
-            /*
-            if (v[0] == e2.v[0]) return v[1].less(e2.v[1]);
-            return v[0].less(e2.v[0]);
-            */
-            return true;
+            if (v[0].equals(e2.v[0])) return v[1].instanceId < e2.v[1].instanceId;
+            return v[0].instanceId < e2.v[0].instanceId;
         }
         SDVertex[] v = { null, null };
         SDFace[] f = { null, null };
@@ -406,22 +408,22 @@ public class LoopSubdiv {
     private static Point3f weightOneRing(SDVertex vert, Float beta) {
         // Put _vert_ one-ring in _pRing_
         int valence = vert.valence();
-        Point3f[] pRing = new Point3f[valence];
+        ArrayList<Point3f> pRing = new ArrayList<>(valence);
         vert.oneRing(pRing);
         Point3f p = vert.p.scale(1 - valence * beta);
         for (int i = 0; i < valence; ++i)
-            p = p.add(pRing[i].scale(beta));
+            p = p.add(pRing.get(i).scale(beta));
         return p;
     }
 
     private static Point3f weightBoundary(SDVertex vert, float beta) {
         // Put _vert_ one-ring in _pRing_
         int valence = vert.valence();
-        Point3f[] pRing = new Point3f[valence];
+        ArrayList<Point3f> pRing = new ArrayList<>(valence);
         vert.oneRing(pRing);
         Point3f p =  vert.p.scale(1 - 2 * beta);
-        p = p.add(pRing[0].scale(beta));
-        p = p.add(pRing[valence - 1].scale(beta));
+        p = p.add(pRing.get(0).scale(beta));
+        p = p.add(pRing.get(valence - 1).scale(beta));
         return p;
     }
 

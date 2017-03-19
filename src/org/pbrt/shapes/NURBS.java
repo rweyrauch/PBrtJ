@@ -11,13 +11,14 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
+import org.pbrt.core.Error;
 
 import java.util.ArrayList;
+import java.util.function.BiFunction;
 
 public class NURBS {
 
     public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
-        /*
         int nu = paramSet.FindOneInt("nu", -1);
         if (nu == -1) {
             Error.Error("Must provide number of control points \"nu\" with NURBS shape.");
@@ -29,7 +30,6 @@ public class NURBS {
             Error.Error("Must provide u order \"uorder\" with NURBS shape.");
             return null;
         }
-        int nuknots, nvknots;
         Float[] uknots = paramSet.FindFloat("uknots");
         if (uknots == null) {
             Error.Error("Must provide u knot vector \"uknots\" with NURBS shape.");
@@ -38,7 +38,7 @@ public class NURBS {
 
         if (uknots.length != nu + uorder) {
             Error.Error("Number of knots in u knot vector %d doesn't match sum of number of u control points %d and u order %d.",
-                    nuknots, nu, uorder);
+                    uknots.length, nu, uorder);
             return null;
         }
 
@@ -65,7 +65,7 @@ public class NURBS {
 
         if (vknots.length != nv + vorder) {
             Error.Error("Number of knots in v knot vector %d doesn't match sum of number of v control points %d and v order %d.",
-                    nvknots, nv, vorder);
+                    vknots.length, nv, vorder);
             return null;
         }
 
@@ -74,23 +74,29 @@ public class NURBS {
 
         boolean isHomogeneous = false;
         int npts;
+        Float[] Pp = null;
         Point3f[] P = paramSet.FindPoint3f("P");
         if (P == null) {
-            P = paramSet.FindFloat("Pw");
-            if (P == null) {
+            Pp = paramSet.FindFloat("Pw");
+            if (Pp == null) {
                 Error.Error("Must provide control points via \"P\" or \"Pw\" parameter to NURBS shape.");
                 return null;
             }
-            if ((npts % 4) != 0) {
+            npts = Pp.length;
+            if ((Pp.length % 4) != 0) {
                 Error.Error("Number of \"Pw\" control points provided to NURBS shape must be multiple of four");
                 return null;
             }
             npts /= 4;
             isHomogeneous = true;
         }
+        else
+        {
+            npts = P.length;
+        }
+
         if (npts != nu * nv) {
-            Error.Error("NURBS shape was expecting %dx%d=%d control points, was given %d",
-                    nu, nv, nu * nv, npts);
+            Error.Error("NURBS shape was expecting %dx%d=%d control points, was given %d", nu, nv, nu * nv, npts);
             return null;
         }
 
@@ -100,47 +106,34 @@ public class NURBS {
         float[] veval = new float[dicev];
         Point3f[] evalPs = new Point3f[diceu * dicev];
         Normal3f[] evalNs = new Normal3f[diceu * dicev];
-        int i;
-        for (i = 0; i < diceu; ++i)
+
+        for (int i = 0; i < diceu; ++i)
             ueval[i] = Pbrt.Lerp((float)i / (float)(diceu - 1), u0, u1);
-        for (i = 0; i < dicev; ++i)
+        for (int i = 0; i < dicev; ++i)
             veval[i] = Pbrt.Lerp((float)i / (float)(dicev - 1), v0, v1);
 
         // Evaluate NURBS over grid of points
-        memset(evalPs.get(), 0, diceu * dicev * sizeof(Point3f));
-        memset(evalNs.get(), 0, diceu * dicev * sizeof(Point3f));
         Point2f[] uvs = new Point2f[diceu * dicev];
 
         // Turn NURBS into triangles
         Homogeneous3[] Pw = new Homogeneous3[nu * nv];
         if (isHomogeneous) {
             for (int i = 0; i < nu * nv; ++i) {
-                Pw[i].x = P[4 * i];
-                Pw[i].y = P[4 * i + 1];
-                Pw[i].z = P[4 * i + 2];
-                Pw[i].w = P[4 * i + 3];
+                Pw[i] = new Homogeneous3(Pp[4 * i], Pp[4 * i + 1], Pp[4 * i + 2], Pp[4 * i + 3]);
             }
         } else {
             for (int i = 0; i < nu * nv; ++i) {
-                Pw[i].x = P[3 * i];
-                Pw[i].y = P[3 * i + 1];
-                Pw[i].z = P[3 * i + 2];
-                Pw[i].w = 1.;
+                Pw[i] = new Homogeneous3(P[i].x, P[i].y, P[i].z, 1);
             }
         }
 
         for (int v = 0; v < dicev; ++v) {
             for (int u = 0; u < diceu; ++u) {
-                uvs[(v * diceu + u)].x = ueval[u];
-                uvs[(v * diceu + u)].y = veval[v];
+                uvs[(v * diceu + u)] = new Point2f(ueval[u], veval[v]);
 
-                Vector3f dpdu, dpdv;
-                Point3f pt = NURBSEvaluateSurface(uorder, uknots, nu, ueval[u],
-                        vorder, vknots, nv, veval[v],
-                        Pw, &dpdu, &dpdv);
-                evalPs[v * diceu + u].x = pt.x;
-                evalPs[v * diceu + u].y = pt.y;
-                evalPs[v * diceu + u].z = pt.z;
+                Vector3f dpdu = new Vector3f(), dpdv = new Vector3f();
+                Point3f pt = NURBSEvaluateSurface(uorder, uknots, nu, ueval[u], vorder, vknots, nv, veval[v], Pw, dpdu, dpdv);
+                evalPs[v * diceu + u] = new Point3f(pt.x, pt.y, pt.z);
                 evalNs[v * diceu + u] = new Normal3f(Vector3f.Normalize(Vector3f.Cross(dpdu, dpdv)));
             }
         }
@@ -148,19 +141,20 @@ public class NURBS {
         // Generate points-polygons mesh
         int nTris = 2 * (diceu - 1) * (dicev - 1);
         int[] vertices = new int[3 * nTris];
-    int *vertp = vertices.get();
+        int[] vertp = vertices;
+
+        BiFunction<Integer, Integer, Integer> VN = (u, v) -> v * diceu + u;
         // Compute the vertex offset numbers for the triangles
+        int ndx = 0;
         for (int v = 0; v < dicev - 1; ++v) {
             for (int u = 0; u < diceu - 1; ++u) {
-#define VN(u, v) ((v)*diceu + (u))
-                        *vertp++ = VN(u, v);
-            *vertp++ = VN(u + 1, v);
-            *vertp++ = VN(u + 1, v + 1);
+                vertp[ndx++] = VN.apply(u, v);
+                vertp[ndx++] = VN.apply(u + 1, v);
+                vertp[ndx++] = VN.apply(u + 1, v + 1);
 
-            *vertp++ = VN(u, v);
-            *vertp++ = VN(u + 1, v + 1);
-            *vertp++ = VN(u, v + 1);
-#undef VN
+                vertp[ndx++] = VN.apply(u, v);
+                vertp[ndx++] = VN.apply(u + 1, v + 1);
+                vertp[ndx++] = VN.apply(u, v + 1);
             }
         }
         int nVerts = diceu * dicev;
@@ -168,15 +162,13 @@ public class NURBS {
         return Triangle.CreateTriangleMesh(object2world, world2object, reverseOrientation, nTris,
                 vertices, nVerts, evalPs, null,
                 evalNs, uvs, null, null);
-        */
-        return null;
     }
 
-    private static Point3f NURBSEvaluateSurface(int uOrder, float[] uKnot, int ucp,
-                                        float u, int vOrder, float[] vKnot,
+    private static Point3f NURBSEvaluateSurface(int uOrder, Float[] uKnot, int ucp,
+                                        float u, int vOrder, Float[] vKnot,
                                         int vcp, float v, Homogeneous3[] cp,
                                         Vector3f dpdu, Vector3f dpdv) {
-        /*
+
         Homogeneous3[] iso = new Homogeneous3[Math.max(uOrder, vOrder)];
 
         int uOffset = KnotOffset(uKnot, uOrder, ucp, u);
@@ -184,77 +176,68 @@ public class NURBS {
         assert(uFirstCp >= 0 && uFirstCp + uOrder - 1 < ucp);
 
         for (int i = 0; i < uOrder; ++i)
-            iso[i] = NURBSEvaluate(vOrder, vKnot, &cp[uFirstCp + i], vcp, ucp, v);
+            iso[i] = NURBSEvaluate(vOrder, vKnot, cp,uFirstCp + i, vcp, ucp, v, null);
 
         int vOffset = KnotOffset(vKnot, vOrder, vcp, v);
         int vFirstCp = vOffset - vOrder + 1;
         assert (vFirstCp >= 0 && vFirstCp + vOrder - 1 < vcp);
 
-        Homogeneous3 P =
-                NURBSEvaluate(uOrder, uKnot, iso - uFirstCp, ucp, 1, u, dpdu);
+        Homogeneous3 P = NURBSEvaluate(uOrder, uKnot, iso, -uFirstCp, ucp, 1, u, dpdu);
 
-        if (dpdv) {
+        if (dpdv != null) {
             for (int i = 0; i < vOrder; ++i)
-                iso[i] = NURBSEvaluate(uOrder, uKnot, &cp[(vFirstCp + i) * ucp],
-                        ucp, 1, u);
-            (void)NURBSEvaluate(vOrder, vKnot, iso - vFirstCp, vcp, 1, v, dpdv);
+                iso[i] = NURBSEvaluate(uOrder, uKnot, cp,(vFirstCp + i) * ucp, ucp, 1, u, null);
+            NURBSEvaluate(vOrder, vKnot, iso, -vFirstCp, vcp, 1, v, dpdv);
         }
         return new Point3f(P.x / P.w, P.y / P.w, P.z / P.w);
-        */
-        return null;
     }
 
-    private static Homogeneous3 NURBSEvaluate(int order, float[] knot, Homogeneous3[] cp, int np, int cpStride, float t, Vector3f deriv) {
-        /*
+    private static Homogeneous3 NURBSEvaluate(int order, Float[] knot, Homogeneous3[] cp, int cpi, int np, int cpStride, float t, Vector3f deriv) {
         //    int nKnots = np + order;
         float alpha;
 
         int knotOffset = KnotOffset(knot, order, np, t);
-        knot += knotOffset;
-
         int cpOffset = knotOffset - order + 1;
         assert(cpOffset >= 0 && cpOffset < np);
 
         Homogeneous3[] cpWork = new Homogeneous3[order];
-        for (int i = 0; i < order; ++i) cpWork[i] = cp[(cpOffset + i) * cpStride];
+        for (int i = 0; i < order; ++i) cpWork[i] = cp[cpi + (cpOffset + i) * cpStride];
 
-        for (int i = 0; i < order - 2; ++i)
+        for (int i = 0; i < order - 2; ++i) {
             for (int j = 0; j < order - 1 - i; ++j) {
-                alpha = (knot[1 + j] - t) / (knot[1 + j] - knot[j + 2 - order + i]);
-                assert(alpha >= 0. && alpha <= 1.);
+                alpha = (knot[knotOffset + 1 + j] - t) / (knot[knotOffset + 1 + j] - knot[knotOffset + j + 2 - order + i]);
+                assert (alpha >= 0. && alpha <= 1.);
 
                 cpWork[j].x = cpWork[j].x * alpha + cpWork[j + 1].x * (1 - alpha);
                 cpWork[j].y = cpWork[j].y * alpha + cpWork[j + 1].y * (1 - alpha);
                 cpWork[j].z = cpWork[j].z * alpha + cpWork[j + 1].z * (1 - alpha);
                 cpWork[j].w = cpWork[j].w * alpha + cpWork[j + 1].w * (1 - alpha);
             }
-
-        alpha = (knot[1] - t) / (knot[1] - knot[0]);
+        }
+        alpha = (knot[knotOffset + 1] - t) / (knot[knotOffset + 1] - knot[knotOffset + 0]);
         assert (alpha >= 0 && alpha <= 1);
 
-        Homogeneous3 val new Homogeneous3(cpWork[0].x * alpha + cpWork[1].x * (1 - alpha),
+        Homogeneous3 val = new Homogeneous3(cpWork[0].x * alpha + cpWork[1].x * (1 - alpha),
                 cpWork[0].y * alpha + cpWork[1].y * (1 - alpha),
                 cpWork[0].z * alpha + cpWork[1].z * (1 - alpha),
                 cpWork[0].w * alpha + cpWork[1].w * (1 - alpha));
 
-        if (deriv) {
-            float factor = (order - 1) / (knot[1] - knot[0]);
-            Homogeneous3 delta((cpWork[1].x - cpWork[0].x) * factor,
+        if (deriv != null) {
+            float factor = (order - 1) / (knot[knotOffset + 1] - knot[knotOffset + 0]);
+            Homogeneous3 delta = new Homogeneous3((cpWork[1].x - cpWork[0].x) * factor,
                     (cpWork[1].y - cpWork[0].y) * factor,
                     (cpWork[1].z - cpWork[0].z) * factor,
                     (cpWork[1].w - cpWork[0].w) * factor);
 
-            deriv->x = delta.x / val.w - (val.x * delta.w / (val.w * val.w));
-            deriv->y = delta.y / val.w - (val.y * delta.w / (val.w * val.w));
-            deriv->z = delta.z / val.w - (val.z * delta.w / (val.w * val.w));
+            deriv.x = delta.x / val.w - (val.x * delta.w / (val.w * val.w));
+            deriv.y = delta.y / val.w - (val.y * delta.w / (val.w * val.w));
+            deriv.z = delta.z / val.w - (val.z * delta.w / (val.w * val.w));
         }
 
         return val;
-        */
-        return null;
     }
 
-    private static int KnotOffset(float[] knot, int order, int np, float t) {
+    private static int KnotOffset(Float[] knot, int order, int np, float t) {
         int firstKnot = order - 1;
 
         int knotOffset = firstKnot;

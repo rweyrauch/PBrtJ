@@ -111,6 +111,10 @@ public class Curve extends Shape {
 
     @Override
     public HitResult Intersect(Ray r, boolean testAlphaTexture) {
+        return Intersect(r, testAlphaTexture, false);
+    }
+
+    private HitResult Intersect(Ray r, boolean testAlphaTexture, boolean isShadow) {
         hitsPerTest.incrementDenom(1); // ++nTests
         // Transform _Ray_ to object space
          Ray ray = WorldToObject.xform(r);
@@ -177,7 +181,11 @@ public class Curve extends Shape {
         int maxDepth = Pbrt.Clamp(r0, 0, 10);
         refinementLevel.ReportValue(maxDepth);
 
-        return recursiveIntersect(ray, cp, Transform.Inverse(objectToRay), uMin, uMax, maxDepth);
+        return recursiveIntersect(ray, cp, 0, Transform.Inverse(objectToRay), uMin, uMax, maxDepth, isShadow);
+    }
+
+    public boolean IntersectP(Ray ray, boolean testAlphaTexture) {
+        return (Intersect(ray, testAlphaTexture, true) != null);
     }
 
     @Override
@@ -201,10 +209,9 @@ public class Curve extends Shape {
 
     }
 
-    private HitResult recursiveIntersect(Ray ray, Point3f[] cp, Transform rayToObject, float u0, float u1, int depth) {
-
+    private HitResult recursiveIntersect(Ray ray, Point3f[] cp, int cpi, Transform rayToObject, float u0, float u1, int depth, boolean isShadow) {
         HitResult hr = new HitResult();
-/*
+
         float rayLength = ray.d.Length();
 
         if (depth > 0) {
@@ -219,31 +226,31 @@ public class Curve extends Shape {
             float[] u = {u0, (u0 + u1) / 2, u1};
             // Pointer to the 4 control points for the current segment.
             Point3f[] cps = cpSplit;
-            for (int seg = 0; seg < 2; ++seg, cps += 3) {
+            int cpsi = cpi;
+            for (int seg = 0; seg < 2; ++seg, cpsi += 3) {
                 float maxWidth = Math.max(Pbrt.Lerp(u[seg], common.width[0], common.width[1]), Pbrt.Lerp(u[seg + 1], common.width[0], common.width[1]));
 
                 // As above, check y first, since it most commonly lets us exit
                 // out early.
-                if (Math.max(Math.max(cps[0].y, cps[1].y), Math.max(cps[2].y, cps[3].y)) + 0.5 * maxWidth < 0 ||
-                        Math.min(Math.min(cps[0].y, cps[1].y), Math.min(cps[2].y, cps[3].y)) - 0.5 * maxWidth > 0)
+                if (Math.max(Math.max(cps[cpsi+0].y, cps[cpsi+1].y), Math.max(cps[cpsi+2].y, cps[cpsi+3].y)) + 0.5 * maxWidth < 0 ||
+                        Math.min(Math.min(cps[cpsi+0].y, cps[cpsi+1].y), Math.min(cps[cpsi+2].y, cps[cpsi+3].y)) - 0.5 * maxWidth > 0)
                     continue;
 
-                if (Math.max(Math.max(cps[0].x, cps[1].x), Math.max(cps[2].x, cps[3].x)) + 0.5 * maxWidth < 0 ||
-                        Math.min(Math.min(cps[0].x, cps[1].x), Math.min(cps[2].x, cps[3].x)) - 0.5 * maxWidth > 0)
+                if (Math.max(Math.max(cps[cpsi+0].x, cps[cpsi+1].x), Math.max(cps[cpsi+2].x, cps[cpsi+3].x)) + 0.5 * maxWidth < 0 ||
+                        Math.min(Math.min(cps[cpsi+0].x, cps[cpsi+1].x), Math.min(cps[cpsi+2].x, cps[cpsi+3].x)) - 0.5 * maxWidth > 0)
                     continue;
 
                 float zMax = rayLength * ray.tMax;
-                if (Math.max(Math.max(cps[0].z, cps[1].z), Math.max(cps[2].z, cps[3].z)) + 0.5 * maxWidth < 0 ||
-                        Math.min(Math.min(cps[0].z, cps[1].z), Math.min(cps[2].z, cps[3].z)) - 0.5 * maxWidth > zMax)
+                if (Math.max(Math.max(cps[cpsi+0].z, cps[cpsi+1].z), Math.max(cps[cpsi+2].z, cps[cpsi+3].z)) + 0.5 * maxWidth < 0 ||
+                        Math.min(Math.min(cps[cpsi+0].z, cps[cpsi+1].z), Math.min(cps[cpsi+2].z, cps[cpsi+3].z)) - 0.5 * maxWidth > zMax)
                     continue;
 
-                hit |= recursiveIntersect(ray, tHit, isect, cps, rayToObject,
-                        u[seg], u[seg + 1], depth - 1);
+                hr = recursiveIntersect(ray, cps, cpsi, rayToObject, u[seg], u[seg + 1], depth - 1, isShadow);
                 // If we found an intersection and this is a shadow ray,
                 // we can exit out immediately.
-                if (hit && !tHit) return true;
+                if (hr.isect != null && isShadow) return hr;
             }
-            return hit;
+            return hr;
         }
         else {
             // Intersect ray with curve segment
@@ -251,23 +258,23 @@ public class Curve extends Shape {
             // Test ray against segment endpoint boundaries
 
             // Test sample point against tangent perpendicular at curve start
-            float edge = (cp[1].y - cp[0].y) * -cp[0].y + cp[0].x * (cp[0].x - cp[1].x);
+            float edge = (cp[cpi+1].y - cp[cpi+0].y) * -cp[cpi+0].y + cp[cpi+0].x * (cp[cpi+0].x - cp[cpi+1].x);
             if (edge < 0) return null;
 
             // Test sample point against tangent perpendicular at curve end
-            edge = (cp[2].y - cp[3].y) * -cp[3].y + cp[3].x * (cp[3].x - cp[2].x);
+            edge = (cp[cpi+2].y - cp[cpi+3].y) * -cp[cpi+3].y + cp[cpi+3].x * (cp[cpi+3].x - cp[cpi+2].x);
             if (edge < 0) return null;
 
             // Compute line $w$ that gives minimum distance to sample point
-            Vector2f segmentDirection = (new Point2f(cp[3])).subtract(new Point2f(cp[0]));
+            Vector2f segmentDirection = (new Point2f(cp[cpi+3])).subtract(new Point2f(cp[cpi+0]));
             float denom = segmentDirection.LengthSquared();
             if (denom == 0) return null;
-            float w = Vector2f.Dot((new Vector2f(cp[0])).negate(), segmentDirection) / denom;
+            float w = Vector2f.Dot((new Vector2f(cp[cpi+0])).negate(), segmentDirection) / denom;
 
             // Compute $u$ coordinate of curve intersection point and _hitWidth_
             float u = Pbrt.Clamp(Pbrt.Lerp(w, u0, u1), u0, u1);
             float hitWidth = Pbrt.Lerp(u, common.width[0], common.width[1]);
-            Normal3f nHit;
+            Normal3f nHit = new Normal3f();
             if (common.type == CurveType.Ribbon) {
                 // Scale _hitWidth_ based on ribbon orientation
                 float sin0 = (float)Math.sin((1 - u) * common.normalAngle) * common.invSinNormalAngle;
@@ -291,9 +298,9 @@ public class Curve extends Shape {
             float v = (edgeFunc > 0) ? 0.5f + ptCurveDist / hitWidth : 0.5f - ptCurveDist / hitWidth;
 
             // Compute hit _t_ and partial derivatives for curve intersection
-            if (tHit != null) {
+            if (!isShadow) {
                 // FIXME: this tHit isn't quite right for ribbons...
-                tHit = pc.z / rayLength;
+                hr.tHit = pc.z / rayLength;
                 // Compute error bounds for curve intersection
                 Vector3f pError = new Vector3f(2 * hitWidth, 2 * hitWidth, 2 * hitWidth);
 
@@ -302,7 +309,7 @@ public class Curve extends Shape {
                 bp = EvalBezier(common.cpObj, u);
                 dpdu = bp.deriv;
                 if (common.type == CurveType.Ribbon)
-                    dpdv = Vector3f.Normalize(Vector3f.Cross(nHit, dpdu)) * hitWidth;
+                    dpdv = Vector3f.Normalize(Vector3f.Cross(nHit, dpdu)).scale(hitWidth);
                 else {
                     // Compute curve $\dpdv$ for flat and cylinder curves
                     Vector3f dpduPlane = Transform.Inverse(rayToObject).xform(dpdu);
@@ -315,14 +322,12 @@ public class Curve extends Shape {
                     }
                     dpdv = rayToObject.xform(dpdvPlane);
                 }
-            isect = ObjectToWorld.xform(new SurfaceInteraction(ray.at(pc.z), pError, new Point2f(u, v), ray.d.negate(), dpdu, dpdv,
+                hr.isect = ObjectToWorld.xform(new SurfaceInteraction(ray.at(pc.z), pError, new Point2f(u, v), ray.d.negate(), dpdu, dpdv,
                         new Normal3f(0, 0, 0), new Normal3f(0, 0, 0), ray.time, this));
             }
             hitsPerTest.incrementNumer(1); //++nHits;
-            return true;
+            return hr;
         }
-        */
-        return hr;
     }
 
     // Curve Utility Functions
