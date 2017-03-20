@@ -52,6 +52,7 @@ public class ImageIO {
         public Spectrum[] image;
         public Point2i resolution = new Point2i(0, 0);
     }
+
     public static SpectrumImage Read(String filename) {
         if (FileUtil.HasExtension(filename, ".exr")) {
             return ReadEXR(filename);

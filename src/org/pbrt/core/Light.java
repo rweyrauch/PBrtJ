@@ -84,7 +84,10 @@ public abstract class Light {
            MediumInterface mediumInterface, int nSamples) {
         this.flags = flags;
         this.nSamples = Math.max(1, nSamples);
-        this.mediumInterface = new MediumInterface(mediumInterface);
+        if (mediumInterface != null)
+            this.mediumInterface = new MediumInterface(mediumInterface);
+        else
+            this.mediumInterface = null;
         this.LightToWorld = new Transform(LightToWorld);
         this.WorldToLight = Transform.Inverse(LightToWorld);
 

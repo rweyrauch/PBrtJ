@@ -262,9 +262,8 @@ class BSDFTest extends GroovyTestCase {
             cells.get(i).expFrequency = expFrequencies[i]
             cells.get(i).index = i
         }
-        //std::sort(cells.begin(), cells.end(), [](const Cell& a, const Cell& b) {
-        //    return a.expFrequency < b.expFrequency;
-        //});
+        Comparator<Cell> lessCell = [compare:{ Cell a, Cell b -> a.expFrequency < b.expFrequency }] as Comparator
+        cells.sort(lessCell)
 
         /* Compute the Chi^2 statistic and pool cells as necessary */
         float pooledFrequencies = 0, pooledExpFrequencies = 0, chsq = 0

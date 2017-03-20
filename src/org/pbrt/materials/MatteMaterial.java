@@ -28,7 +28,7 @@ public class MatteMaterial extends Material {
         // Evaluate textures for _MatteMaterial_ material and allocate BRDF
         si.bsdf = new BSDF(si, 1);
         Spectrum r = (Kd.Evaluate(si)).clamp(0, Pbrt.Infinity);
-        float sig = Pbrt.Clamp(sigma.Evaluate(si), 0, 90);
+        float sig = Pbrt.Clamp(sigma.Evaluate(si), 0.0f, 90.0f);
         if (!r.isBlack()) {
             if (sig == 0)
                 si.bsdf.Add(new LambertianReflection(r));
