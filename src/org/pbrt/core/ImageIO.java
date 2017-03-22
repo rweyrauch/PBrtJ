@@ -20,7 +20,7 @@ public class ImageIO {
     public static void Write(String filename, float[] rgb, Bounds2i outputBounds, Point2i totalResolution) {
         Vector2i resolution = outputBounds.Diagonal();
         if (FileUtil.HasExtension(filename, ".exr")) {
-            WriteEXR(filename, rgb, resolution.x, resolution.y, totalResolution.x, totalResolution.y, outputBounds.pMin.x, outputBounds.pMin.y);
+            WriteEXR(filename, rgb, resolution.x, resolution.y);
         }
         else if (FileUtil.HasExtension(filename, ".pfm")) {
             WritePFM(filename, rgb, resolution.x, resolution.y);
@@ -108,6 +108,8 @@ public class ImageIO {
     private static void WritePFM(String filename, float[] rgb, int x, int y) {
     }
 
-    private native static void WriteEXR(String filename, float[] rgb, int xRes, int yRes, int totalXRes, int totalYRes, int xOffset, int yOffset);
+    private static void WriteEXR(String filename, float[] rgb, int xRes, int yRes) {
+        EXROutput.SaveEXR(rgb, xRes, yRes, 3, filename);
+    }
 
 }
