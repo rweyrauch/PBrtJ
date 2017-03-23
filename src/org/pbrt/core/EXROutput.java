@@ -11,6 +11,7 @@ package org.pbrt.core;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
@@ -102,6 +103,7 @@ public class EXROutput {
 
     private static int SaveEXRImageToFile(Image image, Header header, String filename) {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+
         int ret = SaveEXRImageToMemory(image, header, byteBuffer);
         if (ret == SUCCESS) {
             // write byte buffer to file
@@ -131,7 +133,7 @@ public class EXROutput {
         writeString(byteBuffer, name);
         writeString(byteBuffer, type);
         int outLen = b.length;
-        byteBuffer.write(ByteBuffer.allocate(4).putInt(outLen).array());
+        byteBuffer.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(outLen).array());
         byteBuffer.write(b);
     }
 
@@ -140,13 +142,13 @@ public class EXROutput {
         try {
             for (int c = 0; c < header.channels.length; c++) {
                 writeString(channelBytes, header.channels[c].name);
-                channelBytes.write(ByteBuffer.allocate(4).putInt(header.channels[c].pixel_type).array());
+                channelBytes.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(header.channels[c].pixel_type).array());
 
                 channelBytes.write(header.channels[c].p_linear);
                 channelBytes.write(header.channels[c].pad);
 
-                channelBytes.write(ByteBuffer.allocate(4).putInt(header.channels[c].x_sampling).array());
-                channelBytes.write(ByteBuffer.allocate(4).putInt(header.channels[c].y_sampling).array());
+                channelBytes.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(header.channels[c].x_sampling).array());
+                channelBytes.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(header.channels[c].y_sampling).array());
             }
             channelBytes.write(0);
         }
@@ -169,9 +171,9 @@ public class EXROutput {
             byte[] channelBytes = packChannelInfo(header);
             writeAttribute(byteBuffer, "channels", "chlist", channelBytes);
 
-            writeAttribute(byteBuffer, "compression", "compression", ByteBuffer.allocate(4).putInt(COMPRESSIONTYPE_NONE).array());
+            writeAttribute(byteBuffer, "compression", "compression", ByteBuffer.allocate(1).put((byte)COMPRESSIONTYPE_NONE).array());
 
-            ByteBuffer sizeBuff = ByteBuffer.allocate(16);
+            ByteBuffer sizeBuff = ByteBuffer.allocate(16).order(ByteOrder.LITTLE_ENDIAN);
             sizeBuff.putInt(header.data_window[0]);
             sizeBuff.putInt(header.data_window[1]);
             sizeBuff.putInt(header.data_window[2]);
@@ -186,15 +188,15 @@ public class EXROutput {
 
             writeAttribute(byteBuffer, "displayWindow", "box2i", sizeBuff.array());
 
-            writeAttribute(byteBuffer, "lineOrder", "lineOrder", ByteBuffer.allocate(4).putInt(header.line_order).array());
-            writeAttribute(byteBuffer, "pixelAspectRatio", "float", ByteBuffer.allocate(4).putFloat(header.pixel_aspect_ratio).array());
+            writeAttribute(byteBuffer, "lineOrder", "lineOrder", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(header.line_order).array());
+            writeAttribute(byteBuffer, "pixelAspectRatio", "float", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(header.pixel_aspect_ratio).array());
 
             ByteBuffer centerBuff = ByteBuffer.allocate(8);
             centerBuff.putFloat(header.screen_window_center[0]);
             centerBuff.putFloat(header.screen_window_center[1]);
             writeAttribute(byteBuffer, "screenWindowCenter", "v2f", centerBuff.array());
 
-            writeAttribute(byteBuffer, "screenWindowWidth", "float", ByteBuffer.allocate(4).putFloat(header.screen_window_width).array());
+            writeAttribute(byteBuffer, "screenWindowWidth", "float", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(header.screen_window_width).array());
 
             // End of header
             byteBuffer.write(0);
@@ -203,15 +205,15 @@ public class EXROutput {
             ex.printStackTrace();
         }
 
-        // Write pixels - float, uncompressed
+        // Write pixels - half, uncompressed
         try {
             // Table of block (line) offsets
             long offset = byteBuffer.size();
-            long lineSize = image.width * 4;
+            long lineSize = image.width * 2;
 
             for (int c = 0; c < header.channels.length; c++) {
                 for (int y = 0; y < image.height; y++) {
-                    byteBuffer.write(ByteBuffer.allocate(8).putLong(offset).array());
+                    byteBuffer.write(ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(offset).array());
                     offset += lineSize;
                 }
             }
@@ -219,7 +221,9 @@ public class EXROutput {
             for (int c = 0; c < header.channels.length; c++) {
                 for (int y = 0; y < image.height; y++) {
                     for (int x = 0; x < image.width; x++) {
-                        byteBuffer.write(ByteBuffer.allocate(4).putFloat(image.images[c][y * image.width + x]).array());
+                        float pixel = image.images[c][y * image.width + x];
+                        short hpixel = toHalf(pixel);
+                        byteBuffer.write(ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort(hpixel).array());
                     }
                 }
             }
@@ -232,7 +236,7 @@ public class EXROutput {
 
     private static class ChannelInfo {
         String name; // max 256 chars
-        int pixel_type = PIXELTYPE_FLOAT;
+        int pixel_type = PIXELTYPE_HALF;
         int x_sampling = 1;
         int y_sampling = 1;
         byte p_linear = 0;
@@ -255,5 +259,23 @@ public class EXROutput {
         int width;
         int height;
         int num_channels;
+    }
+
+    @SuppressWarnings ( "FloatingPointEquality" )
+    private static short toHalf(final float v)
+    {
+        if(Float.isNaN(v)) throw new UnsupportedOperationException("NaN to half conversion not supported!");
+        if(v == Float.POSITIVE_INFINITY) return(short)0x7c00;
+        if(v == Float.NEGATIVE_INFINITY) return(short)0xfc00;
+        if(v == 0.0f) return(short)0x0000;
+        if(v == -0.0f) return(short)0x8000;
+        if(v > 65504.0f) return 0x7bff;  // max value supported by half float
+        if(v < -65504.0f) return(short)( 0x7bff | 0x8000 );
+        if(v > 0.0f && v < 5.96046E-8f) return 0x0001;
+        if(v < 0.0f && v > -5.96046E-8f) return(short)0x8001;
+
+        final int f = Float.floatToIntBits(v);
+
+        return(short)((( f>>16 ) & 0x8000 ) | (((( f & 0x7f800000 ) - 0x38000000 )>>13 ) & 0x7c00 ) | (( f>>13 ) & 0x03ff ));
     }
 }
