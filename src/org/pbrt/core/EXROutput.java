@@ -188,10 +188,10 @@ public class EXROutput {
 
             writeAttribute(byteBuffer, "displayWindow", "box2i", sizeBuff.array());
 
-            writeAttribute(byteBuffer, "lineOrder", "lineOrder", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(header.line_order).array());
+            writeAttribute(byteBuffer, "lineOrder", "lineOrder", ByteBuffer.allocate(1).put((byte)header.line_order).array());
             writeAttribute(byteBuffer, "pixelAspectRatio", "float", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(header.pixel_aspect_ratio).array());
 
-            ByteBuffer centerBuff = ByteBuffer.allocate(8);
+            ByteBuffer centerBuff = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN);
             centerBuff.putFloat(header.screen_window_center[0]);
             centerBuff.putFloat(header.screen_window_center[1]);
             writeAttribute(byteBuffer, "screenWindowCenter", "v2f", centerBuff.array());
@@ -205,21 +205,25 @@ public class EXROutput {
             ex.printStackTrace();
         }
 
+        int numScanlines = 1;  // always 1 for uncompressed
+        int numBlocks = image.height / numScanlines;
+        int headerSize = byteBuffer.size();
+        long offset = headerSize + numBlocks * 8;
+
         // Write pixels - half, uncompressed
         try {
             // Table of block (line) offsets
-            long offset = byteBuffer.size();
-            long lineSize = image.width * 2;
+            final int lineSize = image.width * 2 * header.channels.length;
 
-            for (int c = 0; c < header.channels.length; c++) {
-                for (int y = 0; y < image.height; y++) {
-                    byteBuffer.write(ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(offset).array());
-                    offset += lineSize;
-                }
+            for (int y = 0; y < image.height; y++) {
+                byteBuffer.write(ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(offset).array());
+                offset += lineSize;
             }
 
-            for (int c = 0; c < header.channels.length; c++) {
-                for (int y = 0; y < image.height; y++) {
+            for (int y = 0; y < image.height; y++) {
+                byteBuffer.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(y).array());
+                byteBuffer.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(lineSize).array());
+                for (int c = 0; c < header.channels.length; c++) {
                     for (int x = 0; x < image.width; x++) {
                         float pixel = image.images[c][y * image.width + x];
                         short hpixel = toHalf(pixel);
