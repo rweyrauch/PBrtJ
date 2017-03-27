@@ -18,13 +18,16 @@ public class PixelSampler extends Sampler {
     protected ArrayList<Float[]> samples1D = new ArrayList<>();
     protected ArrayList<Point2f[]> samples2D = new ArrayList<>();
     protected int current1DDimension = 0, current2DDimension = 0;
-    protected RNG rng;
+    protected RNG rng = new RNG();
 
     public PixelSampler(int samplesPerPixel, int nSampledDimensions) {
         super(samplesPerPixel);
         for (int i = 0; i < nSampledDimensions; ++i) {
             samples1D.add(new Float[samplesPerPixel]);
-            samples2D.add(new Point2f[samplesPerPixel]);
+            Point2f[] pnts = new Point2f[samplesPerPixel];
+            for (int j = 0; j < samplesPerPixel; j++)
+                pnts[j] = new Point2f();
+            samples2D.add(pnts);
         }
 
     }
