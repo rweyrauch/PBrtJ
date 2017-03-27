@@ -15,6 +15,7 @@ import org.pbrt.core.Error;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class RealisticCamera extends Camera {
 
@@ -47,11 +48,13 @@ public class RealisticCamera extends Camera {
         // Compute exit pupil bounds at sampled points on the film
         int nSamples = 64;
         exitPupilBounds = new Bounds2f[nSamples];
-        for (int i = 0; i < nSamples; i++) {
+        Consumer<Long> exitFunc = (Long li) -> {
+            int i = Math.toIntExact(li);
             float r0 = (float)i / nSamples * film.diagonal / 2;
             float r1 = (float)(i + 1) / nSamples * film.diagonal / 2;
             exitPupilBounds[i] = BoundExitPupil(r0, r1);
-        }
+        };
+        Parallel.ParallelFor(exitFunc, nSamples, 1);
     }
 
     @Override

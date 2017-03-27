@@ -15,6 +15,7 @@ import org.pbrt.samplers.HaltonSampler;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class SPPMIntegrator extends Integrator {
 
@@ -52,98 +53,98 @@ public class SPPMIntegrator extends Integrator {
             // Generate SPPM visible points
             //std::vector<MemoryArena> perThreadArenas(MaxThreadIndex());
             {
-                for (int y = 0; y < nTiles.y; y++) {
-                    for (int x = 0; x < nTiles.x; x++) {
-                        Point2i tile = new Point2i(x, y);
-                        // Follow camera paths for _tile_ in image for SPPM
-                        int tileIndex = tile.y * nTiles.x + tile.x;
-                        Sampler tileSampler = sampler.Clone(tileIndex);
+                final int localIter = iter;
+                Consumer<Point2i> visFunc = (Point2i tile) -> {
+                    // Follow camera paths for _tile_ in image for SPPM
+                    int tileIndex = tile.y * nTiles.x + tile.x;
+                    Sampler tileSampler = sampler.Clone(tileIndex);
 
-                        // Compute _tileBounds_ for SPPM tile
-                        int x0 = pixelBounds.pMin.x + tile.x * tileSize;
-                        int x1 = Math.min(x0 + tileSize, pixelBounds.pMax.x);
-                        int y0 = pixelBounds.pMin.y + tile.y * tileSize;
-                        int y1 = Math.min(y0 + tileSize, pixelBounds.pMax.y);
-                        Bounds2i tileBounds = new Bounds2i(new Point2i(x0, y0), new Point2i(x1, y1));
-                        for (int py = tileBounds.pMin.y; py < tileBounds.pMax.y; py++) {
-                            for (int px = tileBounds.pMin.x; px < tileBounds.pMax.x; px++) {
-                                Point2i pPixel = new Point2i(px, py);
-                                // Prepare _tileSampler_ for _pPixel_
-                                tileSampler.StartPixel(pPixel);
-                                tileSampler.SetSampleNumber(iter);
+                    // Compute _tileBounds_ for SPPM tile
+                    int x0 = pixelBounds.pMin.x + tile.x * tileSize;
+                    int x1 = Math.min(x0 + tileSize, pixelBounds.pMax.x);
+                    int y0 = pixelBounds.pMin.y + tile.y * tileSize;
+                    int y1 = Math.min(y0 + tileSize, pixelBounds.pMax.y);
+                    Bounds2i tileBounds = new Bounds2i(new Point2i(x0, y0), new Point2i(x1, y1));
+                    for (int py = tileBounds.pMin.y; py < tileBounds.pMax.y; py++) {
+                        for (int px = tileBounds.pMin.x; px < tileBounds.pMax.x; px++) {
+                            Point2i pPixel = new Point2i(px, py);
+                            // Prepare _tileSampler_ for _pPixel_
+                            tileSampler.StartPixel(pPixel);
+                            tileSampler.SetSampleNumber(localIter);
 
-                                // Generate camera ray for pixel for SPPM
-                                Camera.CameraSample cameraSample = tileSampler.GetCameraSample(pPixel);
-                                Camera.CameraRayDiff camRay = camera.GenerateRayDifferential(cameraSample);
-                                RayDifferential ray = camRay.rd;
-                                Spectrum beta = new Spectrum(camRay.weight);
-                                ray.ScaleDifferentials(invSqrtSPP);
+                            // Generate camera ray for pixel for SPPM
+                            Camera.CameraSample cameraSample = tileSampler.GetCameraSample(pPixel);
+                            Camera.CameraRayDiff camRay = camera.GenerateRayDifferential(cameraSample);
+                            RayDifferential ray = camRay.rd;
+                            Spectrum beta = new Spectrum(camRay.weight);
+                            ray.ScaleDifferentials(invSqrtSPP);
 
-                                // Follow camera ray path until a visible point is created
+                            // Follow camera ray path until a visible point is created
 
-                                // Get _SPPMPixel_ for _pPixel_
-                                Point2i pPixelO = new Point2i(pPixel.subtract(pixelBounds.pMin));
-                                int pixelOffset = pPixelO.x + pPixelO.y * (pixelBounds.pMax.x - pixelBounds.pMin.x);
-                                SPPMPixel pixel = pixels[pixelOffset];
-                                boolean specularBounce = false;
-                                for (int depth = 0; depth < maxDepth; ++depth) {
-                                    pointsPerInterations.incrementDenom(1);
-                                    SurfaceInteraction isect = scene.Intersect(ray);
-                                    if (isect == null) {
-                                        // Accumulate light contributions for ray with no
-                                        // intersection
-                                        for (Light light : scene.lights)
-                                            pixel.Ld = pixel.Ld.add(beta.multiply(light.Le(ray)));
-                                        break;
-                                    }
-                                    // Process SPPM camera ray intersection
-
-                                    // Compute BSDF at SPPM camera ray intersection
-                                    isect.ComputeScatteringFunctions(ray, true, Material.TransportMode.Radiance);
-                                    if (isect.bsdf == null) {
-                                        ray = new RayDifferential(isect.SpawnRay(ray.d));
-                                        --depth;
-                                        continue;
-                                    }
-                                    final BSDF bsdf = isect.bsdf;
-
-                                    // Accumulate direct illumination at SPPM camera ray
+                            // Get _SPPMPixel_ for _pPixel_
+                            Point2i pPixelO = new Point2i(pPixel.subtract(pixelBounds.pMin));
+                            int pixelOffset = pPixelO.x + pPixelO.y * (pixelBounds.pMax.x - pixelBounds.pMin.x);
+                            SPPMPixel pixel = pixels[pixelOffset];
+                            boolean specularBounce = false;
+                            for (int depth = 0; depth < maxDepth; ++depth) {
+                                pointsPerInterations.incrementDenom(1);
+                                SurfaceInteraction isect = scene.Intersect(ray);
+                                if (isect == null) {
+                                    // Accumulate light contributions for ray with no
                                     // intersection
-                                    Vector3f wo = ray.d.negate();
-                                    if (depth == 0 || specularBounce)
-                                        pixel.Ld = pixel.Ld.add(beta.multiply(isect.Le(wo)));
-                                    pixel.Ld = pixel.Ld.add(beta.multiply(SamplerIntegrator.UniformSampleOneLight(isect, scene, tileSampler, false, null)));
+                                    for (Light light : scene.lights)
+                                        pixel.Ld = pixel.Ld.add(beta.multiply(light.Le(ray)));
+                                    break;
+                                }
+                                // Process SPPM camera ray intersection
 
-                                    // Possibly create visible point and end camera path
-                                    boolean isDiffuse = bsdf.NumComponents(BxDF.BSDF_DIFFUSE | BxDF.BSDF_REFLECTION | BxDF.BSDF_TRANSMISSION) > 0;
-                                    boolean isGlossy = bsdf.NumComponents(BxDF.BSDF_GLOSSY | BxDF.BSDF_REFLECTION | BxDF.BSDF_TRANSMISSION) > 0;
-                                    if (isDiffuse || (isGlossy && depth == maxDepth - 1)) {
-                                        pixel.vp = new SPPMPixel.VisiblePoint(isect.p, wo, bsdf, beta);
-                                        break;
-                                    }
+                                // Compute BSDF at SPPM camera ray intersection
+                                isect.ComputeScatteringFunctions(ray, true, Material.TransportMode.Radiance);
+                                if (isect.bsdf == null) {
+                                    ray = new RayDifferential(isect.SpawnRay(ray.d));
+                                    --depth;
+                                    continue;
+                                }
+                                final BSDF bsdf = isect.bsdf;
 
-                                    // Spawn ray from SPPM camera path vertex
-                                    if (depth < maxDepth - 1) {
-                                        final BxDF.BxDFSample bxs = bsdf.Sample_f(wo, tileSampler.Get2D(), BxDF.BSDF_ALL);
-                                        float pdf = bxs.pdf;
-                                        Vector3f wi = bxs.wiWorld;
-                                        int type = bxs.sampledType;
-                                        Spectrum f = bxs.f;
-                                        if (pdf == 0. || f.isBlack()) break;
-                                        specularBounce = (type & BxDF.BSDF_SPECULAR) != 0;
-                                        beta = beta.multiply(f.scale(Normal3f.AbsDot(wi, isect.shading.n) / pdf));
-                                        if (beta.y() < 0.25f) {
-                                            float continueProb = Math.min(1, beta.y());
-                                            if (tileSampler.Get1D() > continueProb) break;
-                                            beta = beta.scale(1 / continueProb);
-                                        }
-                                        ray = new RayDifferential(isect.SpawnRay(wi));
+                                // Accumulate direct illumination at SPPM camera ray
+                                // intersection
+                                Vector3f wo = ray.d.negate();
+                                if (depth == 0 || specularBounce)
+                                    pixel.Ld = pixel.Ld.add(beta.multiply(isect.Le(wo)));
+                                pixel.Ld = pixel.Ld.add(beta.multiply(SamplerIntegrator.UniformSampleOneLight(isect, scene, tileSampler, false, null)));
+
+                                // Possibly create visible point and end camera path
+                                boolean isDiffuse = bsdf.NumComponents(BxDF.BSDF_DIFFUSE | BxDF.BSDF_REFLECTION | BxDF.BSDF_TRANSMISSION) > 0;
+                                boolean isGlossy = bsdf.NumComponents(BxDF.BSDF_GLOSSY | BxDF.BSDF_REFLECTION | BxDF.BSDF_TRANSMISSION) > 0;
+                                if (isDiffuse || (isGlossy && depth == maxDepth - 1)) {
+                                    pixel.vp = new SPPMPixel.VisiblePoint(isect.p, wo, bsdf, beta);
+                                    break;
+                                }
+
+                                // Spawn ray from SPPM camera path vertex
+                                if (depth < maxDepth - 1) {
+                                    final BxDF.BxDFSample bxs = bsdf.Sample_f(wo, tileSampler.Get2D(), BxDF.BSDF_ALL);
+                                    float pdf = bxs.pdf;
+                                    Vector3f wi = bxs.wiWorld;
+                                    int type = bxs.sampledType;
+                                    Spectrum f = bxs.f;
+                                    if (pdf == 0. || f.isBlack()) break;
+                                    specularBounce = (type & BxDF.BSDF_SPECULAR) != 0;
+                                    beta = beta.multiply(f.scale(Normal3f.AbsDot(wi, isect.shading.n) / pdf));
+                                    if (beta.y() < 0.25f) {
+                                        float continueProb = Math.min(1, beta.y());
+                                        if (tileSampler.Get1D() > continueProb) break;
+                                        beta = beta.scale(1 / continueProb);
                                     }
+                                    ray = new RayDifferential(isect.SpawnRay(wi));
                                 }
                             }
                         }
                     }
-                }
+                };
+
+                Parallel.ParallelFor2D(visFunc, nTiles);
             }
             progress.Update(1L);
 
@@ -172,16 +173,19 @@ public class SPPMIntegrator extends Integrator {
                 for (int i = 0; i < 3; ++i)
                     gridRes[i] = Math.max((int)(baseGridRes * diag.at(i) / maxDiag), 1);
 
+                final Bounds3f localGridBounds = gridBounds;
+
                 // Add visible points to SPPM grid
-                for (int pixelIndex = 0; pixelIndex< nPixels; pixelIndex += 4096) {
+                Consumer<Long> sumFunc = (Long li) -> {
+                    int pixelIndex = Math.toIntExact(li);
                     //MemoryArena &arena = perThreadArenas[ThreadIndex];
                     SPPMPixel pixel = pixels[pixelIndex];
                     if (!pixel.vp.beta.isBlack()) {
                         // Add pixel's visible point to applicable grid cells
                         float radius = pixel.radius;
                         Point3i pMin = new Point3i(), pMax = new Point3i();
-                        ToGrid(pixel.vp.p.subtract(new Vector3f(radius, radius, radius)), gridBounds, gridRes, pMin);
-                        ToGrid(pixel.vp.p.add(new Vector3f(radius, radius, radius)), gridBounds, gridRes, pMax);
+                        ToGrid(pixel.vp.p.subtract(new Vector3f(radius, radius, radius)), localGridBounds, gridRes, pMin);
+                        ToGrid(pixel.vp.p.add(new Vector3f(radius, radius, radius)), localGridBounds, gridRes, pMax);
                         for (int z = pMin.z; z <= pMax.z; ++z) {
                             for (int y = pMin.y; y <= pMax.y; ++y) {
                                 for (int x = pMin.x; x <= pMax.x; ++x) {
@@ -199,16 +203,20 @@ public class SPPMIntegrator extends Integrator {
                         }
                         gridCellsPerVisiblePoint.ReportValue((1 + pMax.x - pMin.x) * (1 + pMax.y - pMin.y) * (1 + pMax.z - pMin.z));
                     }
-                }
+                };
+                Parallel.ParallelFor(sumFunc, nPixels, 4096);
             }
 
             // Trace photons and accumulate contributions
             {
+                int localIter = iter;
+                final Bounds3f localGridBounds = gridBounds;
                 //std::vector<MemoryArena> photonShootArenas(MaxThreadIndex());
-                for(int photonIndex = 0; photonIndex < photonsPerIteration; photonIndex += 8192) {
+                Consumer<Long> traceFunc = (Long li) -> {
+                    int photonIndex = Math.toIntExact(li);
                     //MemoryArena &arena = photonShootArenas[ThreadIndex];
                     // Follow photon path for _photonIndex_
-                    long haltonIndex = (long)iter * (long)photonsPerIteration + photonIndex;
+                    long haltonIndex = (long)localIter * (long)photonsPerIteration + photonIndex;
                     int haltonDim = 0;
 
                     // Choose light to shoot photon from
@@ -248,7 +256,7 @@ public class SPPMIntegrator extends Integrator {
                         if (depth > 0) {
                             // Add photon contribution to nearby visible points
                             Point3i photonGridIndex = new Point3i();
-                            if (ToGrid(isect.p, gridBounds, gridRes, photonGridIndex)) {
+                            if (ToGrid(isect.p, localGridBounds, gridRes, photonGridIndex)) {
                                 int h = hash(photonGridIndex, hashSize);
                                 // Add photon contribution to visible points in
                                 // _grid[h]_
@@ -301,14 +309,16 @@ public class SPPMIntegrator extends Integrator {
                         photonRay = new RayDifferential(isect.SpawnRay(wi));
                     }
                     //arena.Reset();
-                }
+                };
+                Parallel.ParallelFor(traceFunc, photonsPerIteration, 8192);
                 progress.Update(1);
                 photonPaths.increment((long)photonsPerIteration);
             }
 
             // Update pixel values from this pass's photons
             {
-                for(int i = 0; i < nPixels; i += 4096) {
+                Consumer<Long> updateFunc = (Long li) -> {
+                    int i = Math.toIntExact(li);
                     SPPMPixel p = pixels[i];
                     if (p.M.get() > 0) {
                         // Update pixel photon count, search radius, and $\tau$ from
@@ -329,7 +339,8 @@ public class SPPMIntegrator extends Integrator {
                     // Reset _VisiblePoint_ in pixel
                     p.vp.beta = new Spectrum(0);
                     p.vp.bsdf = null;
-                }
+                };
+                Parallel.ParallelFor(updateFunc, nPixels, 4096);
             }
 
             // Periodically store SPPM image in film and write image

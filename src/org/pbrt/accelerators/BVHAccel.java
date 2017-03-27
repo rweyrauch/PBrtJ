@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class BVHAccel extends Aggregate {
 
@@ -445,29 +446,32 @@ public class BVHAccel extends Aggregate {
             bounds = Bounds3f.Union(bounds, pi.centroid);
 
         // Compute Morton indices of primitives
-        MortonPrimitive[] mortonPrims = new MortonPrimitive[primitiveInfo.size()];
+        final MortonPrimitive[] mortonPrims = new MortonPrimitive[primitiveInfo.size()];
         for (int i = 0; i < mortonPrims.length; i++) mortonPrims[i] = new MortonPrimitive();
-        for (int i = 0; i < primitiveInfo.size(); i++) {
+        final Bounds3f localBounds = bounds;
+        Consumer<Long> mortonFunc = (Long li) -> {
+            int i = Math.toIntExact(li);
             // Initialize _mortonPrims[i]_ for _i_th primitive
             final int mortonBits = 10;
             final int mortonScale = 1 << mortonBits;
             mortonPrims[i].primitiveIndex = primitiveInfo.get(i).primitiveNumber;
-            Vector3f centroidOffset = bounds.Offset(primitiveInfo.get(i).centroid);
+            Vector3f centroidOffset = localBounds.Offset(primitiveInfo.get(i).centroid);
             mortonPrims[i].mortonCode = EncodeMorton3(centroidOffset.scale(mortonScale));
-        }
+        };
+        Parallel.ParallelFor(mortonFunc, primitiveInfo.size(), 512);
 
         // Radix sort primitive Morton indices
-        mortonPrims = RadixSort(mortonPrims);
+        MortonPrimitive[] mortonPrimsSorted = RadixSort(mortonPrims);
 
         // Create LBVH treelets at bottom of BVH
 
         // Find intervals of primitives for each treelet
         ArrayList<LBVHTreelet> treeletsToBuild = new ArrayList<>();
-        for (int start = 0, end = 1; end <= mortonPrims.length; ++end) {
+        for (int start = 0, end = 1; end <= mortonPrimsSorted.length; ++end) {
             int mask = 0b00111111111111000000000000000000;
-            if (end == mortonPrims.length ||
-                    ((mortonPrims[start].mortonCode & mask) !=
-                            (mortonPrims[end].mortonCode & mask))) {
+            if (end == mortonPrimsSorted.length ||
+                    ((mortonPrimsSorted[start].mortonCode & mask) !=
+                            (mortonPrimsSorted[end].mortonCode & mask))) {
                 // Add entry to _treeletsToBuild_ for this treelet
                 int nPrimitives = end - start;
                 int maxBVHNodes = 2 * nPrimitives;
@@ -481,19 +485,19 @@ public class BVHAccel extends Aggregate {
         AtomicInteger atomicTotal = new AtomicInteger(0);
         AtomicInteger orderedPrimsOffset = new AtomicInteger(0);
         orderedPrims.ensureCapacity(primitives.length);
-        int nodeIndex = 0;
-        for (int i = 0; i < treeletsToBuild.size(); i++) {
+        Consumer<Long> treeletFunc = (Long li) -> {
+            int i = Math.toIntExact(li);
             // Generate _i_th LBVH treelet
             Integer[] nodesCreated = { 0 };
             final int firstBitIndex = 29 - 12;
             LBVHTreelet tr = treeletsToBuild.get(i);
-            tr.buildNodes[nodeIndex] =
-                    emitLBVH(tr.buildNodes, nodeIndex, primitiveInfo, mortonPrims, tr.startIndex,
+            tr.buildNodes[i] =
+                    emitLBVH(tr.buildNodes, i, primitiveInfo, mortonPrimsSorted, tr.startIndex,
                     tr.nPrimitives, nodesCreated, orderedPrims,
                      orderedPrimsOffset, firstBitIndex);
-            nodeIndex++;
             atomicTotal.addAndGet(nodesCreated[0]);
-        }
+        };
+        Parallel.ParallelFor(treeletFunc, treeletsToBuild.size(), 1);
         totalNodes[0] = atomicTotal.get();
 
         // Create and return SAH BVH from LBVH treelets

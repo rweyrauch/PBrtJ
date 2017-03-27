@@ -41,10 +41,10 @@ public class Stats {
         }
 
         public void increment() {
-            var.set(var.get()+1);
+            //var.set(var.get()+1);
         }
         public void increment(long val) {
-            var.set(var.get()+val);
+            //var.set(var.get()+val);
         }
     }
 
@@ -70,7 +70,7 @@ public class Stats {
         }
 
         public void increment(long value) {
-            var.set(var.get()+value);
+            //var.set(var.get()+value);
         }
     }
 
@@ -89,10 +89,10 @@ public class Stats {
         }
 
         public void incrementNumer(int value) {
-            numVar.set(numVar.get()+value);
+            //numVar.set(numVar.get()+value);
         }
         public void incrementDenom(int value) {
-            denomVar.set(denomVar.get()+value);
+            //denomVar.set(denomVar.get()+value);
         }
 
         StatRegisterer statRegisterer;
@@ -121,10 +121,10 @@ public class Stats {
         }
 
         public void incrementNumer(int value) {
-            numVar.set(numVar.get()+value);
+            //numVar.set(numVar.get()+value);
         }
         public void incrementDenom(int value) {
-            denomVar.set(denomVar.get()+value);
+            //denomVar.set(denomVar.get()+value);
         }
 
         StatRegisterer statRegisterer;
@@ -157,10 +157,12 @@ public class Stats {
         }
 
         public void ReportValue(long value) {
+            /*
             sumVar.set(sumVar.get()+value);
             countVar.set(countVar.get()+1);
             minVar.set(Math.min(minVar.get(), value));
             maxVar.set(Math.max(maxVar.get(), value));
+            */
         }
 
         StatRegisterer statRegisterer;
@@ -195,10 +197,12 @@ public class Stats {
         }
 
         public void ReportValue(double value) {
+            /*
             sumVar.set(sumVar.get()+value);
             countVar.set(countVar.get()+1);
             minVar.set(Math.min(minVar.get(), value));
             maxVar.set(Math.max(maxVar.get(), value));
+            */
         }
 
         StatRegisterer statRegisterer;

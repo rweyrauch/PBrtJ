@@ -12,6 +12,8 @@ package org.pbrt.lights;
 
 import org.pbrt.core.*;
 
+import java.util.function.Consumer;
+
 public class InfiniteAreaLight extends Light {
 
     public InfiniteAreaLight(Transform lightToWorld, Spectrum L, int nSamples, String texMap) {
@@ -44,7 +46,8 @@ public class InfiniteAreaLight extends Light {
         int width = 2 * Lmap.Width(), height = 2 * Lmap.Height();
         float[] img = new float[width * height];
         float fwidth = 0.5f / Math.min(width, height);
-        for (int v = 0; v < height; v++) {
+        Consumer<Long> envFunc = (Long li) -> {
+            int v = Math.toIntExact(li);
             float vp = (v + .5f) / height;
             float sinTheta = (float)Math.sin(Math.PI * (v + .5f) / height);
             for (int u = 0; u < width; ++u) {
@@ -52,7 +55,8 @@ public class InfiniteAreaLight extends Light {
                 img[u + v * width] = Lmap.Lookup(new Point2f(up, vp), fwidth).y();
                 img[u + v * width] *= sinTheta;
             }
-        }
+        };
+        Parallel.ParallelFor(envFunc, height, 32);
 
         // Compute sampling distributions for rows and columns of image
         distribution = new Distribution2D(img, width, height);

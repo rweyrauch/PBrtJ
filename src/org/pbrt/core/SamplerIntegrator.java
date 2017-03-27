@@ -10,6 +10,8 @@
 
 package org.pbrt.core;
 
+import java.util.function.Consumer;
+
 public abstract class SamplerIntegrator extends Integrator {
 
     public SamplerIntegrator(Camera camera, Sampler sampler, Bounds2i pixelBounds) {
@@ -33,85 +35,83 @@ public abstract class SamplerIntegrator extends Integrator {
 
         ProgressReporter reporter = new ProgressReporter(nTiles.x * nTiles.y, "Rendering");
 
-        for (int y = 0; y < nTiles.y; y++) {
-            for (int x = 0; x < nTiles.x; x++) {
-                Point2i tile = new Point2i(x, y);
+        Consumer<Point2i> renderFunc = (Point2i tile) -> {
+            // Render section of image corresponding to _tile_
 
-                // Render section of image corresponding to _tile_
+            // Get sampler instance for tile
+            int seed = tile.y * nTiles.x + tile.x;
+            Sampler tileSampler = sampler.Clone(seed);
 
-                // Get sampler instance for tile
-                int seed = tile.y * nTiles.x + tile.x;
-                Sampler tileSampler = sampler.Clone(seed);
+            // Compute sample bounds for tile
+            int x0 = sampleBounds.pMin.x + tile.x * tileSize;
+            int x1 = Math.min(x0 + tileSize, sampleBounds.pMax.x);
+            int y0 = sampleBounds.pMin.y + tile.y * tileSize;
+            int y1 = Math.min(y0 + tileSize, sampleBounds.pMax.y);
+            Bounds2i tileBounds = new Bounds2i(new Point2i(x0, y0), new Point2i(x1, y1));
+            //Api.logger.info("Starting image tile %s\n", tileBounds.toString());
 
-                // Compute sample bounds for tile
-                int x0 = sampleBounds.pMin.x + tile.x * tileSize;
-                int x1 = Math.min(x0 + tileSize, sampleBounds.pMax.x);
-                int y0 = sampleBounds.pMin.y + tile.y * tileSize;
-                int y1 = Math.min(y0 + tileSize, sampleBounds.pMax.y);
-                Bounds2i tileBounds = new Bounds2i(new Point2i(x0, y0), new Point2i(x1, y1));
-                //Api.logger.info("Starting image tile %s\n", tileBounds.toString());
+            // Get _FilmTile_ for tile
+            Film.FilmTile filmTile = camera.film.GetFilmTile(tileBounds);
 
-                // Get _FilmTile_ for tile
-                Film.FilmTile filmTile = camera.film.GetFilmTile(tileBounds);
+            // Loop over pixels in tile to render them
+            for (int py = tileBounds.pMin.y; py < tileBounds.pMax.y; py++) {
+                for (int px = tileBounds.pMin.x; px < tileBounds.pMax.x; px++) {
+                    Point2i pixel = new Point2i(px, py);
+                    tileSampler.StartPixel(pixel);
 
-                // Loop over pixels in tile to render them
-                for (int py = tileBounds.pMin.y; py < tileBounds.pMax.y; py++) {
-                    for (int px = tileBounds.pMin.x; px < tileBounds.pMax.x; px++) {
-                        Point2i pixel = new Point2i(px, py);
-                        tileSampler.StartPixel(pixel);
+                    // Do this check after the StartPixel() call; this keeps
+                    // the usage of RNG values from (most) Samplers that use
+                    // RNGs consistent, which improves reproducability /
+                    // debugging.
+                    if (!Bounds2i.InsideExclusive(pixel, pixelBounds))
+                        continue;
 
-                        // Do this check after the StartPixel() call; this keeps
-                        // the usage of RNG values from (most) Samplers that use
-                        // RNGs consistent, which improves reproducability /
-                        // debugging.
-                        if (!Bounds2i.InsideExclusive(pixel, pixelBounds))
-                            continue;
+                    do {
+                        // Initialize _CameraSample_ for current sample
+                        Camera.CameraSample cameraSample = tileSampler.GetCameraSample(pixel);
 
-                        do {
-                            // Initialize _CameraSample_ for current sample
-                            Camera.CameraSample cameraSample = tileSampler.GetCameraSample(pixel);
+                        // Generate camera ray for current sample
+                        Camera.CameraRayDiff camRay = camera.GenerateRayDifferential(cameraSample);
+                        RayDifferential ray = camRay.rd;
+                        float rayWeight = camRay.weight;
 
-                            // Generate camera ray for current sample
-                            Camera.CameraRayDiff camRay = camera.GenerateRayDifferential(cameraSample);
-                            RayDifferential ray = camRay.rd;
-                            float rayWeight = camRay.weight;
+                        ray.ScaleDifferentials(1 / (float) Math.sqrt((float) tileSampler.samplesPerPixel));
+                        nCameraRays.increment();
 
-                            ray.ScaleDifferentials(1 / (float) Math.sqrt((float) tileSampler.samplesPerPixel));
-                            nCameraRays.increment();
+                        // Evaluate radiance along camera ray
+                        Spectrum L = new Spectrum(0);
+                        if (rayWeight > 0) L = Li(ray, scene, tileSampler, 0);
 
-                            // Evaluate radiance along camera ray
-                            Spectrum L = new Spectrum(0);
-                            if (rayWeight > 0) L = Li(ray, scene, tileSampler, 0);
+                        // Issue warning if unexpected radiance value returned
+                        if (L.hasNaNs()) {
+                            Api.logger.error("Not-a-number radiance value returned for pixel (%d, %d), sample %d. Setting to black.",
+                                    pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
+                            L = new Spectrum(0);
+                        } else if (L.y() < -1e-5f) {
+                            Api.logger.error("Negative luminance value, %f, returned for pixel (%d, %d), sample %d. Setting to black.",
+                                    L.y(), pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
+                            L = new Spectrum(0);
+                        } else if (Float.isInfinite(L.y())) {
+                            Api.logger.error("Infinite luminance value returned for pixel (%d, %d), sample %d. Setting to black.",
+                                    pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
+                            L = new Spectrum(0);
+                        }
+                        //System.out.format("Camera sample: (%f,%f) L: (%f,%f,%f)\n", cameraSample.pFilm.x, cameraSample.pFilm.y, L.at(0), L.at(1), L.at(2));
 
-                            // Issue warning if unexpected radiance value returned
-                            if (L.hasNaNs()) {
-                                Api.logger.error("Not-a-number radiance value returned for pixel (%d, %d), sample %d. Setting to black.",
-                                        pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
-                                L = new Spectrum(0);
-                            } else if (L.y() < -1e-5f) {
-                                Api.logger.error("Negative luminance value, %f, returned for pixel (%d, %d), sample %d. Setting to black.",
-                                        L.y(), pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
-                                L = new Spectrum(0);
-                            } else if (Float.isInfinite(L.y())) {
-                                Api.logger.error("Infinite luminance value returned for pixel (%d, %d), sample %d. Setting to black.",
-                                        pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
-                                L = new Spectrum(0);
-                            }
-                            //System.out.format("Camera sample: (%f,%f) L: (%f,%f,%f)\n", cameraSample.pFilm.x, cameraSample.pFilm.y, L.at(0), L.at(1), L.at(2));
+                        // Add camera ray's contribution to image
+                        filmTile.AddSample(cameraSample.pFilm, L, rayWeight);
 
-                            // Add camera ray's contribution to image
-                            filmTile.AddSample(cameraSample.pFilm, L, rayWeight);
-
-                        } while (tileSampler.StartNextSample());
-                    }
+                    } while (tileSampler.StartNextSample());
                 }
-                //Api.logger.info("Finished image tile, %s", tileBounds.toString());
-
-                // Merge image tile into _Film_
-                camera.film.MergeFilmTile(filmTile);
-                reporter.Update(1);
             }
-        }
+            //Api.logger.info("Finished image tile, %s", tileBounds.toString());
+
+            // Merge image tile into _Film_
+            camera.film.MergeFilmTile(filmTile);
+            reporter.Update(1);
+        };
+        Parallel.ParallelFor2D(renderFunc, nTiles);
+
         reporter.Done();
 
         Api.logger.info("Rendering finished");
@@ -387,6 +387,6 @@ public abstract class SamplerIntegrator extends Integrator {
     private Sampler sampler;
     private final Bounds2i pixelBounds;
 
-    private static Stats.Counter nCameraRays = new Stats.Counter("Integrator/Camera rays traced");
+    private static final Stats.Counter nCameraRays = new Stats.Counter("Integrator/Camera rays traced");
 
 }

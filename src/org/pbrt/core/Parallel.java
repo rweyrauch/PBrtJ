@@ -18,7 +18,7 @@ public class Parallel {
     public static void ParallelFor(Consumer<Long> func, long count, int chunkSize) {
 
         // Run iterations immediately if _count_ is small
-        if (count < chunkSize) {
+        if (MaxThreadIndex() == 1 || count < chunkSize) {
             for (long i = 0; i < count; ++i) func.accept(i);
             return;
         }
@@ -41,7 +41,7 @@ public class Parallel {
 
         try {
             pool.shutdown();
-            pool.awaitTermination(10, TimeUnit.SECONDS);
+            pool.awaitTermination(1000, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,7 +49,7 @@ public class Parallel {
 
     public static void ParallelFor2D(Consumer<Point2i> func, Point2i count) {
 
-        if (count.x * count.y <= 1) {
+        if (MaxThreadIndex() == 1 || count.x * count.y <= 1) {
             for (int y = 0; y < count.y; ++y)
                 for (int x = 0; x < count.x; ++x) func.accept(new Point2i(x, y));
             return;
@@ -73,7 +73,7 @@ public class Parallel {
 
         try {
             pool.shutdown();
-            pool.awaitTermination(10, TimeUnit.SECONDS);
+            pool.awaitTermination(1000, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }

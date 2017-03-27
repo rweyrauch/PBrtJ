@@ -13,6 +13,7 @@ package org.pbrt.integrators;
 import org.pbrt.core.*;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class MLTIntegrator extends Integrator {
 
@@ -50,7 +51,9 @@ public class MLTIntegrator extends Integrator {
         if (scene.lights.size() > 0) {
             ProgressReporter progress = new ProgressReporter(nBootstrap / 256, "Generating bootstrap paths");
             int chunkSize = Pbrt.Clamp(nBootstrap / 128, 1, 8192);
-            for (int i = 0; i < nBootstrap; i += chunkSize) {
+
+            Consumer<Long> bootFunc = (Long li) -> {
+                int i = Math.toIntExact(li);
                 // Generate _i_th bootstrap sample
                 for (int depth = 0; depth <= maxDepth; ++depth) {
                     int rngIndex = i * (maxDepth + 1) + depth;
@@ -59,7 +62,8 @@ public class MLTIntegrator extends Integrator {
                     bootstrapWeights[rngIndex] = L(scene, lightDistr, lightToIndex, sampler, depth, pRaster).y();
                 }
                 if ((i + 1 % 256) == 0) progress.Update(1);
-            }
+            };
+            Parallel.ParallelFor(bootFunc, nBootstrap, chunkSize);
             progress.Done();
         }
         Distribution1D bootstrap = new Distribution1D(bootstrapWeights);
@@ -71,7 +75,10 @@ public class MLTIntegrator extends Integrator {
         if (scene.lights.size() > 0) {
             final int progressFrequency = 32768;
             ProgressReporter progress = new ProgressReporter(nTotalMutations / progressFrequency, "Rendering");
-            for (int i = 0; i < nChains; i++) {
+
+            Consumer<Long> renderFunc = (Long li) -> {
+                int i = Math.toIntExact(li);
+
                 long nChainMutations = Math.min((i + 1) * nTotalMutations / nChains, nTotalMutations) - i * nTotalMutations / nChains;
                 // Follow {i}th Markov chain for _nChainMutations_
 
@@ -113,7 +120,8 @@ public class MLTIntegrator extends Integrator {
                     if ((i * nTotalMutations / nChains + j) % progressFrequency == 0)
                         progress.Update(1);
                 }
-            }
+            };
+            Parallel.ParallelFor(renderFunc, nChains, 1);
             progress.Done();
         }
 
