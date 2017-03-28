@@ -156,8 +156,7 @@ public class BDPTIntegrator extends Integrator {
         // Write buffers for debug visualization
         if (visualizeStrategies || visualizeWeights) {
             final float invSampleCount = 1.0f / sampler.samplesPerPixel;
-            for (int i = 0; i < weightFilms.length; ++i)
-                if (weightFilms[i] != null) weightFilms[i].WriteImage(invSampleCount);
+            for (Film weightFilm : weightFilms) if (weightFilm != null) weightFilm.WriteImage(invSampleCount);
         }
     }
 

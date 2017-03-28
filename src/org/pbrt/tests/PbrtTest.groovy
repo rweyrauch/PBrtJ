@@ -114,7 +114,7 @@ class PbrtTest extends GroovyTestCase {
         float f = Float.intBitsToFloat(rng.UniformInt32())
         while (Float.isNaN(f)) {
             f = Float.intBitsToFloat(rng.UniformInt32())
-        };
+        }
         return f
     }
 
@@ -122,7 +122,7 @@ class PbrtTest extends GroovyTestCase {
         double d = Double.longBitsToDouble((long)(rng.UniformInt32()) | ((long)(rng.UniformInt32()) << 32))
         while (Double.isNaN(d)) {
             d = Double.longBitsToDouble((long)(rng.UniformInt32()) | ((long)(rng.UniformInt32()) << 32))
-        };
+        }
         return d
     }
 
@@ -139,7 +139,7 @@ class PbrtTest extends GroovyTestCase {
         RNG rng = new RNG(0)
         for (int i = 0; i < 100000; ++i) {
             float f = GetFloat(rng)
-            if (Float.isInfinite(f)) continue;
+            if (Float.isInfinite(f)) continue
 
             assertEquals((float)Math.nextAfter(f, Pbrt.Infinity), Pbrt.NextFloatUp(f))
             assertEquals((float)Math.nextAfter(f, -Pbrt.Infinity), Pbrt.NextFloatDown(f))

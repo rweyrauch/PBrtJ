@@ -12,7 +12,6 @@ package org.pbrt.integrators;
 import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
-import java.io.PipedReader;
 import java.util.ArrayList;
 
 public class MLTSampler extends Sampler {

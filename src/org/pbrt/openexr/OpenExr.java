@@ -63,17 +63,14 @@ public class OpenExr {
 		Thread[] threads = new Thread[3];
 		for (int j = 0; j < 3; j++) {
 			final int offset = j;
-			threads[j] = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					for (int i = offset; i < length; i += 3) {
-						float value = (float) ((pow(pixels[i] * evCorrection, gammaCorrection)) * 255.0);
-						if (value < 0.0f) value = 0.0f;
-						if (value > 255.0f) value = 255.0f;
-						rgb[i] = (byte) value;
-					}
-				}
-			});
+			threads[j] = new Thread(() -> {
+                for (int i = offset; i < length; i += 3) {
+                    float value = (float) ((pow(pixels[i] * evCorrection, gammaCorrection)) * 255.0);
+                    if (value < 0.0f) value = 0.0f;
+                    if (value > 255.0f) value = 255.0f;
+                    rgb[i] = (byte) value;
+                }
+            });
 			threads[j].start();
 		}
 		
@@ -199,15 +196,19 @@ public class OpenExr {
 		List<Channel> list = channels.list;
 		for (Channel channel : list) {
 			String name = channel.name.toLowerCase();
-			if (name.equals("r")) {
-				verify(channel);
-				r = true;
-			} else if (name.equals("g")) {
-				verify(channel);
-				g = true;
-			} else if (name.equals("b")) {
-				verify(channel);
-				b = true;
+			switch (name) {
+				case "r":
+					verify(channel);
+					r = true;
+					break;
+				case "g":
+					verify(channel);
+					g = true;
+					break;
+				case "b":
+					verify(channel);
+					b = true;
+					break;
 			}
 		}
 		

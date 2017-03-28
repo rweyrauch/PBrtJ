@@ -112,8 +112,6 @@ public class EXROutput {
                 fos = new FileOutputStream(new File(filename));
                 fos.write(byteBuffer.toByteArray());
                 fos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

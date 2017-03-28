@@ -68,9 +68,9 @@ public class Triangle extends Shape {
             Error.Error("Number of \"N\"s for triangle mesh must match \"P\"s");
             N = null;
         }
-        for (int i = 0; i < vi.length; ++i) {
-            if (vi[i] >= P.length) {
-                Error.Error("trianglemesh has out of-bounds vertex index %d (%d \"P\" values were given", vi[i], P.length);
+        for (Integer aVi : vi) {
+            if (aVi >= P.length) {
+                Error.Error("trianglemesh has out of-bounds vertex index %d (%d \"P\" values were given", aVi, P.length);
                 return new ArrayList<>();
             }
         }
@@ -83,7 +83,7 @@ public class Triangle extends Shape {
                 Error.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
             }
         } else if (paramSet.FindOneFloat("alpha", 1) == 0) {
-            alphaTex = new ConstantTexture<>(new Float(0));
+            alphaTex = new ConstantTexture<>(0.0f);
         }
 
         Texture<Float> shadowAlphaTex = null;
@@ -95,7 +95,7 @@ public class Triangle extends Shape {
                 Error.Error("Couldn't find float texture \"%s\" for \"shadowalpha\" parameter", shadowAlphaTexName);
             }
         } else if (paramSet.FindOneFloat("shadowalpha", 1) == 0) {
-            shadowAlphaTex = new ConstantTexture<>(new Float(0));
+            shadowAlphaTex = new ConstantTexture<>(0.0f);
         }
 
         int[] vii = new int[vi.length];

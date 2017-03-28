@@ -30,9 +30,7 @@ public final class Spectrum {
         }
     }
     public Spectrum(Spectrum s) {
-        for (int i = 0; i < this.c.length; i++) {
-            this.c[i] = s.c[i];
-        }
+        System.arraycopy(s.c, 0, this.c, 0, this.c.length);
     }
 
     public static int numSamples() {
@@ -187,8 +185,8 @@ public final class Spectrum {
     }
 
     public boolean isBlack() {
-        for (int i = 0; i < c.length; ++i) {
-            if (c[i] != 0) return false;
+        for (float aC : c) {
+            if (aC != 0) return false;
         }
         return true;
     }
@@ -199,8 +197,8 @@ public final class Spectrum {
     }
 
     public boolean hasNaNs() {
-        for (int i = 0; i < c.length; i++) {
-            if (Float.isNaN(c[i])) return true;
+        for (float aC : c) {
+            if (Float.isNaN(aC)) return true;
         }
         return false;
     }
@@ -222,8 +220,7 @@ public final class Spectrum {
     }
 
     public boolean write(PrintStream f) {
-        for (int i = 0; i < c.length; ++i)
-            f.printf("%f ", c[i]);
+        for (float aC : c) f.printf("%f ", aC);
         return true;
     }
     public boolean read(InputStream f) {

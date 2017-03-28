@@ -210,7 +210,7 @@ class BSDFTest extends GroovyTestCase {
         //Function<Float, Float> integrate = [apply:{float y ->
        //     return AdaptiveSimpson(std::bind(f, std::placeholders::_1, y), x0, x1, eps, depth)
        // }] as Function
-        float value = 0; //AdaptiveSimpson(integrate, y0, y1, eps, depth, 1e-6f, 6)
+        float value = 0 //AdaptiveSimpson(integrate, y0, y1, eps, depth, 1e-6f, 6)
         return value
     }
 
@@ -298,7 +298,7 @@ class BSDFTest extends GroovyTestCase {
                 pooledExpFrequencies += expFrequencies[c.index]
                 pooledCells++
             } else {
-                float diff = frequencies[c.index] - expFrequencies[c.index];
+                float diff = frequencies[c.index] - expFrequencies[c.index]
                 chsq += (diff * diff) / expFrequencies[c.index]
                 ++dof
             }

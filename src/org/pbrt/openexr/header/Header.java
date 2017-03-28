@@ -16,7 +16,7 @@ import org.pbrt.openexr.util.DataReader;
  */
 public class Header {
 	
-	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
+	private Map<String, Attribute> attributes = new HashMap<>();
 	
 	public Header(DataReader data) throws IOException {
 		for (;;) {
@@ -35,17 +35,12 @@ public class Header {
 	
 	public List<Attribute> getAll() {
 		
-		List<Attribute> all = new ArrayList<Attribute>();
+		List<Attribute> all = new ArrayList<>();
 		for (String name : attributes.keySet()) {
 			all.add(get(name));
 		}
 		
-		Collections.sort(all, new Comparator<Attribute>() {
-			@Override
-			public int compare(Attribute x, Attribute y) {
-				return x.name.compareTo(y.name);
-			}
-		});
+		all.sort(Comparator.comparing(x -> x.name));
 		
 		return all;
 	}

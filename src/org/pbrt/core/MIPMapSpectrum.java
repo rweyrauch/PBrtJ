@@ -15,7 +15,7 @@ public class MIPMapSpectrum {
 
     public static class ResampleWeight {
         public int firstTexel;
-        public float[] weight;
+        public float[] weight = { 0, 0, 0, 0 };
     }
 
     public MIPMapSpectrum(Point2i resolution, Spectrum[] data, boolean doTri, float maxAniso, Texture.ImageWrap wrapMode, Spectrum black){
@@ -209,6 +209,7 @@ public class MIPMapSpectrum {
         ResampleWeight[] wt = new ResampleWeight[newRes];
         float filterwidth = 2;
         for (int i = 0; i < newRes; ++i) {
+            wt[i] = new ResampleWeight();
             // Compute image resampling weights for _i_th texel
             float center = (i + .5f) * oldRes / newRes;
             wt[i].firstTexel = (int)Math.floor((center - filterwidth) + 0.5);

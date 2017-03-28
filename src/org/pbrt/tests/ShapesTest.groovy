@@ -131,7 +131,7 @@ class ShapesTest extends GroovyTestCase {
             u.x = rng2.UniformFloat()
             u.y = rng2.UniformFloat()
             Ray r = new Ray(p, Sampling.UniformSampleSphere(u))
-            int nHits = 0;
+            int nHits = 0
             for (Shape tri : tris) {
                 def intersect = tri.Intersect(r, false)
                 if (intersect != null) ++nHits

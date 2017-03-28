@@ -975,7 +975,7 @@ public class AnimatedTransform {
             bounds = Bounds3f.Union(bounds, BoundPointMotion(b.Corner(corner)));
         return bounds;
     }
-    Bounds3f BoundPointMotion(Point3f p) {
+    public Bounds3f BoundPointMotion(Point3f p) {
         if (!actuallyAnimated) return new Bounds3f(startTransform.xform(p));
         Bounds3f bounds = new Bounds3f(startTransform.xform(p), endTransform.xform(p));
         float cosTheta = Quaternion.Dot(R0, R1);
@@ -984,11 +984,12 @@ public class AnimatedTransform {
             // Find any motion derivative zeros for the component _c_
             ArrayList<Float> zeros = IntervalFindZeros(c1[c].Eval(p), c2[c].Eval(p), c3[c].Eval(p),
                     c4[c].Eval(p), c5[c].Eval(p), theta, new Interval(0, 1), 8);
-
-            // Expand bounding box for any motion derivative zeros found
-            for (float val : zeros) {
-                Point3f pz = xform(Pbrt.Lerp(val, startTime, endTime), p);
-                bounds = Bounds3f.Union(bounds, pz);
+            if (zeros != null) {
+                // Expand bounding box for any motion derivative zeros found
+                for (float val : zeros) {
+                    Point3f pz = xform(Pbrt.Lerp(val, startTime, endTime), p);
+                    bounds = Bounds3f.Union(bounds, pz);
+                }
             }
         }
         return bounds;

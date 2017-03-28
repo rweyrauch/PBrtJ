@@ -17,7 +17,7 @@ public class BSDF {
     private final Vector3f ss, ts;
     private int nBxDFs = 0;
     private static final int MaxBxDFs = 8;
-    public BxDF[] bxdfs = new BxDF[MaxBxDFs];
+    public final BxDF[] bxdfs = new BxDF[MaxBxDFs];
 
     // BSDF Public Methods
     public BSDF(SurfaceInteraction si, float eta) {
@@ -107,6 +107,7 @@ public class BSDF {
             bxdf = bxdfs[i];
             break;
         }
+        assert(bxdf != null);
 
         //Api.logger.trace("BSDF::Sample_f chose comp = %d / matching = %d, bxdf: %s", comp, matchingComps, bxdf.toString());
 
@@ -178,9 +179,9 @@ public class BSDF {
 
     @Override
     public String toString() {
-        String s = String.format("[ BSDF eta: %f nBxDFs: %d", eta, nBxDFs);
+        StringBuilder s = new StringBuilder(String.format("[ BSDF eta: %f nBxDFs: %d", eta, nBxDFs));
         for (int i = 0; i < nBxDFs; ++i)
-            s += String.format("\n  bxdfs[%d]: ", i) + bxdfs[i].toString();
+            s.append(String.format("\n  bxdfs[%d]: ", i)).append(bxdfs[i].toString());
         return s + " ]";
     }
 

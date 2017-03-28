@@ -115,7 +115,7 @@ public class PlyMesh {
                 Error.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
             }
         } else if (paramSet.FindOneFloat("alpha", 1) == 0) {
-            alphaTex = new ConstantTexture<Float>(new Float(0));
+            alphaTex = new ConstantTexture<>(0.0f);
         }
 
         Texture<Float> shadowAlphaTex = null;
@@ -129,7 +129,7 @@ public class PlyMesh {
             }
         }
         else if (paramSet.FindOneFloat("shadowalpha", 1) == 0) {
-            shadowAlphaTex = new ConstantTexture<Float>(new Float(0));
+            shadowAlphaTex = new ConstantTexture<>(0.0f);
         }
 
         return Triangle.CreateTriangleMesh(object2world, world2object, reverseOrientation,

@@ -29,19 +29,18 @@ public class KeyCode extends Attribute {
 	
 	@Override
 	public String toString() {
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append("%s = ");
-		sb.append("(filmMfcCode=%d, ");
-		sb.append("filmType=%d, ");
-		sb.append("prefix=%d, ");
-		sb.append("count=%d, ");
-		sb.append("perfOffset=%d, ");
-		sb.append("perfsPerFrame=%d, ");
-		sb.append("perfsPerCount=%d)");
-		
+
+		String sb = "%s = " +
+				"(filmMfcCode=%d, " +
+				"filmType=%d, " +
+				"prefix=%d, " +
+				"count=%d, " +
+				"perfOffset=%d, " +
+				"perfsPerFrame=%d, " +
+				"perfsPerCount=%d)";
+
 		return String.format(
-			sb.toString(),
+				sb,
 			name,
 			filmMfcCode,
 			filmType,

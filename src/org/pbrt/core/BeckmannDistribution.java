@@ -97,7 +97,7 @@ public class BeckmannDistribution extends MicrofacetDistribution {
         Vector3f wiStretched = Vector3f.Normalize(new Vector3f(alpha_x * wi.x, alpha_y * wi.y, wi.z));
 
         // 2. simulate P22_{wi}(x_slope, y_slope, 1, 1)
-        Float slope_x = new Float(0), slope_y = new Float(0);
+        Float slope_x = 0.0f, slope_y = 0.0f;
         BeckmannSample11(Reflection.CosTheta(wiStretched), U1, U2, slope_x, slope_y);
 
         // 3. rotate

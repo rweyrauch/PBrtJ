@@ -65,7 +65,7 @@ public class BVHAccel extends Aggregate {
             nodes[i] = new LinearBVHNode();
         Integer[] offset = { 0 };
         flattenBVHTree(root, offset);
-        assert(totalNodes[0] == offset[0]);
+        assert(Objects.equals(totalNodes[0], offset[0]));
 
     }
     public BVHAccel(Primitive[] prims) {
@@ -358,7 +358,7 @@ public class BVHAccel extends Aggregate {
                     case EqualCounts: {
                         // Partition primitives into equally-sized subsets
                         mid = (start + end) / 2;
-                        Collections.sort(primitiveInfo.subList(start, end), new BVHInfoComparable(dim));
+                        primitiveInfo.subList(start, end).sort(new BVHInfoComparable(dim));
                         break;
                     }
                     case SAH:
@@ -367,7 +367,7 @@ public class BVHAccel extends Aggregate {
                         if (nPrimitives <= 2) {
                             // Partition primitives into equally-sized subsets
                             mid = (start + end) / 2;
-                            Collections.sort(primitiveInfo.subList(start, end), new BVHInfoComparable(dim));
+                            primitiveInfo.subList(start, end).sort(new BVHInfoComparable(dim));
                         } else {
                             // Allocate _BucketInfo_ for SAH partition buckets
                             final int nBuckets = 12;

@@ -84,6 +84,8 @@ public class FourierBSDF extends BxDF {
         float muO = Reflection.CosTheta(wo);
         Interpolation.SampleCR sampCR = Interpolation.SampleCatmullRom2D(bsdfTable.nMu, bsdfTable.nMu, bsdfTable.mu,
                 bsdfTable.mu, bsdfTable.a0, bsdfTable.cdf, muO, u.y);
+        if (sampCR == null) return result;
+        
         float pdfMu = sampCR.pdf;
         float muI = sampCR.sample;
 

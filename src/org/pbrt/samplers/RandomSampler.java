@@ -23,13 +23,13 @@ public class RandomSampler extends Sampler {
     }
 
     public void StartPixel(Point2i p) {
-        for (int i = 0; i < sampleArray1D.size(); ++i)
-            for (int j = 0; j < sampleArray1D.get(i).length; ++j)
-                sampleArray1D.get(i)[j] = rng.UniformFloat();
+        for (Float[] aSampleArray1D : sampleArray1D)
+            for (int j = 0; j < aSampleArray1D.length; ++j)
+                aSampleArray1D[j] = rng.UniformFloat();
 
-        for (int i = 0; i < sampleArray2D.size(); ++i)
-            for (int j = 0; j < sampleArray2D.get(i).length; ++j)
-                sampleArray2D.get(i)[j] = new Point2f(rng.UniformFloat(), rng.UniformFloat());
+        for (Point2f[] aSampleArray2D : sampleArray2D)
+            for (int j = 0; j < aSampleArray2D.length; ++j)
+                aSampleArray2D[j] = new Point2f(rng.UniformFloat(), rng.UniformFloat());
         super.StartPixel(p);
     }
 

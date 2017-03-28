@@ -9,7 +9,6 @@
 
 package org.pbrt.core;
 
-import java.util.ArrayList;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 

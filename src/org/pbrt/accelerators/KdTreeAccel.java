@@ -382,7 +382,7 @@ public class KdTreeAccel extends Aggregate {
     private ArrayList<Integer> primitiveIndices = new ArrayList<>();
     private KdAccelNode[] nodes;
     private int nAllocedNodes, nextFreeNode;
-    private Bounds3f bounds;
+    private Bounds3f bounds = new Bounds3f();
 
     private static class KdAccelNode {
         // KdAccelNode Methods

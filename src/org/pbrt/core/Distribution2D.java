@@ -19,7 +19,7 @@ public class Distribution2D {
         for (int v = 0; v < nv; ++v) {
             // Compute conditional sampling distribution for $\tilde{v}$
             float[] func = new float[nu];
-            for (int i = 0; i < nu; i++) func[i] = data[v * nu + i];
+            System.arraycopy(data, v * nu + 0, func, 0, nu);
             pConditionalV[v] = new Distribution1D(func);
         }
         // Compute marginal sampling distribution $p[\tilde{v}]$

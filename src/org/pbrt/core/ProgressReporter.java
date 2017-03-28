@@ -31,9 +31,7 @@ public class ProgressReporter extends Thread {
             // call.
             try {
                 barrier.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (BrokenBarrierException e) {
+            } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
             }
         }
@@ -58,9 +56,7 @@ public class ProgressReporter extends Thread {
     public void run() {
         try {
             barrier.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (BrokenBarrierException e) {
+        } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }
         PrintBar();

@@ -14,6 +14,7 @@ import org.pbrt.core.*;
 import org.pbrt.core.Error;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -51,7 +52,7 @@ public class LoopSubdiv {
         }
         int nFaces = nIndices / 3;
         SDFace[] fs = new SDFace[nFaces];
-        for (int i = 0; i < nFaces; ++i) faces.add(fs[i]);
+        faces.addAll(Arrays.asList(fs).subList(0, nFaces));
 
         // Set face to vertex pointers
         int vpi = 0;
@@ -97,10 +98,7 @@ public class LoopSubdiv {
             v.boundary = (f == null);
             if (!v.boundary && v.valence() == 6)
                 v.regular = true;
-            else if (v.boundary && v.valence() == 4)
-                v.regular = true;
-            else
-                v.regular = false;
+            else v.regular = v.boundary && v.valence() == 4;
         }
 
         // Refine _LoopSubdiv_ into triangles
@@ -267,9 +265,9 @@ public class LoopSubdiv {
             int totVerts = v.size();
             HashMap<SDVertex, Integer> usedVerts = new HashMap<>();
             for (int i = 0; i < totVerts; ++i) usedVerts.put(v.get(i), i);
-            for (int i = 0; i < ntris; ++i) {
+            for (SDFace aF : f) {
                 for (int j = 0; j < 3; ++j) {
-                    vertsmesh[vpi] = usedVerts.get(f.get(i).v[j]);
+                    vertsmesh[vpi] = usedVerts.get(aF.v[j]);
                     vpi++;
                 }
             }

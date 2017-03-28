@@ -12,7 +12,7 @@ package org.pbrt.core;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AtomicFloat {
-    private AtomicInteger bits;
+    private final AtomicInteger bits;
 
     public AtomicFloat() {
         this.bits = new AtomicInteger();

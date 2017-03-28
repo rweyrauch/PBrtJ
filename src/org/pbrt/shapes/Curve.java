@@ -26,9 +26,7 @@ public class Curve extends Shape {
             this.width[0] = w0;
             this.width[1] = w1;
             assert c.length == 4;
-            for (int i = 0; i < 4; i++) {
-                this.cpObj[i] = c[i];
-            }
+            System.arraycopy(c, 0, this.cpObj, 0, 4);
             if (norm != null) {
                 assert norm.length == 2;
                 this.n[0] = Normal3f.Normalize(norm[0]);
@@ -248,7 +246,7 @@ public class Curve extends Shape {
                 hr = recursiveIntersect(ray, cps, cpsi, rayToObject, u[seg], u[seg + 1], depth - 1, isShadow);
                 // If we found an intersection and this is a shadow ray,
                 // we can exit out immediately.
-                if (hr.isect != null && isShadow) return hr;
+                if (hr != null && hr.isect != null && isShadow) return hr;
             }
             return hr;
         }

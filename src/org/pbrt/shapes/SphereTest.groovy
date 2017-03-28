@@ -36,19 +36,19 @@ class SphereTest extends GroovyTestCase {
     }
 
     void testIntersect() {
-        Transform WorldToObject = Transform.RotateX(90).concatenate(Transform.Translate(new Vector3f(0, 0, -10)));
+        Transform WorldToObject = Transform.RotateX(90).concatenate(Transform.Translate(new Vector3f(0, 0, -10)))
         Transform ObjectToWorld = Transform.Inverse(WorldToObject)
         Sphere sphere = new Sphere(ObjectToWorld, WorldToObject, false, 4, -2, 2, 360)
 
         Ray ray = new Ray(new Point3f(0, 0, -100), new Vector3f(0,0,1))
         float[] tHit = new float[1]
-        SurfaceInteraction isect = new SurfaceInteraction();
+        SurfaceInteraction isect = new SurfaceInteraction()
         boolean hit = sphere.Intersect(ray, tHit, isect, true)
         assertTrue(hit)
     }
 
     void testIntersectP() {
-        Transform WorldToObject = Transform.RotateX(90).concatenate(Transform.Translate(new Vector3f(0, 0, -10)));
+        Transform WorldToObject = Transform.RotateX(90).concatenate(Transform.Translate(new Vector3f(0, 0, -10)))
         Transform ObjectToWorld = Transform.Inverse(WorldToObject)
         Sphere sphere = new Sphere(ObjectToWorld, WorldToObject, false, 4, -2, 2, 360)
 

@@ -11,7 +11,7 @@ package org.pbrt.core;
 
 public class Bounds3i {
     // Bounds3 Public Data
-    public Point3i pMin, pMax;
+    public final Point3i pMin, pMax;
 
     public Bounds3i() {
         int minNum = Integer.MIN_VALUE;

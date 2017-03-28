@@ -53,8 +53,7 @@ public class MaxMinDistSampler extends PixelSampler {
             samples2D.get(0)[i] = new Point2f(i * invSPP, LowDiscrepancy.SampleGeneratorMatrix(CPixel, i, 0));
         Sampling.Shuffle(samples2D.get(0), 0, samplesPerPixel, 1, rng);
         // Generate remaining samples for _MaxMinDistSampler_
-        for (int i = 0; i < samples1D.size(); ++i)
-            LowDiscrepancy.VanDerCorput(1, samplesPerPixel, samples1D.get(i), rng);
+        for (Float[] aSamples1D : samples1D) LowDiscrepancy.VanDerCorput(1, samplesPerPixel, aSamples1D, rng);
 
         for (int i = 1; i < samples2D.size(); ++i)
             LowDiscrepancy.Sobol2D(1, samplesPerPixel, samples2D.get(i), rng);

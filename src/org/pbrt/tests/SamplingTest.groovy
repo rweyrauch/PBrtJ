@@ -98,14 +98,14 @@ class SamplingTest extends GroovyTestCase {
         }
 
         // Random / goofball generator matrix
-        RNG rng = new RNG(0);
+        RNG rng = new RNG(0)
         for (int i = 0; i < 32; ++i) {
             C[i] = rng.UniformInt32()
             Crev[i] = LowDiscrepancy.ReverseBits32(C[i])
         }
         for (int a = 0; a < 1024; ++a) {
             assertEquals(LowDiscrepancy.ReverseBits32(LowDiscrepancy.MultiplyGenerator(C, a)),
-                    LowDiscrepancy.MultiplyGenerator(Crev, a));
+                    LowDiscrepancy.MultiplyGenerator(Crev, a))
         }
     }
 
@@ -225,7 +225,7 @@ class SamplingTest extends GroovyTestCase {
             float minDist = Pbrt.Infinity
             for (int i = 0; i < s.size(); ++i) {
                 for (int j = 0; j < s.size(); ++j) {
-                    if (i == j) continue;
+                    if (i == j) continue
                     minDist = Math.min(minDist, pointDist(s[i], s[j]))
                 }
             }
@@ -249,7 +249,7 @@ class SamplingTest extends GroovyTestCase {
         // (inverse) powers of 2.
         float[] func = [0, 1.0f, 0.0f, 3.0f]
         Distribution1D dist = new Distribution1D(func)
-        assertEquals(4, dist.Count());
+        assertEquals(4, dist.Count())
 
         assertEquals(0.0f, dist.DiscretePDF(0))
         assertEquals(0.25f, dist.DiscretePDF(1))

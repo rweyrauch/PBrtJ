@@ -42,7 +42,7 @@ public class TextureParams {
         }
         Spectrum val = materialParams.FindOneSpectrum(name, def);
         val = geomParams.FindOneSpectrum(name, val);
-        return new ConstantTexture<Spectrum>(val);
+        return new ConstantTexture<>(val);
     }
     public Texture<Spectrum> GetSpectrumTextureOrNull(String name) {
         String texname = geomParams.FindTexture(name);

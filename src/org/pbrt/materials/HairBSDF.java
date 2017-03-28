@@ -303,8 +303,8 @@ public class HairBSDF extends BxDF {
         // Compute $A_p$ PDF from individual $A_p$ terms
         float[] apPdf = new float[pMax+1];
         float sumY = 0;
-        for (int i = 0; i < ap.length; i++) {
-            sumY += (s + ap[i].y());
+        for (Spectrum anAp : ap) {
+            sumY += (s + anAp.y());
         }
         for (int i = 0; i <= pMax; ++i) apPdf[i] = ap[i].y() / sumY;
         return apPdf;

@@ -12,7 +12,7 @@ import org.pbrt.openexr.util.DataReader;
  */
 public class Channels extends Attribute {
 	
-	public List<Channel> list = new ArrayList<Channel>();
+	public List<Channel> list = new ArrayList<>();
 	
 	public Channels(DataReader data) {
 		for (;;) {
@@ -39,7 +39,7 @@ public class Channels extends Attribute {
 		int length = list.size();
 		for (int i = 0; i < length; i++) {
 			Channel channel = list.get(i);
-			sb.append(channel + ((i < length - 1) ? ", " : ""));
+			sb.append(channel).append((i < length - 1) ? ", " : "");
 		}
 	}
 }

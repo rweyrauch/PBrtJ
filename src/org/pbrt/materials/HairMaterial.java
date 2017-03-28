@@ -45,7 +45,7 @@ public class HairMaterial extends Material {
         }
         else {
             // Default: brown-ish hair.
-            sigma_a = new ConstantTexture<Spectrum>(HairBSDF.SigmaAFromConcentration(1.3f, 0));
+            sigma_a = new ConstantTexture<>(HairBSDF.SigmaAFromConcentration(1.3f, 0));
         }
 
         Texture<Float> eta = mp.GetFloatTexture("eta", 1.55f);

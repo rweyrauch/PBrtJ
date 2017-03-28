@@ -21,9 +21,7 @@ public class Matrix4x4 {
         assert mat.length == 4;
         assert mat[0].length == 4;
         for (int j = 0; j < 4; j++) {
-            for (int i = 0; i < 4; i++) {
-                m[j][i] = mat[j][i];
-            }
+            System.arraycopy(mat[j], 0, m[j], 0, 4);
         }
     }
 
@@ -95,9 +93,7 @@ public class Matrix4x4 {
         int ipiv[] = {0, 0, 0, 0};
         float minv[][] = new float[4][4];
         for (int j = 0; j < 4; j++) {
-            for (int i = 0; i < 4; i++) {
-                minv[j][i] = m.m[j][i];
-            }
+            System.arraycopy(m.m[j], 0, minv[j], 0, 4);
         }
 
         for (int i = 0; i < 4; i++) {

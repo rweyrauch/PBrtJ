@@ -174,16 +174,16 @@ public class Api {
         public GraphicsState() {}
 
         public GraphicsState(GraphicsState gs) {
-            this.currentInsideMedium = new String(gs.currentInsideMedium);
-            this.currentOutsideMedium = new String(gs.currentOutsideMedium);
+            this.currentInsideMedium = gs.currentInsideMedium;
+            this.currentOutsideMedium = gs.currentOutsideMedium;
             this.floatTextures = new HashMap<>(gs.floatTextures);
             this.spectrumTextures = new HashMap<>(gs.spectrumTextures);
             this.materialParams = new ParamSet(gs.materialParams);
-            this.material = new String(gs.material);
+            this.material = gs.material;
             this.namedMaterials = new HashMap<>(gs.namedMaterials);
-            this.currentNamedMaterial = new String(gs.currentNamedMaterial);
+            this.currentNamedMaterial = gs.currentNamedMaterial;
             this.areaLightParams = new ParamSet(gs.areaLightParams);
-            this.areaLight = new String(gs.areaLight);
+            this.areaLight = gs.areaLight;
             this.reverseOrientation = gs.reverseOrientation;
         }
 
@@ -499,7 +499,7 @@ public class Api {
                 sig_s = Spectrum.FromRGB(sig_s_rgb);
         String preset = paramSet.FindOneString("preset", "");
         Medium.ScatteringProps props = Medium.GetMediumScatteringProperties(preset);
-        if (!Objects.equals(preset, "") && props == null) {
+        if (props == null) {
             Error.Warning("Material preset \"%s\" not found.  Using defaults.", preset);
         } else {
             sig_a = props.sigma_a;
