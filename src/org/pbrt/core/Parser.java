@@ -115,6 +115,10 @@ public class Parser {
                     }
                     pset.AddInt(param.name, ivalue);
                 }
+                else if (param.value instanceof Integer) {
+                    Integer[] ivalue = { (int)param.value };
+                    pset.AddInt(param.name, ivalue);
+                }
                 else {
                     Error.Error("Unexpected value array type for 'integer' parameter.  Got %s.\n", param.value.getClass().toString());
                 }
@@ -139,6 +143,10 @@ public class Parser {
                     for (int i = 0; i < farray.length; i++) {
                         farray[i] = flist.get(i);
                     }
+                    pset.AddFloat(param.name, farray);
+                }
+                else if (param.value instanceof Float) {
+                    Float[] farray = { (float)param.value };
                     pset.AddFloat(param.name, farray);
                 }
                 else {
@@ -572,15 +580,17 @@ public class Parser {
 
     // CONCATTRANSFORM number_array
     private void parseConcatTransform(ArrayList<TokenValue> command) {
-        if (command.size() == 17) {
+        if (command.size() == 19) { // include [ and ]
             float[] matrix = new float[16];
-            for (int i = 1; i < command.size(); i++) {
-                matrix[i] = Float.parseFloat(command.get(i).value);
+            for (int i = 2; i < command.size()-1; i++) {
+                matrix[i-2] = Float.parseFloat(command.get(i).value);
             }
             Api.pbrtConcatTransform(matrix);
-        } else {
-            // TODO: error - require 16 values
-            Error.Error("Array argument to ConcatTransform requires 16 values.\n");
+        }
+        else {
+            Error.Error("Array argument to ConcatTransform requires 16 values.  Got %d.\n", command.size()-3);
+            for (int i = 0; i < command.size(); i++)
+                Error.Error("Param[%d]: %s\n", i, command.get(i).value);
         }
     }
 
@@ -810,15 +820,14 @@ public class Parser {
 
     // TRANSFORM number_array
     private void parserTransform(ArrayList<TokenValue> command) {
-        if (command.size() == 17) {
+        if (command.size() == 19) { // include [ and ]
             float[] matrix = new float[16];
-            for (int i = 1; i < command.size(); i++) {
-                matrix[i] = Float.parseFloat(command.get(i).value);
+            for (int i = 2; i < command.size()-1; i++) {
+                matrix[i-2] = Float.parseFloat(command.get(i).value);
             }
             Api.pbrtTransform(matrix);
         } else {
-            // TODO: error - require 16 values
-            Error.Error("Array argument to Transform requires 16 values.\n");
+            Error.Error("Array argument to Transform requires 16 values.  Got %d.\n", command.size()-3);
         }
     }
 
