@@ -9,6 +9,7 @@
 
 package org.pbrt.core;
 
+import java.util.ArrayList;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
@@ -26,6 +27,7 @@ public class Parallel {
 
         final long numChunks = (count + chunkSize - 1) / chunkSize;
 
+        ArrayList<Future> futures = new ArrayList();
         for (long i = 0; i < numChunks; i++) {
             final long startIndex = i * chunkSize;
             final long endIndex = Math.min(startIndex+chunkSize, count);
@@ -35,9 +37,19 @@ public class Parallel {
                     func.accept(ii);
                 }
             };
-            pool.execute(task1D);
+            Future future = pool.submit(task1D);
+            futures.add(future);
         }
 
+        for (Future ff : futures) {
+            try {
+                ff.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             pool.shutdown();
             pool.awaitTermination(1000, TimeUnit.SECONDS);
@@ -59,6 +71,7 @@ public class Parallel {
         final long chunkSize = 1;
         final long numChunks = count.x * count.y;
 
+        ArrayList<Future> futures = new ArrayList();
         for (long i = 0; i < numChunks; i++) {
             final long startIndex = i * chunkSize;
             final long endIndex = startIndex+chunkSize;
@@ -67,9 +80,19 @@ public class Parallel {
                     func.accept(new Point2i((int)(ii % count.x), (int)(ii / count.x)));
                 }
             };
-            pool.execute(task2D);
+            Future future = pool.submit(task2D);
+            futures.add(future);
         }
 
+        for (Future ff : futures) {
+            try {
+                ff.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             pool.shutdown();
             pool.awaitTermination(1000, TimeUnit.SECONDS);
