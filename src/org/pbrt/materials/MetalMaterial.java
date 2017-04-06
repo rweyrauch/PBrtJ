@@ -44,7 +44,7 @@ public class MetalMaterial extends Material {
     }
     
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
         si.bsdf = new BSDF(si, 1);
@@ -58,7 +58,6 @@ public class MetalMaterial extends Material {
         Fresnel frMf = new FresnelConductor(new Spectrum(1), eta.Evaluate(si), k.Evaluate(si));
         MicrofacetDistribution distrib = new TrowbridgeReitzDistribution(uRough, vRough, true);
         si.bsdf.Add(new MicrofacetReflection(new Spectrum(1), distrib, frMf));
-        return si;
     }
 
     Texture<Spectrum> eta, k;

@@ -48,7 +48,7 @@ public class UberMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
         float e = eta.Evaluate(si);
@@ -98,8 +98,6 @@ public class UberMaterial extends Material {
         Spectrum kt = Spectrum.Multiply(op, Kt.Evaluate(si).clamp(0, Pbrt.Infinity));
         if (!kt.isBlack())
             si.bsdf.Add(new SpecularTransmission(kt, 1, e, mode));
-
-        return si;
     }
 
     private Texture<Spectrum> Kd, Ks, Kr, Kt, opacity;

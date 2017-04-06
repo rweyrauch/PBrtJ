@@ -42,7 +42,7 @@ public class TranslucentMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
         float eta = 1.5f;
@@ -50,7 +50,7 @@ public class TranslucentMaterial extends Material {
 
         Spectrum r = reflect.Evaluate(si).clamp(0, Pbrt.Infinity);
         Spectrum t = transmit.Evaluate(si).clamp(0, Pbrt.Infinity);
-        if (r.isBlack() && t.isBlack()) return si;
+        if (r.isBlack() && t.isBlack()) return;
 
         Spectrum kd = Kd.Evaluate(si).clamp(0, Pbrt.Infinity);
         if (!kd.isBlack()) {
@@ -72,7 +72,6 @@ public class TranslucentMaterial extends Material {
             if (!t.isBlack())
                 si.bsdf.Add(new MicrofacetTransmission(t.multiply(ks), distrib, 1.f, eta, mode));
         }
-        return si;
     }
 
     private Texture<Spectrum> Kd, Ks;

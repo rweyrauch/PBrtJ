@@ -21,7 +21,7 @@ public class MatteMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
 
@@ -35,7 +35,6 @@ public class MatteMaterial extends Material {
         else
             si.bsdf.Add(new OrenNayar(r, sig));
         }
-        return si;
     }
 
     public static Material Create(TextureParams mp) {

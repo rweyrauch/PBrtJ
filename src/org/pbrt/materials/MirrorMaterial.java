@@ -26,14 +26,13 @@ public class MirrorMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
         si.bsdf = new BSDF(si, 1);
         Spectrum R = Kr.Evaluate(si).clamp(0, Pbrt.Infinity);
         if (!R.isBlack())
             si.bsdf.Add(new SpecularReflection(R, new FresnelNoOp()));
-        return si;
     }
 
     private Texture<Spectrum> Kr;

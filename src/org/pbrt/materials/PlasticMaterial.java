@@ -36,7 +36,7 @@ public class PlasticMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
         si.bsdf = new BSDF(si, 1);
@@ -57,7 +57,6 @@ public class PlasticMaterial extends Material {
             BxDF spec = new MicrofacetReflection(ks, distrib, fresnel);
             si.bsdf.Add(spec);
         }
-        return si;
     }
 
     private Texture<Spectrum> Kd, Ks;

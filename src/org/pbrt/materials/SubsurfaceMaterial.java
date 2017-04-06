@@ -74,7 +74,7 @@ public class SubsurfaceMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
 
@@ -87,7 +87,7 @@ public class SubsurfaceMaterial extends Material {
         // Initialize _bsdf_ for smooth or rough dielectric
         si.bsdf = new BSDF(si, eta);
 
-        if (R.isBlack() && T.isBlack()) return si;
+        if (R.isBlack() && T.isBlack()) return;
 
         boolean isSpecular = urough == 0 && vrough == 0;
         if (isSpecular && allowMultipleLobes) {
@@ -115,7 +115,6 @@ public class SubsurfaceMaterial extends Material {
         Spectrum sig_a = (sigma_a.Evaluate(si).clamp(0, Pbrt.Infinity)).scale(scale);
         Spectrum sig_s = (sigma_s.Evaluate(si).clamp(0, Pbrt.Infinity)).scale(scale);
         si.bssrdf = new TabulatedBSSRDF(si, this, mode, eta, sig_a, sig_s, table);
-        return si;
     }
 
     private final float scale;

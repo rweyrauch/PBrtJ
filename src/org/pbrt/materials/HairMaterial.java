@@ -69,7 +69,7 @@ public class HairMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         float bm = beta_m.Evaluate(si);
         float bn = beta_n.Evaluate(si);
         float a = (float)Math.toRadians(alpha.Evaluate(si));
@@ -93,8 +93,6 @@ public class HairMaterial extends Material {
         // Offset along width
         float h = -1 + 2 * si.uv.y;
         si.bsdf.Add(new HairBSDF(h, e, sig_a, bm, bn, a));
-
-        return si;
     }
 
     private Texture<Spectrum> sigma_a, color;

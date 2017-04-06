@@ -43,7 +43,7 @@ public class GlassMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
         float eta = index.Evaluate(si);
@@ -54,7 +54,7 @@ public class GlassMaterial extends Material {
         // Initialize _bsdf_ for smooth or rough dielectric
         si.bsdf = new BSDF(si, eta);
 
-        if (R.isBlack() && T.isBlack()) return null;
+        if (R.isBlack() && T.isBlack()) return;
 
         boolean isSpecular = urough == 0 && vrough == 0;
         if (isSpecular && allowMultipleLobes) {
@@ -80,7 +80,6 @@ public class GlassMaterial extends Material {
                 si.bsdf.Add(new MicrofacetTransmission(T, distrib, 1.f, eta, mode));
             }
         }
-        return si;
     }
 
     private Texture<Spectrum> Kr, Kt;

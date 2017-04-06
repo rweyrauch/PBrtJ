@@ -26,7 +26,7 @@ public class MixMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Compute weights and original _BxDF_s for mix material
         Spectrum s1 = scale.Evaluate(si).clamp(0, Pbrt.Infinity);
         Spectrum s2 = (new Spectrum(1).subtract(s1)).clamp(0, Pbrt.Infinity);
@@ -40,7 +40,6 @@ public class MixMaterial extends Material {
             si.bsdf.bxdfs[i] = new ScaledBxDF(si.bsdf.bxdfs[i], s1);
         for (int i = 0; i < n2; ++i)
             si.bsdf.Add(new ScaledBxDF(si2.bsdf.bxdfs[i], s2));
-        return si;
     }
 
     private Material m1, m2;

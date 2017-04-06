@@ -34,7 +34,7 @@ public class FourierMaterial extends Material {
     }
 
     @Override
-    public SurfaceInteraction ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
+    public void ComputeScatteringFunctions(SurfaceInteraction si, TransportMode mode, boolean allowMultipleLobes) {
         // Perform bump mapping with _bumpMap_, if present
         if (bumpMap != null) Bump(bumpMap, si);
         si.bsdf = new BSDF(si, 1);
@@ -42,8 +42,6 @@ public class FourierMaterial extends Material {
         // table was successfully read from the file.
         if (bsdfTable.nChannels > 0)
             si.bsdf.Add(new FourierBSDF(bsdfTable, mode));
-
-        return si;
     }
 
     FourierBSDFTable bsdfTable;
