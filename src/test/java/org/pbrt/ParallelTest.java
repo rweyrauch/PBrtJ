@@ -6,60 +6,66 @@
  * Matt Pharr, Greg Humphreys, and Wenzel Jakob.
  *
  */
+package org.pbrt;
 
-package org.pbrt.tests
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-import org.pbrt.core.Options
-import org.pbrt.core.Parallel
-import org.pbrt.core.Pbrt
-import org.pbrt.core.Point2i
+import org.junit.Test;
 
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
-import java.util.function.Consumer
+import org.pbrt.core.Options;
+import org.pbrt.core.Parallel;
+import org.pbrt.core.Pbrt;
+import org.pbrt.core.Point2i;
 
-class ParallelTest extends GroovyTestCase {
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
-    void testParallelBasics() {
-        Pbrt.options = new Options()
+public class ParallelTest {
 
-        Parallel.ParallelInit()
+    @Test
+    public void testParallelBasics() {
+        Pbrt.options = new Options();
 
-        AtomicLong counter = new AtomicLong()
-        counter.set(0)
-        Consumer<Long> funcL = [accept:{ long i -> counter.incrementAndGet() }] as Consumer
-        Parallel.ParallelFor(funcL, 1000, 1)
-        assertEquals(1000, counter.get())
+        Parallel.ParallelInit();
 
-        counter.set(0)
-        Parallel.ParallelFor(funcL, 1000, 19)
-        assertEquals(1000, counter.get())
+        AtomicLong counter = new AtomicLong();
+        counter.set(0);
+        Consumer<Long> funcL = (Long i) -> { counter.incrementAndGet(); };
+        Parallel.ParallelFor(funcL, 1000, 1);
+        assertEquals(1000, counter.get());
 
-        counter.set(0)
-        Consumer<Point2i> funcP = [accept:{ Point2i p -> counter.incrementAndGet() }] as Consumer
-        Parallel.ParallelFor2D(funcP, new Point2i(15, 14))
-        assertEquals(15*14, counter.get())
+        counter.set(0);
+        Parallel.ParallelFor(funcL, 1000, 19);
+        assertEquals(1000, counter.get());
 
-        Parallel.ParallelCleanup()
+        counter.set(0);
+        Consumer<Point2i> funcP = (Point2i p) -> { counter.incrementAndGet(); };
+        Parallel.ParallelFor2D(funcP, new Point2i(15, 14));
+        assertEquals(15*14, counter.get());
+
+        Parallel.ParallelCleanup();
     }
 
-    void testParallelDoNothing() {
-        Pbrt.options = new Options()
+    @Test
+    public void testParallelDoNothing() {
+        Pbrt.options = new Options();
 
-        Parallel.ParallelInit()
+        Parallel.ParallelInit();
 
-        AtomicInteger counter = new AtomicInteger()
-        counter.set(0)
-        Consumer<Long> funcL = [accept:{ long i -> counter.incrementAndGet() }] as Consumer
-        Parallel.ParallelFor(funcL, 0L, 1)
-        assertEquals(0, counter.get())
+        AtomicInteger counter = new AtomicInteger();
+        counter.set(0);
+        Consumer<Long> funcL = (Long i) -> { counter.incrementAndGet(); };
+        Parallel.ParallelFor(funcL, 0L, 1);
+        assertEquals(0, counter.get());
 
-        counter.set(0)
-        Consumer<Point2i> funcP = [accept:{ Point2i p -> counter.incrementAndGet() }] as Consumer
-        Parallel.ParallelFor2D(funcP, new Point2i(0, 0))
-        assertEquals(0, counter.get())
+        counter.set(0);
+        Consumer<Point2i> funcP = (Point2i p) -> { counter.incrementAndGet(); };
+        Parallel.ParallelFor2D(funcP, new Point2i(0, 0));
+        assertEquals(0, counter.get());
 
-        Parallel.ParallelCleanup()
+        Parallel.ParallelCleanup();
     }
 
 }

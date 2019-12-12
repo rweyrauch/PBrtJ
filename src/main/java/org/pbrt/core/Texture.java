@@ -10,8 +10,6 @@
 
 package org.pbrt.core;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.Objects;
 
 public abstract class Texture<T> {
@@ -32,7 +30,7 @@ public abstract class Texture<T> {
         }
 
         @Override
-        public int compareTo(@org.jetbrains.annotations.NotNull @NotNull TexInfo t2) {
+        public int compareTo(@org.jetbrains.annotations.NotNull TexInfo t2) {
             if (!Objects.equals(filename, t2.filename)) return filename.compareTo(t2.filename);
             if (doTrilinear != t2.doTrilinear) return -1;
             if (maxAniso != t2.maxAniso) return (maxAniso < t2.maxAniso) ? -1 : 1;

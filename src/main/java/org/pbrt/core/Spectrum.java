@@ -9,7 +9,7 @@
 
 package org.pbrt.core;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -1179,7 +1179,7 @@ public final class Spectrum {
 
     public static void SortSpectrumSamples(float[] lambda, float[] vals) {
         assert (lambda.length == vals.length);
-        throw new NotImplementedException();
+        throw new NotImplementedException("SortSpectrumSamples");
     }
 
     private static float interp(float[] lambda, float[] vals, float w, int i) {

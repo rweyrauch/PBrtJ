@@ -96,7 +96,7 @@ public class HaltonSampler extends GlobalSampler {
         else if (dim == 1)
             return LowDiscrepancy.RadicalInverse(dim, index / baseScales.y);
         else
-            return LowDiscrepancy.ScrambledRadicalInverse(dim, index, radicalInversePermutations, PermutationForDimension(dim));
+            return LowDiscrepancy.ScrambledRadicalInverse(dim, index, radicalInversePermutations);
     }
 
     @Override

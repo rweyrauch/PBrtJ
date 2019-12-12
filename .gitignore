@@ -13,3 +13,11 @@ hs_err_pid*
 
 # temp files
 *.java~
+
+.vscode/
+.settings/
+.classpath
+.factorypath
+.project
+target/
+out/

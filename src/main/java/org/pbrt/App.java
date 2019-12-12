@@ -17,7 +17,7 @@ import org.pbrt.core.Parser;
 
 import java.util.List;
 
-public class Main {
+public class App {
 
     @Argument(description = "Print this help text.")
     private static Boolean help = false;
@@ -56,15 +56,15 @@ public class Main {
 
 	    final List<String> parse;
         try {
-            parse = Args.parse(Main.class, args);
+            parse = Args.parse(App.class, args);
         } catch (IllegalArgumentException e) {
-            Args.usage(Main.class);
+            Args.usage(App.class);
             System.exit(1);
             return;
         }
 
         if (help) {
-            Args.usage(Main.class);
+            Args.usage(App.class);
             System.exit(0);
             return;
         }
