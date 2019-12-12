@@ -261,28 +261,39 @@ public class Sphere extends Shape {
             return intr;
         }
 
+        // Sample sphere uniformly inside subtended cone
+
         // Compute coordinate system for sphere sampling
-        Vector3f wc = Vector3f.Normalize(pCenter.subtract(ref.p));
+        float dc = Point3f.Distance(ref.p, pCenter);
+        float invDc = 1 / dc;
+        Vector3f wc = (pCenter.subtract(ref.p)).scale(invDc);
         Vector3f wcX, wcY;
         Vector3f.CoordSystem cs = Vector3f.CoordinateSystem(wc);
         wcX = cs.v2;
         wcY = cs.v3;
 
-        // Sample sphere uniformly inside subtended cone
-
         // Compute $\theta$ and $\phi$ values for sample in cone
-        float sinThetaMax2 = radius * radius / Point3f.DistanceSquared(ref.p, pCenter);
+        float sinThetaMax = radius * invDc;
+        float sinThetaMax2 = sinThetaMax * sinThetaMax;
+        float invSinThetaMax = 1 / sinThetaMax;
         float cosThetaMax = (float)Math.sqrt(Math.max(0, 1 - sinThetaMax2));
-        float cosTheta = (1 - u.x) + u.x * cosThetaMax;
-        float sinTheta = (float)Math.sqrt(Math.max(0, 1 - cosTheta * cosTheta));
-        float phi = u.y * 2 * Pbrt.Pi;
-
+        
+        float cosTheta  = (cosThetaMax - 1) * u.x + 1;
+        float sinTheta2 = 1 - cosTheta * cosTheta;
+        
+        if (sinThetaMax2 < 0.00068523f /* sin^2(1.5 deg) */) {
+            /* Fall back to a Taylor series expansion for small angles, where
+               the standard approach suffers from severe cancellation errors */
+            sinTheta2 = sinThetaMax2 * u.x;
+            cosTheta = (float)Math.sqrt(1 - sinTheta2);
+        }
+        
         // Compute angle $\alpha$ from center of sphere to sampled point on surface
-        float dc = Point3f.Distance(ref.p, pCenter);
-        float ds = dc * cosTheta - (float)Math.sqrt(Math.max(0, radius * radius - dc * dc * sinTheta * sinTheta));
-        float cosAlpha = (dc * dc + radius * radius - ds * ds) / (2 * dc * radius);
-        float sinAlpha = (float)Math.sqrt(Math.max(0, 1 - cosAlpha * cosAlpha));
-
+        float cosAlpha = sinTheta2 * invSinThetaMax +
+                cosTheta * (float)Math.sqrt(Math.max(0, 1 - sinTheta2 * invSinThetaMax * invSinThetaMax));
+        float sinAlpha = (float)Math.sqrt(Math.max(0, 1 - cosAlpha*cosAlpha));
+        float phi = u.y * 2 * (float)Math.PI;
+        
         // Compute surface normal and sampled point on sphere
         Vector3f nWorld = Vector3f.SphericalDirection(sinAlpha, cosAlpha, phi, wcX.negate(), wcY.negate(), wc.negate());
         Point3f pWorld = pCenter.add((new Point3f(nWorld.x, nWorld.y, nWorld.z)).scale(radius));

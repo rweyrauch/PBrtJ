@@ -12,6 +12,7 @@ package org.pbrt.core;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import org.apache.commons.lang3.NotImplementedException;
 
 public class Parser {
 
@@ -108,7 +109,7 @@ public class Parser {
             if (Objects.equals(param.type, "integer")) {
                 if (param.value instanceof ArrayList) {
                     // parser converts all values to float, convert back to int
-                    ArrayList<Float> flist = (ArrayList<Float>)param.value;
+                    final ArrayList<Float> flist = (ArrayList<Float>)param.value;
                     Integer[] ivalue = new Integer[flist.size()];
                     for (int i = 0; i < flist.size(); i++) {
                         ivalue[i] = (int)Math.floor(flist.get(i));
@@ -125,7 +126,7 @@ public class Parser {
             }
             else if (Objects.equals(param.type, "bool")) {
                 if (param.value instanceof ArrayList) {
-                    ArrayList<Boolean> blist = (ArrayList<Boolean>)param.value;
+                    final ArrayList<Boolean> blist = (ArrayList<Boolean>)param.value;
                     Boolean[] barray = new Boolean[blist.size()];
                     for (int i = 0; i < barray.length; i++) {
                         barray[i] = blist.get(i);
@@ -138,7 +139,7 @@ public class Parser {
             }
             else if (Objects.equals(param.type, "float")) {
                 if (param.value instanceof ArrayList) {
-                    ArrayList<Float> flist = (ArrayList<Float>)param.value;
+                    final ArrayList<Float> flist = (ArrayList<Float>)param.value;
                     Float[] farray = new Float[flist.size()];
                     for (int i = 0; i < farray.length; i++) {
                         farray[i] = flist.get(i);
@@ -155,8 +156,8 @@ public class Parser {
             }
             else if (Objects.equals(param.type, "point2")) {
                 if (param.value instanceof ArrayList) {
-                    ArrayList<Float> pvalues = (ArrayList<Float>)param.value;
-                    int nItems = pvalues.size();
+                    final ArrayList<Float> pvalues = (ArrayList<Float>)param.value;
+                    final int nItems = pvalues.size();
                     if (nItems % 2 == 0) {
                         Point2f[] points = new Point2f[nItems/2];
                         for (int i = 0; i < points.length; i++) {
@@ -890,4 +891,9 @@ public class Parser {
         }
         return params;
     }
+
+    public static void ParseString(String str) {
+        throw new NotImplementedException("ParseString");
+    }
+    
 }

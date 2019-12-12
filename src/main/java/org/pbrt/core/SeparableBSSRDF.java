@@ -105,7 +105,12 @@ public abstract class SeparableBSSRDF extends BSSRDF {
         // Accumulate chain of intersections along ray
         int nFound = 0;
         SurfaceInteraction isect;
-        while ((isect = scene.Intersect(base.SpawnRayTo(pTarget))) != null) {
+        while (true) {
+            Ray ray = base.SpawnRayTo(pTarget);
+            isect = scene.Intersect(ray);
+            if (ray.d == new Vector3f(0, 0, 0) || isect == null)
+                break;
+                
             base = isect;
             // Append admissible intersection to _IntersectionChain_
             if (isect.primitive.GetMaterial() == this.material) {

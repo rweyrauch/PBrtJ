@@ -30,15 +30,27 @@ public class SurfaceInteraction extends Interaction {
     public Vector3f dpdx = new Vector3f(), dpdy = new Vector3f();
     public float dudx = 0, dvdx = 0, dudy = 0, dvdy = 0;
 
+    public int faceIndex = 0;
+
     // SurfaceInteraction Public Methods
     public SurfaceInteraction() {
         super();
     }
+ 
+    public SurfaceInteraction(Point3f p, Vector3f pError,
+        Point2f uv,  Vector3f wo,
+        Vector3f dpdu,  Vector3f dpdv,
+        Normal3f dndu,  Normal3f dndv, float time,
+        Shape sh) {
+        this(p, pError, uv, wo, dpdu, dpdv, dndu, dndv, time, sh, 0);
+    }
+
     public SurfaceInteraction(Point3f p, Vector3f pError,
                         Point2f uv,  Vector3f wo,
                         Vector3f dpdu,  Vector3f dpdv,
                         Normal3f dndu,  Normal3f dndv, float time,
-                        Shape sh) {
+                        Shape sh,
+                        int faceIndex) {
         super(p, new Normal3f(Vector3f.Normalize(Vector3f.Cross(dpdu, dpdv))), pError, wo, time, null);
         this.uv = new Point2f(uv);
         this.dpdu = new Vector3f(dpdu);
@@ -46,30 +58,29 @@ public class SurfaceInteraction extends Interaction {
         this.dndu = new Normal3f(dndu);
         this.dndv = new Normal3f(dndv);
         this.shape = sh;
+        this.faceIndex = faceIndex;                    
 
         // Initialize shading geometry from true geometry
-        shading.n = new Normal3f(n);
-        shading.dpdu = new Vector3f(dpdu);
-        shading.dpdv = new Vector3f(dpdv);
-        shading.dndu = new Normal3f(dndu);
-        shading.dndv = new Normal3f(dndv);
+        this.shading.n = new Normal3f(n);
+        this.shading.dpdu = new Vector3f(dpdu);
+        this.shading.dpdv = new Vector3f(dpdv);
+        this.shading.dndu = new Normal3f(dndu);
+        this.shading.dndv = new Normal3f(dndv);
 
         // Adjust normal based on orientation and handedness
-        if (shape != null && (shape.reverseOrientation ^ shape.transformSwapsHandedness)) {
-            n.flip();
-            shading.n.flip();
+        if (this.shape != null && (this.shape.reverseOrientation ^ this.shape.transformSwapsHandedness)) {
+            this.n.flip();
+            this.shading.n.flip();
         }
     }
 
     public SurfaceInteraction(SurfaceInteraction si) {
-        this(si.p, si.pError, si.uv, si.wo, si.dpdu, si.dpdv, si.dndu, si.dndv, si.time, si.shape);
+        this(si.p, si.pError, si.uv, si.wo, si.dpdu, si.dpdv, si.dndu, si.dndv, si.time, si.shape, si.faceIndex);
     }
 
     public void SetShadingGeometry(Vector3f dpdus, Vector3f dpdvs, Normal3f dndus, Normal3f dndvs, boolean orientationIsAuthoritative) {
         // Compute _shading.n_ for _SurfaceInteraction_
         shading.n = new Normal3f(Vector3f.Normalize(Vector3f.Cross(dpdus, dpdvs)));
-        if (shape != null && (shape.reverseOrientation ^ shape.transformSwapsHandedness))
-            shading.n.flip();
         if (orientationIsAuthoritative)
             n = Normal3f.Faceforward(n, shading.n);
         else
@@ -96,7 +107,7 @@ public class SurfaceInteraction extends Interaction {
             // Compute auxiliary intersection points with plane
             float d = Normal3f.Dot(n, new Vector3f(p.x, p.y, p.z));
             float tx = -(Normal3f.Dot(n, new Vector3f(ray.rxOrigin)) - d) / Normal3f.Dot(n, ray.rxDirection);
-            if (Float.isNaN(tx)) {
+            if (Float.isInfinite(tx) || Float.isNaN(tx)) {
                 dudx = dvdx = 0;
                 dudy = dvdy = 0;
                 dpdx = dpdy = new Vector3f(0, 0, 0);
@@ -104,7 +115,7 @@ public class SurfaceInteraction extends Interaction {
             }
             Point3f px = ray.rxOrigin.add(ray.rxDirection.scale(tx));
             float ty = -(Normal3f.Dot(n, new Vector3f(ray.ryOrigin)) - d) / Normal3f.Dot(n, ray.ryDirection);
-            if (Float.isNaN(ty)) {
+            if (Float.isInfinite(ty) || Float.isNaN(ty)) {
                 dudx = dvdx = 0;
                 dudy = dvdy = 0;
                 dpdx = dpdy = new Vector3f(0, 0, 0);

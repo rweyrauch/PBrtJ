@@ -188,6 +188,7 @@ public class Transform {
         ret.bssrdf = si.bssrdf;
         ret.primitive = si.primitive;
         ret.shading.n = Normal3f.Faceforward(ret.shading.n, ret.n);
+        ret.faceIndex = si.faceIndex;
         return ret;
     }
 
@@ -326,11 +327,11 @@ public class Transform {
                     up.x, up.y, up.z, dir.x, dir.y, dir.z);
             return new Transform();
         }
-        Vector3f left = Vector3f.Normalize(Vector3f.Cross(Vector3f.Normalize(up), dir));
-        Vector3f newUp = Vector3f.Cross(dir, left);
-        cameraToWorld.m[0][0] = left.x;
-        cameraToWorld.m[1][0] = left.y;
-        cameraToWorld.m[2][0] = left.z;
+        Vector3f right = Vector3f.Normalize(Vector3f.Cross(Vector3f.Normalize(up), dir));
+        Vector3f newUp = Vector3f.Cross(dir, right);
+        cameraToWorld.m[0][0] = right.x;
+        cameraToWorld.m[1][0] = right.y;
+        cameraToWorld.m[2][0] = right.z;
         cameraToWorld.m[3][0] = 0;
         cameraToWorld.m[0][1] = newUp.x;
         cameraToWorld.m[1][1] = newUp.y;

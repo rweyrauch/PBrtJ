@@ -12,7 +12,7 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class ConstantTexture<T> extends Texture {
+public class ConstantTexture<T> extends Texture<T> {
 
     public static ConstantTexture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
         return new ConstantTexture<>(tp.FindFloat("value", 1.0f));

@@ -201,11 +201,13 @@ public class Film {
             return;
         }
 
-        if (!Bounds2i.InsideExclusive(new Point2i(p), croppedPixelBounds)) return;
+        Point2i pi = new Point2i((int)Math.floor(p.x), (int)Math.floor(p.y));
+        if (!Bounds2i.InsideExclusive(pi, croppedPixelBounds)) return;
+
         if (v.y() > maxSampleLuminance)
             v = v.scale(maxSampleLuminance / v.y());
         float[] xyz = v.toXYZ();
-        Pixel pixel = GetPixel(new Point2i(p));
+        Pixel pixel = GetPixel(pi);
         for (int i = 0; i < 3; ++i) pixel.splatXYZ[i].add(xyz[i]);
 
     }
@@ -280,20 +282,21 @@ public class Film {
     public Bounds2i croppedPixelBounds;
 
     public static Film Create(ParamSet paramSet, Filter filter) {
-        // Intentionally use FindOneString() rather than FindOneFilename() here
-        // so that the rendered image is left in the working directory, rather
-        // than the directory the scene file lives in.
-        String filename = paramSet.FindOneString("filename", "");
+        String filename = new String();
         if (!Pbrt.options.ImageFile.isEmpty()) {
-            if (!filename.isEmpty()) {
-                Error.Warning("Output filename supplied on command line, \"%s\", ignored " +
-                        "due to filename provided in scene description file, \"%s\".",
-                        Pbrt.options.ImageFile, filename);
+            filename = Pbrt.options.ImageFile;
+            String paramsFilename = paramSet.FindOneString("filename", "");
+            if (!paramsFilename.isEmpty()) {
+                Error.Warning("Output filename supplied on command line, \"%s\" is overriding " +
+                        "filename provided in scene description file, \"%s\".",
+                        Pbrt.options.ImageFile, paramsFilename);
             } else {
                 filename = Pbrt.options.ImageFile;
             }
+        } 
+        else {
+            filename = paramSet.FindOneString("filename", "pbrt.exr");
         }
-        if (filename.isEmpty()) filename = "pbrt.exr";
 
         int xres = paramSet.FindOneInt("xresolution", 1280);
         int yres = paramSet.FindOneInt("yresolution", 720);
@@ -308,6 +311,11 @@ public class Film {
             crop.pMax.y = Pbrt.Clamp(Math.max(cr[2], cr[3]), 0, 1);
         } else if (cr != null) {
             Error.Error("%d values supplied for \"cropwindow\". Expected 4.", cr.length);
+        } else {
+            crop = new Bounds2f(new Point2f(Pbrt.Clamp(Pbrt.options.CropWindow[0][0], 0, 1),
+                                Pbrt.Clamp(Pbrt.options.CropWindow[1][0], 0, 1)),
+                        new Point2f(Pbrt.Clamp(Pbrt.options.CropWindow[0][1], 0, 1),
+                                Pbrt.Clamp(Pbrt.options.CropWindow[1][1], 0, 1)));
         }
 
         float scale = paramSet.FindOneFloat("scale", 1);

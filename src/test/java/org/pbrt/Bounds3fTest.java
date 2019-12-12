@@ -9,6 +9,7 @@
 package org.pbrt;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -51,4 +52,19 @@ public class Bounds3fTest {
         assertEquals(0, Bounds3f.Distance(new Point3f(-0.99f, -2, 5), bb), epsilon);
         assertEquals(2 * 2 + 6 * 6 + 4 * 4, Bounds3f.DistanceSquared(new Point3f(-3, -9, 22), bb), epsilon);
     }
+       
+    @Test
+    public void testUnion() {
+        Bounds3f a = new Bounds3f(new Point3f(-10, -10, 5), new Point3f(0, 20, 10));
+        Bounds3f b = new Bounds3f(); // degenerate
+        Bounds3f c = Bounds3f.Union(a, b);
+        assertTrue(a.equal(c));
+    
+        assertTrue(b.equal(Bounds3f.Union(b, b)));
+    
+        Bounds3f d = new Bounds3f(new Point3f(-15, 10, 30));
+        Bounds3f e = Bounds3f.Union(a, d);
+        assertTrue(e.equal(new Bounds3f(new Point3f(-15, -10, 5), new Point3f(0, 20, 30))));
+    }
+        
 }

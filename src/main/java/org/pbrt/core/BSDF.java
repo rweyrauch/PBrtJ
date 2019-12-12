@@ -75,7 +75,8 @@ public class BSDF {
         return rho(nSamples, samples1, samples2, BxDF.BSDF_ALL);
     }
 
-    public Spectrum rho(Vector3f wo, int nSamples, Point2f[] samples, int flags) {
+    public Spectrum rho(Vector3f woWorld, int nSamples, Point2f[] samples, int flags) {
+        Vector3f wo = WorldToLocal(woWorld);
         Spectrum ret = new Spectrum(0);
         for (int i = 0; i < nBxDFs; ++i)
             if (bxdfs[i].MatchesFlags(flags))
@@ -141,7 +142,7 @@ public class BSDF {
         if (matchingComps > 1) sample.pdf /= matchingComps;
 
         // Compute value of BSDF for sampled direction
-        if ((bxdf.type & BxDF.BSDF_SPECULAR) == 0 && matchingComps > 1) {
+        if ((bxdf.type & BxDF.BSDF_SPECULAR) == 0) {
             boolean reflect = Normal3f.Dot(sample.wiWorld, ng) * Normal3f.Dot(woWorld, ng) > 0;
             for (int i = 0; i < nBxDFs; ++i) {
                 if (bxdfs[i].MatchesFlags(type) &&

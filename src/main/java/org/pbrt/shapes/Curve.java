@@ -320,7 +320,7 @@ public class Curve extends Shape {
                     }
                     dpdv = rayToObject.xform(dpdvPlane);
                 }
-                hr.isect = ObjectToWorld.xform(new SurfaceInteraction(ray.at(pc.z), pError, new Point2f(u, v), ray.d.negate(), dpdu, dpdv,
+                hr.isect = ObjectToWorld.xform(new SurfaceInteraction(ray.at(hr.tHit), pError, new Point2f(u, v), ray.d.negate(), dpdu, dpdv,
                         new Normal3f(0, 0, 0), new Normal3f(0, 0, 0), ray.time, this));
             }
             hitsPerTest.incrementNumer(1); //++nHits;
@@ -354,7 +354,19 @@ public class Curve extends Shape {
         BezierPoint bp = new BezierPoint();
         Point3f[] cp1 = {Point3f.Lerp(u, cp[0], cp[1]), Point3f.Lerp(u, cp[1], cp[2]), Point3f.Lerp(u, cp[2], cp[3])};
         Point3f[] cp2 = {Point3f.Lerp(u, cp1[0], cp1[1]), Point3f.Lerp(u, cp1[1], cp1[2])};
-        bp.deriv = (cp2[1].subtract(cp2[0])).scale(3);
+        Vector3f vcp = cp2[1].subtract(cp2[0]);
+        if (vcp.LengthSquared() > 0) {
+            bp.deriv = vcp.scale(3);
+        }
+        else {
+            // For a cubic Bezier, if the first three control points (say) are
+            // coincident, then the derivative of the curve is legitimately (0,0,0)
+            // at u=0.  This is problematic for us, though, since we'd like to be
+            // able to compute a surface normal there.  In that case, just punt and
+            // take the difference between the first and last control points, which
+            // ain't great, but will hopefully do.
+            bp.deriv = cp[3].subtract(cp[0]);
+        }
         bp.point = Point3f.Lerp(u, cp2[0], cp2[1]);
         return bp;
     }

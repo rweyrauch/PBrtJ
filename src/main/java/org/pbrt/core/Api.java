@@ -1279,6 +1279,14 @@ public class Api {
         ImageTextureSpectrum.ClearCacheSpectrum();
     }
 
+    public static void pbrtParseFile(String filename) {
+        Parser.ParseFile(filename);
+    }
+
+    public static void pbrtParseString(String str) {
+        Parser.ParseString(str);
+    }
+
     private static void VERIFY_INITIALIZED(String func) {
         if (!(Pbrt.options.Cat || Pbrt.options.ToPly) && currentApiState == APIState.Uninitialized) {
             Error.Error("pbrtInit() must be before calling \"%s()\". Ignoring.", func);

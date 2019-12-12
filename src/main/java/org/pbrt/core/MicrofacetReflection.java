@@ -26,7 +26,9 @@ public class MicrofacetReflection extends BxDF {
         if (cosThetaI == 0 || cosThetaO == 0) return new Spectrum(0);
         if (wh.x == 0 && wh.y == 0 && wh.z == 0) return new Spectrum(0);
         wh = Vector3f.Normalize(wh);
-        Spectrum F = fresnel.Evaluate(Vector3f.Dot(wi, wh));
+        // For the Fresnel call, make sure that wh is in the same hemisphere
+        // as the surface normal, so that TIR is handled correctly.
+        Spectrum F = fresnel.Evaluate(Vector3f.Dot(wi, Vector3f.Faceforward(wh, new Vector3f(0,0,1))));
         return R.scale(distribution.D(wh) * distribution.G(wo, wi)).multiply(F.scale(1 / (4 * cosThetaI * cosThetaO)));
     }
 
@@ -41,6 +43,7 @@ public class MicrofacetReflection extends BxDF {
         // Sample microfacet orientation $\wh$ and reflected direction $\wi$
         if (wo.z == 0) return bs;
         Vector3f wh = distribution.Sample_wh(wo, u);
+        if (Vector3f.Dot(wo, wh) < 0) return bs;   // Should be rare
         bs.wiWorld = Reflection.Reflect(wo, wh);
         if (!Reflection.SameHemisphere(wo, bs.wiWorld)) return bs;
 

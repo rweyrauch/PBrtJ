@@ -114,6 +114,10 @@ public class Pbrt
         return v + 1;
     }
 
+    public static int CountTrailingZeros(int x) {
+        return Integer.numberOfTrailingZeros(x);
+    }
+        
     public static int FindInterval(int size, Predicate<Integer> pred) {
         int first = 0, len = size;
         while (len > 0) {
@@ -162,7 +166,7 @@ public class Pbrt
         if (v == -0.f) v = 0.f;
 
         // Advance _v_ to next higher float
-        int ui = Float.floatToRawIntBits(v);
+        int ui = Float.floatToIntBits(v);
         if (v >= 0) {
             ++ui;
         } else {
@@ -175,7 +179,7 @@ public class Pbrt
     // Handle infinity and positive zero for _NextFloatDown()_
         if (Float.isInfinite(v) && v > 0) return v;
         if (v == 0.f) v = -0.f;
-        int ui = Float.floatToRawIntBits(v);
+        int ui = Float.floatToIntBits(v);
         if (v > 0)
             --ui;
         else

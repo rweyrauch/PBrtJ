@@ -47,14 +47,14 @@ public class BeckmannDistribution extends MicrofacetDistribution {
             // Compute $\tan^2 \theta$ and $\phi$ for Beckmann distribution sample
             float tan2Theta, phi;
             if (alphax == alphay) {
-                float logSample = (float)Math.log(u.x);
+                float logSample = (float)Math.log(1 - u.x);
                 if (Float.isInfinite(logSample)) logSample = 0;
                 tan2Theta = -alphax * alphax * logSample;
                 phi = u.y * 2 * (float)Math.PI;
             } else {
                 // Compute _tan2Theta_ and _phi_ for anisotropic Beckmann
                 // distribution
-                float logSample = (float)Math.log(u.x);
+                float logSample = (float)Math.log(1 - u.x);
                 if (Float.isInfinite(logSample)) logSample = 0;
                 phi = (float)Math.atan(alphay / alphax * (float)Math.tan(2 * (float)Math.PI * u.y + 0.5f * (float)Math.PI));
                 if (u.y > 0.5f) phi += (float)Math.PI;

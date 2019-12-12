@@ -54,8 +54,7 @@ public class Disk extends Shape {
         // Find parametric representation of disk hit
         float u = phi / phiMax;
         float rHit = (float)Math.sqrt(dist2);
-        float oneMinusV = ((rHit - innerRadius) / (radius - innerRadius));
-        float v = 1 - oneMinusV;
+        float v = (radius - rHit) / (radius - innerRadius);
         Vector3f dpdu = new Vector3f(-phiMax * pHit.y, phiMax * pHit.x, 0);
         Vector3f dpdv = (new Vector3f(pHit.x, pHit.y, 0)).scale((innerRadius - radius) / rHit);
         Normal3f dndu = new Normal3f(0, 0, 0);

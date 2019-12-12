@@ -17,4 +17,6 @@ public class Options {
     public boolean Cat = false;
     public boolean ToPly = false;
     public String ImageFile;
+    // x0, x1, y0, y1
+    public float[][] CropWindow = { {0, 1}, {0, 1}};
 }

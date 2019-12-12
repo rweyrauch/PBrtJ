@@ -48,6 +48,8 @@ public class MicrofacetTransmission extends BxDF {
     public BxDFSample Sample_f(Vector3f wo, Point2f u) {
         if (wo.z == 0) return null;
         Vector3f wh = distribution.Sample_wh(wo, u);
+        if (Vector3f.Dot(wo, wh) < 0) return null;  // Should be rare
+        
         float eta = Reflection.CosTheta(wo) > 0 ? (etaA / etaB) : (etaB / etaA);
         Vector3f wi = Reflection.Refract(wo, new Normal3f(wh), eta);
         if (wi == null) return null;

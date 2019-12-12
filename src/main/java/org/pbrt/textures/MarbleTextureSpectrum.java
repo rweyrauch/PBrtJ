@@ -33,7 +33,7 @@ public class MarbleTextureSpectrum extends Texture<Spectrum> {
         final int nc = marbleColors.length;
         final int NSEG = nc - 3;
 
-        int first = (int)Math.floor(t * NSEG);
+        int first = Math.min(1, (int)(Math.floor(t * NSEG)));
         t = (t * NSEG - first);
         Spectrum c0 = Spectrum.FromRGB(marbleColors[first]);
         Spectrum c1 = Spectrum.FromRGB(marbleColors[first + 1]);
