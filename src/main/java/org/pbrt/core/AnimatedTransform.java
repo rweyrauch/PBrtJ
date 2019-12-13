@@ -101,6 +101,9 @@ public class AnimatedTransform {
         Interval ic5 = new Interval(c5);
 
         ArrayList<Float> zeros = new ArrayList<>();
+        if (tInterval == null) {
+            return zeros;
+        }
 
         Interval r1 = ic2.add(ic3.multiply(tInterval)).multiply(Cos(new Interval(2 * theta).multiply(tInterval)));
         Interval r2 = ic4.add(ic5.multiply(tInterval)).multiply(Sin(new Interval(2 * theta).multiply(tInterval)));
@@ -110,8 +113,14 @@ public class AnimatedTransform {
         if (depth > 0) {
             // Split _tInterval_ and check both resulting intervals
             float mid = (tInterval.low + tInterval.high) * 0.5f;
-            zeros.addAll(IntervalFindZeros(c1, c2, c3, c4, c5, theta, new Interval(tInterval.low, mid), depth - 1));
-            zeros.addAll(IntervalFindZeros(c1, c2, c3, c4, c5, theta, new Interval(mid, tInterval.high), depth - 1));
+            var left = IntervalFindZeros(c1, c2, c3, c4, c5, theta, new Interval(tInterval.low, mid), depth - 1);
+            var right = IntervalFindZeros(c1, c2, c3, c4, c5, theta, new Interval(mid, tInterval.high), depth - 1);
+            if (left != null && left.size() > 0) {
+                zeros.addAll(left);
+            }
+            if (right != null && right.size() > 0) {
+                zeros.addAll(right);
+            }
         } else {
             // Use Newton's method to refine zero
             float tNewton = (tInterval.low + tInterval.high) * 0.5f;

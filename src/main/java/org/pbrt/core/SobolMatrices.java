@@ -17,7 +17,7 @@ public final class SobolMatrices {
     public static final int NumSobolDimensions = 1024;
     public static final int SobolMatrixSize = 52;
 
-    public static final int[] SobolMatrices32 = new int[NumSobolDimensions*SobolMatrixSize];
+    public static final long[] SobolMatrices32 = new long[NumSobolDimensions*SobolMatrixSize];
     public static final long[] SobolMatrices64 = new long[NumSobolDimensions*SobolMatrixSize];
 
     static {
@@ -26,16 +26,17 @@ public final class SobolMatrices {
             byte[] buf = new byte[4];
             for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
                 fis.read(buf);
-                SobolMatrices32[i] = (buf[3]) | (buf[2] << 8) | (buf[1] << 16) | (buf[0] << 24);
+                SobolMatrices32[i] = (buf[0]) | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
             }
             fis.close();
 
-            byte[] buf64 = new byte[8];
+            byte[] buf2 = new byte[4];
             fis = new FileInputStream("sobel64.dat");
             for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
-                fis.read(buf64);
-                SobolMatrices64[i] = ((long)buf64[7]) | ((long)buf64[6] << 8) | ((long)buf64[5] << 16) | ((long)buf64[4] << 24) |
-                        ((long)buf64[3] << 32) | ((long)buf64[2] << 40) | ((long)buf64[1] << 48) | ((long)buf64[0] << 54);
+                fis.read(buf);
+                fis.read(buf2);
+                SobolMatrices64[i] = ((long)buf[0]) | ((long)buf[1] << 8) | ((long)buf[2] << 16) | ((long)buf[3] << 24) |
+                        ((long)buf2[0] << 32) | ((long)buf2[1] << 40) | ((long)buf2[2] << 48) | ((long)buf2[3] << 56);
             }
             fis.close();
         }

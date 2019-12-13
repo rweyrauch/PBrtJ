@@ -2196,7 +2196,7 @@ public class LowDiscrepancy {
     }
     public static float SobolSampleFloat(long a, int dimension, int scramble) {
         assert (dimension < SobolMatrices.NumSobolDimensions); // "Integrator has consumed too many Sobol' dimensions; you may want to use a Sampler without a dimension limit like \"02sequence.\"";
-        int v = scramble;
+        long v = scramble;
         for (int i = dimension * SobolMatrices.SobolMatrixSize; a != 0; a >>>= 1, i++)
             if ((a & 1) != 0) v ^= SobolMatrices.SobolMatrices32[i];
         return Math.min(v * 0x1p-32f /* 1/2^32 */, RNG.FloatOneMinusEpsilon);

@@ -388,6 +388,12 @@ public final class Spectrum {
         return Pbrt.Lerp(t, vals[offset], vals[offset + 1]);
     }
 
+    public static float Blackbody(float lamba, float T) {
+        float[] lambas = {lamba};
+        float[] le = Spectrum.Blackbody(lambas, T);
+        return le[0];
+    }
+
     public static float[] Blackbody(float[] lambda, float T) {
         int n = lambda.length;
         float[] Le = new float[n];
