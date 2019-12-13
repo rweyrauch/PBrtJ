@@ -67,13 +67,13 @@ public class Parser {
     public static boolean ParseFile(String filename) {
         try {
             Yylex scanner = new Yylex( new java.io.FileReader(filename) );
-/*
+            /*
             int token = scanner.yylex();
             while ( token != -1 ) {
-                token = scanner.yylex();
                 System.out.printf("Token: %s\n", scanner.yytext());
+                token = scanner.yylex();
             }
-*/
+            */
             Parser p = new Parser(scanner);
             p.parse();
         }
@@ -384,7 +384,9 @@ public class Parser {
                     // start a new command
                     currentCommand = new CommandTokens();
                 }
-                currentCommand.command.add(new TokenValue(token, scanner.yytext()));
+                if (currentCommand != null) {
+                    currentCommand.command.add(new TokenValue(token, scanner.yytext()));
+                }
             }
             if (currentCommand != null) {
                 processCommand(currentCommand);
@@ -400,7 +402,7 @@ public class Parser {
         assert(currentCommand != null);
         int commandToken = currentCommand.command.get(0).token;
         assert(isCommand(commandToken));
-        //System.out.printf("Command: %s  Num Args: %d\n", currentCommand.command.get(0).value, currentCommand.command.size()-1);
+        System.out.printf("Command: %s  Num Args: %d\n", currentCommand.command.get(0).value, currentCommand.command.size()-1);
         switch (commandToken) {
             case ACCELERATOR:
                 parseAccelerator(currentCommand.command);
