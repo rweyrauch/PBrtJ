@@ -74,11 +74,11 @@ public class SpatialLightDistribution extends LightDistribution {
         // fairly random. For details of and motivation for the following, see:
         // http://zimbry.blogspot.ch/2011/09/better-bit-mixing-improving-on.html
         long hash = packedPos;
-        hash ^= (hash >> 31);
+        hash ^= (hash >>> 31);
         hash *= 0x7fb5d329728ea185L;
-        hash ^= (hash >> 27);
+        hash ^= (hash >>> 27);
         hash *= 0x81dadef4bc2dd44dL;
-        hash ^= (hash >> 33);
+        hash ^= (hash >>> 33);
         hash %= hashTableSize;
         assert (hash >= 0);
 

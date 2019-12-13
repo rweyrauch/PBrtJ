@@ -11,7 +11,7 @@ package org.pbrt.core;
 
 public class Bounds3i {
     // Bounds3 Public Data
-    public final Point3i pMin, pMax;
+    public Point3i pMin, pMax;
 
     public Bounds3i() {
         int minNum = Integer.MIN_VALUE;
@@ -37,10 +37,10 @@ public class Bounds3i {
         return (i == 0) ? pMin : pMax;
     }
     public boolean equal(Bounds3i b) {
-        return b.pMin == pMin && b.pMax == pMax;
+        return b.pMin.equal(pMin) && b.pMax.equal(pMax);
     }
     public boolean notEqual(Bounds3i b) {
-        return b.pMin != pMin || b.pMax != pMax;
+        return b.pMin.notEqual(pMin) || b.pMax.notEqual(pMax);
     }
     public Point3i Corner(int corner) {
         assert (corner >= 0 && corner < 8);
@@ -52,18 +52,28 @@ public class Bounds3i {
     }
 
     public static Bounds3i Union(Bounds3i b, Point3i p) {
-        return new Bounds3i(new Point3i(Math.min(b.pMin.x, p.x), Math.min(b.pMin.y, p.y), Math.min(b.pMin.z, p.z)),
-            new Point3i(Math.max(b.pMax.x, p.x), Math.max(b.pMax.y, p.y), Math.max(b.pMax.z, p.z)));
+        var ret = new Bounds3i();
+        ret.pMin = Point3i.Min(b.pMin, p);
+        ret.pMax = Point3i.Max(b.pMax, p);
+        return ret;
     }
 
     public static Bounds3i Union(Bounds3i b1, Bounds3i b2) {
-        return new Bounds3i(new Point3i(Math.min(b1.pMin.x, b2.pMin.x), Math.min(b1.pMin.y, b2.pMin.y), Math.min(b1.pMin.z, b2.pMin.z)),
-            new Point3i(Math.max(b1.pMax.x, b2.pMax.x), Math.max(b1.pMax.y, b2.pMax.y), Math.max(b1.pMax.z, b2.pMax.z)));
+        var ret = new Bounds3i();
+        ret.pMin = Point3i.Min(b1.pMin, b2.pMin);
+        ret.pMax = Point3i.Max(b1.pMax, b2.pMax);
+        return ret;
     }
 
     public static Bounds3i Intersect(Bounds3i b1, Bounds3i b2) {
-        return new Bounds3i(new Point3i(Math.max(b1.pMin.x, b2.pMin.x), Math.max(b1.pMin.y, b2.pMin.y), Math.max(b1.pMin.z, b2.pMin.z)),
-            new Point3i(Math.min(b1.pMax.x, b2.pMax.x), Math.min(b1.pMax.y, b2.pMax.y), Math.min(b1.pMax.z, b2.pMax.z)));
+        // Important: assign to pMin/pMax directly and don't run the Bounds2()
+        // constructor, since it takes min/max of the points passed to it.  In
+        // turn, that breaks returning an invalid bound for the case where we
+        // intersect non-overlapping bounds (as we'd like to happen).
+        Bounds3i ret = new Bounds3i();
+        ret.pMin = Point3i.Max(b1.pMin, b2.pMin);
+        ret.pMax = Point3i.Min(b1.pMax, b2.pMax);
+        return ret;
     }
 
     public static boolean Overlaps(Bounds3i b1, Bounds3i b2) {

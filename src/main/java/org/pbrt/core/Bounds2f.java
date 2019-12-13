@@ -11,11 +11,11 @@ package org.pbrt.core;
 
 public class Bounds2f {
     // Bounds2 Public Data
-    public final Point2f pMin, pMax;
+    public Point2f pMin, pMax;
 
     public Bounds2f() {
-        float minNum = Float.MIN_VALUE;
-        float maxNum = Float.MAX_VALUE;
+        final float minNum = -Float.MAX_VALUE;
+        final float maxNum = Float.MAX_VALUE;
         pMin = new Point2f(maxNum, maxNum);
         pMax = new Point2f(minNum, minNum);
     }
@@ -41,10 +41,10 @@ public class Bounds2f {
         return (i == 0) ? pMin : pMax;
     }
     public boolean equal(Bounds2f b) {
-        return b.pMin == pMin && b.pMax == pMax;
+        return b.pMin.equal(pMin) && b.pMax.equal(pMax);
     }
     public boolean notEqual(Bounds2f b) {
-        return b.pMin != pMin || b.pMax != pMax;
+        return b.pMin.notEqual(pMin) || b.pMax.notEqual(pMax);
     }
 
     public Vector2f Diagonal() {
@@ -79,21 +79,28 @@ public class Bounds2f {
     }
 
     public static Bounds2f Union(Bounds2f b, Point2f p) {
-        return new Bounds2f(
-                new Point2f(Math.min(b.pMin.x, p.x), Math.min(b.pMin.y, p.y)),
-                new Point2f(Math.max(b.pMax.x, p.x), Math.max(b.pMax.y, p.y)));
+        var ret = new Bounds2f();
+        ret.pMin = Point2f.Min(b.pMin, p);
+        ret.pMax = Point2f.Max(b.pMax, p);
+        return ret;
     }
 
     public static Bounds2f Union(Bounds2f b, Bounds2f b2) {
-        return new Bounds2f(
-                new Point2f(Math.min(b.pMin.x, b2.pMin.x), Math.min(b.pMin.y, b2.pMin.y)),
-                new Point2f(Math.max(b.pMax.x, b2.pMax.x), Math.max(b.pMax.y, b2.pMax.y)));
+        var ret = new Bounds2f();
+        ret.pMin = Point2f.Min(b.pMin, b2.pMin);
+        ret.pMax = Point2f.Max(b.pMax, b2.pMax);
+        return ret;
     }
 
     public static Bounds2f Intersect(Bounds2f b, Bounds2f b2) {
-        return new Bounds2f(
-                new Point2f(Math.max(b.pMin.x, b2.pMin.x), Math.max(b.pMin.y, b2.pMin.y)),
-                new Point2f(Math.min(b.pMax.x, b2.pMax.x), Math.min(b.pMax.y, b2.pMax.y)));
+        // Important: assign to pMin/pMax directly and don't run the Bounds2()
+        // constructor, since it takes min/max of the points passed to it.  In
+        // turn, that breaks returning an invalid bound for the case where we
+        // intersect non-overlapping bounds (as we'd like to happen).
+        Bounds2f ret = new Bounds2f();
+        ret.pMin = Point2f.Max(b.pMin, b2.pMin);
+        ret.pMax = Point2f.Min(b.pMax, b2.pMax);
+        return ret;
     }
 
     public static boolean Overlaps(Bounds2f ba, Bounds2f bb) {

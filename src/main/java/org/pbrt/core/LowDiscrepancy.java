@@ -13,17 +13,17 @@ package org.pbrt.core;
 public class LowDiscrepancy {
 
     public static int ReverseBits32(int n) {
-        n = (n << 16) | (n >> 16);
-        n = ((n & 0x00ff00ff) << 8) | ((n & 0xff00ff00) >> 8);
-        n = ((n & 0x0f0f0f0f) << 4) | ((n & 0xf0f0f0f0) >> 4);
-        n = ((n & 0x33333333) << 2) | ((n & 0xcccccccc) >> 2);
-        n = ((n & 0x55555555) << 1) | ((n & 0xaaaaaaaa) >> 1);
+        n = (n << 16) | (n >>> 16);
+        n = ((n & 0x00ff00ff) << 8) | ((n & 0xff00ff00) >>> 8);
+        n = ((n & 0x0f0f0f0f) << 4) | ((n & 0xf0f0f0f0) >>> 4);
+        n = ((n & 0x33333333) << 2) | ((n & 0xcccccccc) >>> 2);
+        n = ((n & 0x55555555) << 1) | ((n & 0xaaaaaaaa) >>> 1);
         return n;
     }
 
     public static long ReverseBits64(long n) {
         long n0 = ReverseBits32((int)n);
-        long n1 = ReverseBits32((int)(n >> 32));
+        long n1 = ReverseBits32((int)(n >>> 32));
         return (n0 << 32) | n1;
     }
 
@@ -2127,7 +2127,7 @@ public class LowDiscrepancy {
 
     public static int MultiplyGenerator(int[] C, int a) {
         int v = 0;
-        for (int i = 0; a != 0; ++i, a >>= 1)
+        for (int i = 0; a != 0; ++i, a >>>= 1)
             if ((a & 1) != 0) v ^= C[i];
         return v;
     }
@@ -2181,14 +2181,14 @@ public class LowDiscrepancy {
         long index = frame << m2;
 
         long delta = 0;
-        for (int c = 0; frame != 0; frame >>= 1, ++c)
+        for (int c = 0; frame != 0; frame >>>= 1, ++c)
             if ((frame & 1) != 0)  // Add flipped column m + c + 1.
                 delta ^= SobolMatrices.VdCSobolMatrices[m - 1][c];
 
         // flipped b
         long b = (((long)((int)p.x) << m) | p.y) ^ delta;
 
-        for (int c = 0; b != 0; b >>= 1, ++c)
+        for (int c = 0; b != 0; b >>>= 1, ++c)
             if ((b & 1) != 0)  // Add column 2 * m - c.
                 index ^= SobolMatrices.VdCSobolMatricesInv[m - 1][c];
 
@@ -2197,19 +2197,19 @@ public class LowDiscrepancy {
     public static float SobolSampleFloat(long a, int dimension, int scramble) {
         assert (dimension < SobolMatrices.NumSobolDimensions); // "Integrator has consumed too many Sobol' dimensions; you may want to use a Sampler without a dimension limit like \"02sequence.\"";
         int v = scramble;
-        for (int i = dimension * SobolMatrices.SobolMatrixSize; a != 0; a >>= 1, i++)
+        for (int i = dimension * SobolMatrices.SobolMatrixSize; a != 0; a >>>= 1, i++)
             if ((a & 1) != 0) v ^= SobolMatrices.SobolMatrices32[i];
         return Math.min(v * 0x1p-32f /* 1/2^32 */, RNG.FloatOneMinusEpsilon);
     }
     public static double SobolSampleDouble(long a, int dimension, int scramble) {
         assert (dimension < SobolMatrices.NumSobolDimensions); // "Integrator has consumed too many Sobol' dimensions; you may want to use a Sampler without a dimension limit like \"02sequence.\"";
         long result = scramble & ~ - (1L << SobolMatrices.SobolMatrixSize);
-        for (int i = dimension * SobolMatrices.SobolMatrixSize; a != 0; a >>= 1, i++)
+        for (int i = dimension * SobolMatrices.SobolMatrixSize; a != 0; a >>>= 1, i++)
             if ((a & 1) != 0) result ^= SobolMatrices.SobolMatrices64[i];
         return Math.min(result * (1.0 / (1L << SobolMatrices.SobolMatrixSize)), RNG.DoubleOneMinusEpsilon);
     }
 
-    public static int GrayCode(int v) { return (v >> 1) ^ v; }
+    public static int GrayCode(int v) { return (v >>> 1) ^ v; }
 
     public static Float[] GrayCodeSample(int[] C, int n, int scramble, Float[] p) {
         int v = scramble;

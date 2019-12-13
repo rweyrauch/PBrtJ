@@ -96,21 +96,21 @@ public class Pbrt
 
     public static int RoundUpPow2(int v) {
         v--;
-        v |= v >> 1;
-        v |= v >> 2;
-        v |= v >> 4;
-        v |= v >> 8;
-        v |= v >> 16;
+        v |= v >>> 1;
+        v |= v >>> 2;
+        v |= v >>> 4;
+        v |= v >>> 8;
+        v |= v >>> 16;
         return v + 1;
     }
     public static long RoundUpPow2(long v) {
         v--;
-        v |= v >> 1;
-        v |= v >> 2;
-        v |= v >> 4;
-        v |= v >> 8;
-        v |= v >> 16;
-        v |= v >> 32;
+        v |= v >>> 1;
+        v |= v >>> 2;
+        v |= v >>> 4;
+        v |= v >>> 8;
+        v |= v >>> 16;
+        v |= v >>> 32;
         return v + 1;
     }
 
@@ -121,7 +121,7 @@ public class Pbrt
     public static int FindInterval(int size, Predicate<Integer> pred) {
         int first = 0, len = size;
         while (len > 0) {
-            int half = len >> 1, middle = first + half;
+            int half = len >>> 1, middle = first + half;
             // Bisect range based on value of _pred_ at _middle_
             if (pred.test(middle)) {
                 first = middle + 1;

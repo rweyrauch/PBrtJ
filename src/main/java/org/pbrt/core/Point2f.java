@@ -87,4 +87,16 @@ public class Point2f {
         return new Point2f((float) Math.ceil(p.x), (float) Math.ceil(p.y));
     }
 
+    public static Point2f Lerp(float t, Point2f v0, Point2f v1) {
+        return v0.scale(1-t).add(v1.scale(t));
+    }
+
+    public static Point2f Min(Point2f pa, Point2f pb) {
+        return new Point2f(Math.min(pa.x, pb.x), Math.min(pa.y, pb.y));
+    }
+
+    public static Point2f Max(Point2f pa, Point2f pb) {
+        return new Point2f(Math.max(pa.x, pb.x), Math.max(pa.y, pb.y));
+    }
+
 }

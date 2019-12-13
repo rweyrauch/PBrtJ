@@ -11,11 +11,11 @@ package org.pbrt.core;
 
 public class Bounds3f {
     // Bounds3 Public Data
-    public final Point3f pMin, pMax;
+    public Point3f pMin, pMax;
 
     public Bounds3f() {
-        float minNum = Float.MIN_VALUE;
-        float maxNum = Float.MAX_VALUE;
+        final float minNum = -Float.MAX_VALUE;
+        final float maxNum = Float.MAX_VALUE;
         pMin = new Point3f(maxNum, maxNum, maxNum);
         pMax = new Point3f(minNum, minNum, minNum);
     }
@@ -37,10 +37,10 @@ public class Bounds3f {
         return (i == 0) ? pMin : pMax;
     }
     public boolean equal(Bounds3f b) {
-        return b.pMin == pMin && b.pMax == pMax;
+        return b.pMin.equal(pMin) && b.pMax.equal(pMax);
     }
     public boolean notEqual(Bounds3f b) {
-        return b.pMin != pMin || b.pMax != pMax;
+        return b.pMin.notEqual(pMin) || b.pMax.notEqual(pMax);
     }
     public Point3f Corner(int corner) {
         assert (corner >= 0 && corner < 8);
@@ -153,18 +153,28 @@ public class Bounds3f {
     }
 
     public static Bounds3f Union(Bounds3f b, Point3f p) {
-        return new Bounds3f(new Point3f(Math.min(b.pMin.x, p.x), Math.min(b.pMin.y, p.y), Math.min(b.pMin.z, p.z)),
-            new Point3f(Math.max(b.pMax.x, p.x), Math.max(b.pMax.y, p.y), Math.max(b.pMax.z, p.z)));
+        var ret = new Bounds3f();
+        ret.pMin = Point3f.Min(b.pMin, p);
+        ret.pMax = Point3f.Max(b.pMax, p);
+        return ret;
     }
 
     public static Bounds3f Union(Bounds3f b1, Bounds3f b2) {
-        return new Bounds3f(new Point3f(Math.min(b1.pMin.x, b2.pMin.x), Math.min(b1.pMin.y, b2.pMin.y), Math.min(b1.pMin.z, b2.pMin.z)),
-            new Point3f(Math.max(b1.pMax.x, b2.pMax.x), Math.max(b1.pMax.y, b2.pMax.y), Math.max(b1.pMax.z, b2.pMax.z)));
+        var ret = new Bounds3f();
+        ret.pMin = Point3f.Min(b1.pMin, b2.pMin);
+        ret.pMax = Point3f.Max(b1.pMax, b2.pMax);
+        return ret;
     }
 
     public static Bounds3f Intersect(Bounds3f b1, Bounds3f b2) {
-        return new Bounds3f(new Point3f(Math.max(b1.pMin.x, b2.pMin.x), Math.max(b1.pMin.y, b2.pMin.y), Math.max(b1.pMin.z, b2.pMin.z)),
-            new Point3f(Math.min(b1.pMax.x, b2.pMax.x), Math.min(b1.pMax.y, b2.pMax.y), Math.min(b1.pMax.z, b2.pMax.z)));
+        // Important: assign to pMin/pMax directly and don't run the Bounds2()
+        // constructor, since it takes min/max of the points passed to it.  In
+        // turn, that breaks returning an invalid bound for the case where we
+        // intersect non-overlapping bounds (as we'd like to happen).
+        Bounds3f ret = new Bounds3f();
+        ret.pMin = Point3f.Max(b1.pMin, b2.pMin);
+        ret.pMax = Point3f.Min(b1.pMax, b2.pMax);
+        return ret;
     }
 
     public static boolean Overlaps(Bounds3f b1, Bounds3f b2) {

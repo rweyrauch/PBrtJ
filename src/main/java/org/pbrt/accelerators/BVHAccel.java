@@ -778,7 +778,7 @@ public class BVHAccel extends Aggregate {
             int[]  bucketCount = new int[nBuckets];
             final int bitMask = (1 << bitsPerPass) - 1;
             for (MortonPrimitive mp : in) {
-                int bucket = (mp.mortonCode >> lowBit) & bitMask;
+                int bucket = (mp.mortonCode >>> lowBit) & bitMask;
                 assert (bucket >= 0);
                 assert (bucket < nBuckets);
                 ++bucketCount[bucket];
@@ -792,7 +792,7 @@ public class BVHAccel extends Aggregate {
 
             // Store sorted values in output array
             for (MortonPrimitive mp : in) {
-                int bucket = (mp.mortonCode >> lowBit) & bitMask;
+                int bucket = (mp.mortonCode >>> lowBit) & bitMask;
                 out[outIndex[bucket]++] = mp;
             }
         }

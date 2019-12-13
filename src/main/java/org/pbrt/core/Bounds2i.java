@@ -11,7 +11,7 @@ package org.pbrt.core;
 
 public class Bounds2i {
     // Bounds2 Public Data
-    public final Point2i pMin, pMax;
+    public Point2i pMin, pMax;
 
     public Bounds2i() {
         int minNum = Integer.MIN_VALUE;
@@ -42,10 +42,10 @@ public class Bounds2i {
         return (i == 0) ? pMin : pMax;
     }
     public boolean equal(Bounds2i b) {
-        return b.pMin == pMin && b.pMax == pMax;
+        return b.pMin.equal(pMin) && b.pMax.equal(pMax);
     }
     public boolean notEqual(Bounds2i b) {
-        return b.pMin != pMin || b.pMax != pMax;
+        return b.pMin.notEqual(pMin) || b.pMax.notEqual(pMax);
     }
 
     public Vector2i Diagonal() {
@@ -77,21 +77,28 @@ public class Bounds2i {
     }
 
     public static Bounds2i Union(Bounds2i b, Point2i p) {
-        return new Bounds2i(
-                new Point2i(Math.min(b.pMin.x, p.x), Math.min(b.pMin.y, p.y)),
-                new Point2i(Math.max(b.pMax.x, p.x), Math.max(b.pMax.y, p.y)));
+        var ret = new Bounds2i();
+        ret.pMin = Point2i.Min(b.pMin, p);
+        ret.pMax = Point2i.Max(b.pMax, p);
+        return ret;
     }
 
     public static Bounds2i Union(Bounds2i b, Bounds2i b2) {
-        return new Bounds2i(
-                new Point2i(Math.min(b.pMin.x, b2.pMin.x), Math.min(b.pMin.y, b2.pMin.y)),
-                new Point2i(Math.max(b.pMax.x, b2.pMax.x), Math.max(b.pMax.y, b2.pMax.y)));
+        var ret = new Bounds2i();
+        ret.pMin = Point2i.Min(b.pMin, b2.pMin);
+        ret.pMax = Point2i.Max(b.pMax, b2.pMax);
+        return ret;
     }
 
     public static Bounds2i Intersect(Bounds2i b, Bounds2i b2) {
-        return new Bounds2i(
-                new Point2i(Math.max(b.pMin.x, b2.pMin.x), Math.max(b.pMin.y, b2.pMin.y)),
-                new Point2i(Math.min(b.pMax.x, b2.pMax.x), Math.min(b.pMax.y, b2.pMax.y)));
+        // Important: assign to pMin/pMax directly and don't run the Bounds2()
+        // constructor, since it takes min/max of the points passed to it.  In
+        // turn, that breaks returning an invalid bound for the case where we
+        // intersect non-overlapping bounds (as we'd like to happen).
+        Bounds2i ret = new Bounds2i();
+        ret.pMin = Point2i.Max(b.pMin, b2.pMin);
+        ret.pMax = Point2i.Min(b.pMax, b2.pMax);
+        return ret;
     }
 
     public static boolean Overlaps(Bounds2i ba, Bounds2i bb) {

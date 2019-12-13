@@ -26,7 +26,8 @@ public class Bounds2fTest {
         Bounds2f b = new Bounds2f(); // degenerate
         Bounds2f c = Bounds2f.Union(a, b);
         assertTrue(a.equal(c));
-    
+
+        final var bb = Bounds2f.Union(b, b);
         assertTrue(b.equal(Bounds2f.Union(b, b)));
     
         Bounds2f d = new Bounds2f(new Point2f(-15, 10));

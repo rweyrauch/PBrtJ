@@ -248,9 +248,9 @@ public final class Spectrum {
 
     public static Spectrum FromRGB(int argb) {
         Spectrum s = new Spectrum(0);
-        s.c[0] = ((argb & 0xff0000) >> 16) / 255.0f;
-        s.c[1] = ((argb & 0x00ff00) >> 8) / 255.0f;
-        s.c[2] = ((argb & 0x0000ff) >> 0) / 255.0f;
+        s.c[0] = ((argb & 0xff0000) >>> 16) / 255.0f;
+        s.c[1] = ((argb & 0x00ff00) >>> 8) / 255.0f;
+        s.c[2] = ((argb & 0x0000ff) >>> 0) / 255.0f;
         return s;
     }
 

@@ -405,10 +405,10 @@ public class KdTreeAccel extends Aggregate {
             aboveChild |= (ac << 2);
         }
         public float SplitPos() { return split; }
-        public int nPrimitives() { return nPrims >> 2; }
+        public int nPrimitives() { return nPrims >>> 2; }
         public int SplitAxis() { return flags & 3; }
         public boolean IsLeaf() { return (flags & 3) == 3; }
-        public int AboveChild() { return aboveChild >> 2; }
+        public int AboveChild() { return aboveChild >>> 2; }
 
         //union {
         public float split;                 // Interior

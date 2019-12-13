@@ -396,7 +396,7 @@ public class Curve extends Shape {
         // https://graphics.stanford.edu/~seander/bithacks.html#IntegerLog
         // (With an additional add so get round-to-nearest rather than
         // round down.)
-        return (bits >> 23) - 127 + ((bits & (1 << 22)) != 0 ? 1 : 0);
+        return (bits >>> 23) - 127 + ((bits & (1 << 22)) != 0 ? 1 : 0);
     }
 
     private final CurveCommon common;

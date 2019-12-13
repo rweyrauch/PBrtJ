@@ -278,6 +278,6 @@ public class EXROutput {
 
         final int f = Float.floatToIntBits(v);
 
-        return(short)((( f>>16 ) & 0x8000 ) | (((( f & 0x7f800000 ) - 0x38000000 )>>13 ) & 0x7c00 ) | (( f>>13 ) & 0x03ff ));
+        return(short)((( f>>>16 ) & 0x8000 ) | (((( f & 0x7f800000 ) - 0x38000000 )>>>13 ) & 0x7c00 ) | (( f>>>13 ) & 0x03ff ));
     }
 }

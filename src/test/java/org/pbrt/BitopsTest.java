@@ -31,12 +31,12 @@ public class BitopsTest {
             assertEquals((long)i, Pbrt.Log2Int((long)(ui + 1)));
         }
     
-        for (long i = 0; i < 63; ++i) {
+        for (long i = 0; i < 64; ++i) {
             final long ui = 1L << i;
             assertEquals(i, Pbrt.Log2Int(ui));
         }
     
-        for (long i = 1; i < 63; ++i) {
+        for (long i = 1; i < 64; ++i) {
             final long ui = 1L << i;
             assertEquals(i, Pbrt.Log2Int(ui + 1));
         }    

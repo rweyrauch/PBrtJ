@@ -40,7 +40,7 @@ public class SamplingTest {
 
     @Test
     public void testScrambledRadicalInverse() {
-        for (int dim = 0; dim < 128; ++dim) {
+        for (int dim = 1; dim < 128; ++dim) {
             RNG rng = new RNG(dim);
             // Random permutation table
             final int base = LowDiscrepancy.Primes[dim];
@@ -52,41 +52,44 @@ public class SamplingTest {
             int[] indices = {0, 1, 2, 1151, 32351, 4363211, 681122};
             for (int index : indices) {
                 // First, compare to the pbrt-v2 implementation.
-                float val = 0;
-                float invBase = 1.0f / base;
-                float invBi = invBase;
-                int n = index;
-                while (n > 0) {
-                    int d_i = perm[n % base];
-                    val += d_i * invBi;
-                    n *= invBase;
-                    invBi *= invBase;
+                {
+                    float val = 0;
+                    float invBase = 1.0f / base;
+                    float invBi = invBase;
+                    int n = index;
+                    while (n > 0) {
+                        int d_i = perm[n % base];
+                        val += d_i * invBi;
+                        n *= invBase;
+                        invBi *= invBase;
+                    }
+                    // For the case where the permutation table permutes the digit 0
+                    // to
+                    // another digit, account for the infinite sequence of that
+                    // digit
+                    // trailing at the end of the radical inverse value.
+                    val += perm[0] * base / (base - 1.0f) * invBi;
+
+                    assertEquals(val, LowDiscrepancy.ScrambledRadicalInverse(dim, index, perm), 1e-5f);
                 }
-                // For the case where the permutation table permutes the digit 0
-                // to
-                // another digit, account for the infinite sequence of that
-                // digit
-                // trailing at the end of the radical inverse value.
-                val += perm[0] * base / (base - 1.0f) * invBi;
 
-                assertTrue(Pbrt.AlmostEqual(val, LowDiscrepancy.ScrambledRadicalInverse(dim, index, perm), 1e-5f));
+                {
+                    // Now also check against a totally naive "loop over all the
+                    // bits in
+                    // the index" approach, regardless of hitting zero...
+                    float val = 0.0f;
+                    float invBase = 1.0f / base;
+                    float invBi = invBase;
 
+                    int a = index;
+                    for (int i = 0; i < 32; ++i) {
+                        int d_i = perm[a % base];
+                        a /= base;
+                        val += d_i * invBi;
+                        invBi *= invBase;
+                    }
 
-                // Now also check against a totally naive "loop over all the
-                // bits in
-                // the index" approach, regardless of hitting zero...
-                val = 0.0f;
-                invBase = 1.0f / base;
-                invBi = invBase;
-
-                int a = index;
-                for (int i = 0; i < 32; ++i) {
-                    int d_i = perm[a % base];
-                    a /= base;
-                    val += d_i * invBi;
-                    invBi *= invBase;
-
-                    assertTrue(Pbrt.AlmostEqual(val, LowDiscrepancy.ScrambledRadicalInverse(dim, index, perm), 1e-5f));
+                    assertEquals(val, LowDiscrepancy.ScrambledRadicalInverse(dim, index, perm), 1e-5f);
                 }
             }
         }

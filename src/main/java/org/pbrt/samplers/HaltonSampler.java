@@ -92,7 +92,7 @@ public class HaltonSampler extends GlobalSampler {
     public float SampleDimension(int index, int dim) {
         if (sampleAtPixelCenter && (dim == 0 || dim == 1)) return 0.5f;
         if (dim == 0)
-            return LowDiscrepancy.RadicalInverse(dim, index >> baseExponents.x);
+            return LowDiscrepancy.RadicalInverse(dim, index >>> baseExponents.x);
         else if (dim == 1)
             return LowDiscrepancy.RadicalInverse(dim, index / baseScales.y);
         else
