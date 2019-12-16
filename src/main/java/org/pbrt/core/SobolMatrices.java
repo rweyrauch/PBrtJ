@@ -10,6 +10,7 @@
 package org.pbrt.core;
 
 import java.io.FileInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 
 public final class SobolMatrices {
@@ -22,23 +23,17 @@ public final class SobolMatrices {
 
     static {
         try {
-            FileInputStream fis = new FileInputStream("sobel32.dat");
-            byte[] buf = new byte[4];
+            var dis = new DataInputStream(new FileInputStream("sobel32.dat"));
             for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
-                fis.read(buf);
-                SobolMatrices32[i] = (buf[0]) | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
+                SobolMatrices32[i] = dis.readInt();
             }
-            fis.close();
+            dis.close();
 
-            byte[] buf2 = new byte[4];
-            fis = new FileInputStream("sobel64.dat");
+            dis = new DataInputStream(new FileInputStream("sobel64.dat"));
             for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
-                fis.read(buf);
-                fis.read(buf2);
-                SobolMatrices64[i] = ((long)buf[0]) | ((long)buf[1] << 8) | ((long)buf[2] << 16) | ((long)buf[3] << 24) |
-                        ((long)buf2[0] << 32) | ((long)buf2[1] << 40) | ((long)buf2[2] << 48) | ((long)buf2[3] << 56);
+                SobolMatrices64[i] = dis.readLong();
             }
-            fis.close();
+            dis.close();
         }
         catch (IOException e) {
         }
