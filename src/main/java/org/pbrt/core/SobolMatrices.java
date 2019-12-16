@@ -18,7 +18,7 @@ public final class SobolMatrices {
     public static final int NumSobolDimensions = 1024;
     public static final int SobolMatrixSize = 52;
 
-    public static final long[] SobolMatrices32 = new long[NumSobolDimensions*SobolMatrixSize];
+    public static final int[] SobolMatrices32 = new int[NumSobolDimensions*SobolMatrixSize];
     public static final long[] SobolMatrices64 = new long[NumSobolDimensions*SobolMatrixSize];
 
     static {

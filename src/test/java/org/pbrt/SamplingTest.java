@@ -157,11 +157,26 @@ public class SamplingTest {
         // Make sure first dimension is the regular base 2 radical inverse
         for (int i = 0; i < 8192; ++i) {
             final float actual = LowDiscrepancy.SobolSampleFloat(i, 0, 0);
-            final float expected = LowDiscrepancy.ReverseBits32(i) * 0x1p-32f;
+            final int i_rev = LowDiscrepancy.ReverseBits32(i);
+            System.out.println("I(hex) = 0x" + Integer.toHexString(i) + "  I_rev = 0x" + Integer.toHexString(i_rev));
+            final float expected = i_rev * 0x1p-32f;
             if (!Pbrt.AlmostEqual(actual, expected, epsilon)) {
                 System.out.printf("Expected: %f  Actual: %f\n", expected, actual);
             }
             assertEquals(actual, expected, epsilon);
+        }
+    }
+
+    @Test
+    public void testSobolSampleFloat() {
+        for (int i = 0; i < 16; ++i) {
+            final float sbf = LowDiscrepancy.SobolSampleFloat(i, 0, 0);
+            final int i_rev = LowDiscrepancy.ReverseBits32(i);
+            float esbf = i_rev * 0x1p-32f;
+            if (esbf < 0) esbf = 1.0f + esbf;
+            System.out.println("SBF(" + i + ") = " + sbf + "  Exp = " + esbf +
+                " i = 0x" + Integer.toHexString(i) +
+                " i_rev = 0x" + Integer.toHexString(i_rev));
         }
     }
 

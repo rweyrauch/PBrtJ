@@ -19,10 +19,11 @@ public class BitopsTest {
 
     @Test
     public void testLog2() {
-        for (int i = 0; i < 31; ++i) {
+        for (int i = 0; i < 32; ++i) {
             final int ui = 1 << i;
+            final long uil = 1L << i;
             assertEquals(i, Pbrt.Log2Int(ui));
-            assertEquals((long)i, Pbrt.Log2Int((long)ui));
+            assertEquals((long)i, Pbrt.Log2Int(uil));
         }
     
         for (int i = 1; i < 31; ++i) {

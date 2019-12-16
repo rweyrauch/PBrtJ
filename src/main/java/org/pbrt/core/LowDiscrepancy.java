@@ -12,19 +12,12 @@ package org.pbrt.core;
 
 public class LowDiscrepancy {
 
-    public static int ReverseBits32(int n) {
-        n = (n << 16) | (n >>> 16);
-        n = ((n & 0x00ff00ff) << 8) | ((n & 0xff00ff00) >>> 8);
-        n = ((n & 0x0f0f0f0f) << 4) | ((n & 0xf0f0f0f0) >>> 4);
-        n = ((n & 0x33333333) << 2) | ((n & 0xcccccccc) >>> 2);
-        n = ((n & 0x55555555) << 1) | ((n & 0xaaaaaaaa) >>> 1);
-        return n;
+    public static int ReverseBits32(int n) {       
+        return Integer.reverse(n);
     }
 
     public static long ReverseBits64(long n) {
-        long n0 = ReverseBits32((int)n);
-        long n1 = ReverseBits32((int)(n >>> 32));
-        return (n0 << 32) | n1;
+        return Long.reverse(n);        
     }
 
     private static float ScrambledRadicalInverseSpecialized(int base, Short[] perm, long a) {
