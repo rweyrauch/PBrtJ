@@ -126,12 +126,12 @@ public class ParamSet {
 
             float[] vals = FloatFile.Read(fn);
             if (vals == null) {
-                Error.Warning("Unable to read SPD file \"%s\".  Using black distribution.", fn);
+                PBrtTLogger.Warning("Unable to read SPD file \"%s\".  Using black distribution.", fn);
                 s[i] = new Spectrum(0);
             }
             else {
                 if (vals.length % 2 != 0) {
-                    Error.Warning("Extra value found in spectrum file \"%s\". Ignoring it.", fn);
+                    PBrtTLogger.Warning("Extra value found in spectrum file \"%s\". Ignoring it.", fn);
                 }
                 float[] wls = new float[vals.length/2], v = new float[vals.length/2];
                 for (int j = 0; j < vals.length / 2; ++j) {
@@ -492,57 +492,57 @@ public class ParamSet {
     public void ReportUnused() {
         for (ParamSetItem<Boolean> bool : bools) {
             if (!bool.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", bool.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", bool.Name);
             }
         }
         for (ParamSetItem<Integer> anInt : ints) {
             if (!anInt.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", anInt.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", anInt.Name);
             }
         }
         for (ParamSetItem<Float> aFloat : floats) {
             if (!aFloat.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", aFloat.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", aFloat.Name);
             }
         }
         for (ParamSetItem<Point2f> point2f : point2fs) {
             if (!point2f.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", point2f.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", point2f.Name);
             }
         }
         for (ParamSetItem<Vector2f> vector2f : vector2fs) {
             if (!vector2f.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", vector2f.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", vector2f.Name);
             }
         }
         for (ParamSetItem<Point3f> point3f : point3fs) {
             if (!point3f.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", point3f.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", point3f.Name);
             }
         }
         for (ParamSetItem<Vector3f> vector3f : vector3fs) {
             if (!vector3f.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", vector3f.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", vector3f.Name);
             }
         }
         for (ParamSetItem<Normal3f> normal : normals) {
             if (!normal.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", normal.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", normal.Name);
             }
         }
         for (ParamSetItem<Spectrum> aSpectra : spectra) {
             if (!aSpectra.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", aSpectra.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", aSpectra.Name);
             }
         }
         for (ParamSetItem<String> string : strings) {
             if (!string.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", string.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", string.Name);
             }
         }
         for (ParamSetItem<String> texture : textures) {
             if (!texture.LookedUp) {
-                Error.Warning("Parameter \"%s\" not used.", texture.Name);
+                PBrtTLogger.Warning("Parameter \"%s\" not used.", texture.Name);
             }
         }
     }

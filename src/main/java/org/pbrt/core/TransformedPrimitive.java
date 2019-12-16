@@ -60,6 +60,6 @@ public class TransformedPrimitive extends Primitive {
 
     @Override
     public void ComputeScatteringFunctions(SurfaceInteraction isect, Material.TransportMode mode, boolean allowMultipleLobes) {
-        Error.Error("TransformedPrimitive::ComputeScatteringFunctions() shouldn't be called");
+        PBrtTLogger.Error("TransformedPrimitive::ComputeScatteringFunctions() shouldn't be called");
     }
 }

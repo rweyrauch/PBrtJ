@@ -50,7 +50,7 @@ public abstract class Camera {
         this.medium = medium;
 
         if (CameraToWorld.HasScale()) {
-            Error.Warning("Scaling detected in world-to-camera transformation!\n" +
+            PBrtTLogger.Warning("Scaling detected in world-to-camera transformation!\n" +
                     "The system has numerous assumptions, implicit and explicit,\n" +
                     "that this transform will have no scale factors in it.\n" +
                     "Proceed at your own risk; your image may have errors or\n" +
@@ -110,16 +110,16 @@ public abstract class Camera {
         public Spectrum swe;
     }
     public CameraWe We(Ray ray) {
-        Error.Error("Camera::We() is not implemented!");
+        PBrtTLogger.Error("Camera::We() is not implemented!");
         return null;
     }
     public CameraPdf Pdf_We(Ray ray) {
-        Error.Error("Camera::Pdf_We() is not implemented!");
+        PBrtTLogger.Error("Camera::Pdf_We() is not implemented!");
         return null;
     }
 
     public CameraWi Sample_Wi(Interaction ref, Point2f u) {
-        Error.Error("Camera::Sample_Wi() is not implemented!");
+        PBrtTLogger.Error("Camera::Sample_Wi() is not implemented!");
         return null;
     }
 

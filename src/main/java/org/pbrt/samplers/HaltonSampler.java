@@ -11,7 +11,7 @@
 package org.pbrt.samplers;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class HaltonSampler extends GlobalSampler {
 
@@ -125,7 +125,7 @@ public class HaltonSampler extends GlobalSampler {
     // HaltonSampler Private Methods
     private int PermutationForDimension(int dim) {
         if (dim >= LowDiscrepancy.PrimeTableSize)
-            Error.Error("HaltonSampler can only sample %d dimensions.", LowDiscrepancy.PrimeTableSize);
+            PBrtTLogger.Error("HaltonSampler can only sample %d dimensions.", LowDiscrepancy.PrimeTableSize);
         return LowDiscrepancy.PrimeSums[dim];
     }
 

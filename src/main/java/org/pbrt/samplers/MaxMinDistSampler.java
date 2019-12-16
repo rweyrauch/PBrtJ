@@ -11,20 +11,20 @@
 package org.pbrt.samplers;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class MaxMinDistSampler extends PixelSampler {
 
     private static int calcSPP(int spp) {
         int Cindex = Pbrt.Log2Int(spp);
         if (Cindex >= LowDiscrepancy.CMaxMinDist.length) {
-            Error.Warning("No more than %d samples per pixel are supported with MaxMinDistSampler. Rounding down.",
+            PBrtTLogger.Warning("No more than %d samples per pixel are supported with MaxMinDistSampler. Rounding down.",
                     (1 << LowDiscrepancy.CMaxMinDist.length) -1);
             spp = (1 << LowDiscrepancy.CMaxMinDist.length) - 1;
         }
         if (!Pbrt.IsPowerOf2(spp)) {
             spp = Pbrt.RoundUpPow2(spp);
-            Error.Warning("Non power-of-two sample count rounded up to %d for MaxMinDistSampler.", spp);
+            PBrtTLogger.Warning("Non power-of-two sample count rounded up to %d for MaxMinDistSampler.", spp);
         }
         return spp;
     }

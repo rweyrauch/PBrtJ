@@ -11,7 +11,7 @@
 package org.pbrt.textures;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
@@ -71,7 +71,7 @@ public class CheckerBoardTextureFloat extends Texture<Float> {
     public static Texture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
         int dim = tp.FindInt("dimension", 2);
         if (dim != 2 && dim != 3) {
-            Error.Error("%d dimensional checkerboard texture not supported", dim);
+            PBrtTLogger.Error("%d dimensional checkerboard texture not supported", dim);
             return null;
         }
         Texture<Float> tex1 = tp.GetFloatTexture("tex1", 1);
@@ -96,7 +96,7 @@ public class CheckerBoardTextureFloat extends Texture<Float> {
                         tp.FindVector3f("v2", new Vector3f(0, 1, 0)),
                         tp.FindFloat("udelta", 0), tp.FindFloat("vdelta", 0));
             else {
-                Error.Error("2D texture mapping \"%s\" unknown", type);
+                PBrtTLogger.Error("2D texture mapping \"%s\" unknown", type);
                 map = new UVMapping2D();
             }
 
@@ -108,7 +108,7 @@ public class CheckerBoardTextureFloat extends Texture<Float> {
             else if (Objects.equals(aa, "closedform"))
                 aaMethod = AAMethod.ClosedForm;
             else {
-                Error.Warning("Antialiasing mode \"%s\" not understood by Checkerboard2DTexture; using \"closedform\"", aa);
+                PBrtTLogger.Warning("Antialiasing mode \"%s\" not understood by Checkerboard2DTexture; using \"closedform\"", aa);
                 aaMethod = AAMethod.ClosedForm;
             }
             return new CheckerBoardTextureFloat(map, tex1, tex2, aaMethod);

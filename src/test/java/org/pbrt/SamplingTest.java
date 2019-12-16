@@ -36,7 +36,7 @@ public class SamplingTest {
 
     @Test
     public void testScrambledRadicalInverse() {
-        for (int dim = 1; dim < 128; ++dim) {
+        for (int dim = 0; dim < 128; ++dim) {
             RNG rng = new RNG(dim);
             // Random permutation table
             final int base = LowDiscrepancy.Primes[dim];
@@ -150,7 +150,7 @@ public class SamplingTest {
         // Check that float and double variants match (as float values).
         for (int i = 0; i < 256; ++i) {
             for (int dim = 0; dim < 100; ++dim) {
-                //assertEquals(LowDiscrepancy.SobolSampleFloat(i, dim, 0), (float)LowDiscrepancy.SobolSampleDouble(i, dim, 0), epsilon);
+                assertEquals(LowDiscrepancy.SobolSampleFloat(i, dim, 0), (float)LowDiscrepancy.SobolSampleDouble(i, dim, 0), epsilon);
             }
         }
 
@@ -251,7 +251,7 @@ public class SamplingTest {
                 0.35355f, 0.35355f, 0.22534f, 0.16829f, 0.11267f,
                 0.07812f, 0.05644f, 0.03906f, 0.02816f, 0.01953f,
                 0.01408f, 0.00975f, 0.00704f, 0.00486f, 0.00352f,
-        };
+            };
 
             // Increase the tolerance by a small slop factor.
             assertTrue(minDist > 0.99f * expectedMinDist[logSamples]);

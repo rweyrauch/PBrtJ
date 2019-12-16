@@ -10,7 +10,7 @@
 package org.pbrt.integrators;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class MLTSampler extends Sampler {
 
     @Override
     public Sampler Clone(int seed) {
-        Error.Error("MLTSampler::Clone() is not implemented.");
+        PBrtTLogger.Error("MLTSampler::Clone() is not implemented.");
         return null;
     }
 

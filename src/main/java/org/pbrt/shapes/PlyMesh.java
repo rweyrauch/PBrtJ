@@ -11,7 +11,7 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 import org.pbrt.textures.ConstantTexture;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class PlyMesh {
             ply = new PlyReaderFile(filename);
         }
         catch (IOException e) {
-            Error.Error("Couldn't open PLY file \"%s\"", filename);
+            PBrtTLogger.Error("Couldn't open PLY file \"%s\"", filename);
             return new ArrayList<>();
         }
 
@@ -45,7 +45,7 @@ public class PlyMesh {
         int faceCount = ply.getElementCount("face");
 
         if (vertexCount == 0 || faceCount == 0) {
-            Error.Error("PLY file \"%s\" is invalid! No face/vertex elements found!", filename);
+            PBrtTLogger.Error("PLY file \"%s\" is invalid! No face/vertex elements found!", filename);
             return new ArrayList<>();
         }
 
@@ -100,7 +100,7 @@ public class PlyMesh {
             ply.close();
 
         } catch (IOException e) {
-            Error.Error("PLY file \"%s\", failed to read elements.", filename);
+            PBrtTLogger.Error("PLY file \"%s\", failed to read elements.", filename);
             return new ArrayList<>();
         }
 
@@ -112,7 +112,7 @@ public class PlyMesh {
                 alphaTex = floatTextures.get(alphaTexName);
             }
             else {
-                Error.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
+                PBrtTLogger.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
             }
         } else if (paramSet.FindOneFloat("alpha", 1) == 0) {
             alphaTex = new ConstantTexture<>(0.0f);
@@ -125,7 +125,7 @@ public class PlyMesh {
                 shadowAlphaTex = floatTextures.get(shadowAlphaTexName);
             }
             else {
-                Error.Error("Couldn't find float texture \"%s\" for \"shadowalpha\" parameter", shadowAlphaTexName);
+                PBrtTLogger.Error("Couldn't find float texture \"%s\" for \"shadowalpha\" parameter", shadowAlphaTexName);
             }
         }
         else if (paramSet.FindOneFloat("shadowalpha", 1) == 0) {

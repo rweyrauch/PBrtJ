@@ -29,7 +29,7 @@ public class MIPMapSpectrum {
         if (!Pbrt.IsPowerOf2(resolution.x) || !Pbrt.IsPowerOf2(resolution.y)) {
             // Resample image to power-of-two resolution
             Point2i resPow2 = new Point2i(Pbrt.RoundUpPow2(resolution.x), Pbrt.RoundUpPow2(resolution.y));
-            Api.logger.info("Resampling MIPMap from %s to %s. Ratio = %f", resolution.toString(), resPow2.toString(), (float)(resPow2.x * resPow2.y) / (float)(resolution.x * resolution.y));
+            PBrtTLogger.Info("Resampling MIPMap from %s to %s. Ratio = %f", resolution.toString(), resPow2.toString(), (float)(resPow2.x * resPow2.y) / (float)(resolution.x * resolution.y));
             // Resample image in $s$ direction
             ResampleWeight[] sWeights = resampleWeights(resolution.x, resPow2.x);
             resampledImage = new Spectrum[resPow2.x * resPow2.y];

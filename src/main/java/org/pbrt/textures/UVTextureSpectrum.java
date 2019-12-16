@@ -11,7 +11,7 @@
 package org.pbrt.textures;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
@@ -48,7 +48,7 @@ public class UVTextureSpectrum extends Texture<Spectrum> {
                     tp.FindFloat("udelta", 0.f),
                     tp.FindFloat("vdelta", 0.f));
         else {
-            Error.Error("2D texture mapping \"%s\" unknown", type);
+            PBrtTLogger.Error("2D texture mapping \"%s\" unknown", type);
             map = new UVMapping2D();
         }
         return new UVTextureSpectrum(map);

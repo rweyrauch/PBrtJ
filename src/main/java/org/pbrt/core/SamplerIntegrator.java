@@ -84,15 +84,15 @@ public abstract class SamplerIntegrator extends Integrator {
 
                         // Issue warning if unexpected radiance value returned
                         if (L.hasNaNs()) {
-                            Api.logger.error("Not-a-number radiance value returned for pixel (%d, %d), sample %d. Setting to black.",
+                            PBrtTLogger.Error("Not-a-number radiance value returned for pixel (%d, %d), sample %d. Setting to black.",
                                     pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
                             L = new Spectrum(0);
                         } else if (L.y() < -1e-5f) {
-                            Api.logger.error("Negative luminance value, %f, returned for pixel (%d, %d), sample %d. Setting to black.",
+                            PBrtTLogger.Error("Negative luminance value, %f, returned for pixel (%d, %d), sample %d. Setting to black.",
                                     L.y(), pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
                             L = new Spectrum(0);
                         } else if (Float.isInfinite(L.y())) {
-                            Api.logger.error("Infinite luminance value returned for pixel (%d, %d), sample %d. Setting to black.",
+                            PBrtTLogger.Error("Infinite luminance value returned for pixel (%d, %d), sample %d. Setting to black.",
                                     pixel.x, pixel.y, tileSampler.CurrentSampleNumber());
                             L = new Spectrum(0);
                         }
@@ -114,7 +114,7 @@ public abstract class SamplerIntegrator extends Integrator {
 
         reporter.Done();
 
-        Api.logger.info("Rendering finished");
+        PBrtTLogger.Info("Rendering finished");
         reporter.Exit();
 
         // Save final image after rendering

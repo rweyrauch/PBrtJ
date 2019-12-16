@@ -11,7 +11,7 @@
 package org.pbrt.media;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class GridDensityMedium extends Medium {
 
@@ -40,7 +40,7 @@ public class GridDensityMedium extends Medium {
         // Precompute values for Monte Carlo sampling of _GridDensityMedium_
         this.sigma_t = Spectrum.Add(sigma_a,sigma_s).at(0);
         if (new Spectrum(sigma_t).notEqual(Spectrum.Add(sigma_a,sigma_s)))
-            Error.Error("GridDensityMedium requires a spectrally uniform attenuation coefficient!");
+            PBrtTLogger.Error("GridDensityMedium requires a spectrally uniform attenuation coefficient!");
         float maxDensity = 0;
         for (int i = 0; i < nx * ny * nz; ++i)
             maxDensity = Math.max(maxDensity, density[i]);

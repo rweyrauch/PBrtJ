@@ -11,7 +11,7 @@
 package org.pbrt.textures;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
@@ -53,7 +53,7 @@ public class BilerpTextureFloat extends Texture<Float> {
                     tp.FindFloat("udelta", 0),
                     tp.FindFloat("vdelta", 0));
         else {
-            Error.Error("2D texture mapping \"%s\" unknown", type);
+            PBrtTLogger.Error("2D texture mapping \"%s\" unknown", type);
             map = new UVMapping2D();
         }
         return new BilerpTextureFloat(map, tp.FindFloat("v00", 0), tp.FindFloat("v01", 1),

@@ -11,7 +11,7 @@
 package org.pbrt.materials;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class SubsurfaceMaterial extends Material {
 
@@ -28,7 +28,7 @@ public class SubsurfaceMaterial extends Material {
         float g = mp.FindFloat("g", 0.0f);
         if (!name.isEmpty()) {
             if (props == null)
-                Error.Warning("Named material \"%s\" not found.  Using defaults.", name);
+                PBrtTLogger.Warning("Named material \"%s\" not found.  Using defaults.", name);
             else
                 g = 0; /* Enforce g=0 (the database specifies reduced scattering
                       coefficients) */

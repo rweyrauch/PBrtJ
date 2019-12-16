@@ -2110,7 +2110,7 @@ public class LowDiscrepancy {
             case 1023:
                 return RadicalInverseSpecialized(8161,a);
             default:
-               Error.Error("Base %d is >= 1024, the limit of RadicalInverse", baseIndex);
+               PBrtTLogger.Error("Base %d is >= 1024, the limit of RadicalInverse", baseIndex);
                 return 0;
         }
     }
@@ -2133,7 +2133,8 @@ public class LowDiscrepancy {
     }
 
     public static float SampleGeneratorMatrix(int[] C, int a, int scramble) {
-        return Math.min((MultiplyGenerator(C, a) ^ scramble) * 0x1p-32f, Pbrt.OneMinusEpsilon);
+        final long tmp = (MultiplyGenerator(C, a) ^ scramble);
+        return Math.min(tmp * 0x1p-32f, Pbrt.OneMinusEpsilon);
     }
 
     public static Short[] ComputeRadicalInversePermutations(RNG rng) {
@@ -4330,7 +4331,7 @@ public class LowDiscrepancy {
             case 1023:
                 return ScrambledRadicalInverseSpecialized(8161,perm, a);
             default:
-                Error.Error("Base %d is >= 1024, the limit of ScrambledRadicalInverse", baseIndex);
+                PBrtTLogger.Error("Base %d is >= 1024, the limit of ScrambledRadicalInverse", baseIndex);
                 return 0;
         }
     }

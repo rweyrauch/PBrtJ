@@ -19,19 +19,19 @@ public abstract class Aggregate extends Primitive {
 
     @Override
     public AreaLight GetAreaLight() {
-        Error.Error("Aggregate::GetAreaLight() method called; should have gone to GeometricPrimitive");
+        PBrtTLogger.Error("Aggregate::GetAreaLight() method called; should have gone to GeometricPrimitive");
         return null;
     }
 
     @Override
     public Material GetMaterial() {
-        Error.Error("Aggregate::GetMaterial() method called; should have gone to GeometricPrimitive");
+        PBrtTLogger.Error("Aggregate::GetMaterial() method called; should have gone to GeometricPrimitive");
         return null;
     }
 
     @Override
     public void ComputeScatteringFunctions(SurfaceInteraction isect, Material.TransportMode mode, boolean allowMultipleLobes) {
-        Error.Error("Aggregate::ComputeScatteringFunctions() method called; should have gone to GeometricPrimitive");
+        PBrtTLogger.Error("Aggregate::ComputeScatteringFunctions() method called; should have gone to GeometricPrimitive");
     }
 }
 

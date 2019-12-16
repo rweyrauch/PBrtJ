@@ -11,7 +11,7 @@
 package org.pbrt.lights;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 import org.pbrt.shapes.Triangle;
 
 public class DiffuseAreaLight extends AreaLight {
@@ -36,7 +36,7 @@ public class DiffuseAreaLight extends AreaLight {
         // Warn if light has transformation with non-uniform scale, though not
         // for Triangles, since this doesn't matter for them.
         if (WorldToLight.HasScale() && shape.getClass() != Triangle.class) {
-            Error.Warning("Scaling detected in world to light transformation! " +
+            PBrtTLogger.Warning("Scaling detected in world to light transformation! " +
                     "The system has numerous assumptions, implicit and explicit, " +
                     "that this transform will have no scale factors in it. " +
                     "Proceed at your own risk; your image may have errors.");

@@ -11,7 +11,7 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -54,7 +54,7 @@ public class Curve extends Shape {
 
         Point3f[] cp = paramSet.FindPoint3f("P");
         if (cp.length != 4) {
-            Error.Error("Must provide 4 control points for \"curve\" primitive. (Provided %d).", cp.length);
+            PBrtTLogger.Error("Must provide 4 control points for \"curve\" primitive. (Provided %d).", cp.length);
             return null;
         }
 
@@ -67,16 +67,16 @@ public class Curve extends Shape {
         else if (Objects.equals(curveType, "cylinder"))
             type = CurveType.Cylinder;
         else {
-            Error.Error("Unknown curve type \"%s\".  Using \"flat\".", curveType);
+            PBrtTLogger.Error("Unknown curve type \"%s\".  Using \"flat\".", curveType);
             type = CurveType.Cylinder;
         }
         Normal3f[] n = paramSet.FindNormal3f("N");
         if (n != null) {
             if (type != CurveType.Ribbon) {
-                Error.Warning("Curve normals are only used with \"ribbon\" type curves.");
+                PBrtTLogger.Warning("Curve normals are only used with \"ribbon\" type curves.");
                 n = null;
             } else if (n.length != 2) {
-                Error.Error("Must provide two normals with \"N\" parameter for ribbon curves. (Provided %d).", n.length);
+                PBrtTLogger.Error("Must provide two normals with \"N\" parameter for ribbon curves. (Provided %d).", n.length);
                 return null;
             }
         }
@@ -84,7 +84,7 @@ public class Curve extends Shape {
         int sd = (int)paramSet.FindOneFloat("splitdepth", 3);
 
         if (type == CurveType.Ribbon && n == null) {
-            Error.Error("Must provide normals \"N\" at curve endpoints with ribbon curves.");
+            PBrtTLogger.Error("Must provide normals \"N\" at curve endpoints with ribbon curves.");
             return null;
         } else
             return CreateCurve(object2world, world2object, reverseOrientation, cp, width0, width1, type, n, sd);
@@ -202,7 +202,7 @@ public class Curve extends Shape {
 
     @Override
     public SampleResult Sample(Point2f u) {
-        Error.Error("Curve::Sample not implemented.");
+        PBrtTLogger.Error("Curve::Sample not implemented.");
         return null;
 
     }

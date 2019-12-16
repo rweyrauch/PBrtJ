@@ -10,7 +10,7 @@
 package org.pbrt.integrators;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -273,7 +273,7 @@ public class Vertex {
                 MediumInteraction mi = (MediumInteraction)interaction;
                 return new Spectrum(mi.phase.p(mi.wo, wi));
             default:
-                Error.Error("Vertex::f(): Unimplemented");
+                PBrtTLogger.Error("Vertex::f(): Unimplemented");
                 return new Spectrum(0);
         }
     }
@@ -292,7 +292,7 @@ public class Vertex {
                 return si.bsdf.NumComponents(BxDF.BSDF_DIFFUSE | BxDF.BSDF_GLOSSY | BxDF.BSDF_REFLECTION |
                     BxDF.BSDF_TRANSMISSION) > 0;
         }
-        Error.Error("Unhandled vertex type in IsConnectable()");
+        PBrtTLogger.Error("Unhandled vertex type in IsConnectable()");
         return false;  // NOTREACHED
     }
     public boolean IsLight() {
@@ -409,7 +409,7 @@ public class Vertex {
             pdf = mi.phase.p(wp, wn);
         }
         else {
-            Error.Error("Vertex::Pdf(): Unimplemented");
+            PBrtTLogger.Error("Vertex::Pdf(): Unimplemented");
         }
 
         // Return probability per unit area at vertex _next_

@@ -11,7 +11,7 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class Cone extends Shape {
 
@@ -179,7 +179,7 @@ public class Cone extends Shape {
 
     @Override
     public SampleResult Sample(Point2f u) {
-        Error.Error("Cone.Sample not implemented.");
+        PBrtTLogger.Error("Cone.Sample not implemented.");
         return null;
     }
 

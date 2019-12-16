@@ -10,8 +10,7 @@
 
 package org.pbrt.core;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.pbrt.accelerators.BVHAccel;
 import org.pbrt.accelerators.KdTreeAccel;
 import org.pbrt.accelerators.NoAccel;
@@ -37,8 +36,6 @@ import java.util.Objects;
 import java.util.Stack;
 
 public class Api {
-
-    public static final Logger logger = LogManager.getFormatterLogger("Pbrt");
 
     private static final int MaxTransforms = 2;
     private static final int StartTransformBits = 1 << 0;
@@ -76,13 +73,13 @@ public class Api {
         public Integrator MakeIntegrator() {
             Camera camera = MakeCamera();
             if (camera == null) {
-                Error.Error("Unable to create camera");
+                PBrtTLogger.Error("Unable to create camera");
                 return null;
             }
 
             Sampler sampler = MakeSampler(SamplerName, SamplerParams, camera.film);
             if (sampler == null) {
-                Error.Error("Unable to create sampler.");
+                PBrtTLogger.Error("Unable to create sampler.");
                 return null;
             }
 
@@ -102,13 +99,13 @@ public class Api {
             } else if (Objects.equals(IntegratorName, "sppm")) {
                 integrator = SPPMIntegrator.Create(IntegratorParams, camera);
             } else {
-                Error.Error("Integrator \"%s\" unknown.", IntegratorName);
+                PBrtTLogger.Error("Integrator \"%s\" unknown.", IntegratorName);
                 return null;
             }
 
             if (renderOptions.haveScatteringMedia && !Objects.equals(IntegratorName, "volpath") &&
                     !Objects.equals(IntegratorName, "bdpt") && !Objects.equals(IntegratorName, "mlt")) {
-                Error.Warning("Scene has scattering media but \"%s\" integrator doesn't support "+
+                PBrtTLogger.Warning("Scene has scattering media but \"%s\" integrator doesn't support "+
                         "volume scattering. Consider using \"volpath\", \"bdpt\", or "+
                         "\"mlt\".", IntegratorName);
             }
@@ -116,7 +113,7 @@ public class Api {
             IntegratorParams.ReportUnused();
             // Warn if no light sources are defined
             if (lights.isEmpty()) {
-                Error.Warning("No light sources defined in scene; rendering a black image.");
+                PBrtTLogger.Warning("No light sources defined in scene; rendering a black image.");
             }
             return integrator;
         }
@@ -139,7 +136,7 @@ public class Api {
             Filter filter = MakeFilter(FilterName, FilterParams);
             Film film = MakeFilm(FilmName, FilmParams, filter);
             if (film == null) {
-                Error.Error("Unable to create film.");
+                PBrtTLogger.Error("Unable to create film.");
                 return null;
             }
             Camera camera = Api.MakeCamera(CameraName, CameraParams, CameraToWorld,
@@ -194,7 +191,7 @@ public class Api {
             if (!Objects.equals(currentNamedMaterial, "")) {
                 mtl = namedMaterials.get(currentNamedMaterial);
                 if (mtl == null) {
-                    Error.Error("Named material \"%s\" not defined. Using \"matte\".", currentNamedMaterial);
+                    PBrtTLogger.Error("Named material \"%s\" not defined. Using \"matte\".", currentNamedMaterial);
                     mtl = MakeMaterial("matte", mp);
                 }
             } else {
@@ -210,13 +207,13 @@ public class Api {
             if (!currentInsideMedium.isEmpty()) {
                 m.inside = renderOptions.namedMedia.get(currentInsideMedium);
                 if (m.inside == null) {
-                    Error.Error("Named medium \"%s\" undefined.", currentInsideMedium);
+                    PBrtTLogger.Error("Named medium \"%s\" undefined.", currentInsideMedium);
                 }
             }
             if (!currentOutsideMedium.isEmpty()) {
                 m.outside = renderOptions.namedMedia.get(currentOutsideMedium);
                 if (m.outside == null) {
-                    Error.Error("Named medium \"%s\" undefined.", currentOutsideMedium);
+                    PBrtTLogger.Error("Named medium \"%s\" undefined.", currentOutsideMedium);
                 }
             }
             return m;
@@ -325,7 +322,7 @@ public class Api {
                 Vector3f[] S = paramSet.FindVector3f("S");
 
                 if (!WritePlyFile(fn, nvi / 3, vi, npi, P, S, N, uvs))
-                    Error.Error("Unable to write PLY file \"%s\"", fn);
+                    PBrtTLogger.Error("Unable to write PLY file \"%s\"", fn);
 
                 System.out.format("%*sShape \"plymesh\" \"string filename\" \"%s\" ",
                         catIndentCount, "", fn);
@@ -364,7 +361,7 @@ public class Api {
         } else if (Objects.equals(name, "nurbs")) {
             shapes.addAll(NURBS.Create(object2world, world2object, reverseOrientation, paramSet));
         } else {
-            Error.Warning("Shape \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Shape \"%s\" unknown.", name);
         }
         paramSet.ReportUnused();
         return shapes;
@@ -394,11 +391,11 @@ public class Api {
             Material mat1 = graphicsState.namedMaterials.get(m1);
             Material mat2 = graphicsState.namedMaterials.get(m2);
             if (mat1 == null) {
-                Error.Error("Named material \"%s\" undefined.  Using \"matte\"", m1);
+                PBrtTLogger.Error("Named material \"%s\" undefined.  Using \"matte\"", m1);
                 mat1 = MakeMaterial("matte", mp);
             }
             if (mat2 == null) {
-                Error.Error("Named material \"%s\" undefined.  Using \"matte\"", m2);
+                PBrtTLogger.Error("Named material \"%s\" undefined.  Using \"matte\"", m2);
                 mat2 = MakeMaterial("matte", mp);
             }
 
@@ -416,17 +413,17 @@ public class Api {
         } else if (Objects.equals(name, "fourier")) {
             material = FourierMaterial.Create(mp);
         } else {
-            Error.Warning("Material \"%s\" unknown. Using \"matte\".", name);
+            PBrtTLogger.Warning("Material \"%s\" unknown. Using \"matte\".", name);
             material = MatteMaterial.Create(mp);
         }
 
         if ((Objects.equals(name, "subsurface") || Objects.equals(name, "kdsubsurface")) && (!Objects.equals(renderOptions.IntegratorName, "path") && (!Objects.equals(renderOptions.IntegratorName, "volpath")))) {
-            Error.Warning("Subsurface scattering material \"%s\" used, but \"%s\" integrator doesn't support subsurface scattering. Use \"path\" or \"volpath\".",
+            PBrtTLogger.Warning("Subsurface scattering material \"%s\" used, but \"%s\" integrator doesn't support subsurface scattering. Use \"path\" or \"volpath\".",
                     name, renderOptions.IntegratorName);
         }
         mp.ReportUnused();
         if (material == null) {
-            Error.Error("Unable to create material \"%s\"", name);
+            PBrtTLogger.Error("Unable to create material \"%s\"", name);
         } else {
             nMaterialsCreated.increment();
         }
@@ -456,7 +453,7 @@ public class Api {
         else if (Objects.equals(name, "windy"))
             tex = WindyTextureFloat.CreateFloat(tex2world, tp);
         else
-            Error.Warning("Float texture \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Float texture \"%s\" unknown.", name);
         tp.ReportUnused();
         return tex;
     }
@@ -488,7 +485,7 @@ public class Api {
         else if (Objects.equals(name, "windy"))
             tex = WindyTextureSpectrum.CreateSpectrum(tex2world, tp);
         else
-            Error.Warning("Spectrum texture \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Spectrum texture \"%s\" unknown.", name);
         tp.ReportUnused();
         return tex;
     }
@@ -500,7 +497,7 @@ public class Api {
         String preset = paramSet.FindOneString("preset", "");
         Medium.ScatteringProps props = Medium.GetMediumScatteringProperties(preset);
         if (props == null) {
-            Error.Warning("Material preset \"%s\" not found.  Using defaults.", preset);
+            PBrtTLogger.Warning("Material preset \"%s\" not found.  Using defaults.", preset);
         } else {
             sig_a = props.sigma_a;
             sig_s = props.sigma_s;
@@ -517,7 +514,7 @@ public class Api {
         } else if (Objects.equals(name, "heterogeneous")) {
             Float[] data = paramSet.FindFloat("density");
             if (data == null) {
-                Error.Error("No \"density\" values provided for heterogeneous medium?");
+                PBrtTLogger.Error("No \"density\" values provided for heterogeneous medium?");
                 return null;
             }
             int nx = paramSet.FindOneInt("nx", 1);
@@ -526,13 +523,13 @@ public class Api {
             Point3f p0 = paramSet.FindOnePoint3f("p0", new Point3f(0.f, 0.f, 0.f));
             Point3f p1 = paramSet.FindOnePoint3f("p1", new Point3f(1.f, 1.f, 1.f));
             if (data.length != nx * ny * nz) {
-                Error.Error("GridDensityMedium has %d density values; expected nx*ny*nz = %d", data.length, nx * ny * nz);
+                PBrtTLogger.Error("GridDensityMedium has %d density values; expected nx*ny*nz = %d", data.length, nx * ny * nz);
                 return null;
             }
             Transform data2Medium = Transform.Translate(new Vector3f(p0)).concatenate(Transform.Scale(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z));
             m = new GridDensityMedium(sig_a, sig_s, g, nx, ny, nz, medium2world.concatenate(data2Medium), data);
         } else {
-            Error.Warning("Medium \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Medium \"%s\" unknown.", name);
         }
         paramSet.ReportUnused();
         return m;
@@ -553,7 +550,7 @@ public class Api {
         else if (Objects.equals(name, "infinite") || Objects.equals(name, "exinfinite"))
             light = InfiniteAreaLight.Create(light2world, paramSet);
         else
-            Error.Warning("Light \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Light \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return light;
     }
@@ -563,7 +560,7 @@ public class Api {
         if (Objects.equals(name, "area") || Objects.equals(name, "diffuse"))
             area = DiffuseAreaLight.Create(light2world, mediumInterface.outside, paramSet, shape);
         else
-            Error.Warning("Area light \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Area light \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return area;
     }
@@ -577,7 +574,7 @@ public class Api {
         else if (Objects.equals(name, "none"))
             accel = NoAccel.Create(prims, paramSet);
         else
-            Error.Warning("Accelerator \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Accelerator \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return accel;
     }
@@ -597,7 +594,7 @@ public class Api {
         else if (Objects.equals(name, "environment"))
             camera = EnvironmentCamera.Create(paramSet, animatedCam2World, film, mediumInterface.outside);
         else
-            Error.Warning("Camera \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Camera \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return camera;
     }
@@ -617,7 +614,7 @@ public class Api {
         else if (Objects.equals(name, "stratified"))
             sampler = StratifiedSampler.Create(paramSet);
         else
-            Error.Warning("Sampler \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Sampler \"%s\" unknown.", name);
         paramSet.ReportUnused();
         return sampler;
     }
@@ -635,7 +632,7 @@ public class Api {
         else if (Objects.equals(name, "triangle"))
             filter = TriangleFilter.Create(paramSet);
         else {
-            Error.Error("Filter \"%s\" unknown.", name);
+            PBrtTLogger.Error("Filter \"%s\" unknown.", name);
         }
         paramSet.ReportUnused();
         return filter;
@@ -646,7 +643,7 @@ public class Api {
         if (Objects.equals(name, "image"))
             film = Film.Create(paramSet, filter);
         else
-            Error.Warning("Film \"%s\" unknown.", name);
+            PBrtTLogger.Warning("Film \"%s\" unknown.", name);
 
         paramSet.ReportUnused();
         return film;
@@ -658,7 +655,7 @@ public class Api {
 
         // API Initialization
         if (currentApiState != APIState.Uninitialized)
-            Error.Error("pbrtInit() has already been called.");
+            PBrtTLogger.Error("pbrtInit() has already been called.");
         currentApiState = APIState.OptionsBlock;
         renderOptions = new RenderOptions();
         graphicsState = new GraphicsState();
@@ -673,9 +670,9 @@ public class Api {
     public static void pbrtCleanup() {
         // API Cleanup
         if (currentApiState == APIState.Uninitialized)
-            Error.Error("pbrtCleanup() called without pbrtInit().");
+            PBrtTLogger.Error("pbrtCleanup() called without pbrtInit().");
         else if (currentApiState == APIState.WorldBlock)
-            Error.Error("pbrtCleanup() called while inside world block.");
+            PBrtTLogger.Error("pbrtCleanup() called while inside world block.");
         currentApiState = APIState.Uninitialized;
         //ParallelCleanup();
         renderOptions = null;
@@ -789,7 +786,7 @@ public class Api {
         if (namedCoordinateSystems.containsKey(name))
             curTransform = namedCoordinateSystems.get(name);
         else
-            Error.Warning("Couldn't find named coordinate system \"%s\"", name);
+            PBrtTLogger.Warning("Couldn't find named coordinate system \"%s\"", name);
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
             System.out.format("%sCoordSysTransform \"%s\"\n", new String(spaces, 0, catIndentCount), name);
     }
@@ -893,7 +890,7 @@ public class Api {
         WARN_IF_ANIMATED_TRANSFORM("MakeNamedMedium");
         String type = params.FindOneString("type", "");
         if (type.isEmpty())
-            Error.Error("No parameter string \"type\" found in MakeNamedMedium");
+            PBrtTLogger.Error("No parameter string \"type\" found in MakeNamedMedium");
         else {
             Medium medium = MakeMedium(type, params, curTransform.trans[0]);
             if (medium != null) renderOptions.namedMedia.put(name, medium);
@@ -939,7 +936,7 @@ public class Api {
     public static void pbrtAttributeEnd() {
         VERIFY_WORLD("AttributeEnd");
         if (pushedGraphicsStates.empty()) {
-            Error.Error("Unmatched pbrtAttributeEnd() encountered. Ignoring it.");
+            PBrtTLogger.Error("Unmatched pbrtAttributeEnd() encountered. Ignoring it.");
             return;
         }
         graphicsState = pushedGraphicsStates.pop();
@@ -964,7 +961,7 @@ public class Api {
     public static void pbrtTransformEnd() {
         VERIFY_WORLD("TransformEnd");
         if (pushedTransforms.empty()) {
-            Error.Error("Unmatched pbrtTransformEnd() encountered. Ignoring it.");
+            PBrtTLogger.Error("Unmatched pbrtTransformEnd() encountered. Ignoring it.");
             return;
         }
         curTransform = pushedTransforms.pop();
@@ -981,7 +978,7 @@ public class Api {
         if (Objects.equals(type, "float")) {
             // Create _Float_ texture and store in _floatTextures_
             if (graphicsState.floatTextures.containsKey(name)) {
-                Error.Warning("Texture \"%s\" being redefined", name);
+                PBrtTLogger.Warning("Texture \"%s\" being redefined", name);
             }
             WARN_IF_ANIMATED_TRANSFORM("Texture");
             Texture<Float> ft = MakeFloatTexture(texname, curTransform.trans[0], tp);
@@ -989,12 +986,12 @@ public class Api {
         } else if (Objects.equals(type, "color") || Objects.equals(type, "spectrum")) {
             // Create _color_ texture and store in _spectrumTextures_
             if (graphicsState.spectrumTextures.containsKey(name))
-                Error.Warning("Texture \"%s\" being redefined", name);
+                PBrtTLogger.Warning("Texture \"%s\" being redefined", name);
             WARN_IF_ANIMATED_TRANSFORM("Texture");
             Texture<Spectrum> st = MakeSpectrumTexture(texname, curTransform.trans[0], tp);
             if (st != null) graphicsState.spectrumTextures.put(name, st);
         } else {
-            Error.Error("Texture type \"%s\" unknown.", type);
+            PBrtTLogger.Error("Texture type \"%s\" unknown.", type);
         }
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
             System.out.format("%sTexture \"%s\" \"%s\" \"%s\" ", new String(spaces, 0, catIndentCount), name, type, texname);
@@ -1023,7 +1020,7 @@ public class Api {
         String matName = mp.FindString("type","");
         WARN_IF_ANIMATED_TRANSFORM("MakeNamedMaterial");
         if (matName.isEmpty()) {
-            Error.Error("No parameter string \"type\" found in MakeNamedMaterial");
+            PBrtTLogger.Error("No parameter string \"type\" found in MakeNamedMaterial");
         }
 
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
@@ -1033,7 +1030,7 @@ public class Api {
         } else {
             Material mtl = MakeMaterial(matName, mp);
             if (graphicsState.namedMaterials.containsKey(name))
-                Error.Warning("Named material \"%s\" redefined.", name);
+                PBrtTLogger.Warning("Named material \"%s\" redefined.", name);
             graphicsState.namedMaterials.put(name, mtl);
         }
     }
@@ -1051,7 +1048,7 @@ public class Api {
         MediumInterface mi = graphicsState.CreateMediumInterface();
         Light lt = MakeLight(name, params, curTransform.trans[0], mi);
         if (lt == null) {
-            Error.Error("LightSource: light type \"%s\" unknown.", name);
+            PBrtTLogger.Error("LightSource: light type \"%s\" unknown.", name);
         } else {
             renderOptions.lights.add(lt);
         }
@@ -1111,7 +1108,7 @@ public class Api {
 
             // Create initial shape or shapes for animated shape
             if (!graphicsState.areaLight.isEmpty()) {
-                Error.Warning("Ignoring currently set area light when creating animated shape");
+                PBrtTLogger.Warning("Ignoring currently set area light when creating animated shape");
             }
             TransformCache.TransformPair tp = transformCache.Lookup(new Transform());
             ArrayList<Shape> shapes = MakeShapes(name, tp.t, tp.t, graphicsState.reverseOrientation, params);
@@ -1143,7 +1140,7 @@ public class Api {
         // Add _prims_ and _areaLights_ to scene or current instance
         if (renderOptions.currentInstance != null) {
             if (!areaLights.isEmpty()) {
-                Error.Warning("Area lights not supported with object instancing");
+                PBrtTLogger.Warning("Area lights not supported with object instancing");
             }
             renderOptions.currentInstance.addAll(prims);
         } else {
@@ -1166,7 +1163,7 @@ public class Api {
         VERIFY_WORLD("ObjectBegin");
         pbrtAttributeBegin();
         if (renderOptions.currentInstance != null)
-            Error.Error("ObjectBegin called inside of instance definition");
+            PBrtTLogger.Error("ObjectBegin called inside of instance definition");
         renderOptions.instances.put(name, new ArrayList<>());
         renderOptions.currentInstance = renderOptions.instances.get(name);
         if (Pbrt.options.Cat || Pbrt.options.ToPly) {
@@ -1179,7 +1176,7 @@ public class Api {
     public static void pbrtObjectEnd() {
         VERIFY_WORLD("ObjectEnd");
         if (renderOptions.currentInstance == null)
-            Error.Error("ObjectEnd called outside of instance definition");
+            PBrtTLogger.Error("ObjectEnd called outside of instance definition");
         renderOptions.currentInstance = null;
         pbrtAttributeEnd();
         nObjectInstancesCreated.increment();
@@ -1197,11 +1194,11 @@ public class Api {
         if (Pbrt.options.Cat || Pbrt.options.ToPly)
             System.out.format("%sObjectInstance \"%s\"\n", new String(spaces, 0, catIndentCount), name);
         if (renderOptions.currentInstance != null) {
-            Error.Error("ObjectInstance can't be called inside instance definition");
+            PBrtTLogger.Error("ObjectInstance can't be called inside instance definition");
             return;
         }
         if (!renderOptions.instances.containsKey(name)) {
-            Error.Error("Unable to find instance named \"%s\"", name);
+            PBrtTLogger.Error("Unable to find instance named \"%s\"", name);
             return;
         }
         ArrayList<Primitive> in = renderOptions.instances.get(name);
@@ -1233,12 +1230,12 @@ public class Api {
         VERIFY_WORLD("WorldEnd");
         // Ensure there are no pushed graphics states
         while (!pushedGraphicsStates.empty()) {
-            Error.Warning("Missing end to pbrtAttributeBegin()");
+            PBrtTLogger.Warning("Missing end to pbrtAttributeBegin()");
             pushedGraphicsStates.pop();
             pushedTransforms.pop();
         }
         while (!pushedTransforms.empty()) {
-            Error.Warning("Missing end to pbrtTransformBegin()");
+            PBrtTLogger.Warning("Missing end to pbrtTransformBegin()");
             pushedTransforms.pop();
         }
 
@@ -1289,27 +1286,27 @@ public class Api {
 
     private static void VERIFY_INITIALIZED(String func) {
         if (!(Pbrt.options.Cat || Pbrt.options.ToPly) && currentApiState == APIState.Uninitialized) {
-            Error.Error("pbrtInit() must be before calling \"%s()\". Ignoring.", func);
+            PBrtTLogger.Error("pbrtInit() must be before calling \"%s()\". Ignoring.", func);
         }
     }
 
     private static void VERIFY_OPTIONS(String func) {
         VERIFY_INITIALIZED(func);
         if (!(Pbrt.options.Cat || Pbrt.options.ToPly) && currentApiState == APIState.WorldBlock) {
-            Error.Error("Options cannot be set inside world block; \"%s\" not allowed.  Ignoring.", func);
+            PBrtTLogger.Error("Options cannot be set inside world block; \"%s\" not allowed.  Ignoring.", func);
         }
     }
 
     private static void VERIFY_WORLD(String func) {
         VERIFY_INITIALIZED(func);
         if(!(Pbrt.options.Cat || Pbrt.options.ToPly) && currentApiState ==APIState.OptionsBlock)  {
-            Error.Error("Scene description must be inside world block; \"%s\" not allowed. Ignoring.", func);
+            PBrtTLogger.Error("Scene description must be inside world block; \"%s\" not allowed. Ignoring.", func);
         }
     }
 
     private static void WARN_IF_ANIMATED_TRANSFORM(String func) {
         if (curTransform.IsAnimated()) {
-            Error.Warning("Animated transformations set; ignoring for \"%s\" " +
+            PBrtTLogger.Warning("Animated transformations set; ignoring for \"%s\" " +
                     "and using the start transform only", func);
         }
     }

@@ -11,7 +11,7 @@
 package org.pbrt.integrators;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
@@ -85,18 +85,20 @@ public class DirectLightingIntegrator extends SamplerIntegrator {
         else if (Objects.equals(st, "all"))
             strategy = LightStrategy.UniformSampleAll;
         else {
-            Error.Warning("Strategy \"%s\" for direct lighting unknown. Using \"all\".", st);
+            PBrtTLogger.Warning("Strategy \"%s\" for direct lighting unknown. Using \"all\".", st);
             strategy = LightStrategy.UniformSampleAll;
         }
         Integer[] pb = params.FindInt("pixelbounds");
         Bounds2i pixelBounds = camera.film.GetSampleBounds();
         if (pb != null) {
-            if (pb.length != 4)
-                Error.Error("Expected four values for \"pixelbounds\" parameter. Got %d.", pb.length);
+            if (pb.length != 4) {
+                PBrtTLogger.Error("Expected four values for \"pixelbounds\" parameter. Got %d.", pb.length);
+            }
             else {
                 pixelBounds = Bounds2i.Intersect(pixelBounds, new Bounds2i(new Point2i(pb[0], pb[2]), new Point2i(pb[1], pb[3])));
-                if (pixelBounds.Area() == 0)
-                    Error.Error("Degenerate \"pixelbounds\" specified.");
+                if (pixelBounds.Area() == 0) {
+                    PBrtTLogger.Error("Degenerate \"pixelbounds\" specified.");
+                }
             }
         }
         return new DirectLightingIntegrator(strategy, maxDepth, camera, sampler, pixelBounds);

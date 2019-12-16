@@ -78,7 +78,7 @@ public class ImageIO {
             e.printStackTrace();
         }
 
-        Error.Error("Unable to load image stored in format \"%s\" for filename \"%s\".",
+        PBrtTLogger.Error("Unable to load image stored in format \"%s\" for filename \"%s\".",
                 FileUtil.GetExtension(filename), filename);
 
         return null;
@@ -101,7 +101,7 @@ public class ImageIO {
         return image;
     }
     private static SpectrumImage ReadPFM(String filename) {
-        Error.Warning("PFM image read not implemented.");
+        PBrtTLogger.Warning("PFM image read not implemented.");
         return null;
     }
 

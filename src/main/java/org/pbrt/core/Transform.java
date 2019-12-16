@@ -323,7 +323,7 @@ public class Transform {
         // Initialize first three columns of viewing matrix
         Vector3f dir = Vector3f.Normalize(look.subtract(pos));
         if (Vector3f.Cross(Vector3f.Normalize(up), dir).Length() == 0) {
-            Error.Error("\"up\" vector (%f, %f, %f) and viewing direction (%f, %f, %f) passed to LookAt are pointing in the same direction.  Using the identity transformation.",
+            PBrtTLogger.Error("\"up\" vector (%f, %f, %f) and viewing direction (%f, %f, %f) passed to LookAt are pointing in the same direction.  Using the identity transformation.",
                     up.x, up.y, up.z, dir.x, dir.y, dir.z);
             return new Transform();
         }

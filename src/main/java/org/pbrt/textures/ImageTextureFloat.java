@@ -11,7 +11,7 @@
 package org.pbrt.textures;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ public class ImageTextureFloat extends Texture<Float> {
                     tp.FindFloat("udelta", 0),
                     tp.FindFloat("vdelta", 0));
         else {
-            Error.Error("2D texture mapping \"%s\" unknown", type);
+            PBrtTLogger.Error("2D texture mapping \"%s\" unknown", type);
             map = new UVMapping2D();
         }
 
@@ -89,7 +89,7 @@ public class ImageTextureFloat extends Texture<Float> {
         // Create _MIPMap_ for _filename_
         ImageIO.SpectrumImage image = ImageIO.Read(filename);
         if (image == null) {
-            Error.Warning("Creating a constant grey texture to replace \"%s\".", filename);
+            PBrtTLogger.Warning("Creating a constant grey texture to replace \"%s\".", filename);
             image = new ImageIO.SpectrumImage();
             image.resolution.x = image.resolution.y = 1;
             Spectrum[] rgb = new Spectrum[1];

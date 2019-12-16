@@ -23,7 +23,7 @@ public abstract class LightDistribution {
         else if (Objects.equals(name, "spatial"))
             return new SpatialLightDistribution(scene, 64);
         else {
-            Error.Error("Light sample distribution type \"%s\" unknown. Using \"spatial\".", name);
+            PBrtTLogger.Error("Light sample distribution type \"%s\" unknown. Using \"spatial\".", name);
             return new SpatialLightDistribution(scene, 64);
         }
     }

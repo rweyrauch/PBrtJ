@@ -38,7 +38,7 @@ public class TextureParams {
             if (spectrumTextures.get(texname) != null)
                 return spectrumTextures.get(texname);
             else
-                Error.Error("Couldn't find spectrum texture named \"%s\" for parameter \"%s\"", texname, name);
+            PBrtTLogger.Error("Couldn't find spectrum texture named \"%s\" for parameter \"%s\"", texname, name);
         }
         Spectrum val = materialParams.FindOneSpectrum(name, def);
         val = geomParams.FindOneSpectrum(name, val);
@@ -51,7 +51,7 @@ public class TextureParams {
             if (spectrumTextures.get(texname) != null)
                 return spectrumTextures.get(texname);
             else {
-                Error.Error("Couldn't find spectrum texture named \"%s\" for parameter \"%s\"", texname, name);
+                PBrtTLogger.Error("Couldn't find spectrum texture named \"%s\" for parameter \"%s\"", texname, name);
                 return null;
             }
         }
@@ -67,7 +67,7 @@ public class TextureParams {
             if (floatTextures.get(texname) != null)
                 return floatTextures.get(texname);
             else
-                Error.Error("Couldn't find float texture named \"%s\" for parameter \"%s\"", texname, name);
+            PBrtTLogger.Error("Couldn't find float texture named \"%s\" for parameter \"%s\"", texname, name);
         }
         float val = geomParams.FindOneFloat(name, materialParams.FindOneFloat(name, def));
         return new ConstantTexture<>(val);
@@ -79,7 +79,7 @@ public class TextureParams {
             if (floatTextures.get(texname) != null)
                 return floatTextures.get(texname);
             else {
-                Error.Error("Couldn't find float texture named \"%s\" for parameter \"%s\"", texname, name);
+                PBrtTLogger.Error("Couldn't find float texture named \"%s\" for parameter \"%s\"", texname, name);
                 return null;
             }
         }

@@ -11,7 +11,7 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 import org.pbrt.textures.ConstantTexture;
 
 import java.util.ArrayList;
@@ -43,34 +43,34 @@ public class Triangle extends Shape {
         }
         if (uvs != null) {
             if (uvs.length < P.length) {
-                Error.Error(
+                PBrtTLogger.Error(
                         "Not enough of \"uv\"s for triangle mesh.  Expected %d, found %d.  Discarding.", P.length, uvs.length);
                 uvs = null;
             } else if (uvs.length > P.length) {
-                Error.Warning("More \"uv\"s provided than will be used for triangle mesh.  (%d expcted, %d found)", P.length, uvs.length);
+                PBrtTLogger.Warning("More \"uv\"s provided than will be used for triangle mesh.  (%d expcted, %d found)", P.length, uvs.length);
             }
         }
         if (vi == null) {
-            Error.Error("Vertex indices \"indices\" not provided with triangle mesh shape");
+            PBrtTLogger.Error("Vertex indices \"indices\" not provided with triangle mesh shape");
             return new ArrayList<>();
         }
         if (P == null) {
-            Error.Error("Vertex positions \"P\" not provided with triangle mesh shape");
+            PBrtTLogger.Error("Vertex positions \"P\" not provided with triangle mesh shape");
             return new ArrayList<>();
         }
         Vector3f[] S = paramSet.FindVector3f("S");
         if ((S != null) && S.length != P.length) {
-            Error.Error("Number of \"S\"s for triangle mesh must match \"P\"s");
+            PBrtTLogger.Error("Number of \"S\"s for triangle mesh must match \"P\"s");
             S = null;
         }
         Normal3f[] N = paramSet.FindNormal3f("N");
         if ((N != null) && N.length != P.length) {
-            Error.Error("Number of \"N\"s for triangle mesh must match \"P\"s");
+            PBrtTLogger.Error("Number of \"N\"s for triangle mesh must match \"P\"s");
             N = null;
         }
         for (Integer aVi : vi) {
             if (aVi >= P.length) {
-                Error.Error("trianglemesh has out of-bounds vertex index %d (%d \"P\" values were given", aVi, P.length);
+                PBrtTLogger.Error("trianglemesh has out of-bounds vertex index %d (%d \"P\" values were given", aVi, P.length);
                 return new ArrayList<>();
             }
         }
@@ -80,7 +80,7 @@ public class Triangle extends Shape {
             if (floatTextures.containsKey(alphaTexName)) {
                 alphaTex = floatTextures.get(alphaTexName);
             } else {
-                Error.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
+                PBrtTLogger.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
             }
         } else if (paramSet.FindOneFloat("alpha", 1) == 0) {
             alphaTex = new ConstantTexture<>(0.0f);
@@ -92,7 +92,7 @@ public class Triangle extends Shape {
             if (floatTextures.containsKey(shadowAlphaTexName)) {
                 shadowAlphaTex = floatTextures.get(shadowAlphaTexName);
             } else {
-                Error.Error("Couldn't find float texture \"%s\" for \"shadowalpha\" parameter", shadowAlphaTexName);
+                PBrtTLogger.Error("Couldn't find float texture \"%s\" for \"shadowalpha\" parameter", shadowAlphaTexName);
             }
         } else if (paramSet.FindOneFloat("shadowalpha", 1) == 0) {
             shadowAlphaTex = new ConstantTexture<>(0.0f);

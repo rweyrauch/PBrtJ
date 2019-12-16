@@ -12,7 +12,7 @@ package org.pbrt;
 import com.sampullara.cli.*;
 import org.pbrt.core.Api;
 import org.pbrt.core.Options;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 import org.pbrt.core.Parser;
 
 import java.util.List;
@@ -95,7 +95,7 @@ public class App {
             // Parse scene from input files
             for (String f : parse)
             if (!Parser.ParseFile(f)) {
-                Error.Error("Couldn't open scene file \"%s\"", f);
+                PBrtTLogger.Error("Couldn't open scene file \"%s\"", f);
             }
         }
         Api.pbrtCleanup();

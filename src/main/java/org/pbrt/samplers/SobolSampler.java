@@ -11,7 +11,7 @@
 package org.pbrt.samplers;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class SobolSampler extends GlobalSampler {
 
@@ -20,7 +20,7 @@ public class SobolSampler extends GlobalSampler {
         this.sampleBounds = sampleBounds;
 
         if (!Pbrt.IsPowerOf2(samplesPerPixel))
-            Error.Warning("Non power-of-two sample count rounded up to % for SobolSampler.", samplesPerPixel);
+            PBrtTLogger.Warning("Non power-of-two sample count rounded up to % for SobolSampler.", samplesPerPixel);
         resolution = Pbrt.RoundUpPow2(Math.max(sampleBounds.Diagonal().x, sampleBounds.Diagonal().y));
         log2Resolution = Pbrt.Log2Int(resolution);
         if (resolution > 0) assert((1 << log2Resolution) == resolution);
@@ -41,7 +41,7 @@ public class SobolSampler extends GlobalSampler {
     @Override
     public float SampleDimension(int index, int dim) {
         if (dim >= SobolMatrices.NumSobolDimensions)
-            Error.Error("SobolSampler can only sample up to %d dimensions! Exiting.", SobolMatrices.NumSobolDimensions);
+            PBrtTLogger.Error("SobolSampler can only sample up to %d dimensions! Exiting.", SobolMatrices.NumSobolDimensions);
         float s = LowDiscrepancy.SobolSampleFloat(index, dim, 0);
         // Remap Sobol$'$ dimensions used for pixel samples
         if (dim == 0 || dim == 1) {

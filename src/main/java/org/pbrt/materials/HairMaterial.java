@@ -11,7 +11,7 @@
 package org.pbrt.materials;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 import org.pbrt.textures.ConstantTexture;
 
 public class HairMaterial extends Material {
@@ -23,25 +23,25 @@ public class HairMaterial extends Material {
         Texture<Float> pheomelanin = mp.GetFloatTextureOrNull("pheomelanin");
         if (sigma_a != null) {
             if (color != null)
-                Error.Warning("Ignoring \"color\" parameter since \"sigma_a\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"color\" parameter since \"sigma_a\" was provided.");
             if (eumelanin != null)
-                Error.Warning("Ignoring \"eumelanin\" parameter since \"sigma_a\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"eumelanin\" parameter since \"sigma_a\" was provided.");
             if (pheomelanin != null)
-                Error.Warning("Ignoring \"pheomelanin\" parameter since \"sigma_a\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"pheomelanin\" parameter since \"sigma_a\" was provided.");
         }
         else if (color != null) {
             if (sigma_a != null)
-                Error.Warning("Ignoring \"sigma_a\" parameter since \"color\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"sigma_a\" parameter since \"color\" was provided.");
             if (eumelanin != null)
-                Error.Warning("Ignoring \"eumelanin\" parameter since \"color\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"eumelanin\" parameter since \"color\" was provided.");
             if (pheomelanin != null)
-                Error.Warning("Ignoring \"pheomelanin\" parameter since \"color\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"pheomelanin\" parameter since \"color\" was provided.");
         }
         else if (eumelanin != null || pheomelanin != null) {
             if (sigma_a != null)
-                Error.Warning("Ignoring \"sigma_a\" parameter since \"eumelanin\"/\"pheomelanin\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"sigma_a\" parameter since \"eumelanin\"/\"pheomelanin\" was provided.");
             if (color != null)
-                Error.Warning("Ignoring \"color\" parameter since \"eumelanin\"/\"pheomelanin\" was provided.");
+                PBrtTLogger.Warning("Ignoring \"color\" parameter since \"eumelanin\"/\"pheomelanin\" was provided.");
         }
         else {
             // Default: brown-ish hair.

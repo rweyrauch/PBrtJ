@@ -11,7 +11,7 @@
 package org.pbrt.cameras;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class RealisticCamera extends Camera {
         for (int i = 0; i < lensData.length; i += 4) {
             if (lensData[i] == 0) {
                 if (apertureDiameter > lensData[i + 3]) {
-                    Error.Warning("Specified aperture diameter %f is greater than maximum " +
+                    PBrtTLogger.Warning("Specified aperture diameter %f is greater than maximum " +
                             "possible %f.  Clamping it.", apertureDiameter, lensData[i + 3]);
                 }
                 else {
@@ -40,9 +40,9 @@ public class RealisticCamera extends Camera {
 
         // Compute lens--film distance for given focus distance
         float fb = FocusBinarySearch(focusDistance);
-        Api.logger.info("Binary search focus: %f -> %f\n", fb, FocusDistance(fb));
+        PBrtTLogger.Info("Binary search focus: %f -> %f\n", fb, FocusDistance(fb));
         elementInterfaces.get(elementInterfaces.size()-1).thickness = FocusThickLens(focusDistance);
-        Api.logger.info("Thick lens focus: %f -> %f\n", elementInterfaces.get(elementInterfaces.size()-1).thickness,
+        PBrtTLogger.Info("Thick lens focus: %f -> %f\n", elementInterfaces.get(elementInterfaces.size()-1).thickness,
                 FocusDistance(elementInterfaces.get(elementInterfaces.size()-1).thickness));
 
         // Compute exit pupil bounds at sampled points on the film
@@ -96,7 +96,7 @@ public class RealisticCamera extends Camera {
         float shutteropen = paramSet.FindOneFloat("shutteropen", 0);
         float shutterclose = paramSet.FindOneFloat("shutterclose", 1);
         if (shutterclose < shutteropen) {
-            Error.Warning("Shutter close time [%f] < shutter open [%f].  Swapping them.", shutterclose, shutteropen);
+            PBrtTLogger.Warning("Shutter close time [%f] < shutter open [%f].  Swapping them.", shutterclose, shutteropen);
             float temp = shutterclose;
             shutterclose = shutteropen;
             shutteropen = temp;
@@ -108,17 +108,17 @@ public class RealisticCamera extends Camera {
         float focusDistance = paramSet.FindOneFloat("focusdistance", 10);
         boolean simpleWeighting = paramSet.FindOneBoolean("simpleweighting", true);
         if (Objects.equals(lensFile, "")) {
-            Error.Error("No lens description file supplied!");
+            PBrtTLogger.Error("No lens description file supplied!");
             return null;
         }
         // Load element data from lens description file
         float[] lensData = FloatFile.Read(lensFile);
         if (lensData == null) {
-            Error.Error("Error reading lens specification file \"%s\".", lensFile);
+            PBrtTLogger.Error("Error reading lens specification file \"%s\".", lensFile);
             return null;
         }
         if (lensData.length % 4 != 0) {
-            Error.Error("Excess values in lens specification file \"%s\"; must be multiple-of-four values, read %d.", lensFile, lensData.length);
+            PBrtTLogger.Error("Excess values in lens specification file \"%s\"; must be multiple-of-four values, read %d.", lensFile, lensData.length);
             return null;
         }
 
@@ -492,7 +492,7 @@ public class RealisticCamera extends Camera {
         Ray rScene = new Ray(new Point3f(x, 0, LensFrontZ() + 1), new Vector3f(0, 0, -1));
         Ray rFilm = TraceLensesFromScene(rScene);
         if (rFilm == null) {
-            Error.Error("Unable to trace ray from scene to film for thick lens " +
+            PBrtTLogger.Error("Unable to trace ray from scene to film for thick lens " +
                     "approximation. Is aperture stop extremely small?");
         }
         CardPnts[] result = new CardPnts[2];
@@ -502,7 +502,7 @@ public class RealisticCamera extends Camera {
         rFilm = new Ray(new Point3f(x, 0, LensRearZ() - 1), new Vector3f(0, 0, 1));
         rScene = TraceLensesFromFilm(rFilm);
         if (rScene == null) {
-            Error.Error("Unable to trace ray from film to scene for thick lens " +
+            PBrtTLogger.Error("Unable to trace ray from film to scene for thick lens " +
                 "approximation. Is aperture stop extremely small?");
         }
         result[1] = ComputeCardinalPoints(rFilm, rScene);
@@ -511,8 +511,8 @@ public class RealisticCamera extends Camera {
 
     private float FocusThickLens(float focusDistance) {
         CardPnts[] cpnts = ComputeThickLensApproximation();
-        Api.logger.info("Cardinal points: p' = %f f' = %f, p = %f f = %f.\n", cpnts[0].p, cpnts[0].f, cpnts[1].p, cpnts[1].f);
-        Api.logger.info("Effective focal length %f\n", cpnts[0].f - cpnts[0].p);
+        PBrtTLogger.Info("Cardinal points: p' = %f f' = %f, p = %f f = %f.\n", cpnts[0].p, cpnts[0].f, cpnts[1].p, cpnts[1].f);
+        PBrtTLogger.Info("Effective focal length %f\n", cpnts[0].f - cpnts[0].p);
         // Compute translation of lens, _delta_, to focus at _focusDistance_
         float f = cpnts[0].f - cpnts[0].p;
         float z = -focusDistance;
@@ -547,7 +547,7 @@ public class RealisticCamera extends Camera {
         float lu = 0.1f * bounds.pMax.x;
         Ray ray = TraceLensesFromFilm(new Ray(new Point3f(0, 0, LensRearZ() - filmDist), new Vector3f(lu, 0, filmDist)));
         if (ray == null) {
-            Error.Error("Focus ray at lens pos(%f,0) didn't make it through the lenses with film distance %f?!??\n", lu, filmDist);
+            PBrtTLogger.Error("Focus ray at lens pos(%f,0) didn't make it through the lenses with film distance %f?!??\n", lu, filmDist);
             return Pbrt.Infinity;
         }
 
@@ -585,7 +585,7 @@ public class RealisticCamera extends Camera {
 
         // Return entire element bounds if no rays made it through the lens system
         if (nExitingRays == 0) {
-            Api.logger.info("Unable to find exit pupil in x = [%f,%f] on film.", pFilmX0, pFilmX1);
+            PBrtTLogger.Info("Unable to find exit pupil in x = [%f,%f] on film.", pFilmX0, pFilmX1);
             return projRearBounds;
         }
 

@@ -11,7 +11,7 @@
 package org.pbrt.accelerators;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +55,7 @@ public class BVHAccel extends Aggregate {
         for (int i = 0; i < orderedPrims.size(); i++) {
             primitives[i] = orderedPrims.get(i);
         }
-        Api.logger.info("BVH created with %d nodes for %d primitives.\n", totalNodes[0], primitives.length);
+        PBrtTLogger.Info("BVH created with %d nodes for %d primitives.\n", totalNodes[0], primitives.length);
 
         // Compute representation of depth-first traversal of BVH tree
         //treeBytes.increment(totalNodes[0] * ObjectSizeCalculator.getObjectSize(new LinearBVHNode()) + ObjectSizeCalculator.getObjectSize(this) + primitives.length * ObjectSizeCalculator.getObjectSize(primitives[0]));
@@ -169,7 +169,7 @@ public class BVHAccel extends Aggregate {
         else if (Objects.equals(splitMethodName, "equal"))
             splitMethod = BVHAccel.SplitMethod.EqualCounts;
         else {
-            Error.Warning("BVH split method \"%s\" unknown.  Using \"sah\".", splitMethodName);
+            PBrtTLogger.Warning("BVH split method \"%s\" unknown.  Using \"sah\".", splitMethodName);
             splitMethod = BVHAccel.SplitMethod.SAH;
         }
 
@@ -313,7 +313,7 @@ public class BVHAccel extends Aggregate {
         for (int i = start; i < end; ++i)
             bounds = Bounds3f.Union(bounds, primitiveInfo.get(i).bounds);
         int nPrimitives = end - start;
-        Api.logger.info("Number of primitives: %d\n", nPrimitives);
+        PBrtTLogger.Info("Number of primitives: %d\n", nPrimitives);
         if (nPrimitives == 1) {
             // Create leaf _BVHBuildNode_
             int firstPrimOffset = orderedPrims.size();
@@ -431,7 +431,7 @@ public class BVHAccel extends Aggregate {
                         break;
                     }
                 }
-                Api.logger.info("Split: Start: %d  Mid: %d  End: %d\n", start, mid, end);
+                PBrtTLogger.Info("Split: Start: %d  Mid: %d  End: %d\n", start, mid, end);
                 node.InitInterior(dim, recursiveBuild(primitiveInfo, start, mid, totalNodes, orderedPrims),
                         recursiveBuild(primitiveInfo, mid, end, totalNodes, orderedPrims));
             }

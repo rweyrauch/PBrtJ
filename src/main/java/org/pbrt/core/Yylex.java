@@ -375,7 +375,7 @@ public class Yylex {
   /* user code: */
     public Object getLVal () { return null; }
     public void yyerror (String msg) {
-        Error.Error(msg);
+        PBrtTLogger.Error(msg);
     }
 
 
@@ -819,7 +819,7 @@ public class Yylex {
           }
         case 81: break;
         case 1: 
-          { Error.Error("Illegal character: %c (0x%x)", yytext().charAt(0), (int)yytext().charAt(0));
+          { PBrtTLogger.Error("Illegal character: %c (0x%x)", yytext().charAt(0), (int)yytext().charAt(0));
           }
         case 82: break;
         case 24: 

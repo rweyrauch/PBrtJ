@@ -11,14 +11,14 @@
 package org.pbrt.samplers;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class ZeroTwoSequence extends PixelSampler {
 
     public ZeroTwoSequence(int samplesPerPixel, int nSampledDimensions) {
         super(Pbrt.RoundUpPow2(samplesPerPixel), nSampledDimensions);
         if (!Pbrt.IsPowerOf2(samplesPerPixel))
-            Error.Warning("Pixel samples being rounded up to power of 2 (from %d to %d).", samplesPerPixel, Pbrt.RoundUpPow2(samplesPerPixel));
+            PBrtTLogger.Warning("Pixel samples being rounded up to power of 2 (from %d to %d).", samplesPerPixel, Pbrt.RoundUpPow2(samplesPerPixel));
     }
 
     public ZeroTwoSequence(ZeroTwoSequence sampler) {

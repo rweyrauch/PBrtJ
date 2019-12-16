@@ -117,7 +117,7 @@ public class Film {
                         (int)Math.ceil(fullResolution.y * cropWindow.pMin.y)),
                 new Point2i((int)Math.ceil(fullResolution.x * cropWindow.pMax.x),
                         (int)Math.ceil(fullResolution.y * cropWindow.pMax.y)));
-        Api.logger.info("Created film with full resolution %s. Crop window of %s -> croppedPixelBounds %s", resolution.toString(), cropWindow, croppedPixelBounds);
+        PBrtTLogger.Info("Created film with full resolution %s. Crop window of %s -> croppedPixelBounds %s", resolution.toString(), cropWindow, croppedPixelBounds);
 
         // Allocate film image storage
         this.pixels = new Pixel[croppedPixelBounds.Area()];
@@ -191,13 +191,13 @@ public class Film {
 
     public void AddSplat(Point2f p, Spectrum v) {
         if (v.hasNaNs()) {
-            Api.logger.error("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
+            PBrtTLogger.Error("Ignoring splatted spectrum with NaN values at (%f, %f)", p.x, p.y);
             return;
         } else if (v.y() < 0) {
-            Api.logger.error("Ignoring splatted spectrum with negative luminance %f at (%f, %f)", v.y(), p.x, p.y);
+            PBrtTLogger.Error("Ignoring splatted spectrum with negative luminance %f at (%f, %f)", v.y(), p.x, p.y);
             return;
         } else if (Float.isInfinite(v.y())) {
-            Api.logger.error("Ignoring splatted spectrum with infinite luminance at (%f, %f)", p.x, p.y);
+            PBrtTLogger.Error("Ignoring splatted spectrum with infinite luminance at (%f, %f)", p.x, p.y);
             return;
         }
 
@@ -256,7 +256,7 @@ public class Film {
         }
 
         // Write RGB image
-        Api.logger.info("Writing image %s with bounds %s", filename, croppedPixelBounds.toString());
+        PBrtTLogger.Info("Writing image %s with bounds %s", filename, croppedPixelBounds.toString());
         ImageIO.Write(filename, rgb, croppedPixelBounds, fullResolution);
     }
 
@@ -287,7 +287,7 @@ public class Film {
             filename = Pbrt.options.ImageFile;
             String paramsFilename = paramSet.FindOneString("filename", "");
             if (!paramsFilename.isEmpty()) {
-                Error.Warning("Output filename supplied on command line, \"%s\" is overriding " +
+                PBrtTLogger.Warning("Output filename supplied on command line, \"%s\" is overriding " +
                         "filename provided in scene description file, \"%s\".",
                         Pbrt.options.ImageFile, paramsFilename);
             } else {
@@ -310,7 +310,7 @@ public class Film {
             crop.pMin.y = Pbrt.Clamp(Math.min(cr[2], cr[3]), 0, 1);
             crop.pMax.y = Pbrt.Clamp(Math.max(cr[2], cr[3]), 0, 1);
         } else if (cr != null) {
-            Error.Error("%d values supplied for \"cropwindow\". Expected 4.", cr.length);
+            PBrtTLogger.Error("%d values supplied for \"cropwindow\". Expected 4.", cr.length);
         } else {
             crop = new Bounds2f(new Point2f(Pbrt.Clamp(Pbrt.options.CropWindow[0][0], 0, 1),
                                 Pbrt.Clamp(Pbrt.options.CropWindow[1][0], 0, 1)),

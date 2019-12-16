@@ -11,7 +11,7 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,11 +25,11 @@ public class LoopSubdiv {
         Integer[] vertexIndices = paramSet.FindInt("indices");
         Point3f[] P = paramSet.FindPoint3f("P");
         if (vertexIndices == null) {
-            Error.Error("Vertex indices \"indices\" not provided for LoopSubdiv shape.");
+            PBrtTLogger.Error("Vertex indices \"indices\" not provided for LoopSubdiv shape.");
             return null;
         }
         if (P == null) {
-            Error.Error("Vertex positions \"P\" not provided for LoopSubdiv shape.");
+            PBrtTLogger.Error("Vertex positions \"P\" not provided for LoopSubdiv shape.");
             return null;
         }
 
@@ -354,7 +354,7 @@ public class LoopSubdiv {
         int vnum(SDVertex vert) {
             for (int i = 0; i < 3; ++i)
                 if (v[i] == vert) return i;
-            Api.logger.fatal("Basic logic error in SDFace::vnum()");
+            PBrtTLogger.Error("Basic logic error in SDFace::vnum()");
             return -1;
         }
 
@@ -365,7 +365,7 @@ public class LoopSubdiv {
         SDVertex otherVert(SDVertex v0, SDVertex v1) {
         for (int i = 0; i < 3; ++i)
             if (v[i] != v0 && v[i] != v1) return v[i];
-            Api.logger.fatal("Basic logic error in SDVertex::otherVert()");
+            PBrtTLogger.Error("Basic logic error in SDVertex::otherVert()");
             return null;
         }
         SDVertex[] v = { null, null, null };

@@ -11,7 +11,7 @@
 package org.pbrt.cameras;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class OrthographicCamera extends ProjectiveCamera {
 
@@ -110,7 +110,7 @@ public class OrthographicCamera extends ProjectiveCamera {
         float shutteropen = paramSet.FindOneFloat("shutteropen", 0);
         float shutterclose = paramSet.FindOneFloat("shutterclose", 1);
         if (shutterclose < shutteropen) {
-            Error.Warning("Shutter close time [%f] < shutter open [%f].  Swapping them.",
+            PBrtTLogger.Warning("Shutter close time [%f] < shutter open [%f].  Swapping them.",
                     shutterclose, shutteropen);
             float temp = shutterclose;
             shutterclose = shutteropen;
@@ -140,7 +140,7 @@ public class OrthographicCamera extends ProjectiveCamera {
                 screen.pMin.y = sw[2];
                 screen.pMax.y = sw[3];
             } else
-                Error.Error("\"screenwindow\" should have four values");
+                PBrtTLogger.Error("\"screenwindow\" should have four values");
         }
         return new OrthographicCamera(cam2world, screen, shutteropen, shutterclose,
                 lensradius, focaldistance, film, medium);

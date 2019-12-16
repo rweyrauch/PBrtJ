@@ -110,7 +110,7 @@ public class Matrix4x4 {
                                 icol = k;
                             }
                         } else if (ipiv[k] > 1)
-                            Error.Error("Singular matrix in MatrixInvert");
+                            PBrtTLogger.Error("Singular matrix in MatrixInvert");
                     }
                 }
             }
@@ -125,7 +125,7 @@ public class Matrix4x4 {
             }
             indxr[i] = irow;
             indxc[i] = icol;
-            if (minv[icol][icol] == 0.f) Error.Error("Singular matrix in MatrixInvert");
+            if (minv[icol][icol] == 0.f) PBrtTLogger.Error("Singular matrix in MatrixInvert");
 
             // Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
             float pivinv = 1.0f / minv[icol][icol];

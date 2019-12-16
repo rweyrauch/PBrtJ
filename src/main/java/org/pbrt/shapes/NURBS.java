@@ -11,7 +11,7 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 import java.util.ArrayList;
 import java.util.function.BiFunction;
@@ -21,23 +21,23 @@ public class NURBS {
     public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet) {
         int nu = paramSet.FindOneInt("nu", -1);
         if (nu == -1) {
-            Error.Error("Must provide number of control points \"nu\" with NURBS shape.");
+            PBrtTLogger.Error("Must provide number of control points \"nu\" with NURBS shape.");
             return null;
         }
 
         int uorder = paramSet.FindOneInt("uorder", -1);
         if (uorder == -1) {
-            Error.Error("Must provide u order \"uorder\" with NURBS shape.");
+            PBrtTLogger.Error("Must provide u order \"uorder\" with NURBS shape.");
             return null;
         }
         Float[] uknots = paramSet.FindFloat("uknots");
         if (uknots == null) {
-            Error.Error("Must provide u knot vector \"uknots\" with NURBS shape.");
+            PBrtTLogger.Error("Must provide u knot vector \"uknots\" with NURBS shape.");
             return null;
         }
 
         if (uknots.length != nu + uorder) {
-            Error.Error("Number of knots in u knot vector %d doesn't match sum of number of u control points %d and u order %d.",
+            PBrtTLogger.Error("Number of knots in u knot vector %d doesn't match sum of number of u control points %d and u order %d.",
                     uknots.length, nu, uorder);
             return null;
         }
@@ -47,24 +47,24 @@ public class NURBS {
 
         int nv = paramSet.FindOneInt("nv", -1);
         if (nv == -1) {
-            Error.Error("Must provide number of control points \"nv\" with NURBS shape.");
+            PBrtTLogger.Error("Must provide number of control points \"nv\" with NURBS shape.");
             return null;
         }
 
         int vorder = paramSet.FindOneInt("vorder", -1);
         if (vorder == -1) {
-            Error.Error("Must provide v order \"vorder\" with NURBS shape.");
+            PBrtTLogger.Error("Must provide v order \"vorder\" with NURBS shape.");
             return null;
         }
 
         Float[] vknots = paramSet.FindFloat("vknots");
         if (vknots == null) {
-            Error.Error("Must provide v knot vector \"vknots\" with NURBS shape.");
+            PBrtTLogger.Error("Must provide v knot vector \"vknots\" with NURBS shape.");
             return null;
         }
 
         if (vknots.length != nv + vorder) {
-            Error.Error("Number of knots in v knot vector %d doesn't match sum of number of v control points %d and v order %d.",
+            PBrtTLogger.Error("Number of knots in v knot vector %d doesn't match sum of number of v control points %d and v order %d.",
                     vknots.length, nv, vorder);
             return null;
         }
@@ -79,12 +79,12 @@ public class NURBS {
         if (P == null) {
             Pp = paramSet.FindFloat("Pw");
             if (Pp == null) {
-                Error.Error("Must provide control points via \"P\" or \"Pw\" parameter to NURBS shape.");
+                PBrtTLogger.Error("Must provide control points via \"P\" or \"Pw\" parameter to NURBS shape.");
                 return null;
             }
             npts = Pp.length;
             if ((Pp.length % 4) != 0) {
-                Error.Error("Number of \"Pw\" control points provided to NURBS shape must be multiple of four");
+                PBrtTLogger.Error("Number of \"Pw\" control points provided to NURBS shape must be multiple of four");
                 return null;
             }
             npts /= 4;
@@ -96,7 +96,7 @@ public class NURBS {
         }
 
         if (npts != nu * nv) {
-            Error.Error("NURBS shape was expecting %dx%d=%d control points, was given %d", nu, nv, nu * nv, npts);
+            PBrtTLogger.Error("NURBS shape was expecting %dx%d=%d control points, was given %d", nu, nv, nu * nv, npts);
             return null;
         }
 

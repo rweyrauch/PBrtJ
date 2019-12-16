@@ -46,7 +46,7 @@ public class SpatialLightDistribution extends LightDistribution {
             hashTable[i].distribution = new AtomicReference(null);
         }
 
-        Api.logger.info("SpatialLightDistribution: scene bounds %s, voxel res (%d, %d, %d)", b.toString(), nVoxels[0], nVoxels[1], nVoxels[2]);
+        PBrtTLogger.Info("SpatialLightDistribution: scene bounds %s, voxel res (%d, %d, %d)", b.toString(), nVoxels[0], nVoxels[1], nVoxels[2]);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class SpatialLightDistribution extends LightDistribution {
         for (int i = 0; i < 3; ++i)
             // The clamp should almost never be necessary, but is there to be
             // robust to computed intersection points being slightly outside
-            // the scene bounds due to floating-point roundoff error.
+            // the scene bounds due to floating-point roundoff PBrtTLogger.
             pi.set(i, Pbrt.Clamp((int)(offset.at(i) * nVoxels[i]), 0, nVoxels[i] - 1));
 
         // Pack the 3D integer voxel coordinates into a single 64-bit value.

@@ -78,7 +78,7 @@ public class Parser {
             p.parse();
         }
         catch (Exception e) {
-            Error.Error("Failed to parse file, %s. Error: %s", filename, e.toString());
+            PBrtTLogger.Error("Failed to parse file, %s. Error: %s", filename, e.toString());
             e.printStackTrace();
         }
         return true;
@@ -121,7 +121,7 @@ public class Parser {
                     pset.AddInt(param.name, ivalue);
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'integer' parameter.  Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'integer' parameter.  Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "bool")) {
@@ -134,7 +134,7 @@ public class Parser {
                     pset.AddBoolean(param.name, barray);
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'bool' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'bool' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "float")) {
@@ -151,7 +151,7 @@ public class Parser {
                     pset.AddFloat(param.name, farray);
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'float' parameter.  Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'float' parameter.  Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "point2")) {
@@ -166,11 +166,11 @@ public class Parser {
                         pset.AddPoint2f(param.name, points);
                     }
                     else {
-                        Error.Error("Length of 'point2' parameter list must be a factor of 2.");
+                        PBrtTLogger.Error("Length of 'point2' parameter list must be a factor of 2.");
                     }
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'point2' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'point2' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "vector2")) {
@@ -185,11 +185,11 @@ public class Parser {
                         pset.AddVector2f(param.name, vectors);
                     }
                     else {
-                        Error.Error("Length of 'vector2' parameter list must be a factor of 2.");
+                        PBrtTLogger.Error("Length of 'vector2' parameter list must be a factor of 2.");
                     }
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'vector2' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'vector2' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if ((Objects.equals(param.type, "point3")) || (Objects.equals(param.type, "point"))) {
@@ -204,11 +204,11 @@ public class Parser {
                         pset.AddPoint3f(param.name, points);
                     }
                     else {
-                        Error.Error("Length of 'point3' parameter list must be a factor of 3.");
+                        PBrtTLogger.Error("Length of 'point3' parameter list must be a factor of 3.");
                     }
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'point3' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'point3' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "vector3")) {
@@ -223,11 +223,11 @@ public class Parser {
                         pset.AddVector3f(param.name, vectors);
                     }
                     else {
-                        Error.Error("Length of 'vector3' parameter list must be a factor of 3.");
+                        PBrtTLogger.Error("Length of 'vector3' parameter list must be a factor of 3.");
                     }
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'vector3' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'vector3' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "normal")) {
@@ -242,11 +242,11 @@ public class Parser {
                         pset.AddNormal3f(param.name, normals);
                     }
                     else {
-                        Error.Error("Length of 'normal' parameter list must be a factor of 3.");
+                        PBrtTLogger.Error("Length of 'normal' parameter list must be a factor of 3.");
                     }
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'normal' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'normal' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "rgb") || Objects.equals(param.type, "color")) {
@@ -260,11 +260,11 @@ public class Parser {
                         pset.AddRGBSpectrum(param.name, carray);
                     }
                     else {
-                        Error.Error("Length of 'rgb' or 'color' parameter list must be a factor of 3.");
+                        PBrtTLogger.Error("Length of 'rgb' or 'color' parameter list must be a factor of 3.");
                     }
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'rgb' or 'color' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'rgb' or 'color' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "xyz")) {
@@ -278,11 +278,11 @@ public class Parser {
                         pset.AddXYZSpectrum(param.name, xarray);
                     }
                     else {
-                        Error.Error("Length of 'xyz' parameter list must be a factor of 3.");
+                        PBrtTLogger.Error("Length of 'xyz' parameter list must be a factor of 3.");
                     }
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'xyz' parameter'. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'xyz' parameter'. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "blackbody")) {
@@ -295,7 +295,7 @@ public class Parser {
                     pset.AddBlackbodySpectrum(param.name, barray);
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'blackbody' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'blackbody' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "spectrum")) {
@@ -312,7 +312,7 @@ public class Parser {
                     pset.AddSampledSpectrumFiles(param.name, strings, 1);
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'spectrum' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'spectrum' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "string")) {
@@ -329,7 +329,7 @@ public class Parser {
                     pset.AddString(param.name, strings);
                 }
                 else {
-                    Error.Error("Unexpected value array type for 'string' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value array type for 'string' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else if (Objects.equals(param.type, "texture")) {
@@ -338,11 +338,11 @@ public class Parser {
                     pset.AddTexture(param.name, (String)param.value);
                 }
                 else {
-                    Error.Error("Unexpected value type for 'texture' parameter. Got %s.\n", param.value.getClass().toString());
+                    PBrtTLogger.Error("Unexpected value type for 'texture' parameter. Got %s.\n", param.value.getClass().toString());
                 }
             }
             else {
-                Error.Error("Unknown parameter type: %s\n", param.type);
+                PBrtTLogger.Error("Unknown parameter type: %s\n", param.type);
             }
         }
         return pset;
@@ -393,7 +393,7 @@ public class Parser {
             }
         }
         catch (Exception e) {
-            Error.Error("Failed to parse file. Error: %s", e.toString());
+            PBrtTLogger.Error("Failed to parse file. Error: %s", e.toString());
             e.printStackTrace();
         }
     }
@@ -402,7 +402,7 @@ public class Parser {
         assert(currentCommand != null);
         int commandToken = currentCommand.command.get(0).token;
         assert(isCommand(commandToken));
-        System.out.printf("Command: %s  Num Args: %d\n", currentCommand.command.get(0).value, currentCommand.command.size()-1);
+        PBrtTLogger.Trace("Command: %s  Num Args: %d\n", currentCommand.command.get(0).value, currentCommand.command.size()-1);
         switch (commandToken) {
             case ACCELERATOR:
                 parseAccelerator(currentCommand.command);
@@ -591,9 +591,10 @@ public class Parser {
             Api.pbrtConcatTransform(matrix);
         }
         else {
-            Error.Error("Array argument to ConcatTransform requires 16 values.  Got %d.\n", command.size()-3);
-            for (int i = 0; i < command.size(); i++)
-                Error.Error("Param[%d]: %s\n", i, command.get(i).value);
+            PBrtTLogger.Error("Array argument to ConcatTransform requires 16 values.  Got %d.\n", command.size()-3);
+            for (int i = 0; i < command.size(); i++) {
+                PBrtTLogger.Error("Param[%d]: %s\n", i, command.get(i).value);
+            }
         }
     }
 
@@ -632,7 +633,7 @@ public class Parser {
             scanner.yyreset(new java.io.FileReader(filename));
         }
         catch (Exception e) {
-            Error.Error("Failed to parse included file, %s. Error: %s", filename, e.toString());
+            PBrtTLogger.Error("Failed to parse included file, %s. Error: %s", filename, e.toString());
             e.printStackTrace();
         }
     }
@@ -830,7 +831,7 @@ public class Parser {
             }
             Api.pbrtTransform(matrix);
         } else {
-            Error.Error("Array argument to Transform requires 16 values.  Got %d.\n", command.size()-3);
+            PBrtTLogger.Error("Array argument to Transform requires 16 values.  Got %d.\n", command.size()-3);
         }
     }
 

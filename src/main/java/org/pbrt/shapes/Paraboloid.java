@@ -11,7 +11,7 @@
 package org.pbrt.shapes;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class Paraboloid extends Shape {
 
@@ -193,7 +193,7 @@ public class Paraboloid extends Shape {
 
     @Override
     public SampleResult Sample(Point2f u) {
-        Error.Error("Paraboloid.Sample not implemented.");
+        PBrtTLogger.Error("Paraboloid.Sample not implemented.");
         return null;
     }
 

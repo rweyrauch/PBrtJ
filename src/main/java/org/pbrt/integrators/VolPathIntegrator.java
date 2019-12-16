@@ -11,7 +11,7 @@
 package org.pbrt.integrators;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;;
 
 public class VolPathIntegrator extends SamplerIntegrator {
 
@@ -168,11 +168,11 @@ public class VolPathIntegrator extends SamplerIntegrator {
         Bounds2i pixelBounds = camera.film.GetSampleBounds();
         if (pb != null) {
             if (pb.length != 4)
-                Error.Error("Expected four values for \"pixelbounds\" parameter. Got %d.", pb.length);
+                PBrtTLogger.Error("Expected four values for \"pixelbounds\" parameter. Got %d.", pb.length);
             else {
                 pixelBounds = Bounds2i.Intersect(pixelBounds, new Bounds2i(new Point2i(pb[0], pb[2]), new Point2i(pb[1], pb[3])));
                 if (pixelBounds.Area() == 0)
-                    Error.Error("Degenerate \"pixelbounds\" specified.");
+                    PBrtTLogger.Error("Degenerate \"pixelbounds\" specified.");
             }
         }
         float rrThreshold = params.FindOneFloat("rrthreshold", 1);

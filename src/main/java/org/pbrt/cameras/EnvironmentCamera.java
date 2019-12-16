@@ -11,7 +11,7 @@
 package org.pbrt.cameras;
 
 import org.pbrt.core.*;
-import org.pbrt.core.Error;
+import org.pbrt.core.PBrtTLogger;
 
 public class EnvironmentCamera extends Camera {
 
@@ -37,7 +37,7 @@ public class EnvironmentCamera extends Camera {
         float shutteropen = paramSet.FindOneFloat("shutteropen", 0);
         float shutterclose = paramSet.FindOneFloat("shutterclose", 1);
         if (shutterclose < shutteropen) {
-            Error.Warning("Shutter close time [%f] < shutter open [%f].  Swapping them.", shutterclose, shutteropen);
+            PBrtTLogger.Warning("Shutter close time [%f] < shutter open [%f].  Swapping them.", shutterclose, shutteropen);
             float temp = shutterclose;
             shutterclose = shutteropen;
             shutteropen = temp;
@@ -65,7 +65,7 @@ public class EnvironmentCamera extends Camera {
                 screen.pMin.y = sw[2];
                 screen.pMax.y = sw[3];
             } else
-                Error.Error("\"screenwindow\" should have four values");
+                PBrtTLogger.Error("\"screenwindow\" should have four values");
         }
         return new EnvironmentCamera(cam2world, shutteropen, shutterclose, film, medium);
     }
