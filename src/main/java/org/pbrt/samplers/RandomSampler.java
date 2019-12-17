@@ -23,7 +23,7 @@ public class RandomSampler extends Sampler {
     }
 
     public void StartPixel(Point2i p) {
-        for (Float[] aSampleArray1D : sampleArray1D)
+        for (float[] aSampleArray1D : sampleArray1D)
             for (int j = 0; j < aSampleArray1D.length; ++j)
                 aSampleArray1D[j] = rng.UniformFloat();
 

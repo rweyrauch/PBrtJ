@@ -399,7 +399,7 @@ public class KdTreeAccel extends Aggregate {
                 for (int i = 0; i < np; ++i) primitiveIndices.add(primNums[i]);
             }
         }
-        public void InitInterior(int axis, int ac, Float s) {
+        public void InitInterior(int axis, int ac, float s) {
             split = s;
             flags = axis;
             aboveChild |= (ac << 2);

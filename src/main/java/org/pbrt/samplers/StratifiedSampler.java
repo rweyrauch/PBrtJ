@@ -22,18 +22,18 @@ public class StratifiedSampler extends PixelSampler {
     }
 
     public StratifiedSampler(StratifiedSampler sampler) {
-        this(sampler.xPixelSamples, sampler.yPixelSamples, sampler.jitterSamples, sampler.samples1D.size());
+        this(sampler.xPixelSamples, sampler.yPixelSamples, sampler.jitterSamples, sampler.samples1D.length);
     }
 
     public void StartPixel(Point2i p) {
         // Generate single stratified samples for the pixel
-        for (int i = 0; i < samples1D.size(); ++i) {
-            samples1D.set(i, Sampling.StratifiedSample1D(samples1D.get(i), xPixelSamples * yPixelSamples, rng, jitterSamples));
-            samples1D.set(i, Sampling.Shuffle(samples1D.get(i), 0, xPixelSamples * yPixelSamples, 1, rng));
+        for (int i = 0; i < samples1D.length; ++i) {
+            samples1D[i] = Sampling.StratifiedSample1D(samples1D[i], xPixelSamples * yPixelSamples, rng, jitterSamples);
+            samples1D[i] = Sampling.ShuffleF(samples1D[i], 0, xPixelSamples * yPixelSamples, 1, rng);
         }
-        for (int i = 0; i < samples2D.size(); ++i) {
-            samples2D.set(i, Sampling.StratifiedSample2D(samples2D.get(i), xPixelSamples, yPixelSamples, rng, jitterSamples));
-            samples2D.set(i, Sampling.Shuffle(samples2D.get(i), 0, xPixelSamples * yPixelSamples, 1, rng));
+        for (int i = 0; i < samples2D.length; ++i) {
+            samples2D[i] = Sampling.StratifiedSample2D(samples2D[i], xPixelSamples, yPixelSamples, rng, jitterSamples);
+            samples2D[i] = Sampling.Shuffle(samples2D[i], 0, xPixelSamples * yPixelSamples, 1, rng);
         }
 
         // Generate arrays of stratified samples for the pixel
@@ -41,7 +41,7 @@ public class StratifiedSampler extends PixelSampler {
             for (int j = 0; j < samplesPerPixel; ++j) {
                 int count = samples1DArraySizes.get(i);
                 sampleArray1D.set(i, Sampling.StratifiedSample1D(sampleArray1D.get(i), j * count, (j+1)*count, rng, jitterSamples));
-                sampleArray1D.set(i, Sampling.Shuffle(sampleArray1D.get(i), j * count, (j+1)*count, 1, rng));
+                sampleArray1D.set(i, Sampling.ShuffleF(sampleArray1D.get(i), j * count, (j+1)*count, 1, rng));
             }
         }
         for (int i = 0; i < samples2DArraySizes.size(); ++i) {

@@ -26,7 +26,7 @@ public class RayDifferential extends Ray {
         this.hasDifferentials = false;
     }
 
-    public RayDifferential(Point3f o, Vector3f d, Float tMax, float time, Medium medium) {
+    public RayDifferential(Point3f o, Vector3f d, float tMax, float time, Medium medium) {
         super(o, d, tMax, time, medium);
         this.hasDifferentials = false;
     }

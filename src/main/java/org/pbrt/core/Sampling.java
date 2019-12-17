@@ -11,7 +11,7 @@ package org.pbrt.core;
 
 public class Sampling {
 
-    public static Float[] StratifiedSample1D(Float[] samp, int firstIndex, int endIndex, RNG rng, boolean jitter) {
+    public static float[] StratifiedSample1D(float[] samp, int firstIndex, int endIndex, RNG rng, boolean jitter) {
         int nsamples = endIndex-firstIndex;
         float invNSamples = 1 / (float)nsamples;
         for (int i = firstIndex; i < endIndex; ++i) {
@@ -21,11 +21,11 @@ public class Sampling {
         return samp;
     }
 
-    public static Float[] StratifiedSample1D(Float[] samp, int nsamples, RNG rng, boolean jitter) {
+    public static float[] StratifiedSample1D(float[] samp, int nsamples, RNG rng, boolean jitter) {
         return StratifiedSample1D(samp, 0, nsamples, rng, jitter);
     }
 
-    public static Float[] StratifiedSample1D(Float[] samp, int nsamples, RNG rng) {
+    public static float[] StratifiedSample1D(float[] samp, int nsamples, RNG rng) {
         return StratifiedSample1D(samp, nsamples, rng, true);
     }
 
@@ -48,7 +48,7 @@ public class Sampling {
         return StratifiedSample2D(samp, nx, ny, rng, true);
     }
 
-    public static Float[] LatinHypercube(Float[] samples, int startIndex, int endIndex, RNG rng) {
+    public static float[] LatinHypercube(float[] samples, int startIndex, int endIndex, RNG rng) {
         // Generate LHS samples along diagonal
         int nSamples = endIndex - startIndex;
         float invNSamples = 1 / (float)nSamples;
@@ -67,7 +67,7 @@ public class Sampling {
         return samples;
     }
 
-    public static Float[] LatinHypercube(Float[] samples, int nSamples, RNG rng) {
+    public static float[] LatinHypercube(float[] samples, int nSamples, RNG rng) {
         return LatinHypercube(samples, 0, nSamples, rng);
     }
 
@@ -106,20 +106,20 @@ public class Sampling {
     }
 
     public static Vector3f UniformSampleHemisphere(Point2f u) {
-        float z = u.x;
-        float r = (float)Math.sqrt(Math.max(0, 1 - z * z));
-        float phi = 2 * Pbrt.Pi * u.y;
-        return new Vector3f(r * (float)Math.cos(phi), r * (float)Math.sin(phi), z);
+        final var z = u.x;
+        final var r = Math.sqrt(Math.max(0, 1 - z * z));
+        final var phi = 2 * Math.PI * u.y;
+        return new Vector3f((float)(r * Math.cos(phi)), (float)(r * Math.sin(phi)), z);
     }
     public static float UniformHemispherePdf() {
         return Pbrt.Inv2Pi;
     }
 
     public static Vector3f UniformSampleSphere(Point2f u) {
-        float z = 1 - 2 * u.x;
-        float r = (float)Math.sqrt(Math.max(0, 1 - z * z));
-        float phi = 2 * Pbrt.Pi * u.y;
-        return new Vector3f(r * (float)Math.cos(phi), r * (float)Math.sin(phi), z);
+        final var z = 1 - 2 * u.x;
+        final var r = Math.sqrt(Math.max(0, 1 - z * z));
+        final var phi = 2 * Math.PI * u.y;
+        return new Vector3f((float)(r * Math.cos(phi)), (float)(r * Math.sin(phi)), z);
     }
     public static float UniformSpherePdf() {
         return Pbrt.Inv4Pi;
@@ -176,6 +176,19 @@ public class Sampling {
             int other = i + rng.UniformInt32(count - (i - startIndex));
             for (int j = 0; j < nDimensions; ++j) {
                 T temp = samp[nDimensions * i + j];
+                samp[nDimensions * i + j] = samp[nDimensions * other + j];
+                samp[nDimensions * other + j] = temp;
+            }
+        }
+        return samp;
+    }
+
+    public static float[] ShuffleF(float[] samp, int startIndex, int endIndex, int nDimensions, RNG rng) {
+        int count = endIndex-startIndex;
+        for (int i = startIndex; i < endIndex; ++i) {
+            int other = i + rng.UniformInt32(count - (i - startIndex));
+            for (int j = 0; j < nDimensions; ++j) {
+                final var temp = samp[nDimensions * i + j];
                 samp[nDimensions * i + j] = samp[nDimensions * other + j];
                 samp[nDimensions * other + j] = temp;
             }

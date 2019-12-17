@@ -36,7 +36,7 @@ public class MaxMinDistSampler extends PixelSampler {
         CPixel = LowDiscrepancy.CMaxMinDist[Cindex];
     }
     public MaxMinDistSampler(MaxMinDistSampler mms) {
-        this(mms.samplesPerPixel, mms.samples1D.size());
+        this(mms.samplesPerPixel, mms.samples1D.length);
     }
 
     @Override
@@ -50,13 +50,13 @@ public class MaxMinDistSampler extends PixelSampler {
     public void StartPixel(Point2i p) {
         float invSPP = 1.0f / samplesPerPixel;
         for (int i = 0; i < samplesPerPixel; ++i)
-            samples2D.get(0)[i] = new Point2f(i * invSPP, LowDiscrepancy.SampleGeneratorMatrix(CPixel, i, 0));
-        Sampling.Shuffle(samples2D.get(0), 0, samplesPerPixel, 1, rng);
+            samples2D[0][i] = new Point2f(i * invSPP, LowDiscrepancy.SampleGeneratorMatrix(CPixel, i, 0));
+        Sampling.Shuffle(samples2D[0], 0, samplesPerPixel, 1, rng);
         // Generate remaining samples for _MaxMinDistSampler_
-        for (Float[] aSamples1D : samples1D) LowDiscrepancy.VanDerCorput(1, samplesPerPixel, aSamples1D, rng);
+        for (float[] aSamples1D : samples1D) LowDiscrepancy.VanDerCorput(1, samplesPerPixel, aSamples1D, rng);
 
-        for (int i = 1; i < samples2D.size(); ++i)
-            LowDiscrepancy.Sobol2D(1, samplesPerPixel, samples2D.get(i), rng);
+        for (int i = 1; i < samples2D.length; ++i)
+            LowDiscrepancy.Sobol2D(1, samplesPerPixel, samples2D[i], rng);
 
         for (int i = 0; i < samples1DArraySizes.size(); ++i) {
             int count = samples1DArraySizes.get(i);

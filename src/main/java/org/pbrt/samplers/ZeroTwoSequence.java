@@ -22,15 +22,15 @@ public class ZeroTwoSequence extends PixelSampler {
     }
 
     public ZeroTwoSequence(ZeroTwoSequence sampler) {
-        this(sampler.samplesPerPixel, sampler.samples1D.size());
+        this(sampler.samplesPerPixel, sampler.samples1D.length);
     }
 
     public void StartPixel(Point2i p) {
         // Generate 1D and 2D pixel sample components using $(0,2)$-sequence
-        for (int i = 0; i < samples1D.size(); ++i)
-            samples1D.set(i, LowDiscrepancy.VanDerCorput(1, samplesPerPixel, samples1D.get(i), rng));
-        for (int i = 0; i < samples2D.size(); ++i)
-            samples2D.set(i, LowDiscrepancy.Sobol2D(1, samplesPerPixel, samples2D.get(i), rng));
+        for (int i = 0; i < samples1D.length; ++i)
+            samples1D[i] = LowDiscrepancy.VanDerCorput(1, samplesPerPixel, samples1D[i], rng);
+        for (int i = 0; i < samples2D.length; ++i)
+            samples2D[i] = LowDiscrepancy.Sobol2D(1, samplesPerPixel, samples2D[i], rng);
 
         // Generate 1D and 2D array samples using $(0,2)$-sequence
         for (int i = 0; i < samples1DArraySizes.size(); ++i)

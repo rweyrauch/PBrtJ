@@ -10,26 +10,24 @@
 
 package org.pbrt.core;
 
-import java.util.ArrayList;
-
 public class PixelSampler extends Sampler {
 
     // PixelSampler Protected Data
-    protected ArrayList<Float[]> samples1D = new ArrayList<>();
-    protected ArrayList<Point2f[]> samples2D = new ArrayList<>();
+    protected float[][] samples1D;
+    protected Point2f[][] samples2D;
     protected int current1DDimension = 0, current2DDimension = 0;
     protected RNG rng = new RNG();
 
     public PixelSampler(int samplesPerPixel, int nSampledDimensions) {
         super(samplesPerPixel);
+        samples1D = new float[nSampledDimensions][samplesPerPixel];
+        samples2D = new Point2f[nSampledDimensions][samplesPerPixel];
         for (int i = 0; i < nSampledDimensions; ++i) {
-            samples1D.add(new Float[samplesPerPixel]);
-            Point2f[] pnts = new Point2f[samplesPerPixel];
-            for (int j = 0; j < samplesPerPixel; j++)
-                pnts[j] = new Point2f();
-            samples2D.add(pnts);
+            for (int j = 0; j < samplesPerPixel; j++) {
+                samples1D[i][j] = 0.0f;
+                samples2D[i][j] = new Point2f();
+            }
         }
-
     }
 
     public boolean StartNextSample() {
@@ -45,8 +43,8 @@ public class PixelSampler extends Sampler {
     @Override
     public float Get1D() {
         assert (currentPixelSampleIndex < samplesPerPixel);
-        if (current1DDimension < samples1D.size())
-            return samples1D.get(current1DDimension++)[currentPixelSampleIndex];
+        if (current1DDimension < samples1D.length)
+            return samples1D[current1DDimension++][currentPixelSampleIndex];
         else
             return rng.UniformFloat();
     }
@@ -54,14 +52,14 @@ public class PixelSampler extends Sampler {
     @Override
     public Point2f Get2D() {
         assert (currentPixelSampleIndex < samplesPerPixel);
-        if (current2DDimension < samples2D.size())
-            return samples2D.get(current2DDimension++)[currentPixelSampleIndex];
+        if (current2DDimension < samples2D.length)
+            return samples2D[current2DDimension++][currentPixelSampleIndex];
         else
             return new Point2f(rng.UniformFloat(), rng.UniformFloat());
     }
 
     @Override
     public Sampler Clone(int seed) {
-        return null;
+        return new PixelSampler(this.samples1D[0].length, this.samples1D.length);
     }
 }

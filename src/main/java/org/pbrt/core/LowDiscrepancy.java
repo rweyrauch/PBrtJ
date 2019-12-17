@@ -2205,7 +2205,7 @@ public class LowDiscrepancy {
 
     public static int GrayCode(int v) { return (v >>> 1) ^ v; }
 
-    public static Float[] GrayCodeSample(int[] C, int n, int scramble, Float[] p) {
+    public static float[] GrayCodeSample(int[] C, int n, int scramble, float[] p) {
         int v = scramble;
         for (int i = 0; i < n; ++i) {
             p[i] = Math.min(v * 0x1p-32f /* 1/2^32 */, Pbrt.OneMinusEpsilon);
@@ -2225,7 +2225,7 @@ public class LowDiscrepancy {
         return p;
     }
 
-    public static Float[] VanDerCorput(int nSamplesPerPixelSample, int nPixelSamples, Float[] samples, RNG rng) {
+    public static float[] VanDerCorput(int nSamplesPerPixelSample, int nPixelSamples, float[] samples, RNG rng) {
         int scramble = rng.UniformInt32();
         // Define _CVanDerCorput_ Generator Matrix
         final int[] CVanDerCorput = {
@@ -2267,8 +2267,8 @@ public class LowDiscrepancy {
         GrayCodeSample(CVanDerCorput, totalSamples, scramble, samples);
         // Randomly shuffle 1D sample points
         for (int i = 0; i < nPixelSamples; ++i)
-            samples = Sampling.Shuffle(samples, i * nSamplesPerPixelSample, (i+1)*nSamplesPerPixelSample, 1, rng);
-        samples = Sampling.Shuffle(samples, 0, nPixelSamples, nSamplesPerPixelSample, rng);
+            samples = Sampling.ShuffleF(samples, i * nSamplesPerPixelSample, (i+1)*nSamplesPerPixelSample, 1, rng);
+        samples = Sampling.ShuffleF(samples, 0, nPixelSamples, nSamplesPerPixelSample, rng);
         return samples;
     }
 

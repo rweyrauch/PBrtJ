@@ -186,7 +186,7 @@ public class RealisticCamera extends Camera {
 
             // Test intersection point against element aperture
             Point3f pHit = rLens.at(t);
-            Float r2 = pHit.x * pHit.x + pHit.y * pHit.y;
+            float r2 = pHit.x * pHit.x + pHit.y * pHit.y;
             if (r2 > element.apertureRadius * element.apertureRadius) return null;
             rLens.o = pHit;
 
@@ -212,9 +212,9 @@ public class RealisticCamera extends Camera {
     private static InterResult IntersectSphericalElement(float radius, float zCenter, Ray ray) {
         // Compute _t0_ and _t1_ for ray--element intersection
         Point3f o = ray.o.subtract(new Vector3f(0, 0, zCenter));
-        Float A = ray.d.x * ray.d.x + ray.d.y * ray.d.y + ray.d.z * ray.d.z;
-        Float B = 2 * (ray.d.x * o.x + ray.d.y * o.y + ray.d.z * o.z);
-        Float C = o.x * o.x + o.y * o.y + o.z * o.z - radius * radius;
+        float A = ray.d.x * ray.d.x + ray.d.y * ray.d.y + ray.d.z * ray.d.z;
+        float B = 2 * (ray.d.x * o.x + ray.d.y * o.y + ray.d.z * o.z);
+        float C = o.x * o.x + o.y * o.y + o.z * o.z - radius * radius;
         Pbrt.QuadRes res = Pbrt.Quadratic(A, B, C);
         if (res == null) return null;
 
@@ -655,7 +655,7 @@ public class RealisticCamera extends Camera {
     }
 
     private void TestExitPupilBounds() {
-        Float filmDiagonal = film.diagonal;
+        float filmDiagonal = film.diagonal;
 
         RNG rng = new RNG();
 

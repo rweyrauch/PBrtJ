@@ -97,33 +97,30 @@ public class BeckmannDistribution extends MicrofacetDistribution {
         Vector3f wiStretched = Vector3f.Normalize(new Vector3f(alpha_x * wi.x, alpha_y * wi.y, wi.z));
 
         // 2. simulate P22_{wi}(x_slope, y_slope, 1, 1)
-        Float slope_x = 0.0f, slope_y = 0.0f;
-        BeckmannSample11(Reflection.CosTheta(wiStretched), U1, U2, slope_x, slope_y);
+        Point2f slope = BeckmannSample11(Reflection.CosTheta(wiStretched), U1, U2);
 
         // 3. rotate
-        float tmp = Reflection.CosPhi(wiStretched) * slope_x - Reflection.SinPhi(wiStretched) * slope_y;
-        slope_y = Reflection.SinPhi(wiStretched) * slope_x + Reflection.CosPhi(wiStretched) * slope_y;
-        slope_x = tmp;
+        float tmp = Reflection.CosPhi(wiStretched) * slope.x - Reflection.SinPhi(wiStretched) * slope.y;
+        slope.y = Reflection.SinPhi(wiStretched) * slope.x + Reflection.CosPhi(wiStretched) * slope.y;
+        slope.x = tmp;
 
         // 4. unstretch
-        slope_x = alpha_x * slope_x;
-        slope_y = alpha_y * slope_y;
+        slope.x = alpha_x * slope.x;
+        slope.y = alpha_y * slope.y;
 
         // 5. compute normal
-        return Vector3f.Normalize(new Vector3f(-slope_x, -slope_y, 1.f));
+        return Vector3f.Normalize(new Vector3f(-slope.x, -slope.y, 1.f));
     }
 
     private static final float SQRT_PI_INV = 1.f / (float)Math.sqrt(Math.PI);
 
-    private static void BeckmannSample11(float cosThetaI, float U1, float U2, Float slope_x, Float slope_y) {
+    private static Point2f BeckmannSample11(float cosThetaI, float U1, float U2) {
         /* Special case (normal incidence) */
         if (cosThetaI > .9999f) {
             float r = (float)Math.sqrt(-(float)Math.log(1.0f - U1));
             float sinPhi = (float)Math.sin(2 * (float)Math.PI * U2);
             float cosPhi = (float)Math.cos(2 * (float)Math.PI * U2);
-            slope_x = r * cosPhi;
-            slope_y = r * sinPhi;
-            return;
+            return new Point2f(r * cosPhi, r * sinPhi);
         }
 
         /* The original inversion routine from the paper contained
@@ -176,15 +173,17 @@ public class BeckmannDistribution extends MicrofacetDistribution {
         }
 
         /* Now convert back into a slope value */
-        slope_x = Pbrt.ErfInv(b);
+        final float slope_x = Pbrt.ErfInv(b);
 
         /* Simulate Y component */
-        slope_y = Pbrt.ErfInv(2.0f * Math.max(U2, 1e-6f) - 1.0f);
+        final float slope_y = Pbrt.ErfInv(2.0f * Math.max(U2, 1e-6f) - 1.0f);
 
         assert(!Float.isInfinite(slope_x));
         assert(!Float.isNaN(slope_x));
         assert(!Float.isInfinite(slope_y));
         assert(!Float.isNaN(slope_y));
+
+        return new Point2f(slope_x, slope_y);
     }
 
     private final float alphax, alphay;

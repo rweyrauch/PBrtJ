@@ -10,6 +10,7 @@
 
 package org.pbrt.core;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ public abstract class Sampler {
     protected int currentPixelSampleIndex;
     protected ArrayList<Integer> samples1DArraySizes = new ArrayList<>();
     protected ArrayList<Integer> samples2DArraySizes = new ArrayList<>();
-    protected ArrayList<Float[]> sampleArray1D = new ArrayList<>();
+    protected ArrayList<float[]> sampleArray1D = new ArrayList<>();
     protected ArrayList<Point2f[]> sampleArray2D = new ArrayList<>();
 
     // Sampler Private Data
@@ -53,7 +54,7 @@ public abstract class Sampler {
     public void Request1DArray(int n) {
         assert (RoundCount(n) == n);
         samples1DArraySizes.add(n);
-        sampleArray1D.add(new Float[n * samplesPerPixel]);
+        sampleArray1D.add(new float[n * samplesPerPixel]);
     }
     public void Request2DArray(int n) {
         assert (RoundCount(n) == n);
@@ -62,11 +63,11 @@ public abstract class Sampler {
     }
     public int RoundCount(int n) { return n; }
 
-    Float[] Get1DArray(int n) {
+    float[] Get1DArray(int n) {
         if (array1DOffset == sampleArray1D.size()) return null;
         assert (samples1DArraySizes.get(array1DOffset) == n);
         assert (currentPixelSampleIndex < samplesPerPixel);
-        Float[] samples = sampleArray1D.get(array1DOffset++);
+        float[] samples = sampleArray1D.get(array1DOffset++);
         int startIndex = currentPixelSampleIndex * n;
         int endIndex = (currentPixelSampleIndex + 1) * n;
         return Arrays.copyOfRange(samples, startIndex, endIndex);

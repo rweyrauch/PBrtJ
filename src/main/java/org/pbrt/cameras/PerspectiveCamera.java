@@ -236,7 +236,7 @@ public class PerspectiveCamera extends ProjectiveCamera {
             } else
                 PBrtTLogger.Error("\"screenwindow\" should have four values");
         }
-        Float fov = paramSet.FindOneFloat("fov", 90);
+        float fov = paramSet.FindOneFloat("fov", 90);
         float halffov = paramSet.FindOneFloat("halffov", -1);
         if (halffov > 0) {
             // hack for structure synth, which exports half of the full fov

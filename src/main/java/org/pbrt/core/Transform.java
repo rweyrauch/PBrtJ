@@ -115,8 +115,8 @@ public class Transform {
         Point3f o = xform(r.o);
         Vector3f d = xform(r.d);
         // Offset ray origin to edge of error bounds and compute _tMax_
-        Float lengthSquared = d.LengthSquared();
-        Float tMax = r.tMax;
+        float lengthSquared = d.LengthSquared();
+        float tMax = r.tMax;
         if (lengthSquared > 0) {
             float dt = Vector3f.Dot(Vector3f.Abs(d), oError) / lengthSquared;
             o.increment(d.scale(dt));

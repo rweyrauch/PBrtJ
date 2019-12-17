@@ -127,7 +127,7 @@ public class SamplingTest {
         // Identity matrix, column-wise
         for (int i = 0; i < 32; ++i) C[i] = 1 << i;
 
-        Float[] v = new Float[64];
+        float[] v = new float[64];
         for (int i = 0; i < v.length; i++) v[i] = 0.0f;
 
         v = LowDiscrepancy.GrayCodeSample(C, v.length, 0, v);
