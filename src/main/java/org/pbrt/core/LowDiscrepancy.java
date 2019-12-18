@@ -2118,16 +2118,16 @@ public class LowDiscrepancy {
         return index;
     }
 
-    public static long MultiplyGenerator(int[] C, int a) {
+    public static int MultiplyGenerator(int[] C, int a) {
         int v = 0;
         for (int i = 0; a != 0; ++i, a >>>= 1)
             if ((a & 1) != 0) v ^= C[i];
-        return Integer.toUnsignedLong(v);
+        return v;
     }
 
-    public static float SampleGeneratorMatrix(int[] C, int a, long scramble) {
-        final long tmp = (MultiplyGenerator(C, a) ^ scramble);
-        return Math.min(tmp * 0x1p-32f, Pbrt.OneMinusEpsilon);
+    public static float SampleGeneratorMatrix(int[] C, int a, int scramble) {
+        final int mgs = MultiplyGenerator(C, a) ^ scramble;
+        return Math.min(Integer.toUnsignedLong(mgs) * 0x1p-32f, Pbrt.OneMinusEpsilon);
     }
 
     public static Short[] ComputeRadicalInversePermutations(RNG rng) {
@@ -2146,8 +2146,8 @@ public class LowDiscrepancy {
     }
 
     public static Point2f[] Sobol2D(int nSamplesPerPixelSample, int nPixelSamples, Point2f[] samples, RNG rng) {
-        final long scrambleX = rng.UniformUInt32();
-        final long scrambleY = rng.UniformUInt32();
+        final int scrambleX = rng.UniformUInt32();
+        final int scrambleY = rng.UniformUInt32();
 
         // Define 2D Sobol$'$ generator matrices _CSobol[2]_
         final int[][] CSobol = {
@@ -2191,10 +2191,11 @@ public class LowDiscrepancy {
     }
     public static float SobolSampleFloat(long a, int dimension, int scramble) {
         assert (dimension < SobolMatrices.NumSobolDimensions); // "Integrator has consumed too many Sobol' dimensions; you may want to use a Sampler without a dimension limit like \"02sequence.\"";
-        long v = scramble;
+        int v = scramble;
         for (int i = dimension * SobolMatrices.SobolMatrixSize; a != 0; a >>>= 1, i++)
             if ((a & 1) != 0) v ^= SobolMatrices.SobolMatrices32[i];
-        return Math.min(v * 0x1p-32f /* 1/2^32 */, RNG.FloatOneMinusEpsilon);
+        final long vl = Integer.toUnsignedLong(v);    
+        return Math.min(Integer.toUnsignedLong(v) * 0x1p-32f /* 1/2^32 */, RNG.FloatOneMinusEpsilon);
     }
     public static double SobolSampleDouble(long a, int dimension, int scramble) {
         assert (dimension < SobolMatrices.NumSobolDimensions); // "Integrator has consumed too many Sobol' dimensions; you may want to use a Sampler without a dimension limit like \"02sequence.\"";
@@ -2204,22 +2205,22 @@ public class LowDiscrepancy {
         return Math.min(result * (1.0 / (1L << SobolMatrices.SobolMatrixSize)), RNG.DoubleOneMinusEpsilon);
     }
 
-    public static int GrayCode(long v) { return (int)((v >>> 1) ^ v); }
+    public static int GrayCode(int v) { return (int)((v >>> 1) ^ v); }
 
-    public static float[] GrayCodeSample(int[] C, int n, long scramble, float[] p) {
-        long v = scramble;
+    public static float[] GrayCodeSample(int[] C, int n, int scramble, float[] p) {
+        var v = scramble;
         for (int i = 0; i < n; ++i) {
-            p[i] = Math.min(v * 0x1p-32f /* 1/2^32 */, Pbrt.OneMinusEpsilon);
+            p[i] = Math.min(Integer.toUnsignedLong(v) * 0x1p-32f /* 1/2^32 */, Pbrt.OneMinusEpsilon);
             v ^= C[Integer.numberOfTrailingZeros(i + 1)];
         }
         return p;
     }
 
-    public static Point2f[] GrayCodeSample(int[] C0, int[] C1, int n, long scrambleX, long scrambleY, Point2f[] p) {
-        long[] v = {scrambleX, scrambleY};
+    public static Point2f[] GrayCodeSample(int[] C0, int[] C1, int n, int scrambleX, int scrambleY, Point2f[] p) {
+        int[] v = {scrambleX, scrambleY};
         for (int i = 0; i < n; ++i) {
-            p[i].x = Math.min(v[0] * 0x1p-32f, Pbrt.OneMinusEpsilon);
-            p[i].y = Math.min(v[1] * 0x1p-32f, Pbrt.OneMinusEpsilon);
+            p[i].x = Math.min(Integer.toUnsignedLong(v[0]) * 0x1p-32f, Pbrt.OneMinusEpsilon);
+            p[i].y = Math.min(Integer.toUnsignedLong(v[1]) * 0x1p-32f, Pbrt.OneMinusEpsilon);
             v[0] ^= C0[Integer.numberOfTrailingZeros(i + 1)];
             v[1] ^= C1[Integer.numberOfTrailingZeros(i + 1)];
         }
@@ -2227,7 +2228,7 @@ public class LowDiscrepancy {
     }
 
     public static float[] VanDerCorput(int nSamplesPerPixelSample, int nPixelSamples, float[] samples, RNG rng) {
-        long scramble = rng.UniformUInt32();
+        int scramble = rng.UniformUInt32();
         // Define _CVanDerCorput_ Generator Matrix
         final int[] CVanDerCorput = {
             0b10000000000000000000000000000000,

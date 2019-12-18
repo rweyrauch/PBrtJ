@@ -27,14 +27,14 @@ public class EFloatTest {
 
         // Choose a random error bound.
         float err = 0;
-        switch ((int)rng.UniformUInt32(4)) {
+        switch (rng.UniformUInt32(4)) {
             case 0:
                 // no error
                 break;
             case 1:
                 {
                     // small typical/reasonable error
-                    int ulpError = (int)rng.UniformUInt32(1024);
+                    int ulpError = rng.UniformUInt32(1024);
                     float offset = Float.intBitsToFloat(Float.floatToIntBits(val) + ulpError);
                     err = Math.abs(offset - val);
                 }
@@ -42,7 +42,7 @@ public class EFloatTest {
             case 2:
                 {
                     // bigger ~reasonable error
-                    int ulpError = (int)rng.UniformUInt32(1024 * 1024);
+                    int ulpError = rng.UniformUInt32(1024 * 1024);
                     float offset = Float.intBitsToFloat(Float.floatToIntBits(val) + ulpError);
                     err = Math.abs(offset - val);
                 }
@@ -57,7 +57,7 @@ public class EFloatTest {
     // Given an EFloat covering some range, choose a double-precision "precise"
     // value that is in the EFloat's range.
     static double getPrecise(EFloat ef, RNG rng) {
-        switch ((int)rng.UniformUInt32(3)) {
+        switch (rng.UniformUInt32(3)) {
             // 2/3 of the time, pick a value that is right at the end of the range;
             // this is a maximally difficult / adversarial choice, so should help
             // ferret out any bugs.

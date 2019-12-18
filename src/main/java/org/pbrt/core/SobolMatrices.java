@@ -23,17 +23,22 @@ public final class SobolMatrices {
 
     static {
         try {
-            var dis = new DataInputStream(new FileInputStream("sobel32.dat"));
+            var fis = new FileInputStream("sobel32.dat");
+            byte[] buf = new byte[4];
             for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
-                SobolMatrices32[i] = dis.readInt();
+                fis.read(buf);    
+                SobolMatrices32[i] = (buf[0]) | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
             }
-            dis.close();
+            fis.close();
 
-            dis = new DataInputStream(new FileInputStream("sobel64.dat"));
+            byte[] buf64 = new byte[8];
+            fis = new FileInputStream("sobel64.dat");
             for (int i = 0; i < NumSobolDimensions * SobolMatrixSize; i++) {
-                SobolMatrices64[i] = dis.readLong();
+                fis.read(buf64);
+                SobolMatrices64[i] = ((long)buf64[0]) | ((long)buf64[1] << 8) | ((long)buf64[2] << 16) | ((long)buf64[3] << 24) |
+                        ((long)buf64[4] << 32) | ((long)buf64[5] << 40) | ((long)buf64[6] << 48) | ((long)buf64[7] << 56);
             }
-            dis.close();
+            fis.close();
         }
         catch (IOException e) {
         }

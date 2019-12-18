@@ -49,9 +49,9 @@ public class PbrtTest {
     }
 
     float GetFloat(RNG rng) {
-        float f = Float.intBitsToFloat((int)rng.UniformUInt32());
+        float f = Float.intBitsToFloat(rng.UniformUInt32());
         while (Float.isNaN(f)) {
-            f = Float.intBitsToFloat((int)rng.UniformUInt32());
+            f = Float.intBitsToFloat(rng.UniformUInt32());
         }
         return f;
     }
@@ -111,7 +111,7 @@ public class PbrtTest {
     public void testFloatBits() {
         RNG rng = new RNG(1);
         for (int i = 0; i < 100000; ++i) {
-            int ui = (int)rng.UniformUInt32();
+            int ui = rng.UniformUInt32();
             float f = Float.intBitsToFloat(ui);
             if (Float.isNaN(f)) continue;
 
