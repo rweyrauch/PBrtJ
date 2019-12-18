@@ -15,7 +15,7 @@ import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
-public class BilerpTextureFloat extends Texture<Float> {
+public class BilerpTextureFloat extends TextureFloat {
 
     public BilerpTextureFloat(TextureMapping2D mapping, float v00, float v01, float v10, float v11) {
         this.mapping = mapping;
@@ -26,14 +26,14 @@ public class BilerpTextureFloat extends Texture<Float> {
     }
 
     @Override
-    public Float Evaluate(SurfaceInteraction si) {
+    public float Evaluate(SurfaceInteraction si) {
         TextureMapping2D.MapPoint point = mapping.Map(si);
         Point2f st = point.st;
         return (1 - st.x) * (1 - st.y) * v00 + (1 - st.x) * (st.y) * v01 +
                 (st.x) * (1 - st.y) * v10 + (st.x) * (st.y) * v11;
     }
 
-    public static Texture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
+    public static TextureFloat CreateFloat(Transform tex2world, TextureParams tp) {
         // Initialize 2D texture mapping _map_ from _tp_
         TextureMapping2D map;
         String type = tp.FindString("mapping", "uv");

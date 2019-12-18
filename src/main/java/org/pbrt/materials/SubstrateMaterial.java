@@ -15,18 +15,18 @@ import org.pbrt.core.*;
 public class SubstrateMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> Kd = mp.GetSpectrumTexture("Kd", new Spectrum(.5f));
-        Texture<Spectrum> Ks = mp.GetSpectrumTexture("Ks", new Spectrum(.5f));
-        Texture<Float> uroughness = mp.GetFloatTexture("uroughness", .1f);
-        Texture<Float> vroughness = mp.GetFloatTexture("vroughness", .1f);
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum Kd = mp.GetSpectrumTexture("Kd", new Spectrum(.5f));
+        TextureSpectrum Ks = mp.GetSpectrumTexture("Ks", new Spectrum(.5f));
+        TextureFloat uroughness = mp.GetFloatTexture("uroughness", .1f);
+        TextureFloat vroughness = mp.GetFloatTexture("vroughness", .1f);
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         boolean remapRoughness = mp.FindBool("remaproughness", true);
         return new SubstrateMaterial(Kd, Ks, uroughness, vroughness, bumpMap, remapRoughness);
     }
 
-    public SubstrateMaterial(Texture<Spectrum> Kd, Texture<Spectrum> Ks,
-                      Texture<Float> nu, Texture<Float> nv,
-                      Texture<Float> bumpMap, boolean remapRoughness) {
+    public SubstrateMaterial(TextureSpectrum Kd, TextureSpectrum Ks,
+                      TextureFloat nu, TextureFloat nv,
+                      TextureFloat bumpMap, boolean remapRoughness) {
         this.Kd = Kd;
         this.Ks = Ks;
         this.nu = nu;
@@ -55,9 +55,9 @@ public class SubstrateMaterial extends Material {
         }
     }
 
-    private Texture<Spectrum> Kd, Ks;
-    private Texture<Float> nu, nv;
-    private Texture<Float> bumpMap;
+    private TextureSpectrum Kd, Ks;
+    private TextureFloat nu, nv;
+    private TextureFloat bumpMap;
     private boolean remapRoughness;
 
 }

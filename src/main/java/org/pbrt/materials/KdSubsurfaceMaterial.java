@@ -19,13 +19,13 @@ public class KdSubsurfaceMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
         float[] Kd = {.5f, .5f, .5f};
-        Texture<Spectrum> kd = mp.GetSpectrumTexture("Kd", Spectrum.FromRGB(Kd));
-        Texture<Spectrum> mfp = mp.GetSpectrumTexture("mfp", new Spectrum(1));
-        Texture<Spectrum> kr = mp.GetSpectrumTexture("Kr", new Spectrum(1));
-        Texture<Spectrum> kt = mp.GetSpectrumTexture("Kt", new Spectrum(1));
-        Texture<Float> roughu = mp.GetFloatTexture("uroughness", 0);
-        Texture<Float> roughv = mp.GetFloatTexture("vroughness", 0);
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum kd = mp.GetSpectrumTexture("Kd", Spectrum.FromRGB(Kd));
+        TextureSpectrum mfp = mp.GetSpectrumTexture("mfp", new Spectrum(1));
+        TextureSpectrum kr = mp.GetSpectrumTexture("Kr", new Spectrum(1));
+        TextureSpectrum kt = mp.GetSpectrumTexture("Kt", new Spectrum(1));
+        TextureFloat roughu = mp.GetFloatTexture("uroughness", 0);
+        TextureFloat roughv = mp.GetFloatTexture("vroughness", 0);
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         float eta = mp.FindFloat("eta", 1.33f);
         float scale = mp.FindFloat("scale", 1);
         float g = mp.FindFloat("g", 0.0f);
@@ -34,9 +34,9 @@ public class KdSubsurfaceMaterial extends Material {
                 roughv, bumpMap, remapRoughness);
     }
 
-    public KdSubsurfaceMaterial(float scale, Texture<Spectrum> Kd, Texture<Spectrum> Kr, Texture<Spectrum> Kt,
-                         Texture<Spectrum> mfp, float g, float eta,
-                         Texture<Float> uRoughness, Texture<Float> vRoughness, Texture<Float> bumpMap, boolean remapRoughness) {
+    public KdSubsurfaceMaterial(float scale, TextureSpectrum Kd, TextureSpectrum Kr, TextureSpectrum Kt,
+                         TextureSpectrum mfp, float g, float eta,
+                         TextureFloat uRoughness, TextureFloat vRoughness, TextureFloat bumpMap, boolean remapRoughness) {
         this.scale =scale;
         this.Kd = Kd;
         this.Kr = Kr;
@@ -98,9 +98,9 @@ public class KdSubsurfaceMaterial extends Material {
     }
 
     private float scale;
-    private Texture<Spectrum> Kd, Kr, Kt, mfp;
-    private Texture<Float> uRoughness, vRoughness;
-    private Texture<Float> bumpMap;
+    private TextureSpectrum Kd, Kr, Kt, mfp;
+    private TextureFloat uRoughness, vRoughness;
+    private TextureFloat bumpMap;
     private float eta;
     private boolean remapRoughness;
     private BSSRDF.BSSRDFTable table;

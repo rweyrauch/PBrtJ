@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 
-public class ImageTextureFloat extends Texture<Float> {
+public class ImageTextureFloat extends TextureFloat {
 
     public static ImageTextureFloat CreateFloat(Transform tex2world, TextureParams tp) {
         // Initialize 2D texture mapping _map_ from _tp_
@@ -65,7 +65,7 @@ public class ImageTextureFloat extends Texture<Float> {
     }
 
     @Override
-    public Float Evaluate(SurfaceInteraction si) {
+    public float Evaluate(SurfaceInteraction si) {
         TextureMapping2D.MapPoint point = mapping.Map(si);
         return mipmap.Lookup(point.st, point.dstdx, point.dstdy);
     }

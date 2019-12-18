@@ -12,7 +12,7 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class WrinkledTextureFloat extends Texture<Float> {
+public class WrinkledTextureFloat extends TextureFloat {
 
     public WrinkledTextureFloat(TextureMapping3D mapping, int octaves, float omega) {
         this.mapping = mapping;
@@ -21,12 +21,12 @@ public class WrinkledTextureFloat extends Texture<Float> {
     }
 
     @Override
-    public Float Evaluate(SurfaceInteraction si) {
+    public float Evaluate(SurfaceInteraction si) {
         TextureMapping3D.MapPoint point = mapping.Map(si);
-        return Turbulence(point.p, point.dpdx, point.dpdy, omega, octaves);
+        return Texture.Turbulence(point.p, point.dpdx, point.dpdy, omega, octaves);
     }
 
-    public static Texture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
+    public static TextureFloat CreateFloat(Transform tex2world, TextureParams tp) {
         // Initialize 3D texture mapping _map_ from _tp_
         TextureMapping3D map = new IdentityMapping3D(tex2world);
         return new WrinkledTextureFloat(map, tp.FindInt("octaves", 8),

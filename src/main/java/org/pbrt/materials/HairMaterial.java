@@ -12,15 +12,15 @@ package org.pbrt.materials;
 
 import org.pbrt.core.*;
 import org.pbrt.core.PBrtTLogger;
-import org.pbrt.textures.ConstantTexture;
+import org.pbrt.textures.ConstantTextureSpectrum;
 
 public class HairMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> sigma_a = mp.GetSpectrumTextureOrNull("sigma_a");
-        Texture<Spectrum> color = mp.GetSpectrumTextureOrNull("color");
-        Texture<Float> eumelanin = mp.GetFloatTextureOrNull("eumelanin");
-        Texture<Float> pheomelanin = mp.GetFloatTextureOrNull("pheomelanin");
+        TextureSpectrum sigma_a = mp.GetSpectrumTextureOrNull("sigma_a");
+        TextureSpectrum color = mp.GetSpectrumTextureOrNull("color");
+        TextureFloat eumelanin = mp.GetFloatTextureOrNull("eumelanin");
+        TextureFloat pheomelanin = mp.GetFloatTextureOrNull("pheomelanin");
         if (sigma_a != null) {
             if (color != null)
                 PBrtTLogger.Warning("Ignoring \"color\" parameter since \"sigma_a\" was provided.");
@@ -45,19 +45,19 @@ public class HairMaterial extends Material {
         }
         else {
             // Default: brown-ish hair.
-            sigma_a = new ConstantTexture<>(HairBSDF.SigmaAFromConcentration(1.3f, 0));
+            sigma_a = new ConstantTextureSpectrum(HairBSDF.SigmaAFromConcentration(1.3f, 0));
         }
 
-        Texture<Float> eta = mp.GetFloatTexture("eta", 1.55f);
-        Texture<Float> beta_m = mp.GetFloatTexture("beta_m", 0.3f);
-        Texture<Float> beta_n = mp.GetFloatTexture("beta_n", 0.3f);
-        Texture<Float> alpha = mp.GetFloatTexture("alpha", 2.f);
+        TextureFloat eta = mp.GetFloatTexture("eta", 1.55f);
+        TextureFloat beta_m = mp.GetFloatTexture("beta_m", 0.3f);
+        TextureFloat beta_n = mp.GetFloatTexture("beta_n", 0.3f);
+        TextureFloat alpha = mp.GetFloatTexture("alpha", 2.f);
 
         return new HairMaterial(sigma_a, color, eumelanin, pheomelanin, eta, beta_m, beta_n, alpha);
     }
 
-    public HairMaterial(Texture<Spectrum> sigma_a, Texture<Spectrum> color, Texture<Float> eumelanin, Texture<Float> pheomelanin, Texture<Float> eta,
-                        Texture<Float> beta_m, Texture<Float> beta_n, Texture<Float> alpha) {
+    public HairMaterial(TextureSpectrum sigma_a, TextureSpectrum color, TextureFloat eumelanin, TextureFloat pheomelanin, TextureFloat eta,
+                        TextureFloat beta_m, TextureFloat beta_n, TextureFloat alpha) {
         this.sigma_a = sigma_a;
         this.color = color;
         this.eumelanin = eumelanin;
@@ -95,8 +95,8 @@ public class HairMaterial extends Material {
         si.bsdf.Add(new HairBSDF(h, e, sig_a, bm, bn, a));
     }
 
-    private Texture<Spectrum> sigma_a, color;
-    private Texture<Float> eumelanin, pheomelanin, eta;
-    private Texture<Float> beta_m, beta_n, alpha;
+    private TextureSpectrum sigma_a, color;
+    private TextureFloat eumelanin, pheomelanin, eta;
+    private TextureFloat beta_m, beta_n, alpha;
 
 }

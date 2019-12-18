@@ -221,8 +221,8 @@ public class Api {
 
         // Graphics State
         public String currentInsideMedium = "", currentOutsideMedium = "";
-        public HashMap<String, Texture<Float>> floatTextures = new HashMap<>();
-        public HashMap<String, Texture<Spectrum>> spectrumTextures = new HashMap<>();
+        public HashMap<String, TextureFloat> floatTextures = new HashMap<>();
+        public HashMap<String, TextureSpectrum> spectrumTextures = new HashMap<>();
         public ParamSet materialParams = new ParamSet();
         public String material = "matte";
         public HashMap<String, Material> namedMaterials = new HashMap<>();
@@ -430,10 +430,10 @@ public class Api {
         return material;
     }
 
-    private static Texture<Float> MakeFloatTexture(String name, Transform tex2world, TextureParams tp) {
-        Texture<Float> tex = null;
+    private static TextureFloat MakeFloatTexture(String name, Transform tex2world, TextureParams tp) {
+        TextureFloat tex = null;
         if (Objects.equals(name, "constant"))
-            tex = ConstantTexture.CreateFloat(tex2world, tp);
+            tex = ConstantTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "scale"))
             tex = ScaleTextureFloat.CreateFloat(tex2world, tp);
         else if (Objects.equals(name, "mix"))
@@ -458,10 +458,10 @@ public class Api {
         return tex;
     }
 
-    private static Texture<Spectrum> MakeSpectrumTexture(String name, Transform tex2world, TextureParams tp) {
-        Texture<Spectrum> tex = null;
+    private static TextureSpectrum MakeSpectrumTexture(String name, Transform tex2world, TextureParams tp) {
+        TextureSpectrum tex = null;
         if (Objects.equals(name, "constant"))
-            tex = ConstantTexture.CreateSpectrum(tex2world, tp);
+            tex = ConstantTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "scale"))
             tex = ScaleTextureSpectrum.CreateSpectrum(tex2world, tp);
         else if (Objects.equals(name, "mix"))
@@ -981,14 +981,14 @@ public class Api {
                 PBrtTLogger.Warning("Texture \"%s\" being redefined", name);
             }
             WARN_IF_ANIMATED_TRANSFORM("Texture");
-            Texture<Float> ft = MakeFloatTexture(texname, curTransform.trans[0], tp);
+            TextureFloat ft = MakeFloatTexture(texname, curTransform.trans[0], tp);
             if (ft != null) graphicsState.floatTextures.put(name, ft);
         } else if (Objects.equals(type, "color") || Objects.equals(type, "spectrum")) {
             // Create _color_ texture and store in _spectrumTextures_
             if (graphicsState.spectrumTextures.containsKey(name))
                 PBrtTLogger.Warning("Texture \"%s\" being redefined", name);
             WARN_IF_ANIMATED_TRANSFORM("Texture");
-            Texture<Spectrum> st = MakeSpectrumTexture(texname, curTransform.trans[0], tp);
+            TextureSpectrum st = MakeSpectrumTexture(texname, curTransform.trans[0], tp);
             if (st != null) graphicsState.spectrumTextures.put(name, st);
         } else {
             PBrtTLogger.Error("Texture type \"%s\" unknown.", type);

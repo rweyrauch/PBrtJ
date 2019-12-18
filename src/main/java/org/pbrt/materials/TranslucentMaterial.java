@@ -15,22 +15,22 @@ import org.pbrt.core.*;
 public class TranslucentMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.25f));
-        Texture<Spectrum> Ks = mp.GetSpectrumTexture("Ks", new Spectrum(0.25f));
-        Texture<Spectrum> reflect = mp.GetSpectrumTexture("reflect", new Spectrum(0.5f));
-        Texture<Spectrum> transmit = mp.GetSpectrumTexture("transmit", new Spectrum(0.5f));
-        Texture<Float> roughness = mp.GetFloatTexture("roughness", .1f);
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.25f));
+        TextureSpectrum Ks = mp.GetSpectrumTexture("Ks", new Spectrum(0.25f));
+        TextureSpectrum reflect = mp.GetSpectrumTexture("reflect", new Spectrum(0.5f));
+        TextureSpectrum transmit = mp.GetSpectrumTexture("transmit", new Spectrum(0.5f));
+        TextureFloat roughness = mp.GetFloatTexture("roughness", .1f);
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         boolean remapRoughness = mp.FindBool("remaproughness", true);
         return new TranslucentMaterial(Kd, Ks, roughness, reflect, transmit, bumpMap, remapRoughness);
     }
 
-    public TranslucentMaterial(Texture<Spectrum> kd,
-                        Texture<Spectrum> ks,
-                        Texture<Float> rough,
-                        Texture<Spectrum> refl,
-                        Texture<Spectrum> trans,
-                        Texture<Float> bump,
+    public TranslucentMaterial(TextureSpectrum kd,
+                        TextureSpectrum ks,
+                        TextureFloat rough,
+                        TextureSpectrum refl,
+                        TextureSpectrum trans,
+                        TextureFloat bump,
                         boolean remap) {
         this.Kd = kd;
         this.Ks = ks;
@@ -74,9 +74,9 @@ public class TranslucentMaterial extends Material {
         }
     }
 
-    private Texture<Spectrum> Kd, Ks;
-    private Texture<Float> roughness;
-    private Texture<Spectrum> reflect, transmit;
-    private Texture<Float> bumpMap;
+    private TextureSpectrum Kd, Ks;
+    private TextureFloat roughness;
+    private TextureSpectrum reflect, transmit;
+    private TextureFloat bumpMap;
     private boolean remapRoughness;
 }

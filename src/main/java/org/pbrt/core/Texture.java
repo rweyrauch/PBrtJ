@@ -12,12 +12,10 @@ package org.pbrt.core;
 
 import java.util.Objects;
 
-public abstract class Texture<T> {
+public class Texture<T> {
 
     public enum ImageWrap { Repeat, Black, Clamp }
     public enum AAMethod { None, ClosedForm }
-
-    public abstract T Evaluate(SurfaceInteraction si);
 
     public static class TexInfo implements Comparable<TexInfo> {
         public TexInfo(String filename, boolean doTrilinear, float maxAniso, Texture.ImageWrap wrapMode, float scale, boolean gamma) {

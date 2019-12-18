@@ -12,7 +12,7 @@ package org.pbrt.shapes;
 
 import org.pbrt.core.*;
 import org.pbrt.core.PBrtTLogger;
-import org.pbrt.textures.ConstantTexture;
+import org.pbrt.textures.ConstantTextureFloat;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class Triangle extends Shape {
         this.v = new int[]{mesh.vertexIndices[3*triNumber], mesh.vertexIndices[3*triNumber+1], mesh.vertexIndices[3*triNumber+2]};
     }
 
-    public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet, Map<String, Texture<Float>> floatTextures) {
+    public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet, Map<String, TextureFloat> floatTextures) {
         Integer[] vi = paramSet.FindInt("indices");
         Point3f[] P = paramSet.FindPoint3f("P");
         Point2f[] uvs = paramSet.FindPoint2f("uv");
@@ -74,7 +74,7 @@ public class Triangle extends Shape {
                 return new ArrayList<>();
             }
         }
-        Texture<Float> alphaTex = null;
+        TextureFloat alphaTex = null;
         String alphaTexName = paramSet.FindTexture("alpha");
         if (!alphaTexName.isEmpty()) {
             if (floatTextures.containsKey(alphaTexName)) {
@@ -83,10 +83,10 @@ public class Triangle extends Shape {
                 PBrtTLogger.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
             }
         } else if (paramSet.FindOneFloat("alpha", 1) == 0) {
-            alphaTex = new ConstantTexture<>(0.0f);
+            alphaTex = new ConstantTextureFloat(0.0f);
         }
 
-        Texture<Float> shadowAlphaTex = null;
+        TextureFloat shadowAlphaTex = null;
         String shadowAlphaTexName = paramSet.FindTexture("shadowalpha");
         if (!shadowAlphaTexName.isEmpty()) {
             if (floatTextures.containsKey(shadowAlphaTexName)) {
@@ -95,7 +95,7 @@ public class Triangle extends Shape {
                 PBrtTLogger.Error("Couldn't find float texture \"%s\" for \"shadowalpha\" parameter", shadowAlphaTexName);
             }
         } else if (paramSet.FindOneFloat("shadowalpha", 1) == 0) {
-            shadowAlphaTex = new ConstantTexture<>(0.0f);
+            shadowAlphaTex = new ConstantTextureFloat(0.0f);
         }
 
         int[] vii = new int[vi.length];
@@ -107,7 +107,7 @@ public class Triangle extends Shape {
     public static ArrayList<Shape> CreateTriangleMesh(Transform o2w,  Transform w2o, boolean reverseOrientation,
                                                       int nTriangles, int[] vertexIndices, int nVertices, Point3f[] p,
                                                       Vector3f[] s, Normal3f[] n, Point2f[] uv,
-                                                      Texture<Float> alphaTexture, Texture<Float> shadowAlphaTexture) {
+                                                      TextureFloat alphaTexture, TextureFloat shadowAlphaTexture) {
         TriangleMesh mesh = new TriangleMesh(o2w, nTriangles, vertexIndices, nVertices, p, s, n, uv, alphaTexture, shadowAlphaTexture);
         ArrayList<Shape> tris = new ArrayList<>(nTriangles);
         for (int i = 0; i < nTriangles; ++i) {
@@ -583,7 +583,7 @@ public class Triangle extends Shape {
     public static class TriangleMesh {
 
         public TriangleMesh(Transform ObjectToWorld, int nTriangles, int[] vertexIndices, int nVertices, Point3f[] P,
-                     Vector3f[] S, Normal3f[] N, Point2f[] UV, Texture<Float> alphaMask, Texture<Float> shadowAlphaMask) {
+                     Vector3f[] S, Normal3f[] N, Point2f[] UV, TextureFloat alphaMask, TextureFloat shadowAlphaMask) {
             this.nTriangles = nTriangles;
             this.nVertices = nVertices;
             this.vertexIndices = vertexIndices;
@@ -621,7 +621,7 @@ public class Triangle extends Shape {
         public Normal3f[] n;
         public Vector3f[] s;
         public Point2f[] uv;
-        public Texture<Float> alphaMask, shadowAlphaMask;
+        public TextureFloat alphaMask, shadowAlphaMask;
     }
 
     private TriangleMesh mesh;

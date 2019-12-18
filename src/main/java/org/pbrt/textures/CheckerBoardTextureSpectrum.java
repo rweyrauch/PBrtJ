@@ -15,12 +15,12 @@ import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
-public class CheckerBoardTextureSpectrum extends Texture<Spectrum> {
+public class CheckerBoardTextureSpectrum extends TextureSpectrum {
 
     public CheckerBoardTextureSpectrum(TextureMapping2D mapping,
-                                    Texture<Spectrum> tex1,
-                                    Texture<Spectrum> tex2,
-                                    AAMethod aaMethod) {
+                                    TextureSpectrum tex1,
+                                    TextureSpectrum tex2,
+                                    Texture.AAMethod aaMethod) {
         this.mapping = mapping;
         this.tex1 = tex1;
         this.tex2 = tex2;
@@ -68,14 +68,14 @@ public class CheckerBoardTextureSpectrum extends Texture<Spectrum> {
         return (int)Math.floor(x / 2) + 2 * Math.max(x / 2 - (int)Math.floor(x / 2) - 0.5f, 0);
     }
 
-    public static Texture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
+    public static TextureSpectrum CreateSpectrum(Transform tex2world, TextureParams tp) {
         int dim = tp.FindInt("dimension", 2);
         if (dim != 2 && dim != 3) {
             PBrtTLogger.Error("%d dimensional checkerboard texture not supported", dim);
             return null;
         }
-        Texture<Spectrum> tex1 = tp.GetSpectrumTexture("tex1", new Spectrum(1));
-        Texture<Spectrum> tex2 = tp.GetSpectrumTexture("tex2", new Spectrum(0));
+        TextureSpectrum tex1 = tp.GetSpectrumTexture("tex1", new Spectrum(1));
+        TextureSpectrum tex2 = tp.GetSpectrumTexture("tex2", new Spectrum(0));
         if (dim == 2) {
             // Initialize 2D texture mapping _map_ from _tp_
             TextureMapping2D map;
@@ -102,14 +102,14 @@ public class CheckerBoardTextureSpectrum extends Texture<Spectrum> {
 
             // Compute _aaMethod_ for _CheckerboardTexture_
             String aa = tp.FindString("aamode", "closedform");
-            AAMethod aaMethod;
+            Texture.AAMethod aaMethod;
             if (Objects.equals(aa, "none"))
-                aaMethod = AAMethod.None;
+                aaMethod = Texture.AAMethod.None;
             else if (Objects.equals(aa, "closedform"))
-                aaMethod = AAMethod.ClosedForm;
+                aaMethod = Texture.AAMethod.ClosedForm;
             else {
                 PBrtTLogger.Warning("Antialiasing mode \"%s\" not understood by Checkerboard2DTexture; using \"closedform\"", aa);
-                aaMethod = AAMethod.ClosedForm;
+                aaMethod = Texture.AAMethod.ClosedForm;
             }
             return new CheckerBoardTextureSpectrum(map, tex1, tex2, aaMethod);
         } else {
@@ -122,6 +122,6 @@ public class CheckerBoardTextureSpectrum extends Texture<Spectrum> {
     }
 
     private TextureMapping2D mapping;
-    private final Texture<Spectrum> tex1, tex2;
+    private final TextureSpectrum tex1, tex2;
     private final Texture.AAMethod aaMethod;
 }

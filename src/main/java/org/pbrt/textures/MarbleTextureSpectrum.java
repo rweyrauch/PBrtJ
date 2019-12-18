@@ -12,7 +12,7 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class MarbleTextureSpectrum extends Texture<Spectrum> {
+public class MarbleTextureSpectrum extends TextureSpectrum {
 
     public MarbleTextureSpectrum(TextureMapping3D mapping, int octaves, float omega, float scale, float variation) {
         this.mapping = mapping;
@@ -27,7 +27,7 @@ public class MarbleTextureSpectrum extends Texture<Spectrum> {
         TextureMapping3D.MapPoint point = mapping.Map(si);
 
         point.p = point.p.scale(scale);
-        float marble = point.p.y + variation * FBm(point.p, point.dpdx.scale(scale), point.dpdy.scale(scale), omega, octaves);
+        float marble = point.p.y + variation * Texture.FBm(point.p, point.dpdx.scale(scale), point.dpdy.scale(scale), omega, octaves);
         float t = .5f + .5f * (float)Math.sin(marble);
         // Evaluate marble spline at _t_
         final int nc = marbleColors.length;
@@ -49,7 +49,7 @@ public class MarbleTextureSpectrum extends Texture<Spectrum> {
         return (s0.lerp(t, s1)).scale(1.5f);
     }
 
-    public static Texture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
+    public static TextureSpectrum CreateSpectrum(Transform tex2world, TextureParams tp) {
         TextureMapping3D map = new IdentityMapping3D(tex2world);
         return new MarbleTextureSpectrum(map, tp.FindInt("octaves", 8),
                 tp.FindFloat("roughness", .5f),

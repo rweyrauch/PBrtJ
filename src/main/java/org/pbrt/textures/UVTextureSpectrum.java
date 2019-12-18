@@ -15,7 +15,7 @@ import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
-public class UVTextureSpectrum extends Texture<Spectrum> {
+public class UVTextureSpectrum extends TextureSpectrum {
 
     public UVTextureSpectrum(TextureMapping2D mapping) {
         this.mapping = mapping;
@@ -28,7 +28,7 @@ public class UVTextureSpectrum extends Texture<Spectrum> {
         return Spectrum.FromRGB(rgb);
     }
 
-    public static Texture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
+    public static TextureSpectrum CreateSpectrum(Transform tex2world, TextureParams tp) {
         // Initialize 2D texture mapping _map_ from _tp_
         TextureMapping2D map;
         String type = tp.FindString("mapping", "uv");

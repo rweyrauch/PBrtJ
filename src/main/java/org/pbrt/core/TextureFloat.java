@@ -9,9 +9,8 @@
 
 package org.pbrt.core;
 
-public abstract class TextureFloat extends Texture<Float> {
+public abstract class TextureFloat {
 
-    @Override
-    public abstract Float Evaluate(SurfaceInteraction si);
+    public abstract float Evaluate(SurfaceInteraction si);
 
 }

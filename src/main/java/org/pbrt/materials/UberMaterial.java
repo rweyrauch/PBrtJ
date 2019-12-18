@@ -15,25 +15,25 @@ import org.pbrt.core.*;
 public class UberMaterial extends Material {
 
     public static UberMaterial Create(TextureParams mp) {
-        Texture<Spectrum> Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.25f));
-        Texture<Spectrum> Ks = mp.GetSpectrumTexture("Ks", new Spectrum(0.25f));
-        Texture<Spectrum> Kr = mp.GetSpectrumTexture("Kr", new Spectrum(0));
-        Texture<Spectrum> Kt = mp.GetSpectrumTexture("Kt", new Spectrum(0));
-        Texture<Float> roughness = mp.GetFloatTexture("roughness", .1f);
-        Texture<Float> uroughness = mp.GetFloatTextureOrNull("uroughness");
-        Texture<Float> vroughness = mp.GetFloatTextureOrNull("vroughness");
-        Texture<Float> eta = mp.GetFloatTextureOrNull("eta");
+        TextureSpectrum Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.25f));
+        TextureSpectrum Ks = mp.GetSpectrumTexture("Ks", new Spectrum(0.25f));
+        TextureSpectrum Kr = mp.GetSpectrumTexture("Kr", new Spectrum(0));
+        TextureSpectrum Kt = mp.GetSpectrumTexture("Kt", new Spectrum(0));
+        TextureFloat roughness = mp.GetFloatTexture("roughness", .1f);
+        TextureFloat uroughness = mp.GetFloatTextureOrNull("uroughness");
+        TextureFloat vroughness = mp.GetFloatTextureOrNull("vroughness");
+        TextureFloat eta = mp.GetFloatTextureOrNull("eta");
         if (eta == null) eta = mp.GetFloatTexture("index", 1.5f);
-        Texture<Spectrum> opacity = mp.GetSpectrumTexture("opacity", new Spectrum(1));
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum opacity = mp.GetSpectrumTexture("opacity", new Spectrum(1));
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         boolean remapRoughness = mp.FindBool("remaproughness", true);
         return new UberMaterial(Kd, Ks, Kr, Kt, roughness, uroughness, vroughness,
                 opacity, eta, bumpMap, remapRoughness);
     }
 
-    public UberMaterial(Texture<Spectrum> Kd, Texture<Spectrum> Ks, Texture<Spectrum> Kr, Texture<Spectrum> Kt,
-                        Texture<Float> roughness, Texture<Float> roughnessu, Texture<Float> roughnessv,
-                        Texture<Spectrum> opacity, Texture<Float> eta, Texture<Float> bumMap, boolean remapRoughness) {
+    public UberMaterial(TextureSpectrum Kd, TextureSpectrum Ks, TextureSpectrum Kr, TextureSpectrum Kt,
+                        TextureFloat roughness, TextureFloat roughnessu, TextureFloat roughnessv,
+                        TextureSpectrum opacity, TextureFloat eta, TextureFloat bumMap, boolean remapRoughness) {
         this.Kd = Kd;
         this.Ks = Ks;
         this.Kr = Kr;
@@ -100,7 +100,7 @@ public class UberMaterial extends Material {
             si.bsdf.Add(new SpecularTransmission(kt, 1, e, mode));
     }
 
-    private Texture<Spectrum> Kd, Ks, Kr, Kt, opacity;
-    private Texture<Float> roughness, roughnessu, roughnessv, eta, bumpMap;
+    private TextureSpectrum Kd, Ks, Kr, Kt, opacity;
+    private TextureFloat roughness, roughnessu, roughnessv, eta, bumpMap;
     private boolean remapRoughness;
 }

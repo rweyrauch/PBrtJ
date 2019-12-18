@@ -14,7 +14,7 @@ import org.pbrt.core.*;
 
 public class MatteMaterial extends Material {
 
-    public MatteMaterial(Texture<Spectrum> Kd, Texture<Float> sigma, Texture<Float> bumpMap) {
+    public MatteMaterial(TextureSpectrum Kd, TextureFloat sigma, TextureFloat bumpMap) {
         this.Kd = Kd;
         this.sigma = sigma;
         this.bumpMap = bumpMap;
@@ -38,12 +38,12 @@ public class MatteMaterial extends Material {
     }
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.5f));
-        Texture<Float> sigma = mp.GetFloatTexture("sigma", 0.f);
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.5f));
+        TextureFloat sigma = mp.GetFloatTexture("sigma", 0.f);
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         return new MatteMaterial(Kd, sigma, bumpMap);
     }
 
-    private Texture<Spectrum> Kd;
-    private Texture<Float> sigma, bumpMap;
+    private TextureSpectrum Kd;
+    private TextureFloat sigma, bumpMap;
 }

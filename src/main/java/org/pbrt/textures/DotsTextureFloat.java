@@ -15,29 +15,29 @@ import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
-public class DotsTextureFloat extends Texture<Float> {
+public class DotsTextureFloat extends TextureFloat {
 
     public DotsTextureFloat(TextureMapping2D mapping,
-                Texture<Float> outsideDot,
-                Texture<Float> insideDot) {
+                TextureFloat outsideDot,
+                TextureFloat insideDot) {
         this.mapping = mapping;
         this.outsideDot = outsideDot;
         this.insideDot =insideDot;
     }
 
     @Override
-    public Float Evaluate(SurfaceInteraction si) {
+    public float Evaluate(SurfaceInteraction si) {
         // Compute cell indices for dots
         TextureMapping2D.MapPoint point = mapping.Map(si);
         Point2f st = point.st;
         int sCell = (int)Math.floor(st.x + .5f), tCell = (int)Math.floor(st.y + .5f);
 
         // Return _insideDot_ result if point is inside dot
-        if (Noise(sCell + .5f, tCell + .5f) > 0) {
+        if (Texture.Noise(sCell + .5f, tCell + .5f) > 0) {
             float radius = .35f;
             float maxShift = 0.5f - radius;
-            float sCenter = sCell + maxShift * Noise(sCell + 1.5f, tCell + 2.8f);
-            float tCenter = tCell + maxShift * Noise(sCell + 4.5f, tCell + 9.8f);
+            float sCenter = sCell + maxShift * Texture.Noise(sCell + 1.5f, tCell + 2.8f);
+            float tCenter = tCell + maxShift * Texture.Noise(sCell + 4.5f, tCell + 9.8f);
             Vector2f dst = st.subtract(new Point2f(sCenter, tCenter));
             if (dst.LengthSquared() < radius * radius)
                 return insideDot.Evaluate(si);
@@ -45,7 +45,7 @@ public class DotsTextureFloat extends Texture<Float> {
         return outsideDot.Evaluate(si);
     }
 
-    public static Texture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
+    public static TextureFloat CreateFloat(Transform tex2world, TextureParams tp) {
         // Initialize 2D texture mapping _map_ from _tp_
         TextureMapping2D map;
         String type = tp.FindString("mapping", "uv");
@@ -74,5 +74,5 @@ public class DotsTextureFloat extends Texture<Float> {
     }
 
     private TextureMapping2D mapping;
-    Texture<Float> outsideDot, insideDot;
+    TextureFloat outsideDot, insideDot;
 }

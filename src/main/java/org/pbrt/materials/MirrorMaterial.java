@@ -15,12 +15,12 @@ import org.pbrt.core.*;
 public class MirrorMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> Kr = mp.GetSpectrumTexture("Kr", new Spectrum(0.9f));
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum Kr = mp.GetSpectrumTexture("Kr", new Spectrum(0.9f));
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         return new MirrorMaterial(Kr, bumpMap);
     }
 
-    public MirrorMaterial(Texture<Spectrum> r, Texture<Float> bump) {
+    public MirrorMaterial(TextureSpectrum r, TextureFloat bump) {
         this.Kr = r;
         this.bumpMap = bump;
     }
@@ -35,6 +35,6 @@ public class MirrorMaterial extends Material {
             si.bsdf.Add(new SpecularReflection(R, new FresnelNoOp()));
     }
 
-    private Texture<Spectrum> Kr;
-    private Texture<Float> bumpMap;
+    private TextureSpectrum Kr;
+    private TextureFloat bumpMap;
 }

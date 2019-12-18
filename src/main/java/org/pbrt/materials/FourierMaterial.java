@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public class FourierMaterial extends Material {
 
-    public FourierMaterial(String filename, Texture<Float> bumpMap) {
+    public FourierMaterial(String filename, TextureFloat bumpMap) {
         this.bumpMap = bumpMap;
         if (!loadedBSDFs.containsKey(filename)) {
             FourierBSDFTable table = FourierBSDFTable.Read(filename);
@@ -29,7 +29,7 @@ public class FourierMaterial extends Material {
     }
 
     public static Material Create(TextureParams mp) {
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         return new FourierMaterial(mp.FindFilename("bsdffile", ""), bumpMap);
     }
 
@@ -45,6 +45,6 @@ public class FourierMaterial extends Material {
     }
 
     FourierBSDFTable bsdfTable;
-    Texture<Float> bumpMap;
+    TextureFloat bumpMap;
     private static HashMap<String, FourierBSDFTable> loadedBSDFs = new HashMap<>();
 }

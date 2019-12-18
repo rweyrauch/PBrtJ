@@ -15,11 +15,11 @@ import org.pbrt.core.*;
 public class MixMaterial extends Material {
 
     public static Material Create(TextureParams mp, Material mat1, Material mat2) {
-        Texture<Spectrum> scale = mp.GetSpectrumTexture("amount", new Spectrum(0.5f));
+        TextureSpectrum scale = mp.GetSpectrumTexture("amount", new Spectrum(0.5f));
         return new MixMaterial(mat1, mat2, scale);
     }
 
-    public MixMaterial(Material m1, Material m2, Texture<Spectrum> scale) {
+    public MixMaterial(Material m1, Material m2, TextureSpectrum scale) {
         this.m1 = m1;
         this.m2 = m2;
         this.scale = scale;
@@ -43,5 +43,5 @@ public class MixMaterial extends Material {
     }
 
     private Material m1, m2;
-    private Texture<Spectrum> scale;
+    private TextureSpectrum scale;
 }

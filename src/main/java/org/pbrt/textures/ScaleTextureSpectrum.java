@@ -12,9 +12,9 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class ScaleTextureSpectrum extends Texture<Spectrum> {
+public class ScaleTextureSpectrum extends TextureSpectrum {
 
-    ScaleTextureSpectrum(Texture<Spectrum> tex1, Texture<Spectrum> tex2) {
+    ScaleTextureSpectrum(TextureSpectrum tex1, TextureSpectrum tex2) {
         super();
         this.tex1 = tex1;
         this.tex2 = tex2;
@@ -25,10 +25,10 @@ public class ScaleTextureSpectrum extends Texture<Spectrum> {
         return tex1.Evaluate(si).multiply(tex2.Evaluate(si));
     }
 
-    public static Texture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
+    public static TextureSpectrum CreateSpectrum(Transform tex2world, TextureParams tp) {
         return new ScaleTextureSpectrum(tp.GetSpectrumTexture("tex1", new Spectrum(1)),
                 tp.GetSpectrumTexture("tex2", new Spectrum(1)));
     }
 
-    private Texture<Spectrum> tex1, tex2;
+    private TextureSpectrum tex1, tex2;
 }

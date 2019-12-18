@@ -12,7 +12,7 @@ package org.pbrt.shapes;
 
 import org.pbrt.core.*;
 import org.pbrt.core.PBrtTLogger;
-import org.pbrt.textures.ConstantTexture;
+import org.pbrt.textures.ConstantTextureFloat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import org.smurn.jply.util.TextureMode;
 
 public class PlyMesh {
 
-    public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet, Map<String, Texture<Float>> floatTextures) {
+    public static ArrayList<Shape> Create(Transform object2world, Transform world2object, boolean reverseOrientation, ParamSet paramSet, Map<String, TextureFloat> floatTextures) {
         String filename = paramSet.FindOneFilename("filename", "");
 
         PlyReader ply = null;
@@ -105,7 +105,7 @@ public class PlyMesh {
         }
 
         // Look up an alpha texture, if applicable
-        Texture<Float> alphaTex = null;
+        TextureFloat alphaTex = null;
         String alphaTexName = paramSet.FindTexture("alpha");
         if (!alphaTexName.isEmpty()) {
             if (floatTextures.containsKey(alphaTexName)) {
@@ -115,10 +115,10 @@ public class PlyMesh {
                 PBrtTLogger.Error("Couldn't find float texture \"%s\" for \"alpha\" parameter", alphaTexName);
             }
         } else if (paramSet.FindOneFloat("alpha", 1) == 0) {
-            alphaTex = new ConstantTexture<>(0.0f);
+            alphaTex = new ConstantTextureFloat(0.0f);
         }
 
-        Texture<Float> shadowAlphaTex = null;
+        TextureFloat shadowAlphaTex = null;
         String shadowAlphaTexName = paramSet.FindTexture("shadowalpha");
         if (!shadowAlphaTexName.isEmpty()) {
             if (floatTextures.containsKey(shadowAlphaTexName)) {
@@ -129,7 +129,7 @@ public class PlyMesh {
             }
         }
         else if (paramSet.FindOneFloat("shadowalpha", 1) == 0) {
-            shadowAlphaTex = new ConstantTexture<>(0.0f);
+            shadowAlphaTex = new ConstantTextureFloat(0.0f);
         }
 
         return Triangle.CreateTriangleMesh(object2world, world2object, reverseOrientation,

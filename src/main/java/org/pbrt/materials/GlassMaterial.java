@@ -15,23 +15,23 @@ import org.pbrt.core.*;
 public class GlassMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> Kr = mp.GetSpectrumTexture("Kr", new Spectrum(1));
-        Texture<Spectrum> Kt = mp.GetSpectrumTexture("Kt", new Spectrum(1));
-        Texture<Float> eta = mp.GetFloatTextureOrNull("eta");
+        TextureSpectrum Kr = mp.GetSpectrumTexture("Kr", new Spectrum(1));
+        TextureSpectrum Kt = mp.GetSpectrumTexture("Kt", new Spectrum(1));
+        TextureFloat eta = mp.GetFloatTextureOrNull("eta");
         if (eta == null) eta = mp.GetFloatTexture("index", 1.5f);
-        Texture<Float> roughu = mp.GetFloatTexture("uroughness", 0);
-        Texture<Float> roughv = mp.GetFloatTexture("vroughness", 0);
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureFloat roughu = mp.GetFloatTexture("uroughness", 0);
+        TextureFloat roughv = mp.GetFloatTexture("vroughness", 0);
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         boolean remapRoughness = mp.FindBool("remaproughness", true);
         return new GlassMaterial(Kr, Kt, roughu, roughv, eta, bumpMap, remapRoughness);
     }
 
-    public GlassMaterial(Texture<Spectrum> Kr,
-                  Texture<Spectrum> Kt,
-                  Texture<Float> uRoughness,
-                  Texture<Float> vRoughness,
-                  Texture<Float> index,
-                  Texture<Float> bumpMap,
+    public GlassMaterial(TextureSpectrum Kr,
+                  TextureSpectrum Kt,
+                  TextureFloat uRoughness,
+                  TextureFloat vRoughness,
+                  TextureFloat index,
+                  TextureFloat bumpMap,
                   boolean remapRoughness) {
         this.Kr = Kr;
         this.Kt = Kt;
@@ -82,10 +82,10 @@ public class GlassMaterial extends Material {
         }
     }
 
-    private Texture<Spectrum> Kr, Kt;
-    private Texture<Float> uRoughness, vRoughness;
-    private Texture<Float> index;
-    private Texture<Float> bumpMap;
+    private TextureSpectrum Kr, Kt;
+    private TextureFloat uRoughness, vRoughness;
+    private TextureFloat index;
+    private TextureFloat bumpMap;
     boolean remapRoughness;
 
 }

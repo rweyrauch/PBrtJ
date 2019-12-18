@@ -13,25 +13,26 @@ package org.pbrt.core;
 import java.util.Map;
 import java.util.Objects;
 
-import org.pbrt.textures.ConstantTexture;
+import org.pbrt.textures.ConstantTextureFloat;
+import org.pbrt.textures.ConstantTextureSpectrum;
 
 public class TextureParams {
 
     // TextureParams Private Data
-    private Map<String, Texture<Float>> floatTextures;
-    private Map<String, Texture<Spectrum>> spectrumTextures;
+    private Map<String, TextureFloat> floatTextures;
+    private Map<String, TextureSpectrum> spectrumTextures;
     private ParamSet geomParams, materialParams;
 
     // TextureParams Public Methods
     public TextureParams(ParamSet geomParams, ParamSet materialParams,
-                         Map<String, Texture<Float>> fTex,
-                         Map<String, Texture<Spectrum>> sTex) {
+                         Map<String, TextureFloat> fTex,
+                         Map<String, TextureSpectrum> sTex) {
         this.floatTextures = fTex;
         this.spectrumTextures = sTex;
         this.geomParams = geomParams;
         this.materialParams = materialParams;
     }
-    public Texture<Spectrum> GetSpectrumTexture(String name, Spectrum def) {
+    public TextureSpectrum GetSpectrumTexture(String name, Spectrum def) {
         String texname = geomParams.FindTexture(name);
         if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
         if (!Objects.equals(texname, "")) {
@@ -42,9 +43,9 @@ public class TextureParams {
         }
         Spectrum val = materialParams.FindOneSpectrum(name, def);
         val = geomParams.FindOneSpectrum(name, val);
-        return new ConstantTexture<>(val);
+        return new ConstantTextureSpectrum(val);
     }
-    public Texture<Spectrum> GetSpectrumTextureOrNull(String name) {
+    public TextureSpectrum GetSpectrumTextureOrNull(String name) {
         String texname = geomParams.FindTexture(name);
         if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
         if (!Objects.equals(texname, "")) {
@@ -57,10 +58,10 @@ public class TextureParams {
         }
         Spectrum[] val = geomParams.FindSpectrum(name);
         if (val == null) val = materialParams.FindSpectrum(name);
-        if (val != null) return new ConstantTexture<>(val[0]);
+        if (val != null) return new ConstantTextureSpectrum(val[0]);
         return null;
     }
-    public Texture<Float> GetFloatTexture(String name, float def) {
+    public TextureFloat GetFloatTexture(String name, float def) {
         String texname = geomParams.FindTexture(name);
         if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
         if (!Objects.equals(texname, "")) {
@@ -70,9 +71,9 @@ public class TextureParams {
             PBrtTLogger.Error("Couldn't find float texture named \"%s\" for parameter \"%s\"", texname, name);
         }
         float val = geomParams.FindOneFloat(name, materialParams.FindOneFloat(name, def));
-        return new ConstantTexture<>(val);
+        return new ConstantTextureFloat(val);
     }
-    public Texture<Float> GetFloatTextureOrNull(String name) {
+    public TextureFloat GetFloatTextureOrNull(String name) {
         String texname = geomParams.FindTexture(name);
         if (Objects.equals(texname, "")) texname = materialParams.FindTexture(name);
         if (!Objects.equals(texname, "")) {
@@ -85,7 +86,7 @@ public class TextureParams {
         }
         Float[] val = geomParams.FindFloat(name);
         if (val == null) val = materialParams.FindFloat(name);
-        if (val != null) return new ConstantTexture<>(val[0]);
+        if (val != null) return new ConstantTextureFloat(val[0]);
         return null;
     }
     public float FindFloat(String name, float def) {

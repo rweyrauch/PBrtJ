@@ -9,9 +9,8 @@
 
 package org.pbrt.core;
 
-public abstract class TextureSpectrum extends Texture<Spectrum> {
+public abstract class TextureSpectrum {
 
-    @Override
     public abstract Spectrum Evaluate(SurfaceInteraction si);
 
 }

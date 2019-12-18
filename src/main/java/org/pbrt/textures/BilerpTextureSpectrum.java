@@ -15,7 +15,7 @@ import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
-public class BilerpTextureSpectrum extends Texture<Spectrum> {
+public class BilerpTextureSpectrum extends TextureSpectrum {
 
     public BilerpTextureSpectrum(TextureMapping2D mapping, Spectrum v00, Spectrum v01, Spectrum v10, Spectrum v11) {
         this.mapping = mapping;
@@ -32,7 +32,7 @@ public class BilerpTextureSpectrum extends Texture<Spectrum> {
         return (v00.scale((1 - st.x) * (1 - st.y))).add(v01.scale((1 - st.x) * (st.y))).add(v10.scale((st.x) * (1 - st.y))).add(v11.scale((st.x) * (st.y)));
     }
 
-    public static Texture<Spectrum> CreateSpectrum(Transform tex2world, TextureParams tp) {
+    public static TextureSpectrum CreateSpectrum(Transform tex2world, TextureParams tp) {
         // Initialize 2D texture mapping _map_ from _tp_
         TextureMapping2D map;
         String type = tp.FindString("mapping", "uv");

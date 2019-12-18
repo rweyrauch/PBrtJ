@@ -17,22 +17,22 @@ public class MetalMaterial extends Material {
     private static final Spectrum copperN, copperK;
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> eta = mp.GetSpectrumTexture("eta", copperN);
-        Texture<Spectrum> k = mp.GetSpectrumTexture("k", copperK);
-        Texture<Float> roughness = mp.GetFloatTexture("roughness", .01f);
-        Texture<Float> uRoughness = mp.GetFloatTextureOrNull("uroughness");
-        Texture<Float> vRoughness = mp.GetFloatTextureOrNull("vroughness");
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum eta = mp.GetSpectrumTexture("eta", copperN);
+        TextureSpectrum k = mp.GetSpectrumTexture("k", copperK);
+        TextureFloat roughness = mp.GetFloatTexture("roughness", .01f);
+        TextureFloat uRoughness = mp.GetFloatTextureOrNull("uroughness");
+        TextureFloat vRoughness = mp.GetFloatTextureOrNull("vroughness");
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         boolean remapRoughness = mp.FindBool("remaproughness", true);
         return new MetalMaterial(eta, k, roughness, uRoughness, vRoughness, bumpMap, remapRoughness);
     }
 
-    public MetalMaterial(Texture<Spectrum> eta,
-                  Texture<Spectrum> k,
-                  Texture<Float> rough,
-                  Texture<Float> urough,
-                  Texture<Float> vrough,
-                  Texture<Float> bump,
+    public MetalMaterial(TextureSpectrum eta,
+                  TextureSpectrum k,
+                  TextureFloat rough,
+                  TextureFloat urough,
+                  TextureFloat vrough,
+                  TextureFloat bump,
                   boolean remapRoughness) {
         this.eta = eta;
         this.k = k;
@@ -60,9 +60,9 @@ public class MetalMaterial extends Material {
         si.bsdf.Add(new MicrofacetReflection(new Spectrum(1), distrib, frMf));
     }
 
-    Texture<Spectrum> eta, k;
-    Texture<Float> roughness, uRoughness, vRoughness;
-    Texture<Float> bumpMap;
+    TextureSpectrum eta, k;
+    TextureFloat roughness, uRoughness, vRoughness;
+    TextureFloat bumpMap;
     boolean remapRoughness;
 
     private final static int CopperSamples = 56;

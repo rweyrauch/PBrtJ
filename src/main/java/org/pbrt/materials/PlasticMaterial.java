@@ -15,18 +15,18 @@ import org.pbrt.core.*;
 public class PlasticMaterial extends Material {
 
     public static Material Create(TextureParams mp) {
-        Texture<Spectrum> Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.25f));
-        Texture<Spectrum> Ks = mp.GetSpectrumTexture("Ks", new Spectrum(0.25f));
-        Texture<Float> roughness = mp.GetFloatTexture("roughness", .1f);
-        Texture<Float> bumpMap = mp.GetFloatTextureOrNull("bumpmap");
+        TextureSpectrum Kd = mp.GetSpectrumTexture("Kd", new Spectrum(0.25f));
+        TextureSpectrum Ks = mp.GetSpectrumTexture("Ks", new Spectrum(0.25f));
+        TextureFloat roughness = mp.GetFloatTexture("roughness", .1f);
+        TextureFloat bumpMap = mp.GetFloatTextureOrNull("bumpmap");
         boolean remapRoughness = mp.FindBool("remaproughness", true);
         return new PlasticMaterial(Kd, Ks, roughness, bumpMap, remapRoughness);
     }
 
-    PlasticMaterial(Texture<Spectrum> Kd,
-                    Texture<Spectrum> Ks,
-                    Texture<Float> roughness,
-                    Texture<Float> bumpMap,
+    PlasticMaterial(TextureSpectrum Kd,
+                    TextureSpectrum Ks,
+                    TextureFloat roughness,
+                    TextureFloat bumpMap,
                     boolean remapRoughness) {
         this.Kd = Kd;
         this.Ks = Ks;
@@ -59,8 +59,8 @@ public class PlasticMaterial extends Material {
         }
     }
 
-    private Texture<Spectrum> Kd, Ks;
-    private Texture<Float> roughness, bumpMap;
+    private TextureSpectrum Kd, Ks;
+    private TextureFloat roughness, bumpMap;
     private final boolean remapRoughness;
 
 }

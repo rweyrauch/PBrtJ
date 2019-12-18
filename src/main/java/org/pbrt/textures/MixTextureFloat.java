@@ -12,9 +12,9 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class MixTextureFloat extends Texture<Float> {
+public class MixTextureFloat extends TextureFloat {
 
-    public MixTextureFloat(Texture<Float> tex1, Texture<Float> tex2, Texture<Float> amount) {
+    public MixTextureFloat(TextureFloat tex1, TextureFloat tex2, TextureFloat amount) {
         super();
         this.tex1 = tex1;
         this.tex2 = tex2;
@@ -22,7 +22,7 @@ public class MixTextureFloat extends Texture<Float> {
     }
 
     @Override
-    public Float Evaluate(SurfaceInteraction si) {
+    public float Evaluate(SurfaceInteraction si) {
         float t1 = tex1.Evaluate(si), t2 = tex2.Evaluate(si);
         float amt = amount.Evaluate(si);
         return (1-amt) * t1 + amt * t2;
@@ -34,6 +34,6 @@ public class MixTextureFloat extends Texture<Float> {
                 tp.GetFloatTexture("amount", 0.5f));
     }
 
-    private Texture<Float> tex1, tex2;
-    private Texture<Float> amount;
+    private TextureFloat tex1, tex2;
+    private TextureFloat amount;
 }

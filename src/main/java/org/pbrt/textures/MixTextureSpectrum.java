@@ -12,9 +12,9 @@ package org.pbrt.textures;
 
 import org.pbrt.core.*;
 
-public class MixTextureSpectrum extends Texture<Spectrum> {
+public class MixTextureSpectrum extends TextureSpectrum {
 
-    public MixTextureSpectrum(Texture<Spectrum> tex1, Texture<Spectrum> tex2, Texture<Float> amount) {
+    public MixTextureSpectrum(TextureSpectrum tex1, TextureSpectrum tex2, TextureFloat amount) {
         super();
         this.tex1 = tex1;
         this.tex2 = tex2;
@@ -34,6 +34,6 @@ public class MixTextureSpectrum extends Texture<Spectrum> {
                 tp.GetFloatTexture("amount", 0.5f));
     }
 
-    private Texture<Spectrum> tex1, tex2;
-    private Texture<Float> amount;
+    private TextureSpectrum tex1, tex2;
+    private TextureFloat amount;
 }

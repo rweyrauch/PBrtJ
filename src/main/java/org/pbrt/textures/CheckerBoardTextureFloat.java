@@ -15,12 +15,12 @@ import org.pbrt.core.PBrtTLogger;
 
 import java.util.Objects;
 
-public class CheckerBoardTextureFloat extends Texture<Float> {
+public class CheckerBoardTextureFloat extends TextureFloat {
 
     public CheckerBoardTextureFloat(TextureMapping2D mapping,
-                          Texture<Float> tex1,
-                          Texture<Float> tex2,
-                          AAMethod aaMethod) {
+                          TextureFloat tex1,
+                          TextureFloat tex2,
+                          Texture.AAMethod aaMethod) {
         this.mapping = mapping;
         this.tex1 = tex1;
         this.tex2 = tex2;
@@ -28,7 +28,7 @@ public class CheckerBoardTextureFloat extends Texture<Float> {
     }
 
     @Override
-    public Float Evaluate(SurfaceInteraction si) {
+    public float Evaluate(SurfaceInteraction si) {
         TextureMapping2D.MapPoint point = mapping.Map(si);
         if (aaMethod == Texture.AAMethod.None) {
             // Point sample _Checkerboard2DTexture_
@@ -68,14 +68,14 @@ public class CheckerBoardTextureFloat extends Texture<Float> {
         return (int)Math.floor(x / 2) + 2 * Math.max(x / 2 - (int)Math.floor(x / 2) - 0.5f, 0);
     }
 
-    public static Texture<Float> CreateFloat(Transform tex2world, TextureParams tp) {
+    public static TextureFloat CreateFloat(Transform tex2world, TextureParams tp) {
         int dim = tp.FindInt("dimension", 2);
         if (dim != 2 && dim != 3) {
             PBrtTLogger.Error("%d dimensional checkerboard texture not supported", dim);
             return null;
         }
-        Texture<Float> tex1 = tp.GetFloatTexture("tex1", 1);
-        Texture<Float> tex2 = tp.GetFloatTexture("tex2", 0);
+        TextureFloat tex1 = tp.GetFloatTexture("tex1", 1);
+        TextureFloat tex2 = tp.GetFloatTexture("tex2", 0);
         if (dim == 2) {
             // Initialize 2D texture mapping _map_ from _tp_
             TextureMapping2D map;
@@ -104,12 +104,12 @@ public class CheckerBoardTextureFloat extends Texture<Float> {
             String aa = tp.FindString("aamode", "closedform");
             Texture.AAMethod aaMethod;
             if (Objects.equals(aa, "none"))
-                aaMethod = AAMethod.None;
+                aaMethod = Texture.AAMethod.None;
             else if (Objects.equals(aa, "closedform"))
-                aaMethod = AAMethod.ClosedForm;
+                aaMethod = Texture.AAMethod.ClosedForm;
             else {
                 PBrtTLogger.Warning("Antialiasing mode \"%s\" not understood by Checkerboard2DTexture; using \"closedform\"", aa);
-                aaMethod = AAMethod.ClosedForm;
+                aaMethod = Texture.AAMethod.ClosedForm;
             }
             return new CheckerBoardTextureFloat(map, tex1, tex2, aaMethod);
         }
@@ -122,6 +122,6 @@ public class CheckerBoardTextureFloat extends Texture<Float> {
     }
 
     private TextureMapping2D mapping;
-    private final Texture<Float> tex1, tex2;
+    private final TextureFloat tex1, tex2;
     private final Texture.AAMethod aaMethod;
 }

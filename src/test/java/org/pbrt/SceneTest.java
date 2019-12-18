@@ -60,7 +60,10 @@ import org.pbrt.samplers.SobolSampler;
 import org.pbrt.samplers.StratifiedSampler;
 import org.pbrt.samplers.ZeroTwoSequence;
 import org.pbrt.shapes.Sphere;
-import org.pbrt.textures.ConstantTexture;
+import org.pbrt.core.TextureFloat;
+import org.pbrt.core.TextureSpectrum;
+import org.pbrt.textures.ConstantTextureFloat;
+import org.pbrt.textures.ConstantTextureSpectrum;
 
 public class SceneTest {
 
@@ -124,8 +127,8 @@ public class SceneTest {
             Transform id = new Transform();
             Shape sphere = new Sphere(id, id, true /* reverse orientation */, 1, -1, 1, 360);
 
-            Texture<Spectrum> Kd = new ConstantTexture<Spectrum>(new Spectrum(0.5f));
-            Texture<Float> sigma = new ConstantTexture<Float>(0.0f);
+            TextureSpectrum Kd = new ConstantTextureSpectrum(new Spectrum(0.5f));
+            TextureFloat sigma = new ConstantTextureFloat(0.0f);
             Material material = new MatteMaterial(Kd, sigma, null);
 
             MediumInterface mediumInterface = new MediumInterface();
@@ -150,8 +153,8 @@ public class SceneTest {
             Transform id = new Transform();
             Shape sphere = new Sphere(id, id, true /* reverse orientation */, 1, -1, 1, 360);
 
-            Texture<Spectrum> Kd = new ConstantTexture<Spectrum>(new Spectrum(0.5f));
-            Texture<Float> sigma = new ConstantTexture<Float>(0.0f);
+            TextureSpectrum Kd = new ConstantTextureSpectrum(new Spectrum(0.5f));
+            TextureFloat sigma = new ConstantTextureFloat(0.0f);
             Material material = new MatteMaterial(Kd, sigma, null);
 
             MediumInterface mediumInterface = new MediumInterface();
@@ -179,8 +182,8 @@ public class SceneTest {
             Transform id = new Transform();
             Shape sphere = new Sphere(id, id, true /* reverse orientation */, 1, -1, 1, 360);
 
-            Texture<Spectrum> Kd = new ConstantTexture<Spectrum>(new Spectrum(0.5f));
-            Texture<Float> sigma = new ConstantTexture<Float>(0.0f);
+            TextureSpectrum Kd = new ConstantTextureSpectrum(new Spectrum(0.5f));
+            TextureFloat sigma = new ConstantTextureFloat(0.0f);
             Material material = new MatteMaterial(Kd, sigma, null);
 
             AreaLight areaLight = new DiffuseAreaLight(new Transform(), null, new Spectrum(0.5f), 1, sphere);
@@ -207,12 +210,12 @@ public class SceneTest {
             Transform id = new Transform();
             Shape sphere = new Sphere(id, id, true /* reverse orientation */, 1, -1, 1, 360);
 
-            Texture<Spectrum> Kd = new ConstantTexture<Spectrum>(new Spectrum(0.25f));
-            Texture<Spectrum> Kr = new ConstantTexture<Spectrum>(new Spectrum(0.5f));
-            Texture<Spectrum> black = new ConstantTexture<Spectrum>(new Spectrum(0.0f));
-            Texture<Spectrum> white = new ConstantTexture<Spectrum>(new Spectrum(1.0f));
-            Texture<Float> zero = new ConstantTexture<Float>(0.0f);
-            Texture<Float> one = new ConstantTexture<Float>(1.0f);
+            TextureSpectrum Kd = new ConstantTextureSpectrum(new Spectrum(0.25f));
+            TextureSpectrum Kr = new ConstantTextureSpectrum(new Spectrum(0.5f));
+            TextureSpectrum black = new ConstantTextureSpectrum(new Spectrum(0.0f));
+            TextureSpectrum white = new ConstantTextureSpectrum(new Spectrum(1.0f));
+            TextureFloat zero = new ConstantTextureFloat(0.0f);
+            TextureFloat one = new ConstantTextureFloat(1.0f);
             Material material = new UberMaterial(Kd, black, Kr, black, zero, zero, zero, white, one, null, false);
 
             MediumInterface mediumInterface = new MediumInterface();
