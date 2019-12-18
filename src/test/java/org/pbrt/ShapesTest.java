@@ -150,7 +150,7 @@ public class ShapesTest {
             assertTrue(nHits >= 1);
 
             // Now tougher: shoot directly at a vertex.
-            Point3f pVertex = vertices.get(rng2.UniformInt32(vertices.size()));
+            Point3f pVertex = vertices.get((int)rng2.UniformUInt32(vertices.size()));
             r.d = pVertex.subtract(r.o);
             nHits = 0;
             for (Shape tri : tris) {
@@ -261,7 +261,7 @@ public class ShapesTest {
             // triangle's surface (which makes the Monte Carlo stuff have more
             // variance, thus requiring more samples).
             Point3f pc = new Point3f(pUnif(rng, range), pUnif(rng, range), pUnif(rng, range));
-            pc.set(rng.UniformInt32() % 3, (rng.UniformFloat() > 0.5f) ? (float)(-range - 3) : (float)(range + 3));
+            pc.set((int)rng.UniformUInt32() % 3, (rng.UniformFloat() > 0.5f) ? (float)(-range - 3) : (float)(range + 3));
 
             // Compute reference value using Monte Carlo with uniform spherical
             // sampling.
@@ -314,7 +314,7 @@ public class ShapesTest {
             // triangle's surface (which makes the Monte Carlo stuff have more
             // variance, thus requiring more samples).
             Point3f pc = new Point3f(pUnif(rng, range), pUnif(rng, range), pUnif(rng, range));
-            pc.set(rng.UniformInt32() % 3, (rng.UniformFloat() > 0.5f) ? (float)(-range - 3) : (float)(range + 3));
+            pc.set((int)rng.UniformUInt32() % 3, (rng.UniformFloat() > 0.5f) ? (float)(-range - 3) : (float)(range + 3));
 
             // Compute a reference value using Triangle::Sample()
             final int count = 64 * 1024;

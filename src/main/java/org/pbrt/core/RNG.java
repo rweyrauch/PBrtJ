@@ -30,11 +30,11 @@ public class RNG {
     public void SetSequence(long sequenceIndex) {
         random.setSeed(sequenceIndex);
     }
-    public int UniformInt32() {
-        return random.nextInt();
+    public long UniformUInt32() {
+        return Integer.toUnsignedLong(random.nextInt());
     }
-    public int UniformInt32(int b) {
-        return random.nextInt(b);
+    public long UniformUInt32(int b) {
+        return Integer.toUnsignedLong(random.nextInt(b));
     }
     public float UniformFloat() {
         return Math.min(Pbrt.OneMinusEpsilon, random.nextFloat());

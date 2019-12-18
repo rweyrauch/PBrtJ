@@ -2118,14 +2118,14 @@ public class LowDiscrepancy {
         return index;
     }
 
-    public static int MultiplyGenerator(int[] C, int a) {
+    public static long MultiplyGenerator(int[] C, int a) {
         int v = 0;
         for (int i = 0; a != 0; ++i, a >>>= 1)
             if ((a & 1) != 0) v ^= C[i];
-        return v;
+        return Integer.toUnsignedLong(v);
     }
 
-    public static float SampleGeneratorMatrix(int[] C, int a, int scramble) {
+    public static float SampleGeneratorMatrix(int[] C, int a, long scramble) {
         final long tmp = (MultiplyGenerator(C, a) ^ scramble);
         return Math.min(tmp * 0x1p-32f, Pbrt.OneMinusEpsilon);
     }
@@ -2146,7 +2146,8 @@ public class LowDiscrepancy {
     }
 
     public static Point2f[] Sobol2D(int nSamplesPerPixelSample, int nPixelSamples, Point2f[] samples, RNG rng) {
-        Point2i scramble = new Point2i(rng.UniformInt32(), rng.UniformInt32());
+        final long scrambleX = rng.UniformUInt32();
+        final long scrambleY = rng.UniformUInt32();
 
         // Define 2D Sobol$'$ generator matrices _CSobol[2]_
         final int[][] CSobol = {
@@ -2160,7 +2161,7 @@ public class LowDiscrepancy {
                     0xa000a000, 0xf000f000, 0x88008800, 0xcc00cc00, 0xaa00aa00, 0xff00ff00,
                     0x80808080, 0xc0c0c0c0, 0xa0a0a0a0, 0xf0f0f0f0, 0x88888888, 0xcccccccc,
                     0xaaaaaaaa, 0xffffffff}};
-        GrayCodeSample(CSobol[0], CSobol[1], nSamplesPerPixelSample * nPixelSamples, scramble, samples);
+        GrayCodeSample(CSobol[0], CSobol[1], nSamplesPerPixelSample * nPixelSamples, scrambleX, scrambleY, samples);
         for (int i = 0; i < nPixelSamples; ++i)
             samples = Sampling.Shuffle(samples, i * nSamplesPerPixelSample, (i+1)*nSamplesPerPixelSample, 1, rng);
         samples = Sampling.Shuffle(samples, 0, nPixelSamples, nSamplesPerPixelSample, rng);
@@ -2203,10 +2204,10 @@ public class LowDiscrepancy {
         return Math.min(result * (1.0 / (1L << SobolMatrices.SobolMatrixSize)), RNG.DoubleOneMinusEpsilon);
     }
 
-    public static int GrayCode(int v) { return (v >>> 1) ^ v; }
+    public static int GrayCode(long v) { return (int)((v >>> 1) ^ v); }
 
-    public static float[] GrayCodeSample(int[] C, int n, int scramble, float[] p) {
-        int v = scramble;
+    public static float[] GrayCodeSample(int[] C, int n, long scramble, float[] p) {
+        long v = scramble;
         for (int i = 0; i < n; ++i) {
             p[i] = Math.min(v * 0x1p-32f /* 1/2^32 */, Pbrt.OneMinusEpsilon);
             v ^= C[Integer.numberOfTrailingZeros(i + 1)];
@@ -2214,8 +2215,8 @@ public class LowDiscrepancy {
         return p;
     }
 
-    public static Point2f[] GrayCodeSample(int[] C0, int[] C1, int n, Point2i scramble, Point2f[] p) {
-        int[] v = {scramble.x, scramble.y};
+    public static Point2f[] GrayCodeSample(int[] C0, int[] C1, int n, long scrambleX, long scrambleY, Point2f[] p) {
+        long[] v = {scrambleX, scrambleY};
         for (int i = 0; i < n; ++i) {
             p[i].x = Math.min(v[0] * 0x1p-32f, Pbrt.OneMinusEpsilon);
             p[i].y = Math.min(v[1] * 0x1p-32f, Pbrt.OneMinusEpsilon);
@@ -2226,7 +2227,7 @@ public class LowDiscrepancy {
     }
 
     public static float[] VanDerCorput(int nSamplesPerPixelSample, int nPixelSamples, float[] samples, RNG rng) {
-        int scramble = rng.UniformInt32();
+        long scramble = rng.UniformUInt32();
         // Define _CVanDerCorput_ Generator Matrix
         final int[] CVanDerCorput = {
             0b10000000000000000000000000000000,

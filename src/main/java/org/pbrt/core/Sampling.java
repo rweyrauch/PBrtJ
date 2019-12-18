@@ -59,7 +59,7 @@ public class Sampling {
 
         // Permute LHS samples in each dimension
         for (int j = startIndex; j < endIndex; ++j) {
-            int other = j + rng.UniformInt32(nSamples - j);
+            int other = j + (int)rng.UniformUInt32(nSamples - j);
             float temp = samples[j];
             samples[j] = samples[other];
             samples[other] = temp;
@@ -85,7 +85,7 @@ public class Sampling {
         }
         // Permute LHS samples in each dimension
         for (int j = startIndex; j < endIndex; ++j) {
-            int other = j + rng.UniformInt32(nSamples - j);
+            int other = j + (int)rng.UniformUInt32(nSamples - j);
             Point2f temp = samples[j];
             samples[j] = samples[other];
             samples[other] = temp;
@@ -173,7 +173,7 @@ public class Sampling {
     public static <T> T[] Shuffle(T[] samp, int startIndex, int endIndex, int nDimensions, RNG rng) {
         int count = endIndex-startIndex;
         for (int i = startIndex; i < endIndex; ++i) {
-            int other = i + rng.UniformInt32(count - (i - startIndex));
+            int other = i + (int)rng.UniformUInt32(count - (i - startIndex));
             for (int j = 0; j < nDimensions; ++j) {
                 T temp = samp[nDimensions * i + j];
                 samp[nDimensions * i + j] = samp[nDimensions * other + j];
@@ -186,7 +186,7 @@ public class Sampling {
     public static float[] ShuffleF(float[] samp, int startIndex, int endIndex, int nDimensions, RNG rng) {
         int count = endIndex-startIndex;
         for (int i = startIndex; i < endIndex; ++i) {
-            int other = i + rng.UniformInt32(count - (i - startIndex));
+            int other = i + (int)rng.UniformUInt32(count - (i - startIndex));
             for (int j = 0; j < nDimensions; ++j) {
                 final var temp = samp[nDimensions * i + j];
                 samp[nDimensions * i + j] = samp[nDimensions * other + j];

@@ -49,17 +49,17 @@ public class PbrtTest {
     }
 
     float GetFloat(RNG rng) {
-        float f = Float.intBitsToFloat(rng.UniformInt32());
+        float f = Float.intBitsToFloat((int)rng.UniformUInt32());
         while (Float.isNaN(f)) {
-            f = Float.intBitsToFloat(rng.UniformInt32());
+            f = Float.intBitsToFloat((int)rng.UniformUInt32());
         }
         return f;
     }
 
     double GetDouble(RNG rng) {
-        double d = Double.longBitsToDouble((long)(rng.UniformInt32()) | ((long)(rng.UniformInt32()) << 32));
+        double d = Double.longBitsToDouble((rng.UniformUInt32()) | ((rng.UniformUInt32()) << 32));
         while (Double.isNaN(d)) {
-            d = Double.longBitsToDouble((long)(rng.UniformInt32()) | ((long)(rng.UniformInt32()) << 32));
+            d = Double.longBitsToDouble((rng.UniformUInt32()) | ((rng.UniformUInt32()) << 32));
         }
         return d;
     }
@@ -111,7 +111,7 @@ public class PbrtTest {
     public void testFloatBits() {
         RNG rng = new RNG(1);
         for (int i = 0; i < 100000; ++i) {
-            int ui = rng.UniformInt32();
+            int ui = (int)rng.UniformUInt32();
             float f = Float.intBitsToFloat(ui);
             if (Float.isNaN(f)) continue;
 
@@ -123,7 +123,7 @@ public class PbrtTest {
     public void testDoubleBits() {
         RNG rng = new RNG(2);
         for (int i = 0; i < 100000; ++i) {
-            long ui = ((long)(rng.UniformInt32()) | ((long)(rng.UniformInt32()) << 32));
+            long ui = ((rng.UniformUInt32()) | ((rng.UniformUInt32()) << 32));
             double f = Double.longBitsToDouble(ui);
 
             if (Double.isNaN(f)) continue;

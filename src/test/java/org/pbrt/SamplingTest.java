@@ -11,7 +11,6 @@ package org.pbrt;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +18,6 @@ import org.junit.Test;
 
 import org.pbrt.core.*;
 import org.pbrt.samplers.MaxMinDistSampler;
-import org.pbrt.samplers.RandomSampler;
 import org.pbrt.samplers.SobolSampler;
 import org.pbrt.samplers.ZeroTwoSequence;
 
@@ -98,25 +96,25 @@ public class SamplingTest {
         // Identity matrix, column-wise
         for (int i = 0; i < 32; ++i) {
             C[i] = 1 << i;
-            Crev[i] = LowDiscrepancy.ReverseBits32(C[i]);
+            Crev[i] = LowDiscrepancy.ReverseBits32((int)C[i]);
         }
 
         for (int a = 0; a < 128; ++a) {
             // Make sure identity generator matrix matches van der Corput
             assertEquals(a, LowDiscrepancy.MultiplyGenerator(C, a));
             assertEquals(LowDiscrepancy.RadicalInverse(0, a),
-                    LowDiscrepancy.ReverseBits32(LowDiscrepancy.MultiplyGenerator(C, a)) * 2.3283064365386963e-10f, epsilon);
+                    LowDiscrepancy.ReverseBits32((int)LowDiscrepancy.MultiplyGenerator(C, a)) * 2.3283064365386963e-10f, epsilon);
             assertEquals(LowDiscrepancy.RadicalInverse(0, a), LowDiscrepancy.SampleGeneratorMatrix(Crev, a, 0), epsilon);
         }
 
         // Random / goofball generator matrix
         RNG rng = new RNG(0);
         for (int i = 0; i < 32; ++i) {
-            C[i] = rng.UniformInt32();
-            Crev[i] = LowDiscrepancy.ReverseBits32(C[i]);
+            C[i] = (int)rng.UniformUInt32();
+            Crev[i] = LowDiscrepancy.ReverseBits32((int)C[i]);
         }
         for (int a = 0; a < 1024; ++a) {
-            assertEquals(LowDiscrepancy.ReverseBits32(LowDiscrepancy.MultiplyGenerator(C, a)),
+            assertEquals(LowDiscrepancy.ReverseBits32((int)LowDiscrepancy.MultiplyGenerator(C, a)),
                     LowDiscrepancy.MultiplyGenerator(Crev, a));
         }
     }
@@ -157,24 +155,28 @@ public class SamplingTest {
         // Make sure first dimension is the regular base 2 radical inverse
         for (int i = 0; i < 8192; ++i) {
             final float actual = LowDiscrepancy.SobolSampleFloat(i, 0, 0);
-            final int i_rev = LowDiscrepancy.ReverseBits32(i);
-            System.out.println("I(hex) = 0x" + Integer.toHexString(i) + "  I_rev = 0x" + Integer.toHexString(i_rev));
+            final long i_rev = Integer.toUnsignedLong(LowDiscrepancy.ReverseBits32(i));
+            System.out.println("I(hex) = 0x" + Integer.toHexString(i) + "  I_rev = 0x" + Long.toHexString(i_rev));
             final float expected = i_rev * 0x1p-32f;
             if (!Pbrt.AlmostEqual(actual, expected, epsilon)) {
                 System.out.printf("Expected: %f  Actual: %f\n", expected, actual);
             }
             assertEquals(actual, expected, epsilon);
         }
+      
     }
 
     @Test
     public void testSobolSampleFloat() {
         for (int i = 0; i < 16; ++i) {
             final float sbf = LowDiscrepancy.SobolSampleFloat(i, 0, 0);
+            final float sbd = (float)LowDiscrepancy.SobolSampleDouble(i, 0, 0);
             final int i_rev = LowDiscrepancy.ReverseBits32(i);
             float esbf = i_rev * 0x1p-32f;
             if (esbf < 0) esbf = 1.0f + esbf;
-            System.out.println("SBF(" + i + ") = " + sbf + "  Exp = " + esbf +
+            System.out.println("SBF(" + i + ") = " + sbf + 
+                " SBD = " + sbd +
+                "  Exp = " + esbf +
                 " i = 0x" + Integer.toHexString(i) +
                 " i_rev = 0x" + Integer.toHexString(i_rev));
         }

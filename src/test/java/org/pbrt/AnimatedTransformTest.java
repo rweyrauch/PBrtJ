@@ -26,7 +26,7 @@ public class AnimatedTransformTest {
         GenRandom r = () -> { return -10 + 20 * rng.UniformFloat(); };
 
         for (int i = 0; i < 10; ++i) {
-            switch (rng.UniformInt32(3)) {
+            switch ((int)rng.UniformUInt32(3)) {
                 case 0:
                     t = t.concatenate(Transform.Scale(Math.abs(r.generate()), Math.abs(r.generate()), Math.abs(r.generate())));
                     break;
